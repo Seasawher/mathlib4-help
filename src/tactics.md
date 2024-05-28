@@ -1,5 +1,12 @@
 Lean version: `{{#include ../lean-toolchain}}`
 
+# #adaptation_note
+Defined in: `«tactic#adaptation_note_»`
+
+Adaptation notes are comments that are used to indicate that a piece of code
+has been changed to accomodate a change in Lean core.
+They typically require further action/maintenance to be taken in the future.
+
 # #check
 Defined in: `Mathlib.Tactic.«tactic#check__»`
 
@@ -24,7 +31,7 @@ the goal be closed at the end like `· tacs`. Like `by` itself, the tactics
 can be either separated by newlines or `;`.
 
 # _
-Defined in: `Std.Tactic.tactic_`
+Defined in: `Batteries.Tactic.tactic_`
 
 `_` in tactic position acts like the `done` tactic: it fails and gives the list
 of goals if there are any. It is useful as a placeholder after starting a tactic block
@@ -115,7 +122,7 @@ which rewrites all group expressions into a normal form.
   In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
 
 # absurd
-Defined in: `Std.Tactic.tacticAbsurd_`
+Defined in: `Batteries.Tactic.tacticAbsurd_`
 
 Given a proof `h` of `p`, `absurd h` changes the goal to `⊢ ¬ p`.
 If `p` is a negation `¬q` then the goal is changed to `⊢ q` instead.
@@ -517,7 +524,7 @@ Defined in: `«tacticBy_cases_:_»`
 `by_cases (h :)? p` splits the main goal into two cases, assuming `h : p` in the first branch, and `h : ¬ p` in the second branch.
 
 # by_contra
-Defined in: `Std.Tactic.byContra`
+Defined in: `Batteries.Tactic.byContra`
 
 `by_contra h` proves `⊢ p` by contradiction,
 introducing a hypothesis `h : ¬p` and proving `False`.
@@ -611,7 +618,7 @@ example (h : a > 0) : a / 5 > 0 := by
 ```
 
 # case
-Defined in: `Std.Tactic.casePatt`
+Defined in: `Batteries.Tactic.casePatt`
 
 * `case _ : t => tac` finds the first goal that unifies with `t` and then solves it
 using `tac` or else fails. Like `show`, it changes the type of the goal to `t`.
@@ -655,7 +662,7 @@ Recall that `case` closes the goal using `sorry` when `tac` fails, and
 the tactic execution is not interrupted.
 
 # case'
-Defined in: `Std.Tactic.casePatt'`
+Defined in: `Batteries.Tactic.casePatt'`
 
 `case' _ : t => tac` is similar to the `case _ : t => tac` tactic,
 but it does not ensure the goal has been solved after applying `tac`,
@@ -733,6 +740,29 @@ Defined in: `Mathlib.Tactic.casesM`
 Example: The following tactic destructs all conjunctions and disjunctions in the current context.
 ```lean
 casesm* _ ∨ _, _ ∧ _
+```
+
+# cc
+Defined in: `Mathlib.Tactic.cc`
+
+The congruence closure tactic `cc` tries to solve the goal by chaining
+equalities from context and applying congruence (i.e. if `a = b`, then `f a = f b`).
+It is a finishing tactic, i.e. it is meant to close
+the current goal, not to make some inconclusive progress.
+A mostly trivial example would be:
+
+```lean
+example (a b c : ℕ) (f : ℕ → ℕ) (h: a = b) (h' : b = c) : f a = f c := by
+  cc
+```
+
+As an example requiring some thinking to do by hand, consider:
+
+```lean
+example (f : ℕ → ℕ) (x : ℕ)
+    (H1 : f (f (f x)) = x) (H2 : f (f (f (f (f x)))) = x) :
+    f x = x := by
+  cc
 ```
 
 # change
@@ -858,7 +888,7 @@ example (h : ∀ i : ℕ, i < 7 → ∃ j, i < j ∧ j < i+i) : True := by
 ```
 
 # classical
-Defined in: `Std.Tactic.tacticClassical_`
+Defined in: `Batteries.Tactic.tacticClassical_`
 
 `classical tacs` runs `tacs` in a scope where `Classical.propDecidable` is a low priority
 local instance.
@@ -867,7 +897,7 @@ Note that (unlike lean 3) `classical` is a scoping tactic - it adds the instance
 scope of the tactic.
 
 # classical!
-Defined in: `Std.Tactic.tacticClassical!`
+Defined in: `Batteries.Tactic.tacticClassical!`
 
 `classical!` has been removed; use `classical` instead
 
@@ -980,7 +1010,17 @@ The variant `compute_degree!` first applies `compute_degree`.
 Then it uses `norm_num` on all the whole remaining goals and tries `assumption`.
 
 # congr
-Defined in: `Std.Tactic.congrConfigWith`
+Defined in: `Lean.Parser.Tactic.congr`
+
+Apply congruence (recursively) to goals of the form `⊢ f as = f bs` and `⊢ HEq (f as) (f bs)`.
+The optional parameter is the depth of the recursive applications.
+This is useful when `congr` is too aggressive in breaking down the goal.
+For example, given `⊢ f (g (x + y)) = f (g (y + x))`,
+`congr` produces the goals `⊢ x = y` and `⊢ y = x`,
+while `congr 2` produces the intended `⊢ x + y = y + x`.
+
+# congr
+Defined in: `Batteries.Tactic.congrConfigWith`
 
 Apply congruence (recursively) to goals of the form `⊢ f as = f bs` and `⊢ HEq (f as) (f bs)`.
 * `congr n` controls the depth of the recursive applications.
@@ -994,17 +1034,7 @@ Apply congruence (recursively) to goals of the form `⊢ f as = f bs` and `⊢ H
   `x : α ⊢ f x = g x`.
 
 # congr
-Defined in: `Std.Tactic.congrConfig`
-
-Apply congruence (recursively) to goals of the form `⊢ f as = f bs` and `⊢ HEq (f as) (f bs)`.
-The optional parameter is the depth of the recursive applications.
-This is useful when `congr` is too aggressive in breaking down the goal.
-For example, given `⊢ f (g (x + y)) = f (g (y + x))`,
-`congr` produces the goals `⊢ x = y` and `⊢ y = x`,
-while `congr 2` produces the intended `⊢ x + y = y + x`.
-
-# congr
-Defined in: `Lean.Parser.Tactic.congr`
+Defined in: `Batteries.Tactic.congrConfig`
 
 Apply congruence (recursively) to goals of the form `⊢ f as = f bs` and `⊢ HEq (f as) (f bs)`.
 The optional parameter is the depth of the recursive applications.
@@ -1305,6 +1335,17 @@ That is, `convert_to g using n` is equivalent to `convert (?_ : g) using n`.
 The syntax for `convert_to` is the same as for `convert`, and it has variations such as
 `convert_to ← g` and `convert_to (config := {transparency := .default}) g`.
 
+# count_heartbeats
+Defined in: `Mathlib.CountHeartbeats.tacticCount_heartbeats_`
+
+Count the heartbeats used by a tactic, e.g.: `count_heartbeats simp`.
+
+# count_heartbeats!
+Defined in: `Mathlib.CountHeartbeats.tacticCount_heartbeats!_In__`
+
+`count_heartbeats! in tac` runs a tactic 10 times, counting the heartbeats used, and logs the range
+and standard deviation. The tactic `count_heartbeats! n in tac` runs it `n` times instead.
+
 # dbg_trace
 Defined in: `Lean.Parser.Tactic.dbgTrace`
 
@@ -1408,7 +1449,7 @@ example (x : Nat) : (if True then x + 2 else 3) = x + 2 := by
 This command can also be used in `simp_all` and `dsimp`.
 
 # eapply
-Defined in: `Std.Tactic.tacticEapply_`
+Defined in: `Batteries.Tactic.tacticEapply_`
 
 `eapply e` is like `apply e` but it does not add subgoals for variables that appear
 in the types of other goals. Note that this can lead to a failure where there are
@@ -1502,7 +1543,7 @@ Defined in: `Lean.Parser.Tactic.tacticExact_mod_cast_`
 Normalize casts in the goal and the given expression, then close the goal with `exact`.
 
 # exacts
-Defined in: `Std.Tactic.exacts`
+Defined in: `Batteries.Tactic.exacts`
 
 Like `exact`, but takes a list of terms and checks that all goals are discharged after the tactic.
 
@@ -1631,7 +1672,7 @@ Changes the goal to `False`, retaining as much information as possible:
 * For a non-propositional goal use `False.elim`.
 
 # fapply
-Defined in: `Std.Tactic.tacticFapply_`
+Defined in: `Batteries.Tactic.tacticFapply_`
 
 `fapply e` is like `apply e` but it adds goals in the order they appear,
 rather than putting the dependent goals first.
@@ -2056,6 +2097,10 @@ Defined in: `Mathlib.Tactic.Hint.hintStx`
 The `hint` tactic tries every tactic registered using `register_hint tac`,
 and reports any that succeed.
 
+# html!
+Defined in: `ProofWidgets.htmlTac`
+
+
 # induction
 Defined in: `Lean.Parser.Tactic.induction`
 
@@ -2152,6 +2197,11 @@ You can specify a name `h` for the new hypothesis,
 as `interval_cases h : n` or `interval_cases h : n using hl, hu`.
 
 # intro
+Defined in: `Batteries.Tactic.introDot`
+
+The syntax `intro.` is deprecated in favor of `nofun`.
+
+# intro
 Defined in: `Lean.Parser.Tactic.intro`
 
 Introduces one or more hypotheses, optionally naming and/or pattern-matching them.
@@ -2173,11 +2223,6 @@ be a `let` or function type.
   | n + 1, 0 => tac
   | ...
   ```
-
-# intro
-Defined in: `Std.Tactic.introDot`
-
-The syntax `intro.` is deprecated in favor of `nofun`.
 
 # intros
 Defined in: `Lean.Parser.Tactic.intros`
@@ -2687,13 +2732,13 @@ example (a b : ℚ) (h : ∀ p q : ℚ, p = q) : 3*a + qc = 3*b + 2*qc := by
 ```
 
 # map_tacs
-Defined in: `Std.Tactic.«tacticMap_tacs[_;]»`
+Defined in: `Batteries.Tactic.«tacticMap_tacs[_;]»`
 
 Assuming there are `n` goals, `map_tacs [t1; t2; ...; tn]` applies each `ti` to the respective
 goal and leaves the resulting subgoals.
 
 # match
-Defined in: `Std.Tactic.«tacticMatch_,,With.»`
+Defined in: `Batteries.Tactic.«tacticMatch_,,With.»`
 
 The syntax `match ⋯ with.` has been deprecated in favor of `nomatch ⋯`.
 
@@ -3102,7 +3147,7 @@ can be used to:
 Currently, all of these are on by default.
 
 # on_goal
-Defined in: `Std.Tactic.«tacticOn_goal-_=>_»`
+Defined in: `Batteries.Tactic.«tacticOn_goal-_=>_»`
 
 `on_goal n => tacSeq` creates a block scope for the `n`-th goal and tries the sequence
 of tactics `tacSeq` on it.
@@ -3172,7 +3217,7 @@ This tactic works by repeatedly applying lemmas such as `forall_imp`, `Exists.im
 `Filter.Eventually.mp`, `Filter.Frequently.mp`, and `Filter.eventually_of_forall`.
 
 # pick_goal
-Defined in: `Std.Tactic.«tacticPick_goal-_»`
+Defined in: `Batteries.Tactic.«tacticPick_goal-_»`
 
 `pick_goal n` will move the `n`-th goal to the front.
 
@@ -3385,7 +3430,7 @@ matching on the constructor `quot.mk`.
 assumption `h : e = PAT` will be added to the context.
 
 # rcongr
-Defined in: `Std.Tactic.rcongr`
+Defined in: `Batteries.Tactic.rcongr`
 
 Repeatedly apply `congr` and `ext`, using the given patterns as arguments for `ext`.
 
@@ -4279,6 +4324,11 @@ a warning whenever a proof uses `sorry`, so you aren't likely to miss it, but
 you can double check if a theorem depends on `sorry` by using
 `#print axioms my_thm` and looking for `sorryAx` in the axiom list.
 
+# sorry_if_sorry
+Defined in: `CategoryTheory.sorryIfSorry`
+
+Close the main goal with `sorry` if its type contains `sorry`, and fail otherwise.
+
 # specialize
 Defined in: `Lean.Parser.Tactic.specialize`
 
@@ -4304,7 +4354,7 @@ renamed used the `case` or `next` tactics.
 - `split at h` will split the hypothesis `h`.
 
 # split_ands
-Defined in: `Std.Tactic.tacticSplit_ands`
+Defined in: `Batteries.Tactic.tacticSplit_ands`
 
 `split_ands` applies `And.intro` until it does not make progress.
 
@@ -4321,7 +4371,7 @@ ite-expression.
 `split_ifs with h₁ h₂ h₃` overrides the default names for the hypotheses.
 
 # squeeze_scope
-Defined in: `Std.Tactic.squeezeScope`
+Defined in: `Batteries.Tactic.squeezeScope`
 
 The `squeeze_scope` tactic allows aggregating multiple calls to `simp` coming from the same syntax
 but in different branches of execution, such as in `cases x <;> simp`.
@@ -4397,7 +4447,7 @@ Defined in: `Mathlib.Tactic.tacticSuffices_`
 
 
 # swap
-Defined in: `Std.Tactic.tacticSwap`
+Defined in: `Batteries.Tactic.tacticSwap`
 
 `swap` is a shortcut for `pick_goal 2`, which interchanges the 1st and 2nd goals.
 
@@ -4526,7 +4576,7 @@ Defined in: `Mathlib.Tactic.tacticTransitivity___`
 
 
 # triv
-Defined in: `Std.Tactic.triv`
+Defined in: `Batteries.Tactic.triv`
 
 Deprecated variant of `trivial`.
 
@@ -4603,7 +4653,7 @@ Defined in: `Tactic.Interactive.tacticUnit_interval`
 A tactic that solves `0 ≤ ↑x`, `0 ≤ 1 - ↑x`, `↑x ≤ 1`, and `1 - ↑x ≤ 1` for `x : I`.
 
 # unreachable!
-Defined in: `Std.Tactic.unreachable`
+Defined in: `Batteries.Tactic.unreachable`
 
 This tactic causes a panic when run (at compile time).
 (This is distinct from `exact unreachable!`, which inserts code which will panic at run time.)
@@ -4725,6 +4775,18 @@ This also exists as a `conv`-mode tactic.
 Weak-head normal form is when the outer-most expression has been fully reduced, the expression
 may contain subexpressions which have not been reduced.
 
+# with_panel_widgets
+Defined in: `ProofWidgets.withPanelWidgetsTacticStx`
+
+Display the selected panel widgets in the nested tactic script. For example,
+assuming we have written a `GeometryDisplay` component,
+```lean
+by with_panel_widgets [GeometryDisplay]
+  simp
+  rfl
+```
+will show the geometry display alongside the usual tactic state throughout the proof.
+
 # with_reducible
 Defined in: `Lean.Parser.Tactic.withReducible`
 
@@ -4792,6 +4854,11 @@ integer `z` (in the supertype) to `Nat` (the subtype), given a proof that `z ≥
 propositions concerning `z` will still be over `Int`.
 `zify` changes propositions about `Nat` (the subtype) to propositions about `Int` (the supertype),
 without changing the type of any variable.
+
+syntax ... [Batteries.Tactic.seq_focus]
+`t <;> [t1; t2; ...; tn]` focuses on the first goal and applies `t`, which should result in `n`
+subgoals. It then applies each `ti` to the corresponding goal and collects the resulting
+subgoals.
 
 syntax ... [Lean.Parser.Tactic.decide]
 `decide` attempts to prove the main goal (with target type `p`) by synthesizing an instance of `Decidable p`
@@ -4949,8 +5016,7 @@ simp? [X] says simp only [X, Y, Z]
 If you use `set_option says.verify true` (set automatically during CI) then `X says Y`
 runs `X` and verifies that it still prints "Try this: Y".
 
-syntax ... [Std.Tactic.seq_focus]
-`t <;> [t1; t2; ...; tn]` focuses on the first goal and applies `t`, which should result in `n`
-subgoals. It then applies each `ti` to the corresponding goal and collects the resulting
-subgoals.  syntax ... [cdot] `· tac` focuses on the main goal and tries to solve it using `tac`, or else fails.  
+syntax ... [cdot]
+`· tac` focuses on the main goal and tries to solve it using `tac`, or else fails.
+
 
