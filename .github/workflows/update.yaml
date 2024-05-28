@@ -51,33 +51,12 @@ jobs:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_ACTOR_ID: ${{ github.actor_id }}
 
-  deploy:
-    if: needs.update.outputs.updated == 'true' && github.ref == 'refs/heads/main'
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: update
-    permissions:
-      pages: write
-      id-token: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup mdbook
-        uses: peaceiris/actions-mdbook@v2
+      - name: Create Pull Request
+        if: steps.update-lean-mathlib.outputs.result == 'update-success'
+        uses: peter-evans/create-pull-request@v6
         with:
-          mdbook-version: '0.4.32'
-
-      - name: Build mdbook
-        run: mdbook build
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./book
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: auto-update-branch
+          title: "Auto update from GitHub Action"
+          body: "This PR is generated automatically by GitHub Action to update lean/mathlib version."
+          labels: auto-update
