@@ -24,13 +24,10 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
-      - name: Install elan
-        run: |
-          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
-          echo "$HOME/.elan/bin" >> $GITHUB_PATH
-
-      - name: get mathlib cache
-        run: lake exe cache get!
+      - name: lean action
+        uses: leanprover/lean-action@v1-beta
+        with:
+          test: false
 
       - name: generate markdown file
         run: lake env lean --run Main.lean > src/tactics.md
@@ -38,14 +35,14 @@ jobs:
       - name: run python script
         run: python3 script.py
 
-      - name: get diff
+      - name: find out if there are any changes. error if there are changes
         id: diff
         run: |
           git add -N src/tactics.md
           git diff --name-only --exit-code
         continue-on-error: true
 
-      - name: commit
+      - name: commit if there are changes
         if: steps.diff.outcome == 'failure' && github.ref == 'refs/heads/main'
         run: |
           git config user.name "GitHub Action"
