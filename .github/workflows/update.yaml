@@ -1,4 +1,4 @@
-name: Update and deploy
+name: Update Lean and Mathlib
 # Everyday attempt to update Lean and mathlib. If the update succeeds then deploy the updated version to the webpage.
 
 on:
