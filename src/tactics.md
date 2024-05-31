@@ -2479,8 +2479,8 @@ goals over arbitrary types that instantiate `LinearOrderedCommRing`.
 An example:
 ```lean
 example (x y z : ℚ) (h1 : 2*x < 3*y) (h2 : -4*x + 2*z < 0)
-        (h3 : 12*y - 4* z < 0)  : False :=
-by linarith
+        (h3 : 12*y - 4* z < 0)  : False := by
+  linarith
 ```
 
 `linarith` will use all appropriate hypotheses and the negation of the goal, if applicable.
@@ -2494,8 +2494,8 @@ Disequality hypotheses require case splitting and are not normally considered
 
 `linarith!` will use a stronger reducibility setting to try to identify atoms. For example,
 ```lean
-example (x : ℚ) : id x ≥ x :=
-by linarith
+example (x : ℚ) : id x ≥ x := by
+  linarith
 ```
 will fail, because `linarith` will not identify `x` and `id x`. `linarith!` will.
 This can sometimes be expensive.
@@ -2539,8 +2539,8 @@ goals over arbitrary types that instantiate `LinearOrderedCommRing`.
 An example:
 ```lean
 example (x y z : ℚ) (h1 : 2*x < 3*y) (h2 : -4*x + 2*z < 0)
-        (h3 : 12*y - 4* z < 0)  : False :=
-by linarith
+        (h3 : 12*y - 4* z < 0)  : False := by
+  linarith
 ```
 
 `linarith` will use all appropriate hypotheses and the negation of the goal, if applicable.
@@ -2554,8 +2554,8 @@ Disequality hypotheses require case splitting and are not normally considered
 
 `linarith!` will use a stronger reducibility setting to try to identify atoms. For example,
 ```lean
-example (x : ℚ) : id x ≥ x :=
-by linarith
+example (x : ℚ) : id x ≥ x := by
+  linarith
 ```
 will fail, because `linarith` will not identify `x` and `id x`. `linarith!` will.
 This can sometimes be expensive.
@@ -3251,18 +3251,18 @@ Examples:
 
 ```lean
 example (x y : ℚ) (h1 : x*y + 2*x = 1) (h2 : x = y) :
-  x*y = -2*y + 1 :=
-by polyrith
+    x*y = -2*y + 1 := by
+  polyrith
 -- Try this: linear_combination h1 - 2 * h2
 
-example (x y z w : ℚ) (hzw : z = w) : x*z + 2*y*z = x*w + 2*y*w :=
-by polyrith
+example (x y z w : ℚ) (hzw : z = w) : x*z + 2*y*z = x*w + 2*y*w := by
+  polyrith
 -- Try this: linear_combination (2 * y + x) * hzw
 
 constant scary : ∀ a b : ℚ, a + b = 0
 
-example (a b c d : ℚ) (h : a + b = 0) (h2: b + c = 0) : a + b + c + d = 0 :=
-by polyrith only [scary c d, h]
+example (a b c d : ℚ) (h : a + b = 0) (h2: b + c = 0) : a + b + c + d = 0 := by
+  polyrith only [scary c d, h]
 -- Try this: linear_combination scary c d + h
 ```
 
@@ -3290,8 +3290,8 @@ Defined in: `Mathlib.Tactic.Coherence.pure_coherence`
 It can prove any equality made up only of associators, unitors, and identities.
 ```lean
 example {C : Type} [Category C] [MonoidalCategory C] :
-  (λ_ (𝟙_ C)).hom = (ρ_ (𝟙_ C)).hom :=
-by pure_coherence
+  (λ_ (𝟙_ C)).hom = (ρ_ (𝟙_ C)).hom := by
+  pure_coherence
 ```
 
 Users will typically just use the `coherence` tactic,
@@ -4107,10 +4107,10 @@ For example, neither `simp` nor `rw` can solve the following, but `simp_rw` can:
 
 ```lean
 example {a : ℕ}
-  (h1 : ∀ a b : ℕ, a - 1 ≤ b ↔ a ≤ b + 1)
-  (h2 : ∀ a b : ℕ, a ≤ b ↔ ∀ c, c < a → c < b) :
-  (∀ b, a - 1 ≤ b) = ∀ b c : ℕ, c < a → c < b + 1 :=
-by simp_rw [h1, h2]
+    (h1 : ∀ a b : ℕ, a - 1 ≤ b ↔ a ≤ b + 1)
+    (h2 : ∀ a b : ℕ, a ≤ b ↔ ∀ c, c < a → c < b) :
+    (∀ b, a - 1 ≤ b) = ∀ b c : ℕ, c < a → c < b + 1 := by
+  simp_rw [h1, h2]
 ```
 
 # simp_wf
