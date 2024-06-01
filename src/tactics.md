@@ -4647,6 +4647,12 @@ example : ∀ x : Nat, x = x := by unhygienic
   exact Eq.refl x  -- refer to x
 ```
 
+# uniqueDiffWithinAt_Ici_Iic_univ
+Defined in: `intervalIntegral.tacticUniqueDiffWithinAt_Ici_Iic_univ`
+
+An auxiliary tactic closing goals `UniqueDiffWithinAt ℝ s a` where
+`s ∈ {Iic a, Ici a, univ}`.
+
 # unit_interval
 Defined in: `Tactic.Interactive.tacticUnit_interval`
 
