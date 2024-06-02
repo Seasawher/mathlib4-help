@@ -245,14 +245,6 @@ Defined in: `Aesop.BuiltinRules.tacticAesop_destruct_products`
 Defined in: `Aesop.BuiltinRules.tacticAesop_split_hyps`
 
 
-# aesop_subst
-Defined in: `Aesop.BuiltinRules.«tacticAesop_subst[_,,]»`
-
-
-# aesop_subst
-Defined in: `Aesop.BuiltinRules.tacticAesop_subst_`
-
-
 # aesop_unfold
 Defined in: `Aesop.«tacticAesop_unfold[_,,]»`
 
