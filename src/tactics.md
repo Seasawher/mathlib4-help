@@ -212,10 +212,6 @@ clauses are:
   `(simp_config := { zeta := false })` makes Aesop use
   `simp (config := { zeta := false })`.
 
-# aesop_cases
-Defined in: `Aesop.tacticAesop_cases_`
-
-
 # aesop_cat
 Defined in: `CategoryTheory.aesop_cat`
 
@@ -236,14 +232,6 @@ Defined in: `CategoryTheory.aesop_cat_nonterminal`
 A variant of `aesop_cat` which does not fail when it is unable to solve the
 goal. Use this only for exploration! Nonterminal `aesop` is even worse than
 nonterminal `simp`.
-
-# aesop_destruct_products
-Defined in: `Aesop.BuiltinRules.tacticAesop_destruct_products`
-
-
-# aesop_split_hyps
-Defined in: `Aesop.BuiltinRules.tacticAesop_split_hyps`
-
 
 # aesop_unfold
 Defined in: `Aesop.«tacticAesop_unfold[_,,]»`
@@ -550,7 +538,7 @@ example : 1 < 2 := by
 ```
 
 # calc
-Defined in: `calcTactic`
+Defined in: `Lean.calcTactic`
 
 Step-wise reasoning over transitive relations.
 ```lean
@@ -3568,15 +3556,26 @@ Defined in: `Lean.Parser.Tactic.renameI`
 # repeat
 Defined in: `Lean.Parser.Tactic.tacticRepeat_`
 
-`repeat tac` repeatedly applies `tac` to the main goal until it fails.
-That is, if `tac` produces multiple subgoals, only subgoals up to the first failure will be visited.
-The `Std` library provides `repeat'` which repeats separately in each subgoal.
+`repeat tac` repeatedly applies `tac` so long as it succeeds.
+The tactic `tac` may be a tactic sequence, and if `tac` fails at any point in its execution,
+`repeat` will revert any partial changes that `tac` made to the tactic state.
+
+The tactic `tac` should eventually fail, otherwise `repeat tac` will run indefinitely.
+
+See also:
+* `try tac` is like `repeat tac` but will apply `tac` at most once.
+* `repeat' tac` recursively applies `tac` to each goal.
+* `first | tac1 | tac2` implements the backtracking used by `repeat`
 
 # repeat'
 Defined in: `Lean.Parser.Tactic.repeat'`
 
-`repeat' tac` runs `tac` on all of the goals to produce a new list of goals,
-then runs `tac` again on all of those goals, and repeats until `tac` fails on all remaining goals.
+`repeat' tac` recursively applies `tac` on all of the goals so long as it succeeds.
+That is to say, if `tac` produces multiple subgoals, then `repeat' tac` is applied to each of them.
+
+See also:
+* `repeat tac` simply repeatedly applies `tac`.
+* `repeat1' tac` is `repeat' tac` but requires that `tac` succeed for some goal at least once.
 
 # repeat1
 Defined in: `Mathlib.Tactic.tacticRepeat1_`
@@ -3587,8 +3586,12 @@ the tactic is applied recursively to the generated subgoals until it eventually 
 # repeat1'
 Defined in: `Lean.Parser.Tactic.repeat1'`
 
-`repeat1' tac` applies `tac` to main goal at least once. If the application succeeds,
-the tactic is applied recursively to the generated subgoals until it eventually fails.
+`repeat1' tac` recursively applies to `tac` on all of the goals so long as it succeeds,
+but `repeat1' tac` fails if `tac` succeeds on none of the initial goals.
+
+See also:
+* `repeat tac` simply applies `tac` repeatedly.
+* `repeat' tac` is like `repeat1' tac` but it does not require that `tac` succeed at least once.
 
 # replace
 Defined in: `Mathlib.Tactic.replace'`
@@ -4264,7 +4267,7 @@ Defined in: `RatFunc.tacticSmul_tac`
 Solve equations for `RatFunc K` by applying `RatFunc.induction_on`.
 
 # solve
-Defined in: `solve`
+Defined in: `Lean.solveTactic`
 
 Similar to `first`, but succeeds only if one the given tactics solves the current goal.
 
@@ -4303,7 +4306,7 @@ Optional arguments passed via a configuration argument as `solve_by_elim (config
   but it is often useful to change to `.reducible`,
   so semireducible definitions will not be unfolded when trying to apply a lemma.
 
-See also the doc-comment for `Std.Tactic.BacktrackConfig` for the options
+See also the doc-comment for `Lean.Meta.Tactic.Backtrack.BacktrackConfig` for the options
 `proc`, `suspend`, and `discharge` which allow further customization of `solve_by_elim`.
 Both `apply_assumption` and `apply_rules` are implemented via these hooks.
 
@@ -5000,6 +5003,9 @@ concatenating all goals produced by `tac'`.
 
 syntax ... [Lean.Parser.Tactic.unknown]
 
+syntax ... [Lean.cdot]
+`· tac` focuses on the main goal and tries to solve it using `tac`, or else fails.
+
 syntax ... [Mathlib.Tactic.Says.says]
 If you write `X says`, where `X` is a tactic that produces a "Try this: Y" message,
 then you will get a message "Try this: X says Y".
@@ -5012,9 +5018,5 @@ simp? [X] says simp only [X, Y, Z]
 ```
 
 If you use `set_option says.verify true` (set automatically during CI) then `X says Y`
-runs `X` and verifies that it still prints "Try this: Y".
-
-syntax ... [cdot]
-`· tac` focuses on the main goal and tries to solve it using `tac`, or else fails.
-
+runs `X` and verifies that it still prints "Try this: Y".  
 
