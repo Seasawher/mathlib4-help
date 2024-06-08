@@ -3495,6 +3495,13 @@ Defined in: `Lean.Parser.Tactic.tacticRefine_lift'_`
 
 Similar to `refine_lift`, but using `refine'`
 
+# refold_let
+Defined in: `Mathlib.Tactic.refoldLetStx`
+
+`refold_let x y z at loc` looks for the bodies of local definitions `x`, `y`, and `z` at the given
+location and replaces them with `x`, `y`, or `z`. This is the inverse of "zeta reduction."
+This also exists as a `conv`-mode tactic.
+
 # rel
 Defined in: `Mathlib.Tactic.GCongr.«tacticRel[_]»`
 
