@@ -2319,6 +2319,40 @@ in complete and conditionally complete lattices but let automation fill automati
 boundedness proofs in complete lattices, we use the tactic `isBoundedDefault` in the statements,
 in the form `(hf : f.IsBounded (≥) := by isBoundedDefault)`.
 
+# itauto
+Defined in: `Mathlib.Tactic.ITauto.itauto`
+
+A decision procedure for intuitionistic propositional logic. Unlike `finish` and `tauto!` this
+tactic never uses the law of excluded middle (without the `!` option), and the proof search is
+tailored for this use case. (`itauto!` will work as a classical SAT solver, but the algorithm is
+not very good in this situation.)
+
+```lean
+example (p : Prop) : ¬ (p ↔ ¬ p) := by itauto
+```
+
+`itauto [a, b]` will additionally attempt case analysis on `a` and `b` assuming that it can derive
+`Decidable a` and `Decidable b`. `itauto *` will case on all decidable propositions that it can
+find among the atomic propositions, and `itauto! *` will case on all propositional atoms.
+*Warning:* This can blow up the proof search, so it should be used sparingly.
+
+# itauto!
+Defined in: `Mathlib.Tactic.ITauto.itauto!`
+
+A decision procedure for intuitionistic propositional logic. Unlike `finish` and `tauto!` this
+tactic never uses the law of excluded middle (without the `!` option), and the proof search is
+tailored for this use case. (`itauto!` will work as a classical SAT solver, but the algorithm is
+not very good in this situation.)
+
+```lean
+example (p : Prop) : ¬ (p ↔ ¬ p) := by itauto
+```
+
+`itauto [a, b]` will additionally attempt case analysis on `a` and `b` assuming that it can derive
+`Decidable a` and `Decidable b`. `itauto *` will case on all decidable propositions that it can
+find among the atomic propositions, and `itauto! *` will case on all propositional atoms.
+*Warning:* This can blow up the proof search, so it should be used sparingly.
+
 # iterate
 Defined in: `Lean.Parser.Tactic.tacticIterate____`
 
