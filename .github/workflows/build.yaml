@@ -28,6 +28,7 @@ jobs:
         uses: leanprover/lean-action@main
         with:
           test: false
+          use-github-cache: false
 
       - name: generate markdown file
         run: lake env lean --run Tactic.lean > src/tactics.md
