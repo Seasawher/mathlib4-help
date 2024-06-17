@@ -1378,6 +1378,11 @@ Defined in: `Lean.Parser.Tactic.delta`
 This is a low-level tactic, it will expose how recursive definitions have been
 compiled by Lean.
 
+# discrete_cases
+Defined in: `CategoryTheory.Discrete.tacticDiscrete_cases`
+
+A simple tactic to run `cases` on any `Discrete α` hypotheses.
+
 # done
 Defined in: `Lean.Parser.Tactic.done`
 
