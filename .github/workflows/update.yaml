@@ -17,6 +17,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      issues: write
     outputs:
       updated: ${{ steps.update-tactic-list.outputs.files_changed }}
     steps:
@@ -26,6 +27,8 @@ jobs:
       - name: Update Lean project
         id: update-lean-mathlib
         uses: oliver-butterley/lean-update@v1-alpha
+        with:
+          on_update_fails: issue
 
       - name: When update succeeds generate markdown file
         if: steps.update-lean-mathlib.outputs.result == 'update-success'
