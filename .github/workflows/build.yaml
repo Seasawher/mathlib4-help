@@ -30,7 +30,7 @@ jobs:
           test: false
 
       - name: generate markdown file
-        run: lake env lean --run Main.lean > src/tactics.md
+        run: lake env lean --run Tactic.lean > src/tactics.md
 
       - name: run python script
         run: python3 script.py

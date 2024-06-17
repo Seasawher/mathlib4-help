@@ -12,6 +12,6 @@ First, install Lean and Python 3.10, and then run the following commands:
 
 ```bash
 rm .\src\tactics.md
-lake env lean --run Main.lean > src/tactics.md
+lake env lean --run Tactic.lean > src/tactics.md
 python3 script.py
 ```

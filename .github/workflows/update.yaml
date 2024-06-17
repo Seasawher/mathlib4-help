@@ -34,7 +34,7 @@ jobs:
         if: steps.update-lean-mathlib.outputs.result == 'update-success'
         id: update-tactic-list
         run: |
-          lake env lean --run Main.lean > src/tactics.md
+          lake env lean --run Tactic.lean > src/tactics.md
           python3 script.py
           if [[ -n $(git diff -w "src/tactics.md") ]]; then
             echo "files_changed=true"  >> "$GITHUB_OUTPUT"
