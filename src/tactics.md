@@ -1378,11 +1378,6 @@ Defined in: `Lean.Parser.Tactic.delta`
 This is a low-level tactic, it will expose how recursive definitions have been
 compiled by Lean.
 
-# discrete_cases
-Defined in: `CategoryTheory.Discrete.tacticDiscrete_cases`
-
-A simple tactic to run `cases` on any `Discrete α` hypotheses.
-
 # done
 Defined in: `Lean.Parser.Tactic.done`
 
@@ -4606,6 +4601,9 @@ that is, a relation which has a transitivity lemma tagged with the attribute [tr
 
 * `trans s` replaces the goal with the two subgoals `t ~ s` and `s ~ u`.
 * If `s` is omitted, then a metavariable is used instead.
+
+Additionally, `trans` also applies to a goal whose target has the form `t → u`,
+in which case it replaces the goal with `t → s` and `s → u`.
 
 # transitivity
 Defined in: `Mathlib.Tactic.tacticTransitivity___`
