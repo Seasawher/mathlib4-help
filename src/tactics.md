@@ -30,6 +30,19 @@ Defined in: `Lean.Parser.Tactic.paren`
 the goal be closed at the end like `· tacs`. Like `by` itself, the tactics
 can be either separated by newlines or `;`.
 
+# <;>
+Defined in: `Batteries.Tactic.seq_focus`
+
+`t <;> [t1; t2; ...; tn]` focuses on the first goal and applies `t`, which should result in `n`
+subgoals. It then applies each `ti` to the corresponding goal and collects the resulting
+subgoals.
+
+# <;>
+Defined in: `Lean.Parser.Tactic.«tactic_<;>_»`
+
+`tac <;> tac'` runs `tac` on the main goal and `tac'` on each produced goal,
+concatenating all goals produced by `tac'`.
+
 # _
 Defined in: `Batteries.Tactic.tactic_`
 
@@ -1338,6 +1351,63 @@ example : False ∨ True := by
   | apply Or.inr; trivial; dbg_trace "right"
 ```
 
+# decide
+Defined in: `Lean.Parser.Tactic.decide`
+
+`decide` attempts to prove the main goal (with target type `p`) by synthesizing an instance of `Decidable p`
+and then reducing that instance to evaluate the truth value of `p`.
+If it reduces to `isTrue h`, then `h` is a proof of `p` that closes the goal.
+
+Limitations:
+- The target is not allowed to contain local variables or metavariables.
+  If there are local variables, you can try first using the `revert` tactic with these local variables
+  to move them into the target, which may allow `decide` to succeed.
+- Because this uses kernel reduction to evaluate the term, `Decidable` instances defined
+  by well-founded recursion might not work, because evaluating them requires reducing proofs.
+  The kernel can also get stuck reducing `Decidable` instances with `Eq.rec` terms for rewriting propositions.
+  These can appear for instances defined using tactics (such as `rw` and `simp`).
+  To avoid this, use definitions such as `decidable_of_iff` instead.
+
+## Examples
+
+Proving inequalities:
+```lean
+example : 2 + 2 ≠ 5 := by decide
+```
+
+Trying to prove a false proposition:
+```lean
+example : 1 ≠ 1 := by decide
+/-
+tactic 'decide' proved that the proposition
+  1 ≠ 1
+is false
+-/
+```
+
+Trying to prove a proposition whose `Decidable` instance fails to reduce
+```lean
+opaque unknownProp : Prop
+
+open scoped Classical in
+example : unknownProp := by decide
+/-
+tactic 'decide' failed for proposition
+  unknownProp
+since its 'Decidable' instance reduced to
+  Classical.choice ⋯
+rather than to the 'isTrue' constructor.
+-/
+```
+
+## Properties and relations
+
+For equality goals for types with decidable equality, usually `rfl` can be used in place of `decide`.
+```lean
+example : 1 + 1 = 2 := by decide
+example : 1 + 1 = 2 := by rfl
+```
+
 # decreasing_tactic
 Defined in: `tacticDecreasing_tactic`
 
@@ -1451,6 +1521,36 @@ Defined in: `Tactic.Elementwise.tacticElementwise___`
 # elementwise!
 Defined in: `Tactic.Elementwise.tacticElementwise!___`
 
+
+# else
+Defined in: `Lean.Parser.Tactic.tacDepIfThenElse`
+
+In tactic mode, `if h : t then tac1 else tac2` can be used as alternative syntax for:
+```lean
+by_cases h : t
+· tac1
+· tac2
+```
+It performs case distinction on `h : t` or `h : ¬t` and `tac1` and `tac2` are the subproofs.
+
+You can use `?_` or `_` for either subproof to delay the goal to after the tactic, but
+if a tactic sequence is provided for `tac1` or `tac2` then it will require the goal to be closed
+by the end of the block.
+
+# else
+Defined in: `Lean.Parser.Tactic.tacIfThenElse`
+
+In tactic mode, `if t then tac1 else tac2` is alternative syntax for:
+```lean
+by_cases t
+· tac1
+· tac2
+```
+It performs case distinction on `h† : t` or `h† : ¬t`, where `h†` is an anonymous
+hypothesis, and `tac1` and `tac2` are the subproofs. (It doesn't actually use
+nondependent `if`, since this wouldn't add anything to the context and hence would be
+useless for proving theorems. To actually insert an `ite` application use
+`refine if t then ?_ else ?_`.)
 
 # eq_refl
 Defined in: `Lean.Parser.Tactic.eqRefl`
@@ -2199,6 +2299,25 @@ be a `let` or function type.
   | ...
   ```
 
+# intro
+Defined in: `Lean.Parser.Tactic.introMatch`
+
+The tactic
+```
+intro
+| pat1 => tac1
+| pat2 => tac2
+```
+is the same as:
+```lean
+intro x
+match x with
+| pat1 => tac1
+| pat2 => tac2
+```
+That is, `intro` can be followed by match arms and it introduces the values while
+doing a pattern match. This is equivalent to `fun` with match arms in term mode.
+
 # intros
 Defined in: `Lean.Parser.Tactic.intros`
 
@@ -2747,6 +2866,22 @@ Assuming there are `n` goals, `map_tacs [t1; t2; ...; tn]` applies each `ti` to 
 goal and leaves the resulting subgoals.
 
 # match
+Defined in: `Lean.Parser.Tactic.match`
+
+`match` performs case analysis on one or more expressions.
+See [Induction and Recursion][tpil4].
+The syntax for the `match` tactic is the same as term-mode `match`, except that
+the match arms are tactics instead of expressions.
+```lean
+example (n : Nat) : n = n := by
+  match n with
+  | 0 => rfl
+  | i+1 => simp
+```
+
+[tpil4]: https://lean-lang.org/theorem_proving_in_lean4/induction_and_recursion.html
+
+# match
 Defined in: `Batteries.Tactic.«tacticMatch_,,With.»`
 
 The syntax `match ⋯ with.` has been deprecated in favor of `nomatch ⋯`.
@@ -2892,6 +3027,22 @@ There is also a general tactic for a "binary associative commutative operation":
 In this case the syntax requires providing first a term whose head symbol is the operation.
 E.g. `move_oper HAdd.hAdd [...]` is the same as `move_add`, while `move_oper Max.max [...]`
 rearranges `max`s.
+
+# native_decide
+Defined in: `Lean.Parser.Tactic.nativeDecide`
+
+`native_decide` will attempt to prove a goal of type `p` by synthesizing an instance
+of `Decidable p` and then evaluating it to `isTrue ..`. Unlike `decide`, this
+uses `#eval` to evaluate the decidability instance.
+
+This should be used with care because it adds the entire lean compiler to the trusted
+part, and the axiom `ofReduceBool` will show up in `#print axioms` for theorems using
+this method or anything that transitively depends on them. Nevertheless, because it is
+compiled, this can be significantly more efficient than using `decide`, and for very
+large computations this is one way to run external programs and trust the result.
+```lean
+example : (List.range 1000).length = 1000 := by native_decide
+```
 
 # next
 Defined in: `Lean.Parser.Tactic.«tacticNext_=>_»`
@@ -3166,6 +3317,12 @@ bottom.
 
 The goal is not required to be solved and any resulting subgoals are inserted back into the
 list of goals, replacing the chosen goal.
+
+# open
+Defined in: `Lean.Parser.Tactic.open`
+
+`open Foo in tacs` (the tactic) acts like `open Foo` at command level,
+but it opens a namespace only within the tactics `tacs`.
 
 # peel
 Defined in: `Mathlib.Tactic.Peel.peel`
@@ -3499,6 +3656,30 @@ and similarly subtraction.
 
 This tactic uses the type of the subexpression to figure out if it is indeed of positive
 characteristic, for improved performance compared to trying to synthesise a `CharP` instance.
+The variant `reduce_mod_char!` also tries to use `CharP R n` hypotheses in the context.
+(Limitations of the typeclass system mean the tactic can't search for a `CharP R n` instance if
+`n` is not yet known; use `have : CharP R n := inferInstance; reduce_mod_char!` as a workaround.)
+
+# reduce_mod_char!
+Defined in: `Tactic.ReduceModChar.reduce_mod_char!`
+
+The tactic `reduce_mod_char` looks for numeric expressions in characteristic `p`
+and reduces these to lie between `0` and `p`.
+
+For example:
+```lean
+example : (5 : ZMod 4) = 1 := by reduce_mod_char
+example : (X ^ 2 - 3 * X + 4 : (ZMod 4)[X]) = X ^ 2 + X := by reduce_mod_char
+```
+
+It also handles negation, turning it into multiplication by `p - 1`,
+and similarly subtraction.
+
+This tactic uses the type of the subexpression to figure out if it is indeed of positive
+characteristic, for improved performance compared to trying to synthesise a `CharP` instance.
+The variant `reduce_mod_char!` also tries to use `CharP R n` hypotheses in the context.
+(Limitations of the typeclass system mean the tactic can't search for a `CharP R n` instance if
+`n` is not yet known; use `have : CharP R n := inferInstance; reduce_mod_char!` as a workaround.)
 
 # refine
 Defined in: `Lean.Parser.Tactic.refine`
@@ -3963,6 +4144,22 @@ when working on a long tactic proof, by using `save` after expensive tactics.
 (TODO: do this automatically and transparently so that users don't have to use
 this combinator explicitly.)
 
+# says
+Defined in: `Mathlib.Tactic.Says.says`
+
+If you write `X says`, where `X` is a tactic that produces a "Try this: Y" message,
+then you will get a message "Try this: X says Y".
+Once you've clicked to replace `X says` with `X says Y`,
+afterwards `X says Y` will only run `Y`.
+
+The typical usage case is:
+```lean
+simp? [X] says simp only [X, Y, Z]
+```
+
+If you use `set_option says.verify true` (set automatically during CI) then `X says Y`
+runs `X` and verifies that it still prints "Try this: Y".
+
 # set
 Defined in: `Mathlib.Tactic.setTactic`
 
@@ -3970,6 +4167,12 @@ Defined in: `Mathlib.Tactic.setTactic`
 # set!
 Defined in: `Mathlib.Tactic.tacticSet!_`
 
+
+# set_option
+Defined in: `Lean.Parser.Tactic.set_option`
+
+`set_option opt val in tacs` (the tactic) acts like `set_option opt val` at the command level,
+but it sets the option only within the tactics `tacs`.
 
 # show
 Defined in: `Lean.Parser.Tactic.tacticShow_`
@@ -4895,167 +5098,11 @@ propositions concerning `z` will still be over `Int`.
 `zify` changes propositions about `Nat` (the subtype) to propositions about `Int` (the supertype),
 without changing the type of any variable.
 
-syntax ... [Batteries.Tactic.seq_focus]
-`t <;> [t1; t2; ...; tn]` focuses on the first goal and applies `t`, which should result in `n`
-subgoals. It then applies each `ti` to the corresponding goal and collects the resulting
-subgoals.
-
-syntax ... [Lean.Parser.Tactic.decide]
-`decide` attempts to prove the main goal (with target type `p`) by synthesizing an instance of `Decidable p`
-and then reducing that instance to evaluate the truth value of `p`.
-If it reduces to `isTrue h`, then `h` is a proof of `p` that closes the goal.
-
-Limitations:
-- The target is not allowed to contain local variables or metavariables.
-  If there are local variables, you can try first using the `revert` tactic with these local variables
-  to move them into the target, which may allow `decide` to succeed.
-- Because this uses kernel reduction to evaluate the term, `Decidable` instances defined
-  by well-founded recursion might not work, because evaluating them requires reducing proofs.
-  The kernel can also get stuck reducing `Decidable` instances with `Eq.rec` terms for rewriting propositions.
-  These can appear for instances defined using tactics (such as `rw` and `simp`).
-  To avoid this, use definitions such as `decidable_of_iff` instead.
-
-## Examples
-
-Proving inequalities:
-```lean
-example : 2 + 2 ≠ 5 := by decide
-```
-
-Trying to prove a false proposition:
-```lean
-example : 1 ≠ 1 := by decide
-/-
-tactic 'decide' proved that the proposition
-  1 ≠ 1
-is false
--/
-```
-
-Trying to prove a proposition whose `Decidable` instance fails to reduce
-```lean
-opaque unknownProp : Prop
-
-open scoped Classical in
-example : unknownProp := by decide
-/-
-tactic 'decide' failed for proposition
-  unknownProp
-since its 'Decidable' instance reduced to
-  Classical.choice ⋯
-rather than to the 'isTrue' constructor.
--/
-```
-
-## Properties and relations
-
-For equality goals for types with decidable equality, usually `rfl` can be used in place of `decide`.
-```lean
-example : 1 + 1 = 2 := by decide
-example : 1 + 1 = 2 := by rfl
-```
-
-syntax ... [Lean.Parser.Tactic.introMatch]
-The tactic
-```
-intro
-| pat1 => tac1
-| pat2 => tac2
-```
-is the same as:
-```lean
-intro x
-match x with
-| pat1 => tac1
-| pat2 => tac2
-```
-That is, `intro` can be followed by match arms and it introduces the values while
-doing a pattern match. This is equivalent to `fun` with match arms in term mode.
-
-syntax ... [Lean.Parser.Tactic.match]
-`match` performs case analysis on one or more expressions.
-See [Induction and Recursion][tpil4].
-The syntax for the `match` tactic is the same as term-mode `match`, except that
-the match arms are tactics instead of expressions.
-```lean
-example (n : Nat) : n = n := by
-  match n with
-  | 0 => rfl
-  | i+1 => simp
-```
-
-[tpil4]: https://lean-lang.org/theorem_proving_in_lean4/induction_and_recursion.html
-
-syntax ... [Lean.Parser.Tactic.nativeDecide]
-`native_decide` will attempt to prove a goal of type `p` by synthesizing an instance
-of `Decidable p` and then evaluating it to `isTrue ..`. Unlike `decide`, this
-uses `#eval` to evaluate the decidability instance.
-
-This should be used with care because it adds the entire lean compiler to the trusted
-part, and the axiom `ofReduceBool` will show up in `#print axioms` for theorems using
-this method or anything that transitively depends on them. Nevertheless, because it is
-compiled, this can be significantly more efficient than using `decide`, and for very
-large computations this is one way to run external programs and trust the result.
-```lean
-example : (List.range 1000).length = 1000 := by native_decide
-```
-
 syntax ... [Lean.Parser.Tactic.nestedTactic]
-
-syntax ... [Lean.Parser.Tactic.open]
-`open Foo in tacs` (the tactic) acts like `open Foo` at command level,
-but it opens a namespace only within the tactics `tacs`.
-
-syntax ... [Lean.Parser.Tactic.set_option]
-`set_option opt val in tacs` (the tactic) acts like `set_option opt val` at the command level,
-but it sets the option only within the tactics `tacs`.
-
-syntax ... [Lean.Parser.Tactic.tacDepIfThenElse]
-In tactic mode, `if h : t then tac1 else tac2` can be used as alternative syntax for:
-```lean
-by_cases h : t
-· tac1
-· tac2
-```
-It performs case distinction on `h : t` or `h : ¬t` and `tac1` and `tac2` are the subproofs.
-
-You can use `?_` or `_` for either subproof to delay the goal to after the tactic, but
-if a tactic sequence is provided for `tac1` or `tac2` then it will require the goal to be closed
-by the end of the block.
-
-syntax ... [Lean.Parser.Tactic.tacIfThenElse]
-In tactic mode, `if t then tac1 else tac2` is alternative syntax for:
-```lean
-by_cases t
-· tac1
-· tac2
-```
-It performs case distinction on `h† : t` or `h† : ¬t`, where `h†` is an anonymous
-hypothesis, and `tac1` and `tac2` are the subproofs. (It doesn't actually use
-nondependent `if`, since this wouldn't add anything to the context and hence would be
-useless for proving theorems. To actually insert an `ite` application use
-`refine if t then ?_ else ?_`.)
-
-syntax ... [Lean.Parser.Tactic.«tactic_<;>_»]
-`tac <;> tac'` runs `tac` on the main goal and `tac'` on each produced goal,
-concatenating all goals produced by `tac'`.
 
 syntax ... [Lean.Parser.Tactic.unknown]
 
 syntax ... [Lean.cdot]
 `· tac` focuses on the main goal and tries to solve it using `tac`, or else fails.
 
-syntax ... [Mathlib.Tactic.Says.says]
-If you write `X says`, where `X` is a tactic that produces a "Try this: Y" message,
-then you will get a message "Try this: X says Y".
-Once you've clicked to replace `X says` with `X says Y`,
-afterwards `X says Y` will only run `Y`.
-
-The typical usage case is:
-```lean
-simp? [X] says simp only [X, Y, Z]
-```
-
-If you use `set_option says.verify true` (set automatically during CI) then `X says Y`
-runs `X` and verifies that it still prints "Try this: Y".  
 
