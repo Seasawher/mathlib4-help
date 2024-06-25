@@ -2173,8 +2173,11 @@ The `hint` tactic tries every tactic registered using `register_hint tac`,
 and reports any that succeed.
 
 # html!
-Defined in: `ProofWidgets.htmlTac`
+Defined in: `ProofWidgets.HtmlCommand.htmlTac`
 
+The `html!` tactic is deprecated and does nothing.
+If you have a use for it,
+please open an issue on https://github.com/leanprover-community/ProofWidgets4.
 
 # induction
 Defined in: `Lean.Parser.Tactic.induction`
