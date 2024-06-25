@@ -5105,4 +5105,3 @@ syntax ... [Lean.Parser.Tactic.unknown]
 syntax ... [Lean.cdot]
 `· tac` focuses on the main goal and tries to solve it using `tac`, or else fails.
 
-
