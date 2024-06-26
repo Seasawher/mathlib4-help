@@ -1872,6 +1872,10 @@ Defined in: `Lean.Parser.Tactic.focus`
 `focus tac` focuses on the main goal, suppressing all other goals, and runs `tac` on it.
 Usually `· tac`, which enforces that the goal is closed by `tac`, should be preferred.
 
+# forward
+Defined in: `Aesop.Frontend.tacticForward___`
+
+
 # frac_tac
 Defined in: `RatFunc.tacticFrac_tac`
 
@@ -2173,11 +2177,8 @@ The `hint` tactic tries every tactic registered using `register_hint tac`,
 and reports any that succeed.
 
 # html!
-Defined in: `ProofWidgets.HtmlCommand.htmlTac`
+Defined in: `ProofWidgets.htmlTac`
 
-The `html!` tactic is deprecated and does nothing.
-If you have a use for it,
-please open an issue on https://github.com/leanprover-community/ProofWidgets4.
 
 # induction
 Defined in: `Lean.Parser.Tactic.induction`
@@ -4134,6 +4135,10 @@ to prevent `rw_search` from using the names theorems.
 Defined in: `Lean.Parser.Tactic.tacticRwa__`
 
 `rwa` calls `rw`, then closes any remaining goals using `assumption`.
+
+# saturate
+Defined in: `Aesop.Frontend.tacticSaturate_____`
+
 
 # save
 Defined in: `Lean.Parser.Tactic.save`
