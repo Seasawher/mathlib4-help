@@ -2177,8 +2177,11 @@ The `hint` tactic tries every tactic registered using `register_hint tac`,
 and reports any that succeed.
 
 # html!
-Defined in: `ProofWidgets.htmlTac`
+Defined in: `ProofWidgets.HtmlCommand.htmlTac`
 
+The `html!` tactic is deprecated and does nothing.
+If you have a use for it,
+please open an issue on https://github.com/leanprover-community/ProofWidgets4.
 
 # induction
 Defined in: `Lean.Parser.Tactic.induction`
@@ -3211,16 +3214,109 @@ Basic version of `norm_num` that does not call `simp`.
 # nth_rewrite
 Defined in: `Mathlib.Tactic.nthRewriteSeq`
 
-`nth_rewrite` is a variant of `rewrite` that only changes the nth occurrence of the expression
-to be rewritten.
+`nth_rewrite` is a variant of `rewrite` that only changes the `n`ᵗʰ _occurrence_ of the
+expression to be rewritten. `nth_rewrite n [eq₁, eq₂,..., eqₘ]` will rewrite the `n`ᵗʰ _occurrence_
+of each of the `m` equalities `eqᵢ`in that order. Occurrences are counted beginning with `1` in
+order of precedence.
 
-Note: The occurrences are counted beginning with `1` and not `0`, this is different than in
-mathlib3. The translation will be handled by mathport.
+For example,
+```lean
+example (h : a = 1) : a + a + a + a + a = 5 := by
+  nth_rewrite 2 [h]
+/-
+a: ℕ
+h: a = 1
+⊢ a + 1 + a + a + a = 5
+-/
+```
+Notice that the second occurrence of `a` from the left has been rewritten by `nth_rewrite`.
+
+To understand the importance of order of precedence, consider the example below
+```lean
+example (a b c : Nat) : (a + b) + c = (b + a) + c := by
+  nth_rewrite 2 [Nat.add_comm] -- ⊢ (b + a) + c = (b + a) + c
+```
+Here, although the occurrence parameter is `2`, `(a + b)` is rewritten to `(b + a)`. This happens
+because in order of precedence, the first occurrence of `_ + _` is the one that adds `a + b` to `c`.
+The occurrence in `a + b` counts as the second occurrence.
+
+If a term `t` is introduced by rewriting with `eqᵢ`, then this instance of `t` will be counted as an
+_occurrence_ of `t` for all subsequent rewrites of `t` with `eqⱼ` for `j > i`. This behaviour is
+illustrated by the example below
+```lean
+example (h : a = a + b) : a + a + a + a + a = 0 := by
+  nth_rewrite 3 [h, h]
+/-
+a b: ℕ
+h: a = a + b
+⊢ a + a + (a + b + b) + a + a = 0
+-/
+```
+Here, the first `nth_rewrite` with `h` introduces an additional occurrence of `a` in the goal.
+That is, the goal state after the first rewrite looks like below
+```lean
+/-
+a b: ℕ
+h: a = a + b
+⊢ a + a + (a + b) + a + a = 0
+-/
+```
+This new instance of `a` also turns out to be the third _occurrence_ of `a`.  Therefore,
+the next `nth_rewrite` with `h` rewrites this `a`.
 
 # nth_rw
 Defined in: `Mathlib.Tactic.nthRwSeq`
 
-`nth_rw` is like `nth_rewrite`, but also tries to close the goal by trying `rfl` afterwards.
+`nth_rw` is a variant of `rw` that only changes the `n`ᵗʰ _occurrence_ of the expression to be
+rewritten. Like `rw`, and unlike `nth_rewrite`, it will try to close the goal by trying `rfl`
+afterwards. `nth_rw n [eq₁, eq₂,..., eqₘ]` will rewrite the `n`ᵗʰ _occurrence_ of each of the
+`m` equalities `eqᵢ`in that order. Occurrences are counted beginning with `1` in
+order of precedence. For example,
+```lean
+example (h : a = 1) : a + a + a + a + a = 5 := by
+  nth_rw 2 [h]
+/-
+a: ℕ
+h: a = 1
+⊢ a + 1 + a + a + a = 5
+-/
+```
+Notice that the second occurrence of `a` from the left has been rewritten by `nth_rewrite`.
+
+To understand the importance of order of precedence, consider the example below
+```lean
+example (a b c : Nat) : (a + b) + c = (b + a) + c := by
+  nth_rewrite 2 [Nat.add_comm] -- ⊢ (b + a) + c = (b + a) + c
+```
+Here, although the occurrence parameter is `2`, `(a + b)` is rewritten to `(b + a)`. This happens
+because in order of precedence, the first occurrence of `_ + _` is the one that adds `a + b` to `c`.
+The occurrence in `a + b` counts as the second occurrence.
+
+If a term `t` is introduced by rewriting with `eqᵢ`, then this instance of `t` will be counted as an
+_occurrence_ of `t` for all subsequent rewrites of `t` with `eqⱼ` for `j > i`. This behaviour is
+illustrated by the example below
+```lean
+example (h : a = a + b) : a + a + a + a + a = 0 := by
+  nth_rw 3 [h, h]
+/-
+a b: ℕ
+h: a = a + b
+⊢ a + a + (a + b + b) + a + a = 0
+-/
+```
+Here, the first `nth_rw` with `h` introduces an additional occurrence of `a` in the goal. That is,
+the goal state after the first rewrite looks like below
+```lean
+/-
+a b: ℕ
+h: a = a + b
+⊢ a + a + (a + b) + a + a = 0
+-/
+```
+This new instance of `a` also turns out to be the third _occurrence_ of `a`.  Therefore,
+the next `nth_rw` with `h` rewrites this `a`.
+
+Further, `nth_rw` will close the remaining goal with `rfl` if possible.
 
 # observe
 Defined in: `Mathlib.Tactic.LibrarySearch.observe`
