@@ -1318,15 +1318,25 @@ These are passed to `congr!`. See `Congr!.Config` for options.
 # convert_to
 Defined in: `Mathlib.Tactic.convertTo`
 
-`convert_to g using n` attempts to change the current goal to `g`, but unlike `change`,
-it will generate equality proof obligations using `congr! n` to resolve discrepancies.
-`convert_to g` defaults to using `congr! 1`.
-`convert_to` is similar to `convert`, but `convert_to` takes a type (the desired subgoal) while
-`convert` takes a proof term.
-That is, `convert_to g using n` is equivalent to `convert (?_ : g) using n`.
+The `convert_to` tactic is for changing the type of the target or a local hypothesis,
+but unlike the `change` tactic it will generate equality proof obligations using `congr!`
+to resolve discrepancies.
 
-The syntax for `convert_to` is the same as for `convert`, and it has variations such as
+* `convert_to ty` changes the target to `ty`
+* `convert_to ty using n` uses `congr! n` instead of `congr! 1`
+* `convert_to ty at h` changes the type of the local hypothesis `h` to `ty`.
+  Any remaining `congr!` goals come first.
+
+Operating on the target, the tactic `convert_to ty using n`
+is the same as `convert (?_ : ty) using n`.
+The difference is that `convert_to` takes a type but `convert` takes a proof term.
+
+Except for it also being able to operate on local hypotheses,
+the syntax for `convert_to` is the same as for `convert`, and it has variations such as
 `convert_to ← g` and `convert_to (config := {transparency := .default}) g`.
+
+Note that `convert_to ty at h` may leave a copy of `h` if a later local hypotheses or the target
+depends on it, just like in `rw` or `simp`.
 
 # count_heartbeats
 Defined in: `Mathlib.CountHeartbeats.tacticCount_heartbeats_`
@@ -4739,6 +4749,38 @@ Defined in: `Lean.Parser.Tactic.tacticStop_`
 it is defined as `repeat sorry`.
 It is useful when working on the middle of a complex proofs,
 and less messy than commenting the remainder of the proof.
+
+# subsingleton
+Defined in: `Mathlib.Tactic.subsingletonStx`
+
+The `subsingleton` tactic tries to prove a goal of the form `x = y` or `HEq x y`
+using the fact that the types involved are *subsingletons*
+(a type with exactly zero or one terms).
+To a first approximation, it does `apply Subsingleton.elim`.
+As a nicety, `subsingleton` first runs the `intros` tactic.
+
+- If the goal is an equality, it either closes the goal or fails.
+- `subsingleton [inst1, inst2, ...]` can be used to add additional `Subsingleton` instances
+  to the local context. This can be more flexible than
+  `have := inst1; have := inst2; ...; subsingleton` since the tactic does not require that
+  all placeholders be solved for.
+
+Techniques the `subsingleton` tactic can apply:
+- proof irrelevance
+- heterogenous proof irrelevance (via `proof_irrel_heq`)
+- using `Subsingleton` (via `Subsingleton.elim`)
+- proving `BEq` instances are equal if they are both lawful (via `lawful_beq_subsingleton`)
+
+### Properties
+
+The tactic is careful not to accidentally specialize `Sort _` to `Prop`,
+avoiding the following surprising behavior of `apply Subsingleton.elim`:
+```lean
+example (α : Sort _) (x y : α) : x = y := by apply Subsingleton.elim
+```
+The reason this `example` goes through is that
+it applies the `∀ (p : Prop), Subsingleton p` instance,
+specializing the universe level metavariable in `Sort _` to `0`.
 
 # subst
 Defined in: `Lean.Parser.Tactic.subst`
