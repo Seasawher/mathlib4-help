@@ -247,7 +247,11 @@ goal. Use this only for exploration! Nonterminal `aesop` is even worse than
 nonterminal `simp`.
 
 # aesop_unfold
-Defined in: `Aesop.«tacticAesop_unfold[_,,]»`
+Defined in: `Aesop.tacticAesop_unfold_`
+
+
+# aesop_unfold
+Defined in: `Aesop.tacticAesop_unfold_At_`
 
 
 # all_goals
