@@ -26,7 +26,7 @@ jobs:
 
       - name: Update Lean project
         id: update-lean-mathlib
-        uses: oliver-butterley/lean-update@use-github-cache
+        uses: oliver-butterley/lean-update@v1-alpha
         with:
           on_update_fails: issue
 
