@@ -11,3 +11,5 @@ build-dir = "book"
 
 [output.html]
 git-repository-url = "https://github.com/Seasawher/mathlib4-tactics"
+additional-css = ["theme/pagetoc.css"]
+additional-js = ["theme/pagetoc.js"]
