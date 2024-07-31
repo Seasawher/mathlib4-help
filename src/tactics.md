@@ -230,7 +230,6 @@ Defined in: `CategoryTheory.aesop_cat`
 
 A thin wrapper for `aesop` which adds the `CategoryTheory` rule set and
 allows `aesop` to look through semireducible definitions when calling `intros`.
-It also turns on `zetaDelta` in the `simp` config, allowing `aesop_cat` to unfold any `let`s.
 This tactic fails when it is unable to solve the goal, making it suitable for
 use in auto-params.
 
@@ -294,7 +293,7 @@ and first-order unification with dependent types.
 Defined in: `Mathlib.Tactic.applyWith`
 
 `apply (config := cfg) e` is like `apply e` but allows you to provide a configuration
-`cfg : ApplyConfig` to pass to the underlying apply operation.
+`cfg : ApplyConfig` to pass to the underlying `apply` operation.
 
 # apply?
 Defined in: `Lean.Parser.Tactic.apply?`
@@ -615,33 +614,6 @@ example (h : a > 0) : a / 5 > 0 := by
 ```
 
 # case
-Defined in: `Batteries.Tactic.casePatt`
-
-* `case _ : t => tac` finds the first goal that unifies with `t` and then solves it
-using `tac` or else fails. Like `show`, it changes the type of the goal to `t`.
-The `_` can optionally be a case tag, in which case it only looks at goals
-whose tag would be considered by `case` (goals with an exact tag match,
-followed by goals with the tag as a suffix, followed by goals with the tag as a prefix).
-
-* `case _ n₁ ... nₘ : t => tac` additionally names the `m` most recent hypotheses with
-inaccessible names to the given names. The names are renamed before matching against `t`.
-The `_` can optionally be a case tag.
-
-* `case _ : t := e` is short for `case _ : t => exact e`.
-
-* `case _ : t₁ | _ : t₂ | ... => tac`
-is equivalent to `(case _ : t₁ => tac); (case _ : t₂ => tac); ...`
-but with all matching done on the original list of goals --
-each goal is consumed as they are matched, so patterns may repeat or overlap.
-
-* `case _ : t` will make the matched goal be the first goal.
-`case _ : t₁ | _ : t₂ | ...` makes the matched goals be the first goals in the given order.
-
-* `case _ : t := _` and `case _ : t := ?m` are the same as `case _ : t` but in the `?m` case the
-goal tag is changed to `m`.
-In particular, the goal becomes metavariable `?m`.
-
-# case
 Defined in: `Lean.Parser.Tactic.case`
 
 * `case tag => tac` focuses on the goal with case name `tag` and solves it using `tac`,
@@ -657,15 +629,6 @@ Defined in: `Lean.Parser.Tactic.case'`
 has been solved after applying `tac`, nor admits the goal if `tac` failed.
 Recall that `case` closes the goal using `sorry` when `tac` fails, and
 the tactic execution is not interrupted.
-
-# case'
-Defined in: `Batteries.Tactic.casePatt'`
-
-`case' _ : t => tac` is similar to the `case _ : t => tac` tactic,
-but it does not ensure the goal has been solved after applying `tac`,
-nor does it admit the goal if `tac` failed.
-Recall that `case` closes the goal using `sorry` when `tac` fails,
-and the tactic execution is not interrupted.
 
 # cases
 Defined in: `Lean.Parser.Tactic.cases`
@@ -761,6 +724,24 @@ example (f : ℕ → ℕ) (x : ℕ)
     f x = x := by
   cc
 ```
+
+# cfc_cont_tac
+Defined in: `cfcContTac`
+
+A tactic used to automatically discharge goals relating to the continuous functional calculus,
+specifically concerning continuity of the functions involved.
+
+# cfc_tac
+Defined in: `cfcTac`
+
+A tactic used to automatically discharge goals relating to the continuous functional calculus,
+specifically whether the element satisfies the predicate.
+
+# cfc_zero_tac
+Defined in: `cfcZeroTac`
+
+A tactic used to automatically discharge goals relating to the non-unital continuous functional
+calculus, specifically concerning whether `f 0 = 0`.
 
 # change
 Defined in: `Lean.Parser.Tactic.change`
@@ -1462,6 +1443,11 @@ Defined in: `Lean.Parser.Tactic.delta`
 This is a low-level tactic, it will expose how recursive definitions have been
 compiled by Lean.
 
+# discrete_cases
+Defined in: `CategoryTheory.Discrete.tacticDiscrete_cases`
+
+A simple tactic to run `cases` on any `Discrete α` hypotheses.
+
 # done
 Defined in: `Lean.Parser.Tactic.done`
 
@@ -1890,6 +1876,10 @@ Usually `· tac`, which enforces that the goal is closed by `tac`, should be pre
 Defined in: `Aesop.Frontend.tacticForward___`
 
 
+# forward?
+Defined in: `Aesop.Frontend.tacticForward?___`
+
+
 # frac_tac
 Defined in: `RatFunc.tacticFrac_tac`
 
@@ -2293,11 +2283,6 @@ You can specify a name `h` for the new hypothesis,
 as `interval_cases h : n` or `interval_cases h : n using hl, hu`.
 
 # intro
-Defined in: `Batteries.Tactic.introDot`
-
-The syntax `intro.` is deprecated in favor of `nofun`.
-
-# intro
 Defined in: `Lean.Parser.Tactic.intro`
 
 Introduces one or more hypotheses, optionally naming and/or pattern-matching them.
@@ -2628,7 +2613,7 @@ goals over arbitrary types that instantiate `LinearOrderedCommRing`.
 An example:
 ```lean
 example (x y z : ℚ) (h1 : 2*x < 3*y) (h2 : -4*x + 2*z < 0)
-        (h3 : 12*y - 4* z < 0)  : False := by
+        (h3 : 12*y - 4* z < 0) : False := by
   linarith
 ```
 
@@ -2688,7 +2673,7 @@ goals over arbitrary types that instantiate `LinearOrderedCommRing`.
 An example:
 ```lean
 example (x y z : ℚ) (h1 : 2*x < 3*y) (h2 : -4*x + 2*z < 0)
-        (h3 : 12*y - 4* z < 0)  : False := by
+        (h3 : 12*y - 4* z < 0) : False := by
   linarith
 ```
 
@@ -2902,13 +2887,6 @@ example (n : Nat) : n = n := by
 
 [tpil4]: https://lean-lang.org/theorem_proving_in_lean4/induction_and_recursion.html
 
-# match
-Defined in: `Batteries.Tactic.«tacticMatch_,,With.»`
-
-The syntax `match ⋯ with.` has been deprecated in favor of `nomatch ⋯`.
-
-Both now support multiple discriminants.
-
 # match_target
 Defined in: `Mathlib.Tactic.tacticMatch_target_`
 
@@ -2989,6 +2967,11 @@ Defined in: `Mathlib.Tactic.Coherence.tacticMonoidal_coherence`
 
 Coherence tactic for monoidal categories.
 Use `pure_coherence` instead, which is a frontend to this one.
+
+# monoidal_nf
+Defined in: `tacticMonoidal_nf`
+
+Normalize the both sides of an equality.
 
 # monoidal_simps
 Defined in: `Mathlib.Tactic.Coherence.monoidal_simps`
@@ -3742,8 +3725,8 @@ x : α ⊢ f x + 3 = g x + 3
 Defined in: `Mathlib.Tactic.tacticRecover_`
 
 Modifier `recover` for a tactic (sequence) to debug cases where goals are closed incorrectly.
-The tactic `recover tacs` for a tactic (sequence) tacs applies the tactics and then adds goals
-that are not closed starting from the original
+The tactic `recover tacs` for a tactic (sequence) `tacs` applies the tactics and then adds goals
+that are not closed, starting from the original goal.
 
 # reduce
 Defined in: `Mathlib.Tactic.tacticReduce__`
@@ -4248,6 +4231,10 @@ Defined in: `Lean.Parser.Tactic.tacticRwa__`
 
 # saturate
 Defined in: `Aesop.Frontend.tacticSaturate_____`
+
+
+# saturate?
+Defined in: `Aesop.Frontend.tacticSaturate?_____`
 
 
 # save
@@ -5001,6 +4988,20 @@ Defined in: `Lean.Parser.Tactic.unfold`
 For non-recursive definitions, this tactic is identical to `delta`.
 For definitions by pattern matching, it uses "equation lemmas" which are
 autogenerated for each match arm.
+
+# unfold?
+Defined in: `Mathlib.Tactic.InteractiveUnfold.tacticUnfold?`
+
+Replace the selected expression with a definitional unfolding.
+- After each unfolding, we apply `whnfCore` to simplify the expression.
+- Explicit natural number expressions are evaluated.
+- Unfolds of class projections of instances marked with `@[default_instance]` are not shown.
+  This is relevant for notational type classes like `+`: we don't want to suggest `Add.add a b`
+  as an unfolding of `a + b`. Similarly for `OfNat n : Nat` which unfolds into `n : Nat`.
+
+To use `unfold?`, shift-click an expression in the tactic state.
+This gives a list of rewrite suggestions for the selected expression.
+Click on a suggestion to replace `unfold?` by a tactic that performs this rewrite.
 
 # unfold_let
 Defined in: `Mathlib.Tactic.unfoldLetStx`
