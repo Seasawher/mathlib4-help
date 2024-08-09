@@ -3237,19 +3237,19 @@ Basic version of `norm_num` that does not call `simp`.
 # nth_rewrite
 Defined in: `Mathlib.Tactic.nthRewriteSeq`
 
-`nth_rewrite` is a variant of `rewrite` that only changes the `n`ᵗʰ _occurrence_ of the
-expression to be rewritten. `nth_rewrite n [eq₁, eq₂,..., eqₘ]` will rewrite the `n`ᵗʰ _occurrence_
-of each of the `m` equalities `eqᵢ`in that order. Occurrences are counted beginning with `1` in
-order of precedence.
+`nth_rewrite` is a variant of `rewrite` that only changes the `n₁, ..., nₖ`ᵗʰ _occurrence_ of
+the expression to be rewritten. `nth_rewrite n₁ ... nₖ [eq₁, eq₂,..., eqₘ]` will rewrite the
+`n₁, ..., nₖ`ᵗʰ _occurrence_ of each of the `m` equalities `eqᵢ`in that order. Occurrences are
+counted beginning with `1` in order of precedence.
 
 For example,
 ```lean
 example (h : a = 1) : a + a + a + a + a = 5 := by
-  nth_rewrite 2 [h]
+  nth_rewrite 2 3 [h]
 /-
 a: ℕ
 h: a = 1
-⊢ a + 1 + a + a + a = 5
+⊢ a + 1 + 1 + a + a = 5
 -/
 ```
 Notice that the second occurrence of `a` from the left has been rewritten by `nth_rewrite`.
@@ -3290,18 +3290,18 @@ the next `nth_rewrite` with `h` rewrites this `a`.
 # nth_rw
 Defined in: `Mathlib.Tactic.nthRwSeq`
 
-`nth_rw` is a variant of `rw` that only changes the `n`ᵗʰ _occurrence_ of the expression to be
-rewritten. Like `rw`, and unlike `nth_rewrite`, it will try to close the goal by trying `rfl`
-afterwards. `nth_rw n [eq₁, eq₂,..., eqₘ]` will rewrite the `n`ᵗʰ _occurrence_ of each of the
-`m` equalities `eqᵢ`in that order. Occurrences are counted beginning with `1` in
+`nth_rw` is a variant of `rw` that only changes the `n₁, ..., nₖ`ᵗʰ _occurrence_ of the expression
+to be rewritten. Like `rw`, and unlike `nth_rewrite`, it will try to close the goal by trying `rfl`
+afterwards. `nth_rw n₁ ... nₖ [eq₁, eq₂,..., eqₘ]` will rewrite the `n₁, ..., nₖ`ᵗʰ _occurrence_ of
+each of the `m` equalities `eqᵢ`in that order. Occurrences are counted beginning with `1` in
 order of precedence. For example,
 ```lean
 example (h : a = 1) : a + a + a + a + a = 5 := by
-  nth_rw 2 [h]
+  nth_rw 2 3 [h]
 /-
 a: ℕ
 h: a = 1
-⊢ a + 1 + a + a + a = 5
+⊢ a + 1 + 1 + a + a = 5
 -/
 ```
 Notice that the second occurrence of `a` from the left has been rewritten by `nth_rewrite`.
