@@ -996,7 +996,7 @@ The tactic may leave goals of the form `d' = d` `d' ≤ d`, or `r ≠ 0`, where 
 `WithBot ℕ` is the tactic's guess of the degree, and `r` is the coefficient's guess of the
 leading coefficient of `f`.
 
-`compute_degree` applies `norm_num` to the left-hand side of all side goals, trying to clos them.
+`compute_degree` applies `norm_num` to the left-hand side of all side goals, trying to close them.
 
 The variant `compute_degree!` first applies `compute_degree`.
 Then it uses `norm_num` on all the whole remaining goals and tries `assumption`.
@@ -1015,7 +1015,7 @@ The tactic may leave goals of the form `d' = d` `d' ≤ d`, or `r ≠ 0`, where 
 `WithBot ℕ` is the tactic's guess of the degree, and `r` is the coefficient's guess of the
 leading coefficient of `f`.
 
-`compute_degree` applies `norm_num` to the left-hand side of all side goals, trying to clos them.
+`compute_degree` applies `norm_num` to the left-hand side of all side goals, trying to close them.
 
 The variant `compute_degree!` first applies `compute_degree`.
 Then it uses `norm_num` on all the whole remaining goals and tries `assumption`.
@@ -4734,30 +4734,6 @@ starting with a top-most one whose condition does not contain another
 ite-expression.
 `split_ifs at *` splits all ite-expressions in all hypotheses as well as the goal.
 `split_ifs with h₁ h₂ h₃` overrides the default names for the hypotheses.
-
-# squeeze_scope
-Defined in: `Batteries.Tactic.squeezeScope`
-
-The `squeeze_scope` tactic allows aggregating multiple calls to `simp` coming from the same syntax
-but in different branches of execution, such as in `cases x <;> simp`.
-The reported `simp` call covers all simp lemmas used by this syntax.
-```lean
-@[simp] def bar (z : Nat) := 1 + z
-@[simp] def baz (z : Nat) := 1 + z
-
-@[simp] def foo : Nat → Nat → Nat
-  | 0, z => bar z
-  | _+1, z => baz z
-
-example : foo x y = 1 + y := by
-  cases x <;> simp? -- two printouts:
-  -- "Try this: simp only [foo, bar]"
-  -- "Try this: simp only [foo, baz]"
-
-example : foo x y = 1 + y := by
-  squeeze_scope
-    cases x <;> simp -- only one printout: "Try this: simp only [foo, baz, bar]"
-```
 
 # stop
 Defined in: `Lean.Parser.Tactic.tacticStop_`
