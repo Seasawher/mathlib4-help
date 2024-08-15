@@ -920,7 +920,10 @@ Defined in: `Mathlib.Tactic.tacticClean_`
 # clear
 Defined in: `Lean.Elab.Tactic.clearExcept`
 
-Clears all hypotheses it can besides those provided
+Clears all hypotheses it can, except those provided after a minus sign. Example:
+```lean
+  clear * - h₁ h₂
+```
 
 # clear
 Defined in: `Lean.Parser.Tactic.clear`
@@ -4085,7 +4088,8 @@ example {p q : Prop} (h : q) : p ∨ q := by
 Defined in: `Mathlib.Tactic.RingNF.ring`
 
 Tactic for evaluating expressions in *commutative* (semi)rings, allowing for variables in the
-exponent.
+exponent. If the goal is not appropriate for `ring` (e.g. not an equality) `ring_nf` will be
+suggested.
 
 * `ring!` will use a more aggressive reducibility setting to determine equality of atoms.
 * `ring1` fails if the target is not an equality.
@@ -4095,13 +4099,15 @@ For example:
 example (n : ℕ) (m : ℤ) : 2^(n+1) * m = 2 * 2^n * m := by ring
 example (a b : ℤ) (n : ℕ) : (a + b)^(n + 2) = (a^2 + b^2 + a * b + b * a) * (a + b)^n := by ring
 example (x y : ℕ) : x + id y = y + id x := by ring!
+example (x : ℕ) (h : x * 2 > 5): x + x > 5 := by ring; assumption -- suggests ring_nf
 ```
 
 # ring!
 Defined in: `Mathlib.Tactic.RingNF.tacticRing!`
 
 Tactic for evaluating expressions in *commutative* (semi)rings, allowing for variables in the
-exponent.
+exponent. If the goal is not appropriate for `ring` (e.g. not an equality) `ring_nf` will be
+suggested.
 
 * `ring!` will use a more aggressive reducibility setting to determine equality of atoms.
 * `ring1` fails if the target is not an equality.
@@ -4111,6 +4117,7 @@ For example:
 example (n : ℕ) (m : ℤ) : 2^(n+1) * m = 2 * 2^n * m := by ring
 example (a b : ℤ) (n : ℕ) : (a + b)^(n + 2) = (a^2 + b^2 + a * b + b * a) * (a + b)^n := by ring
 example (x y : ℕ) : x + id y = y + id x := by ring!
+example (x : ℕ) (h : x * 2 > 5): x + x > 5 := by ring; assumption -- suggests ring_nf
 ```
 
 # ring1
@@ -4163,6 +4170,11 @@ which rewrites all ring expressions into a normal form.
 * `ring_nf` works as both a tactic and a conv tactic.
   In tactic mode, `ring_nf at h` can be used to rewrite in a hypothesis.
 
+This can be used non-terminally to normalize ring expressions in the goal such as
+`⊢ P (x + x + x)` ~> `⊢ P (x * 3)`, as well as being able to prove some equations that
+`ring` cannot because they involve ring reasoning inside a subterm, such as
+`sin (x + y) + sin (y + x) = 2 * sin (x + y)`.
+
 # ring_nf!
 Defined in: `Mathlib.Tactic.RingNF.tacticRing_nf!__`
 
@@ -4174,6 +4186,11 @@ which rewrites all ring expressions into a normal form.
   * `recursive`: if true, `ring_nf` will also recurse into atoms
 * `ring_nf` works as both a tactic and a conv tactic.
   In tactic mode, `ring_nf at h` can be used to rewrite in a hypothesis.
+
+This can be used non-terminally to normalize ring expressions in the goal such as
+`⊢ P (x + x + x)` ~> `⊢ P (x * 3)`, as well as being able to prove some equations that
+`ring` cannot because they involve ring reasoning inside a subterm, such as
+`sin (x + y) + sin (y + x) = 2 * sin (x + y)`.
 
 # rintro
 Defined in: `Lean.Parser.Tactic.rintro`
