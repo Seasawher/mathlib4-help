@@ -691,6 +691,27 @@ You can use `with` to provide the variables names for each constructor.
 # cases'
 Defined in: `Mathlib.Tactic.cases'`
 
+The `cases'` tactic is similar to the `cases` tactic in Lean 4 core, but the syntax for giving
+names is different:
+
+```
+example (h : p ∨ q) : q ∨ p := by
+  cases h with
+  | inl hp => exact Or.inr hp
+  | inr hq => exact Or.inl hq
+
+example (h : p ∨ q) : q ∨ p := by
+  cases' h with hp hq
+  · exact Or.inr hp
+  · exact Or.inl hq
+
+example (h : p ∨ q) : q ∨ p := by
+  rcases h with hp | hq
+  · exact Or.inr hp
+  · exact Or.inl hq
+```
+
+Prefer `cases` or `rcases` when possible, because these tactics promote structured proofs.
 
 # cases_type
 Defined in: `Mathlib.Tactic.casesType`
@@ -2247,6 +2268,28 @@ You can use `with` to provide the variables names for each constructor.
 # induction'
 Defined in: `Mathlib.Tactic.induction'`
 
+The `induction'` tactic is similar to the `induction` tactic in Lean 4 core,
+but with slightly different syntax (such as, no requirement to name the constructors).
+
+```
+open Nat
+
+example (n : ℕ) : 0 < factorial n := by
+  induction' n with n ih
+  · rw [factorial_zero]
+    simp
+  · rw [factorial_succ]
+    apply mul_pos (succ_pos n) ih
+
+example (n : ℕ) : 0 < factorial n := by
+  induction n
+  case zero =>
+    rw [factorial_zero]
+    simp
+  case succ n ih =>
+    rw [factorial_succ]
+    apply mul_pos (succ_pos n) ih
+```
 
 # infer_instance
 Defined in: `Lean.Parser.Tactic.tacticInfer_instance`
