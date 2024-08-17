@@ -3549,7 +3549,7 @@ immediately. In particular, `peel h using e` is equivalent to `peel h; exact e`.
 may be paired with any of the other features of `peel`.
 
 This tactic works by repeatedly applying lemmas such as `forall_imp`, `Exists.imp`,
-`Filter.Eventually.mp`, `Filter.Frequently.mp`, and `Filter.eventually_of_forall`.
+`Filter.Eventually.mp`, `Filter.Frequently.mp`, and `Filter.Eventually.of_forall`.
 
 # pick_goal
 Defined in: `Batteries.Tactic.«tacticPick_goal-_»`
