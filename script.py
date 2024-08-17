@@ -1,23 +1,26 @@
 import re
 
-targets = ["tactic", "option", "command"]
+targets = ["tactic", "option", "command", "attribute"]
 
 file_path_dict = {
   "tactic": "src/tactics.md",
   "option": "src/options.md",
-  "command": "src/commands.md"
+  "command": "src/commands.md",
+  "attribute": "src/attributes.md"
 }
 
 pattern_dict = {
   "tactic": r'syntax "(.*?)".*?\[(.*)\]',
   "option": r"option (.*) : (.*) := (.*)",
-  "command": r'syntax "(.*?)".*?\[(.*)\]'
+  "command": r'syntax "(.*?)".*?\[(.*)\]',
+  "attribute": r"\[(.*)\]:"
 }
 
 replacement_dict = {
   "tactic": r"# \1\nDefined in: `\2`\n",
   "option": r"## \1\ntype: `\2`\n\ndefault: `\3`\n",
-  "command": r"# \1\nDefined in: `\2`\n"
+  "command": r"# \1\nDefined in: `\2`\n",
+  "attribute": r"# \1\n"
 }
 
 def format(target : str):
