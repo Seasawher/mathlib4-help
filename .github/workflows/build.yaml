@@ -32,8 +32,8 @@ jobs:
 
       - name: generate markdown file
         run: |
-          lake env lean --run Tactic.lean > src/tactics.md
-          lake env lean --run Option.lean > src/options.md
+          lake env lean --run Lean/Tactic.lean > src/tactics.md
+          lake env lean --run Lean/Option.lean > src/options.md
 
       - name: run python script
         run: python3 script.py
