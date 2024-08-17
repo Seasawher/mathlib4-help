@@ -31,7 +31,9 @@ jobs:
           use-github-cache: false
 
       - name: generate markdown file
-        run: lake env lean --run Tactic.lean > src/tactics.md
+        run: |
+          lake env lean --run Tactic.lean > src/tactics.md
+          lake env lean --run Option.lean > src/options.md
 
       - name: run python script
         run: python3 script.py
@@ -39,7 +41,7 @@ jobs:
       - name: find out if there are any changes. error if there are changes
         id: diff
         run: |
-          git add -N src/tactics.md
+          git add -N src/tactics.md src/options.md
           git diff --name-only --exit-code
         continue-on-error: true
 

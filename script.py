@@ -14,7 +14,7 @@ pattern_dict = {
 
 replacement_dict = {
   "tactic": r"# \1\nDefined in: `\2`\n",
-  "option": r"## \1\ntype: `\2`\ndefault: `\3`"
+  "option": r"## \1\ntype: `\2`\n\ndefault: `\3`\n"
 }
 
 def format(target : str):
