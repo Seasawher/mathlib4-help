@@ -1,4 +1,4 @@
-import Mathlib.Tactic
+import Mathlib
 #help tactic
 
 def main : IO UInt32 :=

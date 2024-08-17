@@ -245,6 +245,35 @@ A variant of `aesop_cat` which does not fail when it is unable to solve the
 goal. Use this only for exploration! Nonterminal `aesop` is even worse than
 nonterminal `simp`.
 
+# aesop_graph
+Defined in: `aesop_graph`
+
+A variant of the `aesop` tactic for use in the graph library. Changes relative
+to standard `aesop`:
+
+- We use the `SimpleGraph` rule set in addition to the default rule sets.
+- We instruct Aesop's `intro` rule to unfold with `default` transparency.
+- We instruct Aesop to fail if it can't fully solve the goal. This allows us to
+  use `aesop_graph` for auto-params.
+
+# aesop_graph?
+Defined in: `aesop_graph?`
+
+Use `aesop_graph?` to pass along a `Try this` suggestion when using `aesop_graph`
+
+# aesop_graph_nonterminal
+Defined in: `aesop_graph_nonterminal`
+
+A variant of `aesop_graph` which does not fail if it is unable to solve the
+goal. Use this only for exploration! Nonterminal Aesop is even worse than
+nonterminal `simp`.
+
+# aesop_mat
+Defined in: `Matroid.aesop_mat`
+
+The `aesop_mat` tactic attempts to prove a set is contained in the ground set of a matroid.
+It uses a `[Matroid]` ruleset, and is allowed to fail.
+
 # aesop_unfold
 Defined in: `Aesop.tacticAesop_unfold_`
 
@@ -369,6 +398,16 @@ example (X Y Z : Type) (f : X → Y) (g : Y → Z) (H : Injective <| g ∘ f) :
 
 The function `f` is handled similarly to how it would be handled by `refine` in that `f` can contain
 placeholders. Named placeholders (like `?a` or `?_`) will produce new goals.
+
+# apply_gmonoid_gnpowRec_succ_tac
+Defined in: `GradedMonoid.tacticApply_gmonoid_gnpowRec_succ_tac`
+
+A tactic to for use as an optional value for `GMonoid.gnpow_succ'`.
+
+# apply_gmonoid_gnpowRec_zero_tac
+Defined in: `GradedMonoid.tacticApply_gmonoid_gnpowRec_zero_tac`
+
+A tactic to for use as an optional value for `GMonoid.gnpow_zero'`.
 
 # apply_mod_cast
 Defined in: `Lean.Parser.Tactic.tacticApply_mod_cast_`
@@ -647,6 +686,33 @@ example (h : a > 0) : a / 5 > 0 := by
 ```
 
 # case
+Defined in: `Batteries.Tactic.casePatt`
+
+* `case _ : t => tac` finds the first goal that unifies with `t` and then solves it
+using `tac` or else fails. Like `show`, it changes the type of the goal to `t`.
+The `_` can optionally be a case tag, in which case it only looks at goals
+whose tag would be considered by `case` (goals with an exact tag match,
+followed by goals with the tag as a suffix, followed by goals with the tag as a prefix).
+
+* `case _ n₁ ... nₘ : t => tac` additionally names the `m` most recent hypotheses with
+inaccessible names to the given names. The names are renamed before matching against `t`.
+The `_` can optionally be a case tag.
+
+* `case _ : t := e` is short for `case _ : t => exact e`.
+
+* `case _ : t₁ | _ : t₂ | ... => tac`
+is equivalent to `(case _ : t₁ => tac); (case _ : t₂ => tac); ...`
+but with all matching done on the original list of goals --
+each goal is consumed as they are matched, so patterns may repeat or overlap.
+
+* `case _ : t` will make the matched goal be the first goal.
+`case _ : t₁ | _ : t₂ | ...` makes the matched goals be the first goals in the given order.
+
+* `case _ : t := _` and `case _ : t := ?m` are the same as `case _ : t` but in the `?m` case the
+goal tag is changed to `m`.
+In particular, the goal becomes metavariable `?m`.
+
+# case
 Defined in: `Lean.Parser.Tactic.case`
 
 * `case tag => tac` focuses on the goal with case name `tag` and solves it using `tac`,
@@ -662,6 +728,15 @@ Defined in: `Lean.Parser.Tactic.case'`
 has been solved after applying `tac`, nor admits the goal if `tac` failed.
 Recall that `case` closes the goal using `sorry` when `tac` fails, and
 the tactic execution is not interrupted.
+
+# case'
+Defined in: `Batteries.Tactic.casePatt'`
+
+`case' _ : t => tac` is similar to the `case _ : t => tac` tactic,
+but it does not ensure the goal has been solved after applying `tac`,
+nor does it admit the goal if `tac` failed.
+Recall that `case` closes the goal using `sorry` when `tac` fails,
+and the tactic execution is not interrupted.
 
 # cases
 Defined in: `Lean.Parser.Tactic.cases`
@@ -2079,6 +2154,43 @@ The default behavior is to just try `trivial` (which handles the case
 where `i < arr.size` is in the context) and `simp_arith` and `omega`
 (for doing linear arithmetic in the index).
 
+# ghost_calc
+Defined in: `WittVector.Tactic.ghostCalc`
+
+`ghost_calc` is a tactic for proving identities between polynomial functions.
+Typically, when faced with a goal like
+```lean
+∀ (x y : 𝕎 R), verschiebung (x * frobenius y) = verschiebung x * y
+```
+you can
+1. call `ghost_calc`
+2. do a small amount of manual work -- maybe nothing, maybe `rintro`, etc
+3. call `ghost_simp`
+
+and this will close the goal.
+
+`ghost_calc` cannot detect whether you are dealing with unary or binary polynomial functions.
+You must give it arguments to determine this.
+If you are proving a universally quantified goal like the above,
+call `ghost_calc _ _`.
+If the variables are introduced already, call `ghost_calc x y`.
+In the unary case, use `ghost_calc _` or `ghost_calc x`.
+
+`ghost_calc` is a light wrapper around type class inference.
+All it does is apply the appropriate extensionality lemma and try to infer the resulting goals.
+This is subtle and Lean's elaborator doesn't like it because of the HO unification involved,
+so it is easier (and prettier) to put it in a tactic script.
+
+# ghost_fun_tac
+Defined in: `WittVector.«tacticGhost_fun_tac_,_»`
+
+An auxiliary tactic for proving that `ghostFun` respects the ring operations.
+
+# ghost_simp
+Defined in: `WittVector.Tactic.ghostSimp`
+
+A macro for a common simplification when rewriting with ghost component equations.
+
 # group
 Defined in: `Mathlib.Tactic.Group.group`
 
@@ -2309,6 +2421,11 @@ Defined in: `Lean.Elab.Tactic.inhabit`
 then uses it to make an `Inhabited α` instance.
 If the target is a `Prop`, this is done constructively. Otherwise, it uses `Classical.choice`.
 
+# init_ring
+Defined in: `WittVector.initRing`
+
+`init_ring` is an auxiliary tactic that discharges goals factoring `init` over ring operations.
+
 # injection
 Defined in: `Lean.Parser.Tactic.injection`
 
@@ -2353,6 +2470,11 @@ in which case `interval_cases` calls `fin_cases` on the resulting fact `n ∈ Se
 
 You can specify a name `h` for the new hypothesis,
 as `interval_cases h : n` or `interval_cases h : n using hl, hu`.
+
+# intro
+Defined in: `Batteries.Tactic.introDot`
+
+The syntax `intro.` is deprecated in favor of `nofun`.
 
 # intro
 Defined in: `Lean.Parser.Tactic.intro`
@@ -2937,6 +3059,11 @@ example (a b : ℚ) (h : ∀ p q : ℚ, p = q) : 3*a + qc = 3*b + 2*qc := by
   linear_combination 3 * h a b + hqc
 ```
 
+# map_fun_tac
+Defined in: `WittVector.mapFun.tacticMap_fun_tac`
+
+Auxiliary tactic for showing that `mapFun` respects the ring operations.
+
 # map_tacs
 Defined in: `Batteries.Tactic.«tacticMap_tacs[_;]»`
 
@@ -2958,6 +3085,13 @@ example (n : Nat) : n = n := by
 ```
 
 [tpil4]: https://lean-lang.org/theorem_proving_in_lean4/induction_and_recursion.html
+
+# match
+Defined in: `Batteries.Tactic.«tacticMatch_,,With.»`
+
+The syntax `match ⋯ with.` has been deprecated in favor of `nomatch ⋯`.
+
+Both now support multiple discriminants.
 
 # match_target
 Defined in: `Mathlib.Tactic.tacticMatch_target_`
@@ -2985,6 +3119,14 @@ The tactic `measurability?` solves goals of the form `Measurable f`, `AEMeasurab
 `StronglyMeasurable f`, `AEStronglyMeasurable f μ`, or `MeasurableSet s` by applying lemmas tagged
 with the `measurability` user attribute, and suggests a faster proof script that can be substituted
 for the tactic call in case of success.
+
+# mem_tac
+Defined in: `AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.tacticMem_tac`
+
+
+# mem_tac_aux
+Defined in: `AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.tacticMem_tac_aux`
+
 
 # mfld_set_tac
 Defined in: `Tactic.MfldSetTac.mfldSetTac`
@@ -3103,6 +3245,11 @@ There is also a general tactic for a "binary associative commutative operation":
 In this case the syntax requires providing first a term whose head symbol is the operation.
 E.g. `move_oper HAdd.hAdd [...]` is the same as `move_add`, while `move_oper Max.max [...]`
 rearranges `max`s.
+
+# mv_bisim
+Defined in: `Mathlib.Tactic.MvBisim.tacticMv_bisim___With___`
+
+tactic for proof by bisimulation
 
 # native_decide
 Defined in: `Lean.Parser.Tactic.nativeDecide`
@@ -3550,6 +3697,26 @@ may be paired with any of the other features of `peel`.
 
 This tactic works by repeatedly applying lemmas such as `forall_imp`, `Exists.imp`,
 `Filter.Eventually.mp`, `Filter.Frequently.mp`, and `Filter.Eventually.of_forall`.
+
+# pgame_wf_tac
+Defined in: `SetTheory.PGame.tacticPgame_wf_tac`
+
+Discharges proof obligations of the form `⊢ Subsequent ..` arising in termination proofs
+of definitions using well-founded recursion on `PGame`.
+
+# pi_lower_bound
+Defined in: `Real.«tacticPi_lower_bound[_,,]»`
+
+Create a proof of `a < π` for a fixed rational number `a`, given a witness, which is a
+sequence of rational numbers `√2 < r 1 < r 2 < ... < r n < 2` satisfying the property that
+`√(2 + r i) ≤ r(i+1)`, where `r 0 = 0` and `√(2 - r n) ≥ a/2^(n+1)`.
+
+# pi_upper_bound
+Defined in: `Real.«tacticPi_upper_bound[_,,]»`
+
+Create a proof of `π < a` for a fixed rational number `a`, given a witness, which is a
+sequence of rational numbers `√2 < r 1 < r 2 < ... < r n < 2` satisfying the property that
+`√(2 + r i) ≥ r(i+1)`, where `r 0 = 0` and `√(2 - r n) ≥ (a - 1/4^n) / 2^(n+1)`.
 
 # pick_goal
 Defined in: `Batteries.Tactic.«tacticPick_goal-_»`
@@ -4042,6 +4209,16 @@ h : β
 ```
 
 This can be used to simulate the `specialize` and `apply at` tactics of Coq.
+
+# restrict_tac
+Defined in: `TopCat.Presheaf.restrict_tac`
+
+`restrict_tac` solves relations among subsets (copied from `aesop cat`)
+
+# restrict_tac?
+Defined in: `TopCat.Presheaf.restrict_tac?`
+
+`restrict_tac?` passes along `Try this` from `aesop`
 
 # revert
 Defined in: `Lean.Parser.Tactic.revert`
@@ -4626,6 +4803,11 @@ Defined in: `Lean.Parser.Tactic.sleep`
 The tactic `sleep ms` sleeps for `ms` milliseconds and does nothing.
 It is used for debugging purposes only.
 
+# sleep_heartbeats
+Defined in: `tacticSleep_heartbeats_`
+
+do nothing for at least n heartbeats
+
 # slice_lhs
 Defined in: `sliceLHS`
 
@@ -4795,6 +4977,30 @@ ite-expression.
 `split_ifs at *` splits all ite-expressions in all hypotheses as well as the goal.
 `split_ifs with h₁ h₂ h₃` overrides the default names for the hypotheses.
 
+# squeeze_scope
+Defined in: `Batteries.Tactic.squeezeScope`
+
+The `squeeze_scope` tactic allows aggregating multiple calls to `simp` coming from the same syntax
+but in different branches of execution, such as in `cases x <;> simp`.
+The reported `simp` call covers all simp lemmas used by this syntax.
+```lean
+@[simp] def bar (z : Nat) := 1 + z
+@[simp] def baz (z : Nat) := 1 + z
+
+@[simp] def foo : Nat → Nat → Nat
+  | 0, z => bar z
+  | _+1, z => baz z
+
+example : foo x y = 1 + y := by
+  cases x <;> simp? -- two printouts:
+  -- "Try this: simp only [foo, bar]"
+  -- "Try this: simp only [foo, baz]"
+
+example : foo x y = 1 + y := by
+  squeeze_scope
+    cases x <;> simp -- only one printout: "Try this: simp only [foo, baz, bar]"
+```
+
 # stop
 Defined in: `Lean.Parser.Tactic.tacticStop_`
 
@@ -4847,6 +5053,11 @@ Defined in: `Lean.Parser.Tactic.substEqs`
 
 `subst_eq` repeatedly substitutes according to the equality proof hypotheses in the context,
 replacing the left side of the equality with the right, until no more progress can be made.
+
+# subst_hom_lift
+Defined in: `CategoryTheory.tacticSubst_hom_lift___`
+
+`subst_hom_lift p f φ` tries to substitute `f` with `p(φ)` by using `p.IsHomLift f φ`
 
 # subst_vars
 Defined in: `Lean.Parser.Tactic.substVars`
@@ -4979,6 +5190,17 @@ example : TFAE [P, Q, R] := by
   · /- proof of Q ↔ R -/
   tfae_finish
 ```
+
+# toFinite_tac
+Defined in: `Set.tacticToFinite_tac`
+
+A tactic (for use in default params) that applies `Set.toFinite` to synthesize a `Set.Finite`
+term.
+
+# to_encard_tac
+Defined in: `Set.tacticTo_encard_tac`
+
+A tactic useful for transferring proofs for `encard` to their corresponding `card` statements
 
 # trace
 Defined in: `Lean.Parser.Tactic.trace`
@@ -5212,6 +5434,11 @@ This is similar to the `trivial` tactic but doesn't do things like `contradictio
 Defined in: `tacticUse_finite_instance`
 
 
+# valid
+Defined in: `CategoryTheory.ComposableArrows.tacticValid`
+
+A wrapper for `omega` which prefaces it with some quick and useful attempts
+
 # volume_tac
 Defined in: `MeasureTheory.tacticVolume_tac`
 
@@ -5260,6 +5487,11 @@ Defined in: `Lean.Parser.Tactic.withUnfoldingAll`
 
 `with_unfolding_all tacs` executes `tacs` using the `.all` transparency setting.
 In this setting all definitions that are not opaque are unfolded.
+
+# witt_truncateFun_tac
+Defined in: `witt_truncateFun_tac`
+
+A macro tactic used to prove that `truncateFun` respects ring operations.
 
 # wlog
 Defined in: `Mathlib.Tactic.wlog`
