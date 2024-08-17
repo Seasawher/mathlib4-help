@@ -1,20 +1,23 @@
 import re
 
-targets = ["tactic", "option"]
+targets = ["tactic", "option", "command"]
 
 file_path_dict = {
   "tactic": "src/tactics.md",
-  "option": "src/options.md"
+  "option": "src/options.md",
+  "command": "src/commands.md"
 }
 
 pattern_dict = {
   "tactic": r'syntax "(.*?)".*?\[(.*)\]',
-  "option": r"option (.*) : (.*) := (.*)"
+  "option": r"option (.*) : (.*) := (.*)",
+  "command": r'syntax "(.*?)".*?\[(.*)\]'
 }
 
 replacement_dict = {
   "tactic": r"# \1\nDefined in: `\2`\n",
-  "option": r"## \1\ntype: `\2`\n\ndefault: `\3`\n"
+  "option": r"## \1\ntype: `\2`\n\ndefault: `\3`\n",
+  "command": r"# \1\nDefined in: `\2`\n"
 }
 
 def format(target : str):
@@ -33,6 +36,9 @@ def format(target : str):
 
   # create markdown-style headers
   new_content = re.sub(pattern, replacement, content)
+
+  # escape `#` in headers
+  new_content = re.sub(r"(#+) #", r"\1 \#", new_content)
 
   # replace mere code blocks with lean code blocks
   new_content = re.sub(r'(^|.*:|[a-zA-Z]+\.)\n```\n', r'\1\n```lean\n', new_content)
