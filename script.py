@@ -1,11 +1,31 @@
 import re
 
-def main():
-  file_path = "src/tactics.md"
+targets = ["tactic", "option"]
 
-  pattern = r'syntax "(.*?)".*?\[(.*)\]'
+file_path_dict = {
+  "tactic": "src/tactics.md",
+  "option": "src/options.md"
+}
 
-  replacement = r"# \1\nDefined in: `\2`\n"
+pattern_dict = {
+  "tactic": r'syntax "(.*?)".*?\[(.*)\]',
+  "option": r"option (.*) : (.*) := (.*)"
+}
+
+replacement_dict = {
+  "tactic": r"# \1\nDefined in: `\2`\n",
+  "option": r"## \1\ntype: `\2`\n\ndefault: `\3`\n"
+}
+
+def format(target : str):
+  if target not in targets:
+    raise ValueError(f"target must be one of {targets}")
+
+  file_path = file_path_dict[target]
+
+  pattern = pattern_dict[target]
+
+  replacement = replacement_dict[target]
 
   with open(file_path, 'r', encoding='utf-8') as file:
     # delete leading spaces
@@ -23,4 +43,5 @@ def main():
     file.write(content_with_version)
 
 if __name__ == '__main__':
-  main()
+  for target in targets:
+    format(target)

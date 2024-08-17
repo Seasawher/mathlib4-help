@@ -1,3 +1,4 @@
 # Summary
 
-- [Mathlib4 Tactics](./tactics.md)
+- [Tactics](./tactics.md)
+- [Options](./options.md)
