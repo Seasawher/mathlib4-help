@@ -1,13 +1,13 @@
 Lean version: `{{#include ../lean-toolchain}}`
 
-# #adaptation_note
+# \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
 
 Adaptation notes are comments that are used to indicate that a piece of code
 has been changed to accomodate a change in Lean core.
 They typically require further action/maintenance to be taken in the future.
 
-# #check
+# \#check
 Defined in: `Mathlib.Tactic.«tactic#check__»`
 
 The `#check t` tactic elaborates the term `t` and then pretty prints it with its type as `e : ty`.
@@ -19,7 +19,7 @@ Use `#check (t)` to pretty print it as an elaborated expression.
 Like the `#check` command, the `#check` tactic allows stuck typeclass instance problems.
 These become metavariables in the output.
 
-# #find
+# \#find
 Defined in: `Mathlib.Tactic.Find.«tactic#find_»`
 
 
