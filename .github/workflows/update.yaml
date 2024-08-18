@@ -34,14 +34,15 @@ jobs:
         if: steps.update-lean-mathlib.outputs.result == 'update-success'
         id: update-tactic-list
         run: |
-          lake env lean --run Tactic.lean > src/tactics.md
+          ./scripts/build.ps1
           python3 script.py
           if [[ -n $(git diff -w "src/tactics.md") ]]; then
-            echo "files_changed=true"  >> "$GITHUB_OUTPUT"
+            echo "files_changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "files_changed=false" >> "$GITHUB_OUTPUT"
           fi
           cat "$GITHUB_OUTPUT"
+        shell: pwsh
 
       - name: Create Pull Request
         if: steps.update-lean-mathlib.outputs.result == 'update-success'

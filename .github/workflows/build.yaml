@@ -31,11 +31,8 @@ jobs:
           use-github-cache: false
 
       - name: generate markdown file
-        run: |
-          lake env lean --run Lean/Tactic.lean > src/tactics.md
-          lake env lean --run Lean/Option.lean > src/options.md
-          lake env lean --run Lean/Command.lean > src/commands.md
-          lake env lean --run Lean/Attribute.lean > src/attributes.md
+        run: ./scripts/build.ps1
+        shell: pwsh
 
       - name: run python script
         run: python3 script.py
