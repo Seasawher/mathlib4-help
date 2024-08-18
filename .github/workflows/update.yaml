@@ -36,12 +36,12 @@ jobs:
         run: |
           ./scripts/build.ps1
           python3 script.py
-          if [[ -n $(git diff -w "src/tactics.md") ]]; then
-            echo "files_changed=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "files_changed=false" >> "$GITHUB_OUTPUT"
-          fi
-          cat "$GITHUB_OUTPUT"
+          if (git diff -w "src" -ne "") {
+              "files_changed=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          } else {
+              "files_changed=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          }
+          Get-Content $env:GITHUB_OUTPUT
         shell: pwsh
 
       - name: Create Pull Request
