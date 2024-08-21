@@ -340,7 +340,7 @@ enable all linters
 ## linter.cdot
 type: `Bool`
 
-default: `true`
+default: `false`
 
 enable the `cdot` linter
 
@@ -357,6 +357,13 @@ type: `Bool`
 default: `true`
 
 if true, generate deprecation warnings
+
+## linter.dollarSyntax
+type: `Bool`
+
+default: `false`
+
+enable the `dollarSyntax` linter
 
 ## linter.dupNamespace
 type: `Bool`
@@ -382,7 +389,7 @@ enable the globalAttributeIn linter
 ## linter.hashCommand
 type: `Bool`
 
-default: `true`
+default: `false`
 
 enable the `#`-command linter
 
@@ -399,7 +406,7 @@ enable the `have` vs `let` linter:
 ## linter.longLine
 type: `Bool`
 
-default: `true`
+default: `false`
 
 enable the longLine linter
 
@@ -420,28 +427,28 @@ enable the 'missing documentation' linter
 ## linter.missingEnd
 type: `Bool`
 
-default: `true`
+default: `false`
 
 enable the missing end linter
 
 ## linter.oldObtain
 type: `Bool`
 
-default: `true`
+default: `false`
 
 enable the `oldObtain` linter
 
 ## linter.refine
 type: `Bool`
 
-default: `true`
+default: `false`
 
 enable the refine linter
 
 ## linter.setOption
 type: `Bool`
 
-default: `true`
+default: `false`
 
 enable the `setOption` linter
 
