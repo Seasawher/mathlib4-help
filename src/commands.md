@@ -33,6 +33,24 @@ Notice that you should use the `SyntaxNodeKind` of the tactic.
 Defined in: `Lean.Parser.Command.check`
 
 
+# \#check_assertions
+Defined in: `Mathlib.AssertNotExist.«command#check_assertions!»`
+
+`#check_assertions` retrieves all declarations and all imports that were declared
+not to exist so far (including in transitively imported files) and reports their current
+status:
+* ✓ means the declaration or import exists,
+* × means the declaration or import does not exist.
+
+This means that the expectation is that all checks *succeed* by the time `#check_assertions`
+is used, typically once all of `Mathlib` has been built.
+
+If all declarations and imports are available when `#check_assertions` is used,
+then the command logs an info. Otherwise, it emits a warning.
+
+The variant `#check_assertions!` only prints declarations/imports that are not present in the
+environment.  In particular, it is silent if everything is imported, making it useful for testing.
+
 # \#check_failure
 Defined in: `Lean.Parser.Command.check_failure`
 
