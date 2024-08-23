@@ -396,7 +396,7 @@ enable the `#`-command linter
 ## linter.haveLet
 type: `Nat`
 
-default: `1`
+default: `0`
 
 enable the `have` vs `let` linter:
 * 0 -- inactive;
