@@ -4,7 +4,7 @@ Lean version: `{{#include ../lean-toolchain}}`
 Defined in: `«tactic#adaptation_note_»`
 
 Adaptation notes are comments that are used to indicate that a piece of code
-has been changed to accomodate a change in Lean core.
+has been changed to accommodate a change in Lean core.
 They typically require further action/maintenance to be taken in the future.
 
 # \#check
@@ -5026,7 +5026,7 @@ As a nicety, `subsingleton` first runs the `intros` tactic.
 
 Techniques the `subsingleton` tactic can apply:
 - proof irrelevance
-- heterogenous proof irrelevance (via `proof_irrel_heq`)
+- heterogeneous proof irrelevance (via `proof_irrel_heq`)
 - using `Subsingleton` (via `Subsingleton.elim`)
 - proving `BEq` instances are equal if they are both lawful (via `lawful_beq_subsingleton`)
 
