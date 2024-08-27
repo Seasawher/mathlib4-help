@@ -466,6 +466,13 @@ default: `true`
 
 Linter to check that no unused custom declarations are declared for simps
 
+## linter.style.lambdaSyntax
+type: `Bool`
+
+default: `false`
+
+enable the `lambdaSyntax` linter
+
 ## linter.suspiciousUnexpanderPatterns
 type: `Bool`
 
