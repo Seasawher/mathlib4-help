@@ -2733,6 +2733,13 @@ default: `false`
 
 (aesop) Print the rule set before starting the search.
 
+## trace.aesop.script
+type: `Bool`
+
+default: `false`
+
+(aesop) Print a trace of script generation.
+
 ## trace.aesop.stats
 type: `Bool`
 
