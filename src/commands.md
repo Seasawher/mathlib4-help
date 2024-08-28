@@ -716,6 +716,17 @@ Defined in: `Mathlib.Tactic.Conv.«command#simpOnly_=>__»`
 * The `=>` is optional, so `#simp e` and `#simp only [lems] e` have the same behavior.
   It is mostly useful for disambiguating the expression `e` from the lemmas.
 
+# \#stacks_tags
+Defined in: `Mathlib.Stacks.stacksTags`
+
+`#stacks_tags` retrieves all declarations that have the `stacks` attribute.
+
+For each found declaration, it prints a line
+```
+'declaration_name' corresponds to tag 'declaration_tag'.
+```
+The variant `#stacks_tags!` also adds the theorem statement after each summary line.
+
 # \#synth
 Defined in: `Lean.Parser.Command.synth`
 
