@@ -56,6 +56,13 @@ default: `true`
 
 (aesop) Only for use by Aesop developers. Enables dynamic script structuring.
 
+## aesop.dev.generateScript
+type: `Bool`
+
+default: `false`
+
+(aesop) Only for use by Aesop developers. Generates a script even if none was requested.
+
 ## aesop.smallErrorMessages
 type: `Bool`
 
@@ -330,6 +337,13 @@ default: `false`
 
 enable the use of the `lemma` command as a synonym for `theorem`
 
+## linter.admit
+type: `Bool`
+
+default: `false`
+
+enable the admit linter
+
 ## linter.all
 type: `Bool`
 
@@ -445,13 +459,6 @@ default: `false`
 
 enable the refine linter
 
-## linter.setOption
-type: `Bool`
-
-default: `false`
-
-enable the `setOption` linter
-
 ## linter.simpsNoConstructor
 type: `Bool`
 
@@ -472,6 +479,13 @@ type: `Bool`
 default: `false`
 
 enable the `lambdaSyntax` linter
+
+## linter.style.setOption
+type: `Bool`
+
+default: `false`
+
+enable the `setOption` linter
 
 ## linter.suspiciousUnexpanderPatterns
 type: `Bool`
