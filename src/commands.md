@@ -1418,6 +1418,14 @@ for the notation.
 This command can be used in mathlib4 but it has an uncertain future and was created primarily
 for backward compatibility.
 
+# omit
+Defined in: `Lean.Parser.Command.omit`
+
+`omit` instructs Lean to not include a variable previously `include`d. Apart from variable names, it
+can also refer to typeclass instance variables by type using the syntax `omit [TypeOfInst]`, in
+which case all instance variables that unify with the given type are omitted. `omit` should usually
+only be used in conjunction with `in` in order to keep the section structure simple.
+
 # open
 Defined in: `Lean.Parser.Command.open`
 

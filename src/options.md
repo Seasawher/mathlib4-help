@@ -63,6 +63,13 @@ default: `false`
 
 (aesop) Only for use by Aesop developers. Generates a script even if none was requested.
 
+## aesop.dev.optimizedDynamicStructuring
+type: `Bool`
+
+default: `true`
+
+(aesop) Only for use by Aesop developers. Uses static structuring instead of dynamic structuring if no metavariables appear in the proof.
+
 ## aesop.smallErrorMessages
 type: `Bool`
 
@@ -452,6 +459,13 @@ default: `false`
 
 enable the `oldObtain` linter
 
+## linter.omit
+type: `Bool`
+
+default: `false`
+
+enable the 'avoid omit' linter
+
 ## linter.refine
 type: `Bool`
 
@@ -479,6 +493,13 @@ type: `Bool`
 default: `false`
 
 enable the `lambdaSyntax` linter
+
+## linter.style.longFile
+type: `Nat`
+
+default: `1500`
+
+enable the longFile linter
 
 ## linter.style.setOption
 type: `Bool`
@@ -543,6 +564,13 @@ type: `Bool`
 default: `true`
 
 enable the 'unused rcases pattern' linter
+
+## linter.unusedSectionVars
+type: `Bool`
+
+default: `true`
+
+enable the 'unused section variables in theorem body' linter
 
 ## linter.unusedTactic
 type: `Bool`
