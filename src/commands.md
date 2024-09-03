@@ -736,8 +736,15 @@ Defined in: `SlimCheck.«command#test_»`
 
 
 # \#time
-Defined in: `timeCmd`
+Defined in: `Lean.Parser.timeCmd`
 
+Time the elaboration of a command, and print the result (in milliseconds).
+
+Example usage:
+```lean
+set_option maxRecDepth 100000 in
+#time example : (List.range 500).length = 500 := rfl
+```
 
 # \#unfold?
 Defined in: `Mathlib.Tactic.InteractiveUnfold.unfoldCommand`
@@ -1147,9 +1154,10 @@ Defined in: `Lean.Parser.Command.in`
 Defined in: `Lean.Parser.Command.include`
 
 `include eeny meeny` instructs Lean to include the section `variable`s `eeny` and `meeny` in all
-declarations in the remainder of the current section, differing from the default behavior of
-conditionally including variables based on use in the declaration header. `include` is usually
-followed by the `in` combinator to limit the inclusion to the subsequent declaration.
+theorems in the remainder of the current section, differing from the default behavior of
+conditionally including variables based on use in the theorem header. Other commands are
+not affected. `include` is usually followed by `in theorem ...` to limit the inclusion
+to the subsequent declaration.
 
 # init_quot
 Defined in: `Lean.Parser.Command.init_quot`
@@ -1605,7 +1613,7 @@ Register a tactic for use with the `hint` tactic, e.g. `register_hint simp_all`.
 Defined in: `Lean.Parser.Command.registerLabelAttr`
 
 Initialize a new "label" attribute.
-Declarations tagged with the attribute can be retrieved using `Std.Tactic.LabelAttr.labelled`.
+Declarations tagged with the attribute can be retrieved using `Lean.labelled`.
 
 # register_option
 Defined in: `Lean.Option.registerOption`

@@ -9,6 +9,12 @@ Lean version: `{{#include ../lean-toolchain}}`
 # aesop_Bound_proc
  simprocs in the Aesop rule set 'Bound'
 
+# aesop_CStarAlgebra
+ simp theorems in the Aesop rule set 'CStarAlgebra'
+
+# aesop_CStarAlgebra_proc
+ simprocs in the Aesop rule set 'CStarAlgebra'
+
 # aesop_CategoryTheory
  simp theorems in the Aesop rule set 'CategoryTheory'
 
@@ -93,6 +99,9 @@ to true or `pp.notation` is set to false, it will not be called at all.
 
 # attr_parser
  parser
+
+# boolToPropSimps
+ simp lemmas converting boolean expressions in terms of `decide` into propositional statements
 
 # bound
  Register a theorem as an apply rule for the `bound` tactic.
@@ -224,8 +233,16 @@ to declarations of type `IgnoreFunction` for use by the unused variables linter.
 
 # builtin_widget_module
  (builtin) Registers a widget module. Its type must implement Lean.Widget.ToModule.
-Registers `[builtin_widget_module]` and `[widget_module]` and binds the latter's implementation
-(used for creating the obsolete `[widget]` alias below).
+Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
+
+# bvNormalizeProcBuiltinAttr
+ Builtin bv_normalize simproc
+
+# bv_normalize
+ simp theorems used by bv_normalize
+
+# bv_normalize_proc
+ simprocs used by bv_normalize
 
 # bv_toNat
  simp lemmas converting `BitVec` goals to `Nat` goals, for the `bv_omega` preprocessor
@@ -956,13 +973,9 @@ constructor. You should not have any fields in `variable_alias` structures.
 Notice that `VectorSpace` is not a class; the `variable?` command allows non-classes with the
 `variable_alias` attribute to use instance binders.
 
-# widget
- The `@[widget]` attribute has been deprecated, use `@[widget_module]` instead.
-
 # widget_module
  Registers a widget module. Its type must implement Lean.Widget.ToModule.
-Registers `[builtin_widget_module]` and `[widget_module]` and binds the latter's implementation
-(used for creating the obsolete `[widget]` alias below).
+Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
 
 # zify_simps
  The simpset `zify_simps` is used by the tactic `zify` to move expressions from `ℕ` to `ℤ`
