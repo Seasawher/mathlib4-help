@@ -98,6 +98,20 @@ default: `true`
 
 insert monadic lifts (i.e., `liftM` and coercions) when needed
 
+## backward.eqns.deepRecursiveSplit
+type: `Bool`
+
+default: `true`
+
+Create equational lemmas for recursive functions like for non-recursive functions. If disabled, match statements in recursive function definitions that do not contain recursive calls do not cause further splits in the equational lemmas. This was the behavior before Lean 4.12, and the purpose of this option is to help migrating old code.
+
+## backward.eqns.nonrecursive
+type: `Bool`
+
+default: `true`
+
+Create fine-grained equational lemmas even for non-recursive definitions.
+
 ## backward.isDefEq.lazyProjDelta
 type: `Bool`
 
@@ -196,6 +210,13 @@ default: `1`
 
 (compiler) function declarations with size `≤ small` is inlined even if there are multiple occurrences.
 
+## debug.bv.graphviz
+type: `Bool`
+
+default: `false`
+
+Output the AIG of bv_decide as graphviz into a file called aig.gv in the working directory of the Lean process.
+
 ## debug.byAsSorry
 type: `Bool`
 
@@ -210,6 +231,13 @@ default: `true`
 
 include module name in deterministic timeout error messages.
 Remark: we set this option to false to increase the stability of our test suite
+
+## debug.rawDecreasingByGoal
+type: `Bool`
+
+default: `false`
+
+Shows the raw `decreasing_by` goal including internal implementation detail intead of cleaning it up with the `clean_wf` tactic. Can be enabled for debugging purposes. Please report an issue if you have to use this option for other reasons.
 
 ## debug.skipKernelTC
 type: `Bool`
@@ -238,6 +266,13 @@ type: `Nat`
 default: `20`
 
 only diagnostic counters above this threshold are reported by the definitional equality
+
+## diagnostics.threshold.proofSize
+type: `Nat`
+
+default: `16384`
+
+only display proof statistics when proof has at least this number of terms
 
 ## exponentiation.threshold
 type: `Nat`
@@ -322,6 +357,13 @@ type: `Nat`
 default: `50`
 
 Number of trace node children to display by default
+
+## internal.cmdlineSnapshots
+type: `Bool`
+
+default: `false`
+
+mark persistent and reduce information stored in snapshots to the minimum necessary for the cmdline driver: diagnostics per command and final full snapshot
 
 ## internal.parseQuotWithCurrentStage
 type: `Bool`
@@ -775,6 +817,13 @@ default: `false`
 
 (pretty printer) display implicit arguments
 
+## pp.exprSizes
+type: `Bool`
+
+default: `false`
+
+(pretty printer) prefix each embedded expression with its sizes in the format (size disregarding sharing/size with sharing/size with max sharing)
+
 ## pp.fieldNotation
 type: `Bool`
 
@@ -1112,7 +1161,41 @@ type: `Bool`
 
 default: `true`
 
-When "relaxed" mode is enabled, any atomic nonempty identifier is eligible for auto bound implicit locals (see optin `autoBoundImplicitLocal`.
+When "relaxed" mode is enabled, any atomic nonempty identifier is eligible for auto bound implicit locals (see option `autoImplicit`).
+
+## sat.binaryProofs
+type: `Bool`
+
+default: `true`
+
+Whether to use the binary LRAT proof format. Currently set to false and ignored on Windows due to a bug in CaDiCal.
+
+## sat.solver
+type: `String`
+
+default: `""`
+
+Name of the SAT solver used by Lean.Elab.Tactic.BVDecide tactics.
+
+     1. If this is set to something besides the emtpy string they will use that binary.
+
+     2. If this is set to the empty string they will check if there is a cadical binary next to theexecuting program. Usually that program is going to be `lean` itself and we do ship a`cadical` next to it.
+
+     3. If that does not succeed try to call `cadical` from PATH. The empty string default indicatesto use the one that ships with Lean.
+
+## sat.timeout
+type: `Nat`
+
+default: `10`
+
+the number of seconds that the sat solver is run before aborting
+
+## sat.trimProofs
+type: `Bool`
+
+default: `true`
+
+Whether to run the trimming algorithm on LRAT proofs
 
 ## says.no_verify_in_CI
 type: `Bool`
@@ -2082,6 +2165,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Meta.Tactic.bv
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Meta.Tactic.cases
 type: `Bool`
 
@@ -2132,6 +2222,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Meta.Tactic.polyrith
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.Tactic.sat
 type: `Bool`
 
 default: `false`

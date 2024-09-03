@@ -579,6 +579,54 @@ contains lemmas for goals of the form `1 ≤ x, 1 < x, x ≤ 1, x < 1`.  Convers
 inequalities for more types of relations, supports all `positivity` functionality, and is likely
 faster since it is more specialized (not built atop `aesop`).
 
+# bv_check
+Defined in: `Lean.Parser.Tactic.bvCheck`
+
+This tactic works just like `bv_decide` but skips calling a SAT solver by using a proof that is
+alreay stored on disk. It is called with the name of an LRAT file in the same directory as the
+current Lean file:
+```lean
+bv_check "proof.lrat"
+```
+
+# bv_decide
+Defined in: `Lean.Parser.Tactic.bvDecide`
+
+Close fixed-width `BitVec` and `Bool` goals by obtaining a proof from an external SAT solver and
+verifying it inside Lean. The solvable goals are currently limited to the Lean equivalent of
+[`QF_BV`](https://smt-lib.org/logics-all.shtml#QF_BV) with the following changes:
+- Division and remainder operations are not yet implemented.
+- if-then-else is not yet implemented.
+- `BitVec.ofBool` is not yet implemented.
+
+```lean
+example : ∀ (a b : BitVec 64), (a &&& b) + (a ^^^ b) = a ||| b := by
+  intros
+  bv_decide
+```
+
+If `bv_decide` encounters an unknown definition it will be treated like an unconstrained `BitVec`
+variable. Sometimes this enables solving goals despite not understanding the definition because
+the precise properties of the definition do not matter in the specific proof.
+
+If `bv_decide` fails to close a goal it provides a counter-example, containing assignments for all
+terms that were considered as variables.
+
+In order to avoid calling a SAT solver every time, the proof can be cached with `bv_decide?`.
+
+Note: `bv_decide` uses `ofReduceBool` and thus trusts the correctness of the code generator.
+
+# bv_decide?
+Defined in: `Lean.Parser.Tactic.bvTrace`
+
+Suggest a proof script for a `bv_decide` tactic call. Useful for caching LRAT proofs.
+
+# bv_normalize
+Defined in: `Lean.Parser.Tactic.bvNormalize`
+
+Run the normalization procedure of `bv_decide` only. Sometimes this is enough to solve basic
+`BitVec` goals already.
+
 # bv_omega
 Defined in: `Lean.Parser.Tactic.tacticBv_omega`
 
@@ -1012,6 +1060,12 @@ Defined in: `Batteries.Tactic.tacticClassical!`
 Defined in: `Mathlib.Tactic.tacticClean_`
 
 (Deprecated) `clean t` is a macro for `exact clean% t`.
+
+# clean_wf
+Defined in: `tacticClean_wf`
+
+This tactic is used internally by lean before presenting the proof obligations from a well-founded
+definition to the user via `decreasing_by`. It is not necessary to use this tactic manuall.
 
 # clear
 Defined in: `Lean.Elab.Tactic.clearExcept`
@@ -1564,8 +1618,8 @@ before `omega` is available.
 # decreasing_with
 Defined in: `tacticDecreasing_with_`
 
-Constructs a proof of decreasing along a well founded relation, by applying
-lexicographic order lemmas and using `ts` to solve the base case. If it fails,
+Constructs a proof of decreasing along a well founded relation, by simplifying, then applying
+lexicographic order lemmas and finally using `ts` to solve the base case. If it fails,
 it prints a message to help the user diagnose an ill-founded recursive definition.
 
 # delta
@@ -4715,9 +4769,9 @@ The `simp` tactic uses lemmas and hypotheses to simplify the main goal target or
 non-dependent hypotheses. It has many variants:
 - `simp` simplifies the main goal target using lemmas tagged with the attribute `[simp]`.
 - `simp [h₁, h₂, ..., hₙ]` simplifies the main goal target using the lemmas tagged
-  with the attribute `[simp]` and the given `hᵢ`'s, where the `hᵢ`'s are expressions.
-  If an `hᵢ` is a defined constant `f`, then the equational lemmas associated with
-  `f` are used. This provides a convenient way to unfold `f`.
+  with the attribute `[simp]` and the given `hᵢ`'s, where the `hᵢ`'s are expressions.-
+- If an `hᵢ` is a defined constant `f`, then `f` is unfolded. If `f` has equational lemmas associated
+  with it (and is not a projection or a `reducible` definition), these are used to rewrite with `f`.
 - `simp [*]` simplifies the main goal target using the lemmas tagged with the
   attribute `[simp]` and all hypotheses.
 - `simp only [h₁, h₂, ..., hₙ]` is like `simp [h₁, h₂, ..., hₙ]` but does not use `[simp]` lemmas.
@@ -4871,7 +4925,10 @@ example {a : ℕ}
 Defined in: `tacticSimp_wf`
 
 Unfold definitions commonly used in well founded relation definitions.
-This is primarily intended for internal use in `decreasing_tactic`.
+
+Since Lean 4.12, Lean unfolds these definitions automatically before presenting the goal to the
+user, and this tactic should no longer be necessary. Calls to `simp_wf` can be removed or replaced
+by plain calls to `simp`.
 
 # simpa
 Defined in: `Lean.Parser.Tactic.simpa`
@@ -5421,9 +5478,9 @@ Defined in: `Lean.Parser.Tactic.unfold`
 * `unfold id` unfolds definition `id`.
 * `unfold id1 id2 ...` is equivalent to `unfold id1; unfold id2; ...`.
 
-For non-recursive definitions, this tactic is identical to `delta`.
-For definitions by pattern matching, it uses "equation lemmas" which are
-autogenerated for each match arm.
+For non-recursive definitions, this tactic is identical to `delta`. For recursive definitions,
+it uses the "unfolding lemma" `id.eq_def`, which is generated for each recursive definition,
+to unfold according to the recursive definition given by the user.
 
 # unfold?
 Defined in: `Mathlib.Tactic.InteractiveUnfold.tacticUnfold?`
