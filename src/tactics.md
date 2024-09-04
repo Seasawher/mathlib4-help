@@ -2978,9 +2978,13 @@ Defined in: `Mathlib.Tactic.LinearCombination.linearCombination`
   configuration is set to false, then the tactic will simply set the user up to
   prove their target using the linear combination instead of normalizing the subtraction.
 
-Note: The left and right sides of all the equalities should have the same
-  type, and the coefficients should also have this type.  There must be
-  instances of `Mul` and `AddGroup` for this type.
+Note: The left and right sides of all the equalities should have the same type `α`, and the
+coefficients should also have type `α`.  For full functionality `α` should be a commutative ring --
+strictly speaking, a commutative semiring with "cancellative" addition (in the semiring case,
+negation and subtraction will be handled "formally" as if operating in the enveloping ring). If a
+nonstandard normalization is used (for example `abel` or `skip`), the tactic will work over types
+`α` with less algebraic structure: the minimum is instances of `[Add α] [IsRightCancelAdd α]`
+together with instances of whatever operations are used in the tactic call.
 
 * The input `e` in `linear_combination e` is a linear combination of proofs of equalities,
   given as a sum/difference of coefficients multiplied by expressions.
@@ -2996,17 +3000,6 @@ Note: The left and right sides of all the equalities should have the same
 * `linear_combination (exp := n) e` will take the goal to the `n`th power before subtracting the
   combination `e`. In other words, if the goal is `t1 = t2`, `linear_combination (exp := n) e`
   will change the goal to `(t1 - t2)^n = 0` before proceeding as above.
-  This feature is not supported for `linear_combination2`.
-* `linear_combination2 e` is the same as `linear_combination e` but it produces two
-  subgoals instead of one: rather than proving that `(a - b) - (a' - b') = 0` where
-  `a' = b'` is the linear combination from `e` and `a = b` is the goal,
-  it instead attempts to prove `a = a'` and `b = b'`.
-  Because it does not use subtraction, this form is applicable also to semirings.
-  * Note that a goal which is provable by `linear_combination e` may not be provable
-    by `linear_combination2 e`; in general you may need to add a coefficient to `e`
-    to make both sides match, as in `linear_combination2 e + c`.
-  * You can also reverse equalities using `← h`, so for example if `h₁ : a = b`
-    then `2 * (← h)` is a proof of `2 * b = 2 * a`.
 
 Example Usage:
 ```lean
@@ -3114,79 +3107,6 @@ axiom hqc : qc = 2*qc
 
 example (a b : ℚ) (h : ∀ p q : ℚ, p = q) : 3*a + qc = 3*b + 2*qc := by
   linear_combination' 3 * h a b + hqc
-```
-
-# linear_combination2
-Defined in: `Mathlib.Tactic.LinearCombination.tacticLinear_combination2____`
-
-`linear_combination` attempts to simplify the target by creating a linear combination
-  of a list of equalities and subtracting it from the target.
-  The tactic will create a linear
-  combination by adding the equalities together from left to right, so the order
-  of the input hypotheses does matter.  If the `normalize` field of the
-  configuration is set to false, then the tactic will simply set the user up to
-  prove their target using the linear combination instead of normalizing the subtraction.
-
-Note: The left and right sides of all the equalities should have the same
-  type, and the coefficients should also have this type.  There must be
-  instances of `Mul` and `AddGroup` for this type.
-
-* The input `e` in `linear_combination e` is a linear combination of proofs of equalities,
-  given as a sum/difference of coefficients multiplied by expressions.
-  The coefficients may be arbitrary expressions.
-  The expressions can be arbitrary proof terms proving equalities.
-  Most commonly they are hypothesis names `h1, h2, ...`.
-* `linear_combination (norm := tac) e` runs the "normalization tactic" `tac`
-  on the subgoal(s) after constructing the linear combination.
-  * The default normalization tactic is `ring1`, which closes the goal or fails.
-  * To get a subgoal in the case that it is not immediately provable, use
-    `ring_nf` as the normalization tactic.
-  * To avoid normalization entirely, use `skip` as the normalization tactic.
-* `linear_combination (exp := n) e` will take the goal to the `n`th power before subtracting the
-  combination `e`. In other words, if the goal is `t1 = t2`, `linear_combination (exp := n) e`
-  will change the goal to `(t1 - t2)^n = 0` before proceeding as above.
-  This feature is not supported for `linear_combination2`.
-* `linear_combination2 e` is the same as `linear_combination e` but it produces two
-  subgoals instead of one: rather than proving that `(a - b) - (a' - b') = 0` where
-  `a' = b'` is the linear combination from `e` and `a = b` is the goal,
-  it instead attempts to prove `a = a'` and `b = b'`.
-  Because it does not use subtraction, this form is applicable also to semirings.
-  * Note that a goal which is provable by `linear_combination e` may not be provable
-    by `linear_combination2 e`; in general you may need to add a coefficient to `e`
-    to make both sides match, as in `linear_combination2 e + c`.
-  * You can also reverse equalities using `← h`, so for example if `h₁ : a = b`
-    then `2 * (← h)` is a proof of `2 * b = 2 * a`.
-
-Example Usage:
-```lean
-example (x y : ℤ) (h1 : x*y + 2*x = 1) (h2 : x = y) : x*y = -2*y + 1 := by
-  linear_combination 1*h1 - 2*h2
-
-example (x y : ℤ) (h1 : x*y + 2*x = 1) (h2 : x = y) : x*y = -2*y + 1 := by
-  linear_combination h1 - 2*h2
-
-example (x y : ℤ) (h1 : x*y + 2*x = 1) (h2 : x = y) : x*y = -2*y + 1 := by
-  linear_combination (norm := ring_nf) -2*h2
-  /- Goal: x * y + x * 2 - 1 = 0 -/
-
-example (x y z : ℝ) (ha : x + 2*y - z = 4) (hb : 2*x + y + z = -2)
-    (hc : x + 2*y + z = 2) :
-    -3*x - 3*y - 4*z = 2 := by
-  linear_combination ha - hb - 2*hc
-
-example (x y : ℚ) (h1 : x + y = 3) (h2 : 3*x = 7) :
-    x*x*y + y*x*y + 6*x = 3*x*y + 14 := by
-  linear_combination x*y*h1 + 2*h2
-
-example (x y : ℤ) (h1 : x = -3) (h2 : y = 10) : 2*x = -6 := by
-  linear_combination (norm := skip) 2*h1
-  simp
-
-axiom qc : ℚ
-axiom hqc : qc = 2*qc
-
-example (a b : ℚ) (h : ∀ p q : ℚ, p = q) : 3*a + qc = 3*b + 2*qc := by
-  linear_combination 3 * h a b + hqc
 ```
 
 # linear_combination2
