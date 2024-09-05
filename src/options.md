@@ -400,13 +400,6 @@ default: `false`
 
 enable all linters
 
-## linter.cdot
-type: `Bool`
-
-default: `false`
-
-enable the `cdot` linter
-
 ## linter.constructorNameAsVariable
 type: `Bool`
 
@@ -420,13 +413,6 @@ type: `Bool`
 default: `true`
 
 if true, generate deprecation warnings
-
-## linter.dollarSyntax
-type: `Bool`
-
-default: `false`
-
-enable the `dollarSyntax` linter
 
 ## linter.dupNamespace
 type: `Bool`
@@ -466,13 +452,6 @@ enable the `have` vs `let` linter:
 * 1 -- active only on noisy declarations;
 * 2 or more -- always active.
 
-## linter.longLine
-type: `Bool`
-
-default: `false`
-
-enable the longLine linter
-
 ## linter.minImports
 type: `Bool`
 
@@ -486,13 +465,6 @@ type: `Bool`
 default: `false`
 
 enable the 'missing documentation' linter
-
-## linter.missingEnd
-type: `Bool`
-
-default: `false`
-
-enable the missing end linter
 
 ## linter.oldObtain
 type: `Bool`
@@ -529,6 +501,20 @@ default: `true`
 
 Linter to check that no unused custom declarations are declared for simps
 
+## linter.style.cdot
+type: `Bool`
+
+default: `false`
+
+enable the `cdot` linter
+
+## linter.style.dollarSyntax
+type: `Bool`
+
+default: `false`
+
+enable the `dollarSyntax` linter
+
 ## linter.style.lambdaSyntax
 type: `Bool`
 
@@ -542,6 +528,20 @@ type: `Nat`
 default: `1500`
 
 enable the longFile linter
+
+## linter.style.longLine
+type: `Bool`
+
+default: `false`
+
+enable the longLine linter
+
+## linter.style.missingEnd
+type: `Bool`
+
+default: `false`
+
+enable the missing end linter
 
 ## linter.style.setOption
 type: `Bool`
