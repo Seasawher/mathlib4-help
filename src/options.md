@@ -428,6 +428,13 @@ default: `true`
 
 Linter, mostly used by `@[to_additive]`, that checks that the source declaration doesn't have certain attributes
 
+## linter.flexible
+type: `Bool`
+
+default: `false`
+
+enable the flexible linter
+
 ## linter.globalAttributeIn
 type: `Bool`
 
@@ -525,7 +532,7 @@ enable the `lambdaSyntax` linter
 ## linter.style.longFile
 type: `Nat`
 
-default: `1500`
+default: `0`
 
 enable the longFile linter
 
