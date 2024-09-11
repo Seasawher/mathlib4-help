@@ -674,8 +674,8 @@ The `simps` attribute.
 # specialize
  mark definition to always be specialized
 
-# stacks
- Apply a Stacks project tag to a theorem.
+# stacksTag
+ Apply a Stacks or Kerodon project tag to a theorem.
 
 # stx_parser
  parser
