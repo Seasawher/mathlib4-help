@@ -8,11 +8,11 @@ has been changed to accommodate a change in Lean core.
 They typically require further action/maintenance to be taken in the future.
 
 # \#aesop_rules
-Defined in: `Aesop.Frontend.Parser.«command#aesop_rules»`
+Defined in: `Aesop.Frontend.Parser.showRules`
 
 
 # \#aesop_stats
-Defined in: `Aesop.Frontend.Parser.«command#aesop_stats_»`
+Defined in: `Aesop.Frontend.Parser.showStats`
 
 
 # \#allow_unused_tactic
@@ -480,6 +480,17 @@ the command adds metavariables until the argument is no longer a function.
 The `#instances` command is closely related to `#synth`, but `#synth` does the full
 instance synthesis algorithm and `#instances` does the first step of finding potential instances.
 
+# \#kerodon_tags
+Defined in: `Mathlib.StacksTag.kerodonTags`
+
+The `#kerodon_tags` command retrieves all declarations that have the `kerodon` attribute.
+
+For each found declaration, it prints a line
+```
+'declaration_name' corresponds to tag 'declaration_tag'.
+```
+The variant `#kerodon_tags!` also adds the theorem statement after each summary line.
+
 # \#lint
 Defined in: `Std.Tactic.Lint.«command#lint+-*Only___»`
 
@@ -717,7 +728,7 @@ Defined in: `Mathlib.Tactic.Conv.«command#simpOnly_=>__»`
   It is mostly useful for disambiguating the expression `e` from the lemmas.
 
 # \#stacks_tags
-Defined in: `Mathlib.Stacks.stacksTags`
+Defined in: `Mathlib.StacksTag.stacksTags`
 
 `#stacks_tags` retrieves all declarations that have the `stacks` attribute.
 
@@ -804,7 +815,7 @@ tools. The string is associated with the corresponding position in the file. It 
 multiple times in the same file.
 
 # add_aesop_rules
-Defined in: `Aesop.Frontend.Parser.command_Add_aesop_rules_`
+Defined in: `Aesop.Frontend.Parser.addRules`
 
 
 # add_decl_doc
@@ -990,7 +1001,7 @@ def f := 37
 displays the info message `Min: 7 Max: 8 StdDev: 14%`.
 
 # declare_aesop_rule_sets
-Defined in: `Aesop.Frontend.Parser.declareAesopRuleSets`
+Defined in: `Aesop.Frontend.Parser.declareRuleSets`
 
 
 # declare_bitwise_uint_theorems
@@ -1086,7 +1097,7 @@ Defined in: `Lean.Parser.Command.end`
 with `end <id>`. The `end` command is optional at the end of a file.
 
 # erase_aesop_rules
-Defined in: `Aesop.Frontend.Parser.«commandErase_aesop_rules[_,,]»`
+Defined in: `Aesop.Frontend.Parser.eraseRules`
 
 
 # export
