@@ -23,6 +23,10 @@ These become metavariables in the output.
 Defined in: `Mathlib.Tactic.Find.«tactic#find_»`
 
 
+# \#leansearch
+Defined in: `LeanSearchClient.leansearch_tactic`
+
+
 # (
 Defined in: `Lean.Parser.Tactic.paren`
 
@@ -2403,6 +2407,13 @@ Defined in: `Mathlib.Tactic.Hint.hintStx`
 The `hint` tactic tries every tactic registered using `register_hint tac`,
 and reports any that succeed.
 
+# html!
+Defined in: `ProofWidgets.HtmlCommand.htmlTac`
+
+The `html!` tactic is deprecated and does nothing.
+If you have a use for it,
+please open an issue on https://github.com/leanprover-community/ProofWidgets4.
+
 # induction
 Defined in: `Lean.Parser.Tactic.induction`
 
@@ -4564,7 +4575,7 @@ Rotate the goals to the right by `n`. That is, take the goal at the back
 and push it to the front `n` times. If `n` is omitted, it defaults to `1`.
 
 # rsuffices
-Defined in: `rsuffices`
+Defined in: `Mathlib.Tactic.rsuffices`
 
 The `rsuffices` tactic is an alternative version of `suffices`, that allows the usage
 of any syntax that would be valid in an `obtain` block. This tactic just calls `obtain`

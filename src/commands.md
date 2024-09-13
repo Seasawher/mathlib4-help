@@ -454,6 +454,15 @@ as the docstring will be displayed here.
 
 The form `#help attr id` will show only attributes that begin with `id`.
 
+# \#html
+Defined in: `ProofWidgets.HtmlCommand.htmlCmd`
+
+Display a value of type `Html` in the infoview.
+
+The input can be a pure value
+or a computation in any Lean metaprogramming monad
+(e.g. `CommandElabM Html`).
+
 # \#instances
 Defined in: `Batteries.Tactic.Instances.instancesCmd`
 
@@ -490,6 +499,10 @@ For each found declaration, it prints a line
 'declaration_name' corresponds to tag 'declaration_tag'.
 ```
 The variant `#kerodon_tags!` also adds the theorem statement after each summary line.
+
+# \#leansearch
+Defined in: `LeanSearchClient.leansearch_cmd`
+
 
 # \#lint
 Defined in: `Std.Tactic.Lint.«command#lint+-*Only___»`
@@ -737,6 +750,21 @@ For each found declaration, it prints a line
 'declaration_name' corresponds to tag 'declaration_tag'.
 ```
 The variant `#stacks_tags!` also adds the theorem statement after each summary line.
+
+# \#string_diagram
+Defined in: `Mathlib.Tactic.Widget.stringDiagram`
+
+Display the string diagram for a given term.
+
+Example usage:
+```lean
+/- String diagram for the equality theorem. -/
+#string_diagram MonoidalCategory.whisker_exchange
+
+/- String diagram for the morphism. -/
+variable {C : Type u} [Category.{v} C] [MonoidalCategory C] {X Y : C} (f : 𝟙_ C ⟶ X ⊗ Y) in
+#string_diagram f
+```
 
 # \#synth
 Defined in: `Lean.Parser.Command.synth`

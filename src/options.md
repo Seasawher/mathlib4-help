@@ -386,6 +386,13 @@ default: `false`
 
 enable the use of the `lemma` command as a synonym for `theorem`
 
+## leansearch.queries
+type: `Nat`
+
+default: `6`
+
+Number of results requested from leansearch (default 6)
+
 ## linter.admit
 type: `Bool`
 
@@ -3407,6 +3414,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.split.failure
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.string_diagram
 type: `Bool`
 
 default: `false`
