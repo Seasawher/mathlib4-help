@@ -23,10 +23,6 @@ These become metavariables in the output.
 Defined in: `Mathlib.Tactic.Find.«tactic#find_»`
 
 
-# \#leansearch
-Defined in: `LeanSearchClient.leansearch_tactic`
-
-
 # (
 Defined in: `Lean.Parser.Tactic.paren`
 
@@ -526,11 +522,39 @@ This means that whenever there is an applied lambda expression such as
 `(fun x => f x) y` then the argument is substituted into the lambda expression
 yielding an expression such as `f y`.
 
+# bicategory
+Defined in: `Mathlib.Tactic.Bicategory.tacticBicategory`
+
+Use the coherence theorem for bicategories to solve equations in a bicategory,
+where the two sides only differ by replacing strings of bicategory structural morphisms
+(that is, associators, unitors, and identities)
+with different strings of structural morphisms with the same source and target.
+
+That is, `bicategory` can handle goals of the form
+`a ≫ f ≫ b ≫ g ≫ c = a' ≫ f ≫ b' ≫ g ≫ c'`
+where `a = a'`, `b = b'`, and `c = c'` can be proved using `bicategory_coherence`.
+
 # bicategory_coherence
 Defined in: `Mathlib.Tactic.BicategoryCoherence.tacticBicategory_coherence`
 
 Coherence tactic for bicategories.
 Use `pure_coherence` instead, which is a frontend to this one.
+
+# bicategory_coherence
+Defined in: `Mathlib.Tactic.Bicategory.tacticBicategory_coherence`
+
+Close the goal of the form `η = θ`, where `η` and `θ` are 2-isomorphisms made up only of
+associators, unitors, and identities.
+```lean
+example {B : Type} [Bicategory B] {a : B} :
+  (λ_ (𝟙 a)).hom = (ρ_ (𝟙 a)).hom := by
+  bicategory_coherence
+```
+
+# bicategory_nf
+Defined in: `Mathlib.Tactic.Bicategory.tacticBicategory_nf`
+
+Normalize the both sides of an equality.
 
 # bitwise_assoc_tac
 Defined in: `Nat.tacticBitwise_assoc_tac`
@@ -3322,6 +3346,29 @@ example (x y z k : ℤ)
   mono
 ```
 
+# monoidal
+Defined in: `Mathlib.Tactic.Monoidal.tacticMonoidal`
+
+Use the coherence theorem for monoidal categories to solve equations in a monoidal category,
+where the two sides only differ by replacing strings of monoidal structural morphisms
+(that is, associators, unitors, and identities)
+with different strings of structural morphisms with the same source and target.
+
+That is, `monoidal` can handle goals of the form
+`a ≫ f ≫ b ≫ g ≫ c = a' ≫ f ≫ b' ≫ g ≫ c'`
+where `a = a'`, `b = b'`, and `c = c'` can be proved using `monoidal_coherence`.
+
+# monoidal_coherence
+Defined in: `Mathlib.Tactic.Monoidal.tacticMonoidal_coherence`
+
+Close the goal of the form `η = θ`, where `η` and `θ` are 2-isomorphisms made up only of
+associators, unitors, and identities.
+```lean
+example {C : Type} [Category C] [MonoidalCategory C] :
+  (λ_ (𝟙_ C)).hom = (ρ_ (𝟙_ C)).hom := by
+  monoidal_coherence
+```
+
 # monoidal_coherence
 Defined in: `Mathlib.Tactic.Coherence.tacticMonoidal_coherence`
 
@@ -3329,7 +3376,7 @@ Coherence tactic for monoidal categories.
 Use `pure_coherence` instead, which is a frontend to this one.
 
 # monoidal_nf
-Defined in: `tacticMonoidal_nf`
+Defined in: `Mathlib.Tactic.Monoidal.tacticMonoidal_nf`
 
 Normalize the both sides of an equality.
 
@@ -5698,4 +5745,6 @@ syntax ... [Lean.Parser.Tactic.unknown]
 
 syntax ... [Lean.cdot]
 `· tac` focuses on the main goal and tries to solve it using `tac`, or else fails.
+
+syntax ... [LeanSearchClient.search_tactic]
 

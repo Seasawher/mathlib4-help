@@ -500,10 +500,6 @@ For each found declaration, it prints a line
 ```
 The variant `#kerodon_tags!` also adds the theorem statement after each summary line.
 
-# \#leansearch
-Defined in: `LeanSearchClient.leansearch_cmd`
-
-
 # \#lint
 Defined in: `Std.Tactic.Lint.«command#lint+-*Only___»`
 
@@ -2125,6 +2121,8 @@ syntax ... [Lean.Parser.Command.declaration]
 syntax ... [Lean.Parser.Command.initialize]
 
 syntax ... [Lean.Parser.Command.mixfix]
+
+syntax ... [LeanSearchClient.search_cmd]
 
 syntax ... [lemma]
 `lemma` means the same as `theorem`. It is used to denote "less important" theorems
