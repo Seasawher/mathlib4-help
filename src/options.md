@@ -393,6 +393,13 @@ default: `6`
 
 Number of results requested from leansearch (default 6)
 
+## leansearchclient.useragent
+type: `String`
+
+default: `"LeanSearchClient"`
+
+Username for leansearchclient
+
 ## linter.admit
 type: `Bool`
 
@@ -656,6 +663,13 @@ default: `true`
 
 enable the 'unused variables' linter to mark unused pattern variables
 
+## loogle.queries
+type: `Nat`
+
+default: `6`
+
+Number of results requested from loogle (default 6)
+
 ## match.ignoreUnusedAlts
 type: `Bool`
 
@@ -697,6 +711,13 @@ type: `Nat`
 default: `32`
 
 maximum universe level offset
+
+## moogle.queries
+type: `Nat`
+
+default: `6`
+
+Number of results requested from moogle (default 6)
 
 ## pp.all
 type: `Bool`
@@ -2914,6 +2935,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.bicategory
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.bound.attribute
 type: `Bool`
 
@@ -3244,6 +3272,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.linarith.detail
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.monoidal
 type: `Bool`
 
 default: `false`
