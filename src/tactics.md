@@ -23,6 +23,10 @@ These become metavariables in the output.
 Defined in: `Mathlib.Tactic.Find.«tactic#find_»`
 
 
+# \#loogle
+Defined in: `LeanSearchClient.loogle_tactic`
+
+
 # (
 Defined in: `Lean.Parser.Tactic.paren`
 
