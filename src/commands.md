@@ -527,6 +527,10 @@ Defined in: `«command#long_names_»`
 Lists all declarations with a long name, gathered according to the module they are defined in.
 Use as `#long_names` or `#long_names 100` to specify the length.
 
+# \#loogle
+Defined in: `LeanSearchClient.loogle_cmd`
+
+
 # \#min_imports
 Defined in: `«command#min_imports»`
 
