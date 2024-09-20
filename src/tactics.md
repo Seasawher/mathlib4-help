@@ -23,8 +23,16 @@ These become metavariables in the output.
 Defined in: `Mathlib.Tactic.Find.«tactic#find_»`
 
 
+# \#leansearch
+Defined in: `LeanSearchClient.leansearch_search_tactic`
+
+
 # \#loogle
 Defined in: `LeanSearchClient.loogle_tactic`
+
+
+# \#moogle
+Defined in: `LeanSearchClient.moogle_search_tactic`
 
 
 # (
@@ -5346,12 +5354,9 @@ of hypotheses of the form `Pᵢ → Pⱼ` or `Pᵢ ↔ Pⱼ` have been introduce
 Example:
 ```lean
 example : TFAE [P, Q, R] := by
-  tfae_have 1 → 2
-  · /- proof of P → Q -/
-  tfae_have 2 → 1
-  · /- proof of Q → P -/
-  tfae_have 2 ↔ 3
-  · /- proof of Q ↔ R -/
+  tfae_have 1 → 2 := sorry /- proof of P → Q -/
+  tfae_have 2 → 1 := sorry /- proof of Q → P -/
+  tfae_have 2 ↔ 3 := sorry /- proof of Q ↔ R -/
   tfae_finish
 ```
 
@@ -5359,36 +5364,100 @@ example : TFAE [P, Q, R] := by
 Defined in: `Mathlib.Tactic.TFAE.tfaeHave`
 
 `tfae_have` introduces hypotheses for proving goals of the form `TFAE [P₁, P₂, ...]`. Specifically,
-`tfae_have i arrow j` introduces a hypothesis of type `Pᵢ arrow Pⱼ` to the local context,
-where `arrow` can be `→`, `←`, or `↔`. Note that `i` and `j` are natural number indices (beginning
-at 1) used to specify the propositions `P₁, P₂, ...` that appear in the `TFAE` goal list. A proof
-is required afterward, typically via a tactic block.
+`tfae_have i <arrow> j := ...` introduces a hypothesis of type `Pᵢ <arrow> Pⱼ` to the local
+context, where `<arrow>` can be `→`, `←`, or `↔`. Note that `i` and `j` are natural number indices
+(beginning at 1) used to specify the propositions `P₁, P₂, ...` that appear in the goal.
 
 ```lean
 example (h : P → R) : TFAE [P, Q, R] := by
-  tfae_have 1 → 3
-  · exact h
+  tfae_have 1 → 3 := h
   ...
 ```
 The resulting context now includes `tfae_1_to_3 : P → R`.
 
-The introduced hypothesis can be given a custom name, in analogy to `have` syntax:
-```lean
-tfae_have h : 2 ↔ 3
-```
-
 Once sufficient hypotheses have been introduced by `tfae_have`, `tfae_finish` can be used to close
-the goal.
+the goal. For example,
 
 ```lean
 example : TFAE [P, Q, R] := by
-  tfae_have 1 → 2
-  · /- proof of P → Q -/
-  tfae_have 2 → 1
-  · /- proof of Q → P -/
-  tfae_have 2 ↔ 3
-  · /- proof of Q ↔ R -/
+  tfae_have 1 → 2 := sorry /- proof of P → Q -/
+  tfae_have 2 → 1 := sorry /- proof of Q → P -/
+  tfae_have 2 ↔ 3 := sorry /- proof of Q ↔ R -/
   tfae_finish
+```
+
+All relevant features of `have` are supported by `tfae_have`, including naming, destructuring, goal
+creation, and matching. These are demonstrated below.
+
+```lean
+example : TFAE [P, Q] := by
+  -- `tfae_1_to_2 : P → Q`:
+  tfae_have 1 → 2 := sorry
+  -- `hpq : P → Q`:
+  tfae_have hpq : 1 → 2 := sorry
+  -- inaccessible `h✝ : P → Q`:
+  tfae_have _ : 1 → 2 := sorry
+  -- `tfae_1_to_2 : P → Q`, and `?a` is a new goal:
+  tfae_have 1 → 2 := f ?a
+  -- create a goal of type `P → Q`:
+  tfae_have 1 → 2
+  · exact (sorry : P → Q)
+  -- match on `p : P` and prove `Q`:
+  tfae_have 1 → 2
+  | p => f p
+  -- introduces `pq : P → Q`, `qp : Q → P`:
+  tfae_have ⟨pq, qp⟩ : 1 ↔ 2 := sorry
+  ...
+```
+
+# tfae_have
+Defined in: `Mathlib.Tactic.TFAE.tfaeHave'`
+
+`tfae_have` introduces hypotheses for proving goals of the form `TFAE [P₁, P₂, ...]`. Specifically,
+`tfae_have i <arrow> j := ...` introduces a hypothesis of type `Pᵢ <arrow> Pⱼ` to the local
+context, where `<arrow>` can be `→`, `←`, or `↔`. Note that `i` and `j` are natural number indices
+(beginning at 1) used to specify the propositions `P₁, P₂, ...` that appear in the goal.
+
+```lean
+example (h : P → R) : TFAE [P, Q, R] := by
+  tfae_have 1 → 3 := h
+  ...
+```
+The resulting context now includes `tfae_1_to_3 : P → R`.
+
+Once sufficient hypotheses have been introduced by `tfae_have`, `tfae_finish` can be used to close
+the goal. For example,
+
+```lean
+example : TFAE [P, Q, R] := by
+  tfae_have 1 → 2 := sorry /- proof of P → Q -/
+  tfae_have 2 → 1 := sorry /- proof of Q → P -/
+  tfae_have 2 ↔ 3 := sorry /- proof of Q ↔ R -/
+  tfae_finish
+```
+
+All relevant features of `have` are supported by `tfae_have`, including naming, destructuring, goal
+creation, and matching. These are demonstrated below.
+
+```lean
+example : TFAE [P, Q] := by
+  -- `tfae_1_to_2 : P → Q`:
+  tfae_have 1 → 2 := sorry
+  -- `hpq : P → Q`:
+  tfae_have hpq : 1 → 2 := sorry
+  -- inaccessible `h✝ : P → Q`:
+  tfae_have _ : 1 → 2 := sorry
+  -- `tfae_1_to_2 : P → Q`, and `?a` is a new goal:
+  tfae_have 1 → 2 := f ?a
+  -- create a goal of type `P → Q`:
+  tfae_have 1 → 2
+  · exact (sorry : P → Q)
+  -- match on `p : P` and prove `Q`:
+  tfae_have 1 → 2
+  | p => f p
+  -- introduces `pq : P → Q`, `qp : Q → P`:
+  tfae_have ⟨pq, qp⟩ : 1 ↔ 2 := sorry
+  ...
 ```
 
 # toFinite_tac
@@ -5749,6 +5818,4 @@ syntax ... [Lean.Parser.Tactic.unknown]
 
 syntax ... [Lean.cdot]
 `· tac` focuses on the main goal and tries to solve it using `tac`, or else fails.
-
-syntax ... [LeanSearchClient.search_tactic]
 
