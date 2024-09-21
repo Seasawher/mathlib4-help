@@ -3921,7 +3921,7 @@ Defined in: `Real.«tacticPi_upper_bound[_,,]»`
 
 Create a proof of `π < a` for a fixed rational number `a`, given a witness, which is a
 sequence of rational numbers `√2 < r 1 < r 2 < ... < r n < 2` satisfying the property that
-`√(2 + r i) ≥ r(i+1)`, where `r 0 = 0` and `√(2 - r n) ≥ (a - 1/4^n) / 2^(n+1)`.
+`√(2 + r i) ≥ r(i+1)`, where `r 0 = 0` and `√(2 - r n) ≤ (a - 1/4^n) / 2^(n+1)`.
 
 # pick_goal
 Defined in: `Batteries.Tactic.«tacticPick_goal-_»`
