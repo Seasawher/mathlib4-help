@@ -77,6 +77,13 @@ default: `false`
 
 (aesop) Print smaller error messages. Used for testing.
 
+## aesop.warn.applyIff
+type: `Bool`
+
+default: `true`
+
+(aesop) Warn when apply builder is applied to a rule with conclusion of the form A ↔ B
+
 ## allowUnsafeReducibility
 type: `Bool`
 
