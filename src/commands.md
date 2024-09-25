@@ -505,14 +505,14 @@ Defined in: `LeanSearchClient.leansearch_search_cmd`
 
 
 # \#lint
-Defined in: `Std.Tactic.Lint.«command#lint+-*Only___»`
+Defined in: `Batteries.Tactic.Lint.«command#lint+-*Only___»`
 
 The command `#lint` runs the linters on the current file (by default).
 
 `#lint only someLinter` can be used to run only a single linter.
 
 # \#list_linters
-Defined in: `Std.Tactic.Lint.«command#list_linters»`
+Defined in: `Batteries.Tactic.Lint.«command#list_linters»`
 
 The command `#list_linters` prints a list of all available linters.
 
