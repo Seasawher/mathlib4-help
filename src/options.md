@@ -435,6 +435,13 @@ default: `true`
 
 if true, generate deprecation warnings
 
+## linter.docPrime
+type: `Bool`
+
+default: `false`
+
+enable the docPrime linter
+
 ## linter.dupNamespace
 type: `Bool`
 
