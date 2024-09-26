@@ -3275,6 +3275,41 @@ The syntax `match ⋯ with.` has been deprecated in favor of `nomatch ⋯`.
 
 Both now support multiple discriminants.
 
+# match_scalars
+Defined in: `Mathlib.Tactic.Module.tacticMatch_scalars`
+
+Given a goal which is an equality in a type `M` (with `M` an `AddCommMonoid`), parse the LHS and
+RHS of the goal as linear combinations of `M`-atoms over some semiring `R`, and reduce the goal to
+the respective equalities of the `R`-coefficients of each atom.
+
+For example, this produces the goal `⊢ a * 1 + b * 1 = (b + a) * 1`:
+```lean
+example [AddCommMonoid M] [Semiring R] [Module R M] (a b : R) (x : M) :
+    a • x + b • x = (b + a) • x := by
+  match_scalars
+```
+This produces the two goals `⊢ a * (a * 1) + b * (b * 1) = 1` (from the `x` atom) and
+`⊢ a * -(b * 1) + b * (a * 1) = 0` (from the `y` atom):
+```lean
+example [AddCommGroup M] [Ring R] [Module R M] (a b : R) (x : M) :
+    a • (a • x - b • y) + (b • a • y + b • b • x) = x := by
+  match_scalars
+```
+This produces the goal `⊢ -2 * (a * 1) = a * (-2 * 1)`:
+```lean
+example [AddCommGroup M] [Ring R] [Module R M] (a : R) (x : M) :
+    -(2:R) • a • x = a • (-2:ℤ) • x  := by
+  match_scalars
+```
+The scalar type for the goals produced by the `match_scalars` tactic is the largest scalar type
+encountered; for example, if `ℕ`, `ℚ` and a characteristic-zero field `K` all occur as scalars, then
+the goals produced are equalities in `K`.  A variant of `push_cast` is used internally in
+`match_scalars` to interpret scalars from the other types in this largest type.
+
+If the set of scalar types encountered is not totally ordered (in the sense that for all rings `R`,
+`S` encountered, it holds that either `Algebra R S` or `Algebra S R`), then the `match_scalars`
+tactic fails.
+
 # match_target
 Defined in: `Mathlib.Tactic.tacticMatch_target_`
 
@@ -3327,6 +3362,37 @@ Defined in: `Mathlib.Tactic.ModCases.«tacticMod_cases_:_%_»`
 * In general, `mod_cases h : e % n` works
   when `n` is a positive numeral and `e` is an expression of type `ℕ` or `ℤ`.
 * If `h` is omitted as in `mod_cases e % n`, it will be default-named `H`.
+
+# module
+Defined in: `Mathlib.Tactic.Module.tacticModule`
+
+Given a goal which is an equality in a type `M` (with `M` an `AddCommMonoid`), parse the LHS and
+RHS of the goal as linear combinations of `M`-atoms over some commutative semiring `R`, and prove
+the goal by checking that the LHS- and RHS-coefficients of each atom are the same up to
+ring-normalization in `R`.
+
+(If the proofs of coefficient-wise equality will require more reasoning than just
+ring-normalization, use the tactic `match_scalars` instead, and then prove coefficient-wise equality
+by hand.)
+
+Example uses of the `module` tactic:
+```lean
+example [AddCommMonoid M] [CommSemiring R] [Module R M] (a b : R) (x : M) :
+    a • x + b • x = (b + a) • x := by
+  module
+
+example [AddCommMonoid M] [Field K] [CharZero K] [Module K M] (x : M) :
+    (2:K)⁻¹ • x + (3:K)⁻¹ • x + (6:K)⁻¹ • x = x := by
+  module
+
+example [AddCommGroup M] [CommRing R] [Module R M] (a : R) (v w : M) :
+    (1 + a ^ 2) • (v + w) - a • (a • v - w) = v + (1 + a + a ^ 2) • w := by
+  module
+
+example [AddCommGroup M] [CommRing R] [Module R M] (a b μ ν : R) (x y : M) :
+    (μ - ν) • a • x = (a • μ • x + b • ν • y) - ν • (a • x + b • y) := by
+  module
+```
 
 # monicity
 Defined in: `Mathlib.Tactic.ComputeDegree.monicityMacro`
