@@ -2082,6 +2082,12 @@ example (f : ℕ → Prop) (p : Fin 3) (h0 : f 0) (h1 : f 1) (h2 : f 2) : f p.va
 ```
 after `fin_cases p; simp`, there are three goals, `f 0`, `f 1`, and `f 2`.
 
+# fin_omega
+Defined in: `Fin.tacticFin_omega`
+
+Preprocessor for `omega` to handle inequalities in `Fin`.
+Note that this involves a lot of case splitting, so may be slow.
+
 # find
 Defined in: `Mathlib.Tactic.Find.tacticFind`
 
