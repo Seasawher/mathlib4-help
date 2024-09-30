@@ -367,6 +367,12 @@ division-free.
 # field_simps_proc
  simproc set for field_simps_proc
 
+# fin_omega
+ A simp set for the `fin_omega` wrapper around `omega`. 
+
+# fin_omega_proc
+ simproc set for fin_omega_proc
+
 # formatter
  Register a formatter for a parser.
 
