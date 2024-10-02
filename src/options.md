@@ -564,6 +564,13 @@ default: `0`
 
 enable the longFile linter
 
+## linter.style.longFileDefValue
+type: `Nat`
+
+default: `1500`
+
+a soft upper bound on the number of lines of each file
+
 ## linter.style.longLine
 type: `Bool`
 
