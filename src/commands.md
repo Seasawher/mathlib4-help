@@ -503,6 +503,19 @@ The variant `#kerodon_tags!` also adds the theorem statement after each summary 
 # \#leansearch
 Defined in: `LeanSearchClient.leansearch_search_cmd`
 
+Search [LeanSearch](https://leansearch.net/) from within Lean.
+Queries should be a string that ends with a `.` or `?`. This works as a command, as a term
+and as a tactic as in the following examples. In tactic mode, only valid tactics are displayed.
+
+```lean
+#leansearch "If a natural number n is less than m, then the successor of n is less than the successor of m."
+
+example := #leansearch "If a natural number n is less than m, then the successor of n is less than the successor of m."
+
+example : 3 ≤ 5 := by
+  #leansearch "If a natural number n is less than m, then the successor of n is less than the successor of m."
+  sorry
+```
 
 # \#lint
 Defined in: `Batteries.Tactic.Lint.«command#lint+-*Only___»`
@@ -534,6 +547,106 @@ Use as `#long_names` or `#long_names 100` to specify the length.
 # \#loogle
 Defined in: `LeanSearchClient.loogle_cmd`
 
+Search [Loogle](https://loogle.lean-lang.org/json) from within Lean. This can be used as a command, term or tactic as in the following examples. In the case of a tactic, only valid tactics are displayed.
+
+
+```lean
+#loogle List ?a → ?a
+
+example := #loogle List ?a → ?a
+
+example : 3 ≤ 5 := by
+  #loogle Nat.succ_le_succ
+  sorry
+
+```
+
+## Loogle Usage
+
+Loogle finds definitions and lemmas in various ways:
+
+By constant:
+🔍 Real.sin
+finds all lemmas whose statement somehow mentions the sine function.
+
+By lemma name substring:
+🔍 \"differ\"
+finds all lemmas that have \"differ\" somewhere in their lemma name.
+
+By subexpression:
+🔍 _ * (_ ^ _)
+finds all lemmas whose statements somewhere include a product where the second argument is raised to some power.
+
+The pattern can also be non-linear, as in
+🔍 Real.sqrt ?a * Real.sqrt ?a
+
+If the pattern has parameters, they are matched in any order. Both of these will find List.map:
+🔍 (?a -> ?b) -> List ?a -> List ?b
+🔍 List ?a -> (?a -> ?b) -> List ?b
+
+By main conclusion:
+🔍 |- tsum _ = _ * tsum _
+finds all lemmas where the conclusion (the subexpression to the right of all → and ∀) has the given shape.
+
+As before, if the pattern has parameters, they are matched against the hypotheses of the lemma in any order; for example,
+🔍 |- _ < _ → tsum _ < tsum _
+will find tsum_lt_tsum even though the hypothesis f i < g i is not the last.
+
+If you pass more than one such search filter, separated by commas Loogle will return lemmas which match all of them. The search
+🔍 Real.sin, \"two\", tsum, _ * _, _ ^ _, |- _ < _ → _
+woould find all lemmas which mention the constants Real.sin and tsum, have \"two\" as a substring of the lemma name, include a product and a power somewhere in the type, and have a hypothesis of the form _ < _ (if there were any such lemmas). Metavariables (?a) are assigned independently in each filter.
+
+# \#loogle
+Defined in: `LeanSearchClient.just_loogle_cmd`
+
+Search [Loogle](https://loogle.lean-lang.org/json) from within Lean. This can be used as a command, term or tactic as in the following examples. In the case of a tactic, only valid tactics are displayed.
+
+
+```lean
+#loogle List ?a → ?a
+
+example := #loogle List ?a → ?a
+
+example : 3 ≤ 5 := by
+  #loogle Nat.succ_le_succ
+  sorry
+
+```
+
+## Loogle Usage
+
+Loogle finds definitions and lemmas in various ways:
+
+By constant:
+🔍 Real.sin
+finds all lemmas whose statement somehow mentions the sine function.
+
+By lemma name substring:
+🔍 \"differ\"
+finds all lemmas that have \"differ\" somewhere in their lemma name.
+
+By subexpression:
+🔍 _ * (_ ^ _)
+finds all lemmas whose statements somewhere include a product where the second argument is raised to some power.
+
+The pattern can also be non-linear, as in
+🔍 Real.sqrt ?a * Real.sqrt ?a
+
+If the pattern has parameters, they are matched in any order. Both of these will find List.map:
+🔍 (?a -> ?b) -> List ?a -> List ?b
+🔍 List ?a -> (?a -> ?b) -> List ?b
+
+By main conclusion:
+🔍 |- tsum _ = _ * tsum _
+finds all lemmas where the conclusion (the subexpression to the right of all → and ∀) has the given shape.
+
+As before, if the pattern has parameters, they are matched against the hypotheses of the lemma in any order; for example,
+🔍 |- _ < _ → tsum _ < tsum _
+will find tsum_lt_tsum even though the hypothesis f i < g i is not the last.
+
+If you pass more than one such search filter, separated by commas Loogle will return lemmas which match all of them. The search
+🔍 Real.sin, \"two\", tsum, _ * _, _ ^ _, |- _ < _ → _
+woould find all lemmas which mention the constants Real.sin and tsum, have \"two\" as a substring of the lemma name, include a product and a power somewhere in the type, and have a hypothesis of the form _ < _ (if there were any such lemmas). Metavariables (?a) are assigned independently in each filter.
 
 # \#min_imports
 Defined in: `«command#min_imports»`
@@ -564,6 +677,19 @@ Defined in: `«command#minimize_imports»`
 # \#moogle
 Defined in: `LeanSearchClient.moogle_search_cmd`
 
+Search [Moogle](https://www.moogle.ai/api/search) from within Lean.
+Queries should be a string that ends with a `.` or `?`. This works as a command, as a term
+and as a tactic as in the following examples. In tactic mode, only valid tactics are displayed.
+
+```lean
+#moogle "If a natural number n is less than m, then the successor of n is less than the successor of m."
+
+example := #moogle "If a natural number n is less than m, then the successor of n is less than the successor of m."
+
+example : 3 ≤ 5 := by
+  #moogle "If a natural number n is less than m, then the successor of n is less than the successor of m."
+  sorry
+```
 
 # \#norm_num
 Defined in: `Mathlib.Tactic.normNumCmd`
