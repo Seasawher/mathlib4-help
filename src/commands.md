@@ -1750,7 +1750,7 @@ It is also possible to specify the module instead with
 `open private a b c from Other.Module`.
 
 # proof_wanted
-Defined in: `proof_wanted`
+Defined in: `«proof_wanted»`
 
 This proof would be a welcome contribution to the library!
 
@@ -2084,7 +2084,7 @@ When a definition mentions a variable, Lean will add it as an argument of the de
 useful in particular when writing many definitions that have parameters in common (see below for an
 example).
 
-Variable declarations have the same flexibility as regular function paramaters. In particular they
+Variable declarations have the same flexibility as regular function parameters. In particular they
 can be [explicit, implicit][binder docs], or [instance implicit][tpil classes] (in which case they
 can be anonymous). This can be changed, for instance one can turn explicit variable `x` into an
 implicit one with `variable {x}`. Note that currently, you should avoid changing how variables are
@@ -2260,6 +2260,6 @@ syntax ... [Lean.Parser.Command.initialize]
 
 syntax ... [Lean.Parser.Command.mixfix]
 
-syntax ... [lemma]
+syntax ... [«lemma»]
 `lemma` means the same as `theorem`. It is used to denote "less important" theorems
 

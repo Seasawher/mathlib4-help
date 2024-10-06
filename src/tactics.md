@@ -241,6 +241,19 @@ example (a b c d e f g N : ℕ) : (a + b) + (c + d) + (e + f) + g ≤ N := by
   -- ⊢ a + d + e + f + c + g + b ≤ N
 ```
 
+# ac_nf
+Defined in: `Lean.Parser.Tactic.acNf`
+
+`ac_nf` normalizes equalities up to application of an associative and commutative operator.
+```lean
+instance : Associative (α := Nat) (.+.) := ⟨Nat.add_assoc⟩
+instance : Commutative (α := Nat) (.+.) := ⟨Nat.add_comm⟩
+
+example (a b c d : Nat) : a + b + c + d = d + (b + c) + a := by
+ ac_nf
+ -- goal: a + (b + (c + d)) = a + (b + (c + d))
+```
+
 # ac_rfl
 Defined in: `Lean.Parser.Tactic.acRfl`
 
@@ -370,6 +383,31 @@ Defined in: `Aesop.tacticAesop_unfold_`
 # aesop_unfold
 Defined in: `Aesop.tacticAesop_unfold_At_`
 
+
+# algebraize
+Defined in: `Mathlib.Tactic.tacticAlgebraize____`
+
+Tactic that, given `RingHom`s, adds the corresponding `Algebra` and (if possible)
+`IsScalarTower` instances, as well as `Algebra` corresponding to `RingHom` properties available
+as hypotheses.
+
+Example: given `f : A →+* B` and `g : B →+* C`, and `hf : f.FiniteType`, `algebraize [f, g]` will
+add the instances `Algebra A B`, `Algebra B C`, and `Algebra.FiniteType A B`.
+
+See the `algebraize` tag for instructions on what properties can be added.
+
+The tactic also comes with a configuration option `properties`. If set to `true` (default), the
+tactic searches through the local context for `RingHom` properties that can be converted to
+`Algebra` properties. The macro `algebraize_only` calls
+`algebraize (config := {properties := false})`,
+so in other words it only adds `Algebra` and `IsScalarTower` instances.
+
+# algebraize_only
+Defined in: `Mathlib.Tactic.tacticAlgebraize_only__`
+
+Version of `algebraize`, which only adds `Algebra` instances and `IsScalarTower` instances,
+but does not try to add any instances about any properties tagged with
+`@[algebraize]`, like for example `Finite` or `IsIntegral`.
 
 # all_goals
 Defined in: `Lean.Parser.Tactic.allGoals`
@@ -506,9 +544,7 @@ Normalize casts in the goal and the given expression, then `apply` the expressio
 # apply_rfl
 Defined in: `Lean.Parser.Tactic.applyRfl`
 
-This tactic applies to a goal whose target has the form `x ~ x`,
-where `~` is a reflexive relation other than `=`,
-that is, a relation which has a reflexive lemma tagged with the attribute @[refl].
+The same as `rfl`, but without trying `eq_refl` at the end.
 
 # apply_rules
 Defined in: `Lean.Parser.Tactic.applyRules`
@@ -700,7 +736,7 @@ faster since it is more specialized (not built atop `aesop`).
 Defined in: `Lean.Parser.Tactic.bvCheck`
 
 This tactic works just like `bv_decide` but skips calling a SAT solver by using a proof that is
-alreay stored on disk. It is called with the name of an LRAT file in the same directory as the
+already stored on disk. It is called with the name of an LRAT file in the same directory as the
 current Lean file:
 ```lean
 bv_check "proof.lrat"
@@ -1049,7 +1085,7 @@ Defined in: `Lean.Parser.Tactic.change`
 Defined in: `Lean.Parser.Tactic.changeWith`
 
 * `change a with b` will change occurrences of `a` to `b` in the goal,
-  assuming `a` and `b` are are definitionally equal.
+  assuming `a` and `b` are definitionally equal.
 * `change a with b at h` similarly changes `a` to `b` in the type of hypothesis `h`.
 
 # change?
@@ -1182,7 +1218,7 @@ Defined in: `Mathlib.Tactic.tacticClean_`
 Defined in: `tacticClean_wf`
 
 This tactic is used internally by lean before presenting the proof obligations from a well-founded
-definition to the user via `decreasing_by`. It is not necessary to use this tactic manuall.
+definition to the user via `decreasing_by`. It is not necessary to use this tactic manually.
 
 # clear
 Defined in: `Lean.Elab.Tactic.clearExcept`
@@ -1472,26 +1508,27 @@ The tactic `continuity` solves goals of the form `Continuous f` by applying lemm
 Defined in: `Lean.Parser.Tactic.contradiction`
 
 `contradiction` closes the main goal if its hypotheses are "trivially contradictory".
+
 - Inductive type/family with no applicable constructors
-```lean
-example (h : False) : p := by contradiction
-```
+  ```lean
+  example (h : False) : p := by contradiction
+  ```
 - Injectivity of constructors
-```lean
-example (h : none = some true) : p := by contradiction  --
-```
+  ```lean
+  example (h : none = some true) : p := by contradiction  --
+  ```
 - Decidable false proposition
-```lean
-example (h : 2 + 2 = 3) : p := by contradiction
-```
+  ```lean
+  example (h : 2 + 2 = 3) : p := by contradiction
+  ```
 - Contradictory hypotheses
-```lean
-example (h : p) (h' : ¬ p) : q := by contradiction
-```
+  ```lean
+  example (h : p) (h' : ¬ p) : q := by contradiction
+  ```
 - Other simple contradictions such as
-```lean
-example (x : Nat) (h : x ≠ x) : p := by contradiction
-```
+  ```lean
+  example (x : Nat) (h : x ≠ x) : p := by contradiction
+  ```
 
 # contrapose
 Defined in: `Mathlib.Tactic.Contrapose.contrapose`
@@ -4605,12 +4642,9 @@ restricting which later rewrites can be found.
 # rfl
 Defined in: `Lean.Parser.Tactic.tacticRfl`
 
-`rfl` tries to close the current goal using reflexivity.
-This is supposed to be an extensible tactic and users can add their own support
-for new reflexive relations.
-
-Remark: `rfl` is an extensible tactic. We later add `macro_rules` to try different
-reflexivity theorems (e.g., `Iff.rfl`).
+This tactic applies to a goal whose target has the form `x ~ x`,
+where `~` is equality, heterogeneous equality or any relation that
+has a reflexivity lemma tagged with the attribute @[refl].
 
 # rfl'
 Defined in: `Lean.Parser.Tactic.tacticRfl'`
@@ -5685,12 +5719,16 @@ Type check the given expression, and trace its type.
 # unfold
 Defined in: `Lean.Parser.Tactic.unfold`
 
-* `unfold id` unfolds definition `id`.
+* `unfold id` unfolds all occurrences of definition `id` in the target.
 * `unfold id1 id2 ...` is equivalent to `unfold id1; unfold id2; ...`.
+* `unfold id at h` unfolds at the hypothesis `h`.
 
-For non-recursive definitions, this tactic is identical to `delta`. For recursive definitions,
-it uses the "unfolding lemma" `id.eq_def`, which is generated for each recursive definition,
-to unfold according to the recursive definition given by the user.
+Definitions can be either global or local definitions.
+
+For non-recursive global definitions, this tactic is identical to `delta`.
+For recursive global definitions, it uses the "unfolding lemma" `id.eq_def`,
+which is generated for each recursive definition, to unfold according to the recursive definition given by the user.
+Only one level of unfolding is performed, in contrast to `simp only [id]`, which unfolds definition `id` recursively.
 
 # unfold?
 Defined in: `Mathlib.Tactic.InteractiveUnfold.tacticUnfold?`

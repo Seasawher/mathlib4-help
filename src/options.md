@@ -244,7 +244,7 @@ type: `Bool`
 
 default: `false`
 
-Shows the raw `decreasing_by` goal including internal implementation detail intead of cleaning it up with the `clean_wf` tactic. Can be enabled for debugging purposes. Please report an issue if you have to use this option for other reasons.
+Shows the raw `decreasing_by` goal including internal implementation detail instead of cleaning it up with the `clean_wf` tactic. Can be enabled for debugging purposes. Please report an issue if you have to use this option for other reasons.
 
 ## debug.skipKernelTC
 type: `Bool`
@@ -1233,7 +1233,7 @@ default: `""`
 
 Name of the SAT solver used by Lean.Elab.Tactic.BVDecide tactics.
 
-     1. If this is set to something besides the emtpy string they will use that binary.
+     1. If this is set to something besides the empty string they will use that binary.
 
      2. If this is set to the empty string they will check if there is a cadical binary next to theexecuting program. Usually that program is going to be `lean` itself and we do ship a`cadical` next to it.
 
@@ -1703,6 +1703,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Elab.Deriving.fromJson
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Elab.Deriving.hashable
 type: `Bool`
 
@@ -1732,6 +1739,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Elab.Deriving.toExpr
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Elab.Deriving.toJson
 type: `Bool`
 
 default: `false`
