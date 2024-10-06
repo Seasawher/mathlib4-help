@@ -87,6 +87,26 @@ Lean version: `{{#include ../lean-toolchain}}`
 # aesop_finsetNonempty_proc
  simprocs in the Aesop rule set 'finsetNonempty'
 
+# algebraize
+ Tag that lets the `algebraize` tactic know which `Algebra` property corresponds to this `RingHom`
+property.
+A user attribute that is used to tag `RingHom` properties that can be converted to `Algebra`
+properties. Using an (optional) parameter, it will also generate a `Name` of a declaration which
+will help the `algebraize` tactic access the corresponding `Algebra` property.
+
+There are two cases for what declaration corresponding to this `Name` can be.
+
+1. An inductive type (i.e. the `Algebra` property itself), in this case it is assumed that the
+`RingHom` and the `Algebra` property are definitionally the same, and the tactic will construct the
+`Algebra` property by giving the `RingHom` property as a term.
+2. A constructor for the `Algebra` property. In this case it is assumed that the `RingHom` property
+is the last argument of the constructor, and that no other explicit argument is needed. The tactic
+then constructs the `Algebra` property by applying the constructor to the `RingHom` property.
+
+Finally, if no argument is provided to the `algebraize` attribute, it is assumed that the tagged
+declaration has name `RingHom.Property` and that the corresponding `Algebra` property has name
+`Algebra.Property`. The attribute then returns `Algebra.Property` (so assume case 1 above).
+
 # always_inline
  mark definition to be always inlined
 
