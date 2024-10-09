@@ -1191,7 +1191,7 @@ Defined in: `commandDeclare_uint_theorems_`
 
 
 # deprecate to
-Defined in: `Mathlib.Tactic.DeprecateMe.commandDeprecate_to____`
+Defined in: `Mathlib.Tactic.DeprecateMe.commandDeprecate_to______`
 
 Writing
 ```lean

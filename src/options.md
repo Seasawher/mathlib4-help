@@ -515,6 +515,13 @@ default: `false`
 
 enable the 'avoid omit' linter
 
+## linter.ppRoundtrip
+type: `Bool`
+
+default: `false`
+
+enable the ppRoundtrip linter
+
 ## linter.refine
 type: `Bool`
 
@@ -1258,7 +1265,7 @@ type: `Bool`
 
 default: `false`
 
-Disable reverification, even if `the `CI` environment variable is set.
+Disable reverification, even if the `CI` environment variable is set.
 
 ## says.verify
 type: `Bool`
