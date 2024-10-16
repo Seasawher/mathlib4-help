@@ -557,6 +557,13 @@ default: `false`
 
 enable the `dollarSyntax` linter
 
+## linter.style.header
+type: `Bool`
+
+default: `false`
+
+enable the header style linter
+
 ## linter.style.lambdaSyntax
 type: `Bool`
 
