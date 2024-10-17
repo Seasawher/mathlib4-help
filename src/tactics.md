@@ -1,4 +1,6 @@
-Lean version: `{{#include ../lean-toolchain}}`
+# Tactics
+
+Mathlib version: `035f251efa085d58f145e0d72477526d100c271e`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
