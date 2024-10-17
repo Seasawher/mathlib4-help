@@ -1,21 +1,21 @@
 Lean version: `{{#include ../lean-toolchain}}`
 
-# \#adaptation_note
+## \#adaptation_note
 Defined in: `adaptationNoteCmd`
 
 Adaptation notes are comments that are used to indicate that a piece of code
 has been changed to accommodate a change in Lean core.
 They typically require further action/maintenance to be taken in the future.
 
-# \#aesop_rules
+## \#aesop_rules
 Defined in: `Aesop.Frontend.Parser.showRules`
 
 
-# \#aesop_stats
+## \#aesop_stats
 Defined in: `Aesop.Frontend.Parser.showStats`
 
 
-# \#allow_unused_tactic
+## \#allow_unused_tactic
 Defined in: `Mathlib.Linter.UnusedTactic.«command#allow_unused_tactic_»`
 
 `#allow_unused_tactic` takes an input a space-separated list of identifiers.
@@ -29,11 +29,11 @@ For instance, you can allow the `done` and `skip` tactics using
 ```
 Notice that you should use the `SyntaxNodeKind` of the tactic.
 
-# \#check
+## \#check
 Defined in: `Lean.Parser.Command.check`
 
 
-# \#check_assertions
+## \#check_assertions
 Defined in: `Mathlib.AssertNotExist.«command#check_assertions!»`
 
 `#check_assertions` retrieves all declarations and all imports that were declared
@@ -51,34 +51,34 @@ then the command logs an info. Otherwise, it emits a warning.
 The variant `#check_assertions!` only prints declarations/imports that are not present in the
 environment.  In particular, it is silent if everything is imported, making it useful for testing.
 
-# \#check_failure
+## \#check_failure
 Defined in: `Lean.Parser.Command.check_failure`
 
 
-# \#check_simp
+## \#check_simp
 Defined in: `Lean.Parser.checkSimp`
 
 `#check_simp t ~> r` checks `simp` reduces `t` to `r`.
 
-# \#check_simp
+## \#check_simp
 Defined in: `Lean.Parser.checkSimpFailure`
 
 `#check_simp t !~>` checks `simp` fails on reducing `t`.
 
-# \#check_tactic
+## \#check_tactic
 Defined in: `Lean.Parser.checkTactic`
 
 `#check_tactic t ~> r by commands` runs the tactic sequence `commands`
 on a goal with `t` and sees if the resulting expression has reduced it
 to `r`.
 
-# \#check_tactic_failure
+## \#check_tactic_failure
 Defined in: `Lean.Parser.checkTacticFailure`
 
 `#check_tactic_failure t by tac` runs the tactic `tac`
 on a goal with `t` and verifies it fails.
 
-# \#conv
+## \#conv
 Defined in: `Mathlib.Tactic.Conv.«command#conv_=>_»`
 
 The command `#conv tac => e` will run a conv tactic `tac` on `e`, and display the resulting
@@ -91,7 +91,7 @@ There are also shorthand commands for several common conv tactics:
 * `#norm_num e` is short for `#conv norm_num => e`
 * `#push_neg e` is short for `#conv push_neg => e`
 
-# \#discr_tree_key
+## \#discr_tree_key
 Defined in: `Lean.Parser.discrTreeKeyCmd`
 
 `#discr_tree_key  t` prints the discrimination tree keys for a term `t` (or, if it is a single identifier, the type of that constant).
@@ -110,7 +110,7 @@ For example,
 as one of a simp lemma, i.e. transforms it into an equality and produces the key of the
 left-hand side.
 
-# \#discr_tree_simp_key
+## \#discr_tree_simp_key
 Defined in: `Lean.Parser.discrTreeSimpKeyCmd`
 
 `#discr_tree_key  t` prints the discrimination tree keys for a term `t` (or, if it is a single identifier, the type of that constant).
@@ -129,19 +129,19 @@ For example,
 as one of a simp lemma, i.e. transforms it into an equality and produces the key of the
 left-hand side.
 
-# \#eval
+## \#eval
 Defined in: `Lean.Parser.Command.eval`
 
 
-# \#eval!
+## \#eval!
 Defined in: `Lean.Parser.Command.evalBang`
 
 
-# \#exit
+## \#exit
 Defined in: `Lean.Parser.Command.exit`
 
 
-# \#explode
+## \#explode
 Defined in: `Mathlib.Explode.«command#explode_»`
 
 `#explode expr` displays a proof term in a line-by-line format somewhat akin to a Fitch-style
@@ -252,11 +252,11 @@ the proof will be introduced in a group and the indentation will stay fixed. (Th
 brackets are only needed in order to delimit the scope of assumptions, and these assumptions
 have global scope anyway so detailed tracking is not necessary.)
 
-# \#find
+## \#find
 Defined in: `Mathlib.Tactic.Find.«command#find_»`
 
 
-# \#find_home
+## \#find_home
 Defined in: `«command#find_home!_»`
 
 Find locations as high as possible in the import hierarchy
@@ -272,7 +272,7 @@ the current file itself and looks for all least upper bounds of such files.
 For a simple example, if `lemma` is in a file importing only `A.lean` and `B.lean` and
 uses one lemma from each, then `#find_home! lemma` returns the current file.
 
-# \#guard
+## \#guard
 Defined in: `Lean.Parser.Command.guardCmd`
 
 Command to check that an expression evaluates to `true`.
@@ -290,7 +290,7 @@ the evaluation.
 Note: this uses the untrusted evaluator, so `#guard` passing is *not* a proof that the
 expression equals `true`.
 
-# \#guard_expr
+## \#guard_expr
 Defined in: `Lean.Parser.Command.guardExprCmd`
 
 Command to check equality of two expressions.
@@ -301,7 +301,7 @@ Command to check equality of two expressions.
 
 This is a command version of the `guard_expr` tactic.
 
-# \#guard_msgs
+## \#guard_msgs
 Defined in: `Lean.guardMsgsCmd`
 
 `/-- ... -/ #guard_msgs in cmd` captures the messages generated by the command `cmd`
@@ -364,7 +364,32 @@ Message ordering:
 For example, `#guard_msgs (error, drop all) in cmd` means to check warnings and drop
 everything else.
 
-# \#help
+## \#help
+Defined in: `Batteries.Tactic.«command#help_Term+____»`
+
+The command `#help term` shows all term syntaxes that have been defined in the current environment.
+See `#help cat` for more information.
+
+## \#help
+Defined in: `Batteries.Tactic.«command#help_Cat+______»`
+
+The command `#help cat C` shows all syntaxes that have been defined in syntax category `C` in the
+current environment.
+Each syntax has a format like:
+```lean
+## first
+Defined in: `Parser.tactic.first`
+
+  `first | tac | ...` runs each `tac` until one succeeds, or else fails.
+```lean
+The quoted string is the leading token of the syntax, if applicable. It is followed by the full
+name of the syntax (which you can also click to go to the definition), and the documentation.
+
+* The form `#help cat C id` will show only attributes that begin with `id`.
+* The form `#help cat+ C` will also show information about any `macro`s and `elab`s
+  associated to the listed syntaxes.
+
+## \#help
 Defined in: `Mathlib.Tactic.«command#help_Cats___»`
 
 The command `#help cats` shows all syntax categories that have been defined in the
@@ -379,19 +404,41 @@ but you can click to go to the definition.) It also shows the doc string if avai
 
 The form `#help cats id` will show only syntax categories that begin with `id`.
 
-# \#help
+## \#help
+Defined in: `Batteries.Tactic.«command#help_Command+____»`
+
+The command `#help command` shows all commands that have been defined in the current environment.
+See `#help cat` for more information.
+
+## \#help
+Defined in: `Batteries.Tactic.«command#help_AttrAttribute___»`
+
+The command `#help attribute` (or the short form `#help attr`) shows all attributes that have been
+defined in the current environment.
+Each attribute has a format like:
+```lean
+[inline]: mark definition to always be inlined
+```
+This says that `inline` is an attribute that can be placed on definitions like
+`@[inline] def foo := 1`. (Individual attributes may have restrictions on where they can be
+applied; see the attribute's documentation for details.) Both the attribute's `descr` field as well
+as the docstring will be displayed here.
+
+The form `#help attr id` will show only attributes that begin with `id`.
+
+## \#help
 Defined in: `Mathlib.Tactic.«command#help_Tactic+____»`
 
 The command `#help tactic` shows all tactics that have been defined in the current environment.
 See `#help cat` for more information.
 
-# \#help
+## \#help
 Defined in: `Mathlib.Tactic.«command#help_Conv+____»`
 
 The command `#help conv` shows all tactics that have been defined in the current environment.
 See `#help cat` for more information.
 
-# \#help
+## \#help
 Defined in: `Mathlib.Tactic.«command#help_Option___»`
 
 The command `#help option` shows all options that have been defined in the current environment.
@@ -407,20 +454,20 @@ it will appear as a `(currently: true)` note next to the option.
 
 The form `#help option id` will show only options that begin with `id`.
 
-# \#help
+## \#help
 Defined in: `Mathlib.Tactic.«command#help_Term+____»`
 
 The command `#help term` shows all term syntaxes that have been defined in the current environment.
 See `#help cat` for more information.
 
-# \#help
+## \#help
 Defined in: `Mathlib.Tactic.«command#help_Cat+______»`
 
 The command `#help cat C` shows all syntaxes that have been defined in syntax category `C` in the
 current environment.
 Each syntax has a format like:
 ```lean
-# first
+## first
 Defined in: `Parser.tactic.first`
 
   `first | tac | ...` runs each `tac` until one succeeds, or else fails.
@@ -432,13 +479,28 @@ name of the syntax (which you can also click to go to the definition), and the d
 * The form `#help cat+ C` will also show information about any `macro`s and `elab`s
   associated to the listed syntaxes.
 
-# \#help
+## \#help
+Defined in: `Batteries.Tactic.«command#help_Cats___»`
+
+The command `#help cats` shows all syntax categories that have been defined in the
+current environment.
+Each syntax has a format like:
+```lean
+category command [Lean.Parser.initFn✝]
+```
+The name of the syntax category in this case is `command`, and `Lean.Parser.initFn✝` is the
+name of the declaration that introduced it. (It is often an anonymous declaration like this,
+but you can click to go to the definition.) It also shows the doc string if available.
+
+The form `#help cats id` will show only syntax categories that begin with `id`.
+
+## \#help
 Defined in: `Mathlib.Tactic.«command#help_Command+____»`
 
 The command `#help command` shows all commands that have been defined in the current environment.
 See `#help cat` for more information.
 
-# \#help
+## \#help
 Defined in: `Mathlib.Tactic.«command#help_AttrAttribute___»`
 
 The command `#help attribute` (or the short form `#help attr`) shows all attributes that have been
@@ -454,7 +516,35 @@ as the docstring will be displayed here.
 
 The form `#help attr id` will show only attributes that begin with `id`.
 
-# \#html
+## \#help
+Defined in: `Batteries.Tactic.«command#help_Tactic+____»`
+
+The command `#help tactic` shows all tactics that have been defined in the current environment.
+See `#help cat` for more information.
+
+## \#help
+Defined in: `Batteries.Tactic.«command#help_Conv+____»`
+
+The command `#help conv` shows all tactics that have been defined in the current environment.
+See `#help cat` for more information.
+
+## \#help
+Defined in: `Batteries.Tactic.«command#help_Option___»`
+
+The command `#help option` shows all options that have been defined in the current environment.
+Each option has a format like:
+```lean
+option pp.all : Bool := false
+  (pretty printer) display coercions, implicit parameters, proof terms, fully qualified names,
+  universe, and disable beta reduction and notations during pretty printing
+```
+This says that `pp.all` is an option which can be set to a `Bool` value, and the default value is
+`false`. If an option has been modified from the default using e.g. `set_option pp.all true`,
+it will appear as a `(currently: true)` note next to the option.
+
+The form `#help option id` will show only options that begin with `id`.
+
+## \#html
 Defined in: `ProofWidgets.HtmlCommand.htmlCmd`
 
 Display a value of type `Html` in the infoview.
@@ -463,7 +553,7 @@ The input can be a pure value
 or a computation in any Lean metaprogramming monad
 (e.g. `CommandElabM Html`).
 
-# \#instances
+## \#instances
 Defined in: `Batteries.Tactic.Instances.instancesCmd`
 
 `#instances term` prints all the instances for the given class.
@@ -476,7 +566,7 @@ the command adds metavariables until the argument is no longer a function.
 The `#instances` command is closely related to `#synth`, but `#synth` does the full
 instance synthesis algorithm and `#instances` does the first step of finding potential instances.
 
-# \#instances
+## \#instances
 Defined in: `Batteries.Tactic.Instances.«command#instances__:_»`
 
 `#instances term` prints all the instances for the given class.
@@ -489,7 +579,7 @@ the command adds metavariables until the argument is no longer a function.
 The `#instances` command is closely related to `#synth`, but `#synth` does the full
 instance synthesis algorithm and `#instances` does the first step of finding potential instances.
 
-# \#kerodon_tags
+## \#kerodon_tags
 Defined in: `Mathlib.StacksTag.kerodonTags`
 
 The `#kerodon_tags` command retrieves all declarations that have the `kerodon` attribute.
@@ -500,7 +590,7 @@ For each found declaration, it prints a line
 ```
 The variant `#kerodon_tags!` also adds the theorem statement after each summary line.
 
-# \#leansearch
+## \#leansearch
 Defined in: `LeanSearchClient.leansearch_search_cmd`
 
 Search [LeanSearch](https://leansearch.net/) from within Lean.
@@ -517,19 +607,19 @@ example : 3 ≤ 5 := by
   sorry
 ```
 
-# \#lint
+## \#lint
 Defined in: `Batteries.Tactic.Lint.«command#lint+-*Only___»`
 
 The command `#lint` runs the linters on the current file (by default).
 
 `#lint only someLinter` can be used to run only a single linter.
 
-# \#list_linters
+## \#list_linters
 Defined in: `Batteries.Tactic.Lint.«command#list_linters»`
 
 The command `#list_linters` prints a list of all available linters.
 
-# \#long_instances
+## \#long_instances
 Defined in: `«command#long_instances_»`
 
 Lists all instances with a long name beginning with `inst`,
@@ -538,13 +628,13 @@ This is useful for finding automatically named instances with absurd names.
 
 Use as `#long_names` or `#long_names 100` to specify the length.
 
-# \#long_names
+## \#long_names
 Defined in: `«command#long_names_»`
 
 Lists all declarations with a long name, gathered according to the module they are defined in.
 Use as `#long_names` or `#long_names 100` to specify the length.
 
-# \#loogle
+## \#loogle
 Defined in: `LeanSearchClient.loogle_cmd`
 
 Search [Loogle](https://loogle.lean-lang.org/json) from within Lean. This can be used as a command, term or tactic as in the following examples. In the case of a tactic, only valid tactics are displayed.
@@ -596,7 +686,7 @@ If you pass more than one such search filter, separated by commas Loogle will re
 🔍 Real.sin, \"two\", tsum, _ * _, _ ^ _, |- _ < _ → _
 woould find all lemmas which mention the constants Real.sin and tsum, have \"two\" as a substring of the lemma name, include a product and a power somewhere in the type, and have a hypothesis of the form _ < _ (if there were any such lemmas). Metavariables (?a) are assigned independently in each filter.
 
-# \#loogle
+## \#loogle
 Defined in: `LeanSearchClient.just_loogle_cmd`
 
 Search [Loogle](https://loogle.lean-lang.org/json) from within Lean. This can be used as a command, term or tactic as in the following examples. In the case of a tactic, only valid tactics are displayed.
@@ -648,7 +738,7 @@ If you pass more than one such search filter, separated by commas Loogle will re
 🔍 Real.sin, \"two\", tsum, _ * _, _ ^ _, |- _ < _ → _
 woould find all lemmas which mention the constants Real.sin and tsum, have \"two\" as a substring of the lemma name, include a product and a power somewhere in the type, and have a hypothesis of the form _ < _ (if there were any such lemmas). Metavariables (?a) are assigned independently in each filter.
 
-# \#min_imports
+## \#min_imports
 Defined in: `«command#min_imports»`
 
 Try to compute a minimal set of imports for this file,
@@ -658,23 +748,23 @@ This must be run at the end of the file,
 and is not aware of syntax and tactics,
 so the results will likely need to be adjusted by hand.
 
-# \#min_imports in
+## \#min_imports in
 Defined in: `Mathlib.Command.MinImports.minImpsStx`
 
 `#min_imports in cmd` scans the syntax `cmd` and the declaration obtained by elaborating `cmd`
 to find a collection of minimal imports that should be sufficient for `cmd` to work.
 
-# \#min_imports in
+## \#min_imports in
 Defined in: `Mathlib.Command.MinImports.«command#min_imports_in_»`
 
 `#min_imports in cmd` scans the syntax `cmd` and the declaration obtained by elaborating `cmd`
 to find a collection of minimal imports that should be sufficient for `cmd` to work.
 
-# \#minimize_imports
+## \#minimize_imports
 Defined in: `«command#minimize_imports»`
 
 
-# \#moogle
+## \#moogle
 Defined in: `LeanSearchClient.moogle_search_cmd`
 
 Search [Moogle](https://www.moogle.ai/api/search) from within Lean.
@@ -691,7 +781,7 @@ example : 3 ≤ 5 := by
   sorry
 ```
 
-# \#norm_num
+## \#norm_num
 Defined in: `Mathlib.Tactic.normNumCmd`
 
 The basic usage is `#norm_num e`, where `e` is an expression,
@@ -709,7 +799,7 @@ Unlike `norm_num`, this command does not fail when no simplifications are made.
 
 `#norm_num` understands local variables, so you can use them to introduce parameters.
 
-# \#print
+## \#print
 Defined in: `Batteries.Tactic.printPrefix`
 
 The command `#print prefix foo` will print all definitions that start with
@@ -738,20 +828,20 @@ by setting `showTypes` to `false`:
 The complete set of flags can be seen in the documentation
 for `Lean.Elab.Command.PrintPrefixConfig`.
 
-# \#print
+## \#print
 Defined in: `Lean.Parser.Command.printAxioms`
 
 
-# \#print
+## \#print
 Defined in: `Lean.Parser.Command.printTacTags`
 
 Displays all available tactic tags, with documentation.
 
-# \#print
+## \#print
 Defined in: `Lean.Parser.Command.printEqns`
 
 
-# \#print
+## \#print
 Defined in: `Batteries.Tactic.«command#printDependents___»`
 
 The command `#print dependents X Y` prints a list of all the declarations in the file that
@@ -777,11 +867,11 @@ theorem bar' : 1 = 1 ∨ 1 ≠ 1 := foo
 -- bar': foo
 ```
 
-# \#print
+## \#print
 Defined in: `Lean.Parser.Command.print`
 
 
-# \#push_neg
+## \#push_neg
 Defined in: `Mathlib.Tactic.PushNeg.pushNeg`
 
 The syntax is `#push_neg e`, where `e` is an expression,
@@ -789,7 +879,7 @@ which will print the `push_neg` form of `e`.
 
 `#push_neg` understands local variables, so you can use them to introduce parameters.
 
-# \#reduce
+## \#reduce
 Defined in: `Lean.reduceCmd`
 
 `#reduce <expression>` reduces the expression `<expression>` to its normal form. This
@@ -805,18 +895,18 @@ especially for complex expressions.
 Consider using `#eval <expression>` for simple evaluation/execution
 of expressions.
 
-# \#redundant_imports
+## \#redundant_imports
 Defined in: `«command#redundant_imports»`
 
 List the imports in this file which can be removed
 because they are transitively implied by another import.
 
-# \#reset_min_imports
+## \#reset_min_imports
 Defined in: `Mathlib.Linter.«command#reset_min_imports»`
 
 `#reset_min_imports` sets to empty the current list of cumulative imports.
 
-# \#sample
+## \#sample
 Defined in: `SlimCheck.«command#sample_»`
 
 `#sample type`, where `type` has an instance of `SampleableExt`, prints ten random
@@ -852,7 +942,7 @@ values of type `type` using an increasing size parameter.
 -- or whatever
 ```
 
-# \#show_unused
+## \#show_unused
 Defined in: `Batteries.Tactic.ShowUnused.«command#show_unused___»`
 
 `#show_unused decl1 decl2 ..` will highlight every theorem or definition in the current file
@@ -865,7 +955,7 @@ def bar := foo
 #show_unused bar -- highlights `baz`
 ```
 
-# \#simp
+## \#simp
 Defined in: `Mathlib.Tactic.Conv.«command#simpOnly_=>__»`
 
 * `#simp => e` runs `simp` on the expression `e` and displays the resulting expression after
@@ -874,7 +964,7 @@ Defined in: `Mathlib.Tactic.Conv.«command#simpOnly_=>__»`
 * The `=>` is optional, so `#simp e` and `#simp only [lems] e` have the same behavior.
   It is mostly useful for disambiguating the expression `e` from the lemmas.
 
-# \#stacks_tags
+## \#stacks_tags
 Defined in: `Mathlib.StacksTag.stacksTags`
 
 `#stacks_tags` retrieves all declarations that have the `stacks` attribute.
@@ -885,7 +975,7 @@ For each found declaration, it prints a line
 ```
 The variant `#stacks_tags!` also adds the theorem statement after each summary line.
 
-# \#string_diagram
+## \#string_diagram
 Defined in: `Mathlib.Tactic.Widget.stringDiagram`
 
 Display the string diagram for a given term.
@@ -900,15 +990,15 @@ variable {C : Type u} [Category.{v} C] [MonoidalCategory C] {X Y : C} (f : 𝟙_
 #string_diagram f
 ```
 
-# \#synth
+## \#synth
 Defined in: `Lean.Parser.Command.synth`
 
 
-# \#test
+## \#test
 Defined in: `SlimCheck.«command#test_»`
 
 
-# \#time
+## \#time
 Defined in: `Lean.Parser.timeCmd`
 
 Time the elaboration of a command, and print the result (in milliseconds).
@@ -919,20 +1009,20 @@ set_option maxRecDepth 100000 in
 #time example : (List.range 500).length = 500 := rfl
 ```
 
-# \#unfold?
+## \#unfold?
 Defined in: `Mathlib.Tactic.InteractiveUnfold.unfoldCommand`
 
 `#unfold? e` gives all unfolds of `e`.
 In tactic mode, use `unfold?` instead.
 
-# \#where
+## \#where
 Defined in: `Batteries.Tactic.Where.«command#where»`
 
 `#where` gives a description of the global scope at this point in the module.
 This includes the namespace, `open` namespaces, `universe` and `variable` commands,
 and options set with `set_option`.
 
-# \#whnf
+## \#whnf
 Defined in: `Mathlib.Tactic.Conv.«command#whnf_»`
 
 The command `#whnf e` evaluates `e` to Weak Head Normal Form, which means that the "head"
@@ -952,13 +1042,13 @@ so we can see from this much that the list is not empty,
 but the subterms `Nat.succ 1` and `List.map Nat.succ (List.cons 2 (List.cons 3 List.nil))` are
 still unevaluated. `#reduce` is equivalent to using `#whnf` on every subexpression.
 
-# \#whnfR
+## \#whnfR
 Defined in: `Mathlib.Tactic.Conv.«command#whnfR_»`
 
 The command `#whnfR e` evaluates `e` to Weak Head Normal Form with Reducible transparency,
 that is, it uses `whnf` but only unfolding reducible definitions.
 
-# \#widget
+## \#widget
 Defined in: `Lean.Widget.widgetCmd`
 
 Use `#widget <widget>` to display a panel widget,
@@ -969,18 +1059,18 @@ The type of `<widget>` must implement `Widget.ToModule`,
 and the type of `<props>` must implement `Server.RpcEncodable`.
 In particular, `<props> : Json` works.
 
-# /-!
+## /-!
 Defined in: `Lean.Parser.Command.moduleDoc`
 
 `/-! <text> -/` defines a *module docstring* that can be displayed by documentation generation
 tools. The string is associated with the corresponding position in the file. It can be used
 multiple times in the same file.
 
-# add_aesop_rules
+## add_aesop_rules
 Defined in: `Aesop.Frontend.Parser.addRules`
 
 
-# add_decl_doc
+## add_decl_doc
 Defined in: `Lean.Parser.Command.addDocString`
 
 Adds a docstring to an existing declaration, replacing any existing docstring.
@@ -1004,7 +1094,7 @@ add_decl_doc Triple.toProd
 
 Documentation can only be added to declarations in the same module.
 
-# alias
+## alias
 Defined in: `Batteries.Tactic.Alias.alias`
 
 The command `alias name := target` creates a synonym of `target` with the given name.
@@ -1014,7 +1104,7 @@ of an iff theorem. Use `_` if only one direction is required.
 
 These commands accept all modifiers and attributes that `def` and `theorem` do.
 
-# alias
+## alias
 Defined in: `Batteries.Tactic.Alias.aliasLR`
 
 The command `alias name := target` creates a synonym of `target` with the given name.
@@ -1024,7 +1114,7 @@ of an iff theorem. Use `_` if only one direction is required.
 
 These commands accept all modifiers and attributes that `def` and `theorem` do.
 
-# assert_exists
+## assert_exists
 Defined in: `commandAssert_exists_`
 
 `assert_exists n` is a user command that asserts that a declaration named `n` exists
@@ -1032,12 +1122,12 @@ in the current import scope.
 
 Be careful to use names (e.g. `Rat`) rather than notations (e.g. `ℚ`).
 
-# assert_no_sorry
+## assert_no_sorry
 Defined in: `commandAssert_no_sorry_`
 
 Throws an error if the given identifier uses sorryAx.
 
-# assert_not_exists
+## assert_not_exists
 Defined in: `commandAssert_not_exists_`
 
 `assert_not_exists n` is a user command that asserts that a declaration named `n` *does not exist*
@@ -1057,7 +1147,7 @@ You should *not* delete the `assert_not_exists` statement without careful discus
 
 `assert_not_exists` statements should generally live at the top of the file, after the module doc.
 
-# assert_not_imported
+## assert_not_imported
 Defined in: `commandAssert_not_imported_`
 
 `assert_not_imported m₁ m₂ ... mₙ` checks that each one of the modules `m₁ m₂ ... mₙ` is not
@@ -1065,11 +1155,11 @@ among the transitive imports of the current file.
 
 The command does not currently check whether the modules `m₁ m₂ ... mₙ` actually exist.
 
-# attribute
+## attribute
 Defined in: `Lean.Parser.Command.attribute`
 
 
-# binder_predicate
+## binder_predicate
 Defined in: `Lean.Parser.Command.binderPredicate`
 
 Declares a binder predicate.  For example:
@@ -1077,32 +1167,32 @@ Declares a binder predicate.  For example:
 binder_predicate x " > " y:term => `($x > $y)
 ```
 
-# builtin_dsimproc
+## builtin_dsimproc
 Defined in: `Lean.Parser.«command__Builtin_dsimproc__[_]_(_):=_»`
 
 A builtin defeq simplification procedure.
 
-# builtin_dsimproc_decl
+## builtin_dsimproc_decl
 Defined in: `Lean.Parser.«command_Builtin_dsimproc_decl_(_):=_»`
 
 A builtin defeq simplification procedure declaration.
 
-# builtin_simproc
+## builtin_simproc
 Defined in: `Lean.Parser.«command__Builtin_simproc__[_]_(_):=_»`
 
 A builtin simplification procedure.
 
-# builtin_simproc_decl
+## builtin_simproc_decl
 Defined in: `Lean.Parser.«command_Builtin_simproc_decl_(_):=_»`
 
 A builtin simplification procedure declaration.
 
-# builtin_simproc_pattern%
+## builtin_simproc_pattern%
 Defined in: `Lean.Parser.simprocPatternBuiltin`
 
 Auxiliary command for associating a pattern with a builtin simplification procedure.
 
-# class
+## class
 Defined in: `Lean.Parser.Command.classAbbrev`
 
 Expands
@@ -1115,7 +1205,7 @@ class C <params> extends D_1, ..., D_n
 attribute [instance] C.mk
 ```
 
-# compile_def%
+## compile_def%
 Defined in: `Mathlib.Util.«commandCompile_def%_»`
 
 `compile_def% Foo.foo` adds compiled code for the definition `Foo.foo`.
@@ -1123,14 +1213,14 @@ This can be used for type class projections or definitions like `List._sizeOf_1`
 for which Lean does not generate compiled code by default
 (since it is not used 99% of the time).
 
-# compile_inductive%
+## compile_inductive%
 Defined in: `Mathlib.Util.«commandCompile_inductive%_»`
 
 `compile_inductive% Foo` creates compiled code for the recursor `Foo.rec`,
 so that `Foo.rec` can be used in a definition
 without having to mark the definition as `noncomputable`.
 
-# count_heartbeats
+## count_heartbeats
 Defined in: `Mathlib.CountHeartbeats.commandCount_heartbeatsIn__`
 
 Count the heartbeats used in the enclosed command.
@@ -1149,7 +1239,7 @@ Note that that internal heartbeat counter accessible via `IO.getNumHeartbeats`
 has granularity 1000 times finer that the limits set by `set_option maxHeartbeats`.
 As this is intended as a user command, we divide by 1000.
 
-# count_heartbeats!
+## count_heartbeats!
 Defined in: `Mathlib.CountHeartbeats.commandCount_heartbeats!_In__`
 
 `count_heartbeats! in cmd` runs a command `10` times, reporting the range in heartbeats, and the
@@ -1162,35 +1252,35 @@ def f := 37
 ```
 displays the info message `Min: 7 Max: 8 StdDev: 14%`.
 
-# declare_aesop_rule_sets
+## declare_aesop_rule_sets
 Defined in: `Aesop.Frontend.Parser.declareRuleSets`
 
 
-# declare_bitwise_uint_theorems
+## declare_bitwise_uint_theorems
 Defined in: `commandDeclare_bitwise_uint_theorems_`
 
 
-# declare_config_elab
+## declare_config_elab
 Defined in: `Lean.Elab.Tactic.configElab`
 
 
-# declare_simp_like_tactic
+## declare_simp_like_tactic
 Defined in: `Lean.Parser.Tactic.declareSimpLikeTactic`
 
 
-# declare_syntax_cat
+## declare_syntax_cat
 Defined in: `Lean.Parser.Command.syntaxCat`
 
 
-# declare_uint_simprocs
+## declare_uint_simprocs
 Defined in: `commandDeclare_uint_simprocs_`
 
 
-# declare_uint_theorems
+## declare_uint_theorems
 Defined in: `commandDeclare_uint_theorems_`
 
 
-# deprecate to
+## deprecate to
 Defined in: `Mathlib.Tactic.DeprecateMe.commandDeprecate_to______`
 
 Writing
@@ -1225,44 +1315,44 @@ Technically, the command also take an optional `String` argument to fill in the 
 However, its use is mostly intended for debugging purposes, where having a variable date would
 make tests time-dependent.
 
-# deriving
+## deriving
 Defined in: `Lean.Parser.Command.deriving`
 
 
-# dsimproc
+## dsimproc
 Defined in: `Lean.Parser.«command__Dsimproc__[_]_(_):=_»`
 
 Similar to `simproc`, but resulting expression must be definitionally equal to the input one.
 
-# dsimproc_decl
+## dsimproc_decl
 Defined in: `Lean.Parser.«command_Dsimproc_decl_(_):=_»`
 
 A user-defined defeq simplification procedure declaration. To activate this procedure in `simp` tactic,
 we must provide it as an argument, or use the command `attribute` to set its `[simproc]` attribute.
 
-# elab
+## elab
 Defined in: `Lean.Parser.Command.elab`
 
 
-# elab_rules
+## elab_rules
 Defined in: `Lean.Parser.Command.elab_rules`
 
 
-# elab_stx_quot
+## elab_stx_quot
 Defined in: `Lean.Elab.Term.Quotation.commandElab_stx_quot_`
 
 
-# end
+## end
 Defined in: `Lean.Parser.Command.end`
 
 `end` closes a `section` or `namespace` scope. If the scope is named `<id>`, it has to be closed
 with `end <id>`. The `end` command is optional at the end of a file.
 
-# erase_aesop_rules
+## erase_aesop_rules
 Defined in: `Aesop.Frontend.Parser.eraseRules`
 
 
-# export
+## export
 Defined in: `Lean.Parser.Command.export`
 
 Adds names from other namespaces to the current namespace.
@@ -1289,7 +1379,7 @@ end Evening.Sky
 #check Evening.Sky.star
 ```
 
-# export private
+## export private
 Defined in: `Lean.Elab.Command.exportPrivate`
 
 The command `export private a b c in foo bar` is similar to `open private`, but instead of opening
@@ -1302,28 +1392,28 @@ It will also open the newly created alias definition under the provided short na
 It is also possible to specify the module instead with
 `export private a b c from Other.Module`.
 
-# extend_docs
+## extend_docs
 Defined in: `Mathlib.Tactic.ExtendDocs.commandExtend_docs__Before__After_`
 
 `extend_docs <declName> before <prefix_string> after <suffix_string>` extends the
 docs of `<declName>` by adding `<prefix_string>` before and `<suffix_string>` after.
 
-# gen_injective_theorems%
+## gen_injective_theorems%
 Defined in: `Lean.Parser.Command.genInjectiveTheorems`
 
 This is an auxiliary command for generation constructor injectivity theorems for
 inductive types defined at `Prelude.lean`.
 It is meant for bootstrapping purposes only.
 
-# import
+## import
 Defined in: `Lean.Parser.Command.import`
 
 
-# in
+## in
 Defined in: `Lean.Parser.Command.in`
 
 
-# include
+## include
 Defined in: `Lean.Parser.Command.include`
 
 `include eeny meeny` instructs Lean to include the section `variable`s `eeny` and `meeny` in all
@@ -1332,11 +1422,11 @@ conditionally including variables based on use in the theorem header. Other comm
 not affected. `include` is usually followed by `in theorem ...` to limit the inclusion
 to the subsequent declaration.
 
-# init_quot
+## init_quot
 Defined in: `Lean.Parser.Command.init_quot`
 
 
-# initialize_simps_projections
+## initialize_simps_projections
 Defined in: `Lean.Parser.Command.initialize_simps_projections`
 
 This command allows customisation of the lemmas generated by `simps`.
@@ -1410,7 +1500,7 @@ Some common uses:
     initialize_simps_projections Equiv (toFun → apply, invFun → symm_apply)
   ```
 
-# initialize_simps_projections?
+## initialize_simps_projections?
 Defined in: `Lean.Parser.Command.commandInitialize_simps_projections?_`
 
 This command allows customisation of the lemmas generated by `simps`.
@@ -1484,7 +1574,7 @@ Some common uses:
     initialize_simps_projections Equiv (toFun → apply, invFun → symm_apply)
   ```
 
-# irreducible_def
+## irreducible_def
 Defined in: `Lean.Elab.Command.command_Irreducible_def____`
 
 Introduces an irreducible definition.
@@ -1492,7 +1582,7 @@ Introduces an irreducible definition.
 a constant `foo : Nat` as well as
 a theorem `foo_def : foo = 42`.
 
-# library_note
+## library_note
 Defined in: `Batteries.Util.LibraryNote.commandLibrary_note___`
 
 ```
@@ -1506,7 +1596,7 @@ creates a new "library note", which can then be cross-referenced using
 ```
 in doc-comments.
 
-# lrat_proof
+## lrat_proof
 Defined in: `Mathlib.Tactic.Sat.commandLrat_proof_Example____`
 
 A macro for producing SAT proofs from CNF / LRAT files.
@@ -1530,15 +1620,15 @@ foo : ∀ (a a_1 : Prop), (¬a ∧ ¬a_1 ∨ a ∧ ¬a_1) ∨ ¬a ∧ a_1 ∨ a 
 * You can use the `include_str` macro in place of the two strings
   to load CNF / LRAT files from disk.
 
-# macro
+## macro
 Defined in: `Lean.Parser.Command.macro`
 
 
-# macro_rules
+## macro_rules
 Defined in: `Lean.Parser.Command.macro_rules`
 
 
-# mk_iff_of_inductive_prop
+## mk_iff_of_inductive_prop
 Defined in: `Mathlib.Tactic.MkIff.mkIffOfInductiveProp`
 
 `mk_iff_of_inductive_prop i r` makes an `iff` rule for the inductively-defined proposition `i`.
@@ -1559,11 +1649,11 @@ For example, `mk_iff_of_inductive_prop` on `List.Chain` produces:
 
 See also the `mk_iff` user attribute.
 
-# mutual
+## mutual
 Defined in: `Lean.Parser.Command.mutual`
 
 
-# namespace
+## namespace
 Defined in: `Lean.Parser.Command.namespace`
 
 `namespace <id>` opens a section with label `<id>` that influences naming and name resolution inside
@@ -1581,20 +1671,20 @@ corresponding `end <id>` or the end of the file.
 
 `namespace` also acts like `section` in delimiting the scope of `variable`, `open`, and other scoped commands.
 
-# noncomputable
+## noncomputable
 Defined in: `Lean.Parser.Command.noncomputableSection`
 
 
-# norm_cast_add_elim
+## norm_cast_add_elim
 Defined in: `Lean.Parser.Tactic.normCastAddElim`
 
 `norm_cast_add_elim foo` registers `foo` as an elim-lemma in `norm_cast`.
 
-# notation
+## notation
 Defined in: `Lean.Parser.Command.notation`
 
 
-# notation3
+## notation3
 Defined in: `Mathlib.Notation3.notation3`
 
 `notation3` declares notation using Lean-3-style syntax.
@@ -1613,7 +1703,7 @@ for the notation.
 This command can be used in mathlib4 but it has an uncertain future and was created primarily
 for backward compatibility.
 
-# omit
+## omit
 Defined in: `Lean.Parser.Command.omit`
 
 `omit` instructs Lean to not include a variable previously `include`d. Apart from variable names, it
@@ -1621,7 +1711,7 @@ can also refer to typeclass instance variables by type using the syntax `omit [T
 which case all instance variables that unify with the given type are omitted. `omit` should usually
 only be used in conjunction with `in` in order to keep the section structure simple.
 
-# open
+## open
 Defined in: `Lean.Parser.Command.open`
 
 Makes names from other namespaces visible without writing the namespace prefix.
@@ -1736,7 +1826,7 @@ section
 end
 ```
 
-# open private
+## open private
 Defined in: `Lean.Elab.Command.openPrivate`
 
 The command `open private a b c in foo bar` will look for private definitions named `a`, `b`, `c`
@@ -1749,7 +1839,7 @@ name component.
 It is also possible to specify the module instead with
 `open private a b c from Other.Module`.
 
-# proof_wanted
+## proof_wanted
 Defined in: `«proof_wanted»`
 
 This proof would be a welcome contribution to the library!
@@ -1765,7 +1855,7 @@ Typical usage:
     (∅ : HashMap α β).find? a = none
 ```
 
-# recall
+## recall
 Defined in: `Mathlib.Tactic.Recall.recall`
 
 The `recall` command redeclares a previous definition for illustrative purposes.
@@ -1787,51 +1877,51 @@ capture some details (like binders), so the following works without error.
 recall Nat.add_comm {n m : Nat} : n + m = m + n
 ```
 
-# register_builtin_option
+## register_builtin_option
 Defined in: `Lean.Option.registerBuiltinOption`
 
 
-# register_hint
+## register_hint
 Defined in: `Mathlib.Tactic.Hint.registerHintStx`
 
 Register a tactic for use with the `hint` tactic, e.g. `register_hint simp_all`.
 
-# register_label_attr
+## register_label_attr
 Defined in: `Lean.Parser.Command.registerLabelAttr`
 
 Initialize a new "label" attribute.
 Declarations tagged with the attribute can be retrieved using `Lean.labelled`.
 
-# register_option
+## register_option
 Defined in: `Lean.Option.registerOption`
 
 
-# register_simp_attr
+## register_simp_attr
 Defined in: `Lean.Parser.Command.registerSimpAttr`
 
 
-# register_tactic_tag
+## register_tactic_tag
 Defined in: `Lean.Parser.Command.register_tactic_tag`
 
 Register a tactic tag, saving its user-facing name and docstring.
 
 Tactic tags can be used by documentation generation tools to classify related tactics.
 
-# run_cmd
+## run_cmd
 Defined in: `Lean.runCmd`
 
 The `run_cmd doSeq` command executes code in `CommandElabM Unit`.
 This is almost the same as `#eval show CommandElabM Unit from do doSeq`,
 except that it doesn't print an empty diagnostic.
 
-# run_elab
+## run_elab
 Defined in: `Lean.runElab`
 
 The `run_elab doSeq` command executes code in `TermElabM Unit`.
 This is almost the same as `#eval show TermElabM Unit from do doSeq`,
 except that it doesn't print an empty diagnostic.
 
-# run_meta
+## run_meta
 Defined in: `Lean.runMeta`
 
 The `run_meta doSeq` command executes code in `MetaM Unit`.
@@ -1840,7 +1930,7 @@ except that it doesn't print an empty diagnostic.
 
 (This is effectively a synonym for `run_elab`.)
 
-# scoped
+## scoped
 Defined in: `Mathlib.Tactic.scopedNS`
 
 `scoped[NS]` is similar to the `scoped` modifier on attributes and notations,
@@ -1857,7 +1947,7 @@ scoped[Nat.Count] attribute [instance] CountSet.fintype
 -- but only if `Nat.Count` is open
 ```
 
-# seal
+## seal
 Defined in: `Lean.Parser.commandSeal__`
 
 The `seal foo` command ensures that the definition of `foo` is sealed, meaning it is marked as `[irreducible]`.
@@ -1867,7 +1957,7 @@ In terms of functionality, `seal foo` is equivalent to `attribute [local irreduc
 This attribute specifies that `foo` should be treated as irreducible only within the local scope,
 which helps in maintaining the desired abstraction level without affecting global settings.
 
-# section
+## section
 Defined in: `Lean.Parser.Command.section`
 
 A `section`/`end` pair delimits the scope of `variable`, `include, `open`, `set_option`, and `local`
@@ -1875,7 +1965,7 @@ commands. Sections can be nested. `section <id>` provides a label to the section
 with the matching `end`. In either case, the `end` can be omitted, in which case the section is
 closed at the end of the file.
 
-# set_option
+## set_option
 Defined in: `Lean.Parser.Command.set_option`
 
 `set_option <id> <value>` sets the option `<id>` to `<value>`. Depending on the type of the option,
@@ -1892,7 +1982,7 @@ set_option pp.all true in
 Similarly, `set_option <id> <value> in` can also be used inside terms and tactics to set an option
 only in a single term or tactic.
 
-# show_panel_widgets
+## show_panel_widgets
 Defined in: `Lean.Widget.showPanelWidgetsCmd`
 
 Use `show_panel_widgets [<widget>]` to mark that `<widget>`
@@ -1917,7 +2007,7 @@ in the current section, namespace, or file.
 Note that persistent erasure is not possible, i.e.,
 `-<widget>` has no effect on downstream modules.
 
-# simproc
+## simproc
 Defined in: `Lean.Parser.«command__Simproc__[_]_(_):=_»`
 
 A user-defined simplification procedure used by the `simp` tactic, and its variants.
@@ -1942,24 +2032,24 @@ You can instruct the simplifier to apply the procedure before its sub-expression
 have been simplified by using the modifier `↓` before the procedure name.
 Simplification procedures can be also scoped or local.
 
-# simproc_decl
+## simproc_decl
 Defined in: `Lean.Parser.«command_Simproc_decl_(_):=_»`
 
 A user-defined simplification procedure declaration. To activate this procedure in `simp` tactic,
 we must provide it as an argument, or use the command `attribute` to set its `[simproc]` attribute.
 
-# simproc_pattern%
+## simproc_pattern%
 Defined in: `Lean.Parser.simprocPattern`
 
 Auxiliary command for associating a pattern with a simplification procedure.
 
-# sudo
+## sudo
 Defined in: `commandSudoSet_option___`
 
 The command `sudo set_option name val` is similar to `set_option name val`,
 but it also allows to set undeclared options.
 
-# suppress_compilation
+## suppress_compilation
 Defined in: `commandSuppress_compilation`
 
 Replacing `def` and `instance` by `noncomputable def` and `noncomputable instance`, designed
@@ -1968,15 +2058,15 @@ This is a hack to work around mathlib4#7103.
 Note that it does not work with `notation3`. You need to prefix such a notation declaration with
 `unsuppress_compilation` if `suppress_compilation` is active.
 
-# syntax
+## syntax
 Defined in: `Lean.Parser.Command.syntax`
 
 
-# syntax
+## syntax
 Defined in: `Lean.Parser.Command.syntaxAbbrev`
 
 
-# tactic_extension
+## tactic_extension
 Defined in: `Lean.Parser.Command.tactic_extension`
 
 Add more documentation as an extension of the documentation for a given tactic.
@@ -1984,15 +2074,15 @@ Add more documentation as an extension of the documentation for a given tactic.
 The extended documentation is placed in the command's docstring. It is shown as part of a bulleted
 list, so it should be brief.
 
-# test_extern
+## test_extern
 Defined in: `testExternCmd`
 
 
-# unif_hint
+## unif_hint
 Defined in: `Lean.«command__Unif_hint____Where_|_-⊢_»`
 
 
-# universe
+## universe
 Defined in: `Lean.Parser.Command.universe`
 
 Declares one or more universe variables.
@@ -2053,7 +2143,7 @@ structure Pair (α : Type u) (β : Type v) : Type (max u v) where
 -- Pair : Type v → Type w → Type (max v w)
 ```
 
-# unseal
+## unseal
 Defined in: `Lean.Parser.commandUnseal__`
 
 The `unseal foo` command ensures that the definition of `foo` is unsealed, meaning it is marked as `[semireducible]`, the
@@ -2062,18 +2152,18 @@ default reducibility setting. This command is useful when you need to allow some
 Functionally, `unseal foo` is equivalent to `attribute [local semireducible] foo`.
 Applying this attribute makes `foo` semireducible only within the local scope.
 
-# unset_option
+## unset_option
 Defined in: `Lean.Elab.Command.unsetOption`
 
 Unset a user option
 
-# unsuppress_compilation
+## unsuppress_compilation
 Defined in: `commandUnsuppress_compilationIn_`
 
 The command `unsuppress_compilation in def foo : ...` makes sure that the definition is
 compiled to executable code, even if `suppress_compilation` is active.
 
-# variable
+## variable
 Defined in: `Lean.Parser.Command.variable`
 
 Declares one or more typed variables, or modifies whether already-declared variables are
@@ -2195,7 +2285,7 @@ included section variable '[ToString α]' is not used in 'ex', consider excludin
 In such cases, the offending variable declaration should be moved down or into a section so that
 only theorems that do depend on it follow it until the end of the section.
 
-# variable?
+## variable?
 Defined in: `Mathlib.Command.Variable.variable?`
 
 The `variable?` command has the same syntax as `variable`, but it will auto-insert
@@ -2234,19 +2324,19 @@ A word of warning: the core algorithm depends on pretty printing, so if terms th
 in binders do not round trip, this algorithm can fail. That said, it has some support
 for quantified binders such as `[∀ i, F i]`.
 
-# variables
+## variables
 Defined in: `Mathlib.Tactic.variables`
 
 Syntax for the `variables` command: this command is just a stub,
 and merely warns that it has been renamed to `variable` in Lean 4.
 
-# whatsnew
+## whatsnew
 Defined in: `Mathlib.WhatsNew.commandWhatsnewIn__`
 
 `whatsnew in $command` executes the command and then prints the
 declarations that were added to the environment.
 
-# with_weak_namespace
+## with_weak_namespace
 Defined in: `Lean.Elab.Command.commandWith_weak_namespace__`
 
 Changes the current namespace without causing scoped things to go out of scope

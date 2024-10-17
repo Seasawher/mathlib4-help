@@ -17,10 +17,10 @@ pattern_dict = {
 }
 
 replacement_dict = {
-  "tactic": r"# \1\nDefined in: `\2`\n",
+  "tactic": r"## \1\nDefined in: `\2`\n",
   "option": r"## \1\ntype: `\2`\n\ndefault: `\3`\n",
-  "command": r"# \1\nDefined in: `\2`\n",
-  "attribute": r"# \1\n"
+  "command": r"## \1\nDefined in: `\2`\n",
+  "attribute": r"## \1\n"
 }
 
 def format(target : str):
