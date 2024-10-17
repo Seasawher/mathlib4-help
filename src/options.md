@@ -1,4 +1,6 @@
-Lean version: `{{#include ../lean-toolchain}}`
+# Options
+
+Mathlib version: `035f251efa085d58f145e0d72477526d100c271e`
 
 ## aesop.check.all
 type: `Bool`

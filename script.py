@@ -1,4 +1,5 @@
 import re
+from json import load
 
 targets = ["tactic", "option", "command", "attribute"]
 
@@ -24,6 +25,9 @@ replacement_dict = {
 }
 
 def format(target : str):
+  """
+  Format the content of the file
+  """
   if target not in targets:
     raise ValueError(f"target must be one of {targets}")
 
@@ -46,11 +50,41 @@ def format(target : str):
   # replace mere code blocks with lean code blocks
   new_content = re.sub(r'(^|.*:|[a-zA-Z]+\.)\n```\n', r'\1\n```lean\n', new_content)
 
-  content_with_version = 'Lean version: `{{#include ../lean-toolchain}}`\n\n' + new_content
+  with open(file_path, 'w', encoding='utf-8') as file:
+    file.write(new_content)
+
+def mathlib_version() -> str:
+  """
+  Read `lake-manifest.json` and return the hash of the mathlib
+  """
+  with open('lake-manifest.json', 'r', encoding='utf-8') as file:
+    data = load(file)
+
+  packages : list[str] = data["packages"]
+  version = ""
+  for package in packages:
+    if "mathlib" == package["name"]:
+      version = package["rev"]
+      break
+  return version
+
+def add_header(target : str) -> None:
+  """
+  Add header to the beginning of the file
+  """
+  file_path = file_path_dict[target]
+
+  with open(file_path, 'r', encoding='utf-8') as file:
+    content = file.read()
+
+  header = f"# {target.capitalize()}s\n\n"
+  version_info = f"Mathlib version: `{mathlib_version()}`\n\n"
+  new_content = header + version_info + content
 
   with open(file_path, 'w', encoding='utf-8') as file:
-    file.write(content_with_version)
+    file.write(new_content)
 
 if __name__ == '__main__':
   for target in targets:
     format(target)
+    add_header(target)
