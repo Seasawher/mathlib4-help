@@ -1,4 +1,4 @@
-# Mathlib4 Tactics
+# Mathlib4 Help
 
 This is a list of the output of `#help` command of mathlib4. see [GitHub Page](https://seasawher.github.io/mathlib4-help/)!
 
