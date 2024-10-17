@@ -1,7 +1,7 @@
 import Lake
 open Lake DSL
 
-package «mathlib4-tactics» where
+package «mathlib4-help» where
   -- Settings applied to both builds and interactive editing
   leanOptions := #[
     ⟨`pp.unicode.fun, true⟩ -- pretty-prints `fun a ↦ b`

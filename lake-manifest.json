@@ -81,5 +81,5 @@
    "inputRev": "master",
    "inherited": false,
    "configFile": "lakefile.lean"}],
- "name": "«mathlib4-tactics»",
+ "name": "«mathlib4-help»",
  "lakeDir": ".lake"}
