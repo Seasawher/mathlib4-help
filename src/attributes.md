@@ -1,93 +1,93 @@
 Lean version: `{{#include ../lean-toolchain}}`
 
-# aesop
+## aesop
  Register a declaration as an Aesop rule.
 
-# aesop_Bound
+## aesop_Bound
  simp theorems in the Aesop rule set 'Bound'
 
-# aesop_Bound_proc
+## aesop_Bound_proc
  simprocs in the Aesop rule set 'Bound'
 
-# aesop_CStarAlgebra
+## aesop_CStarAlgebra
  simp theorems in the Aesop rule set 'CStarAlgebra'
 
-# aesop_CStarAlgebra_proc
+## aesop_CStarAlgebra_proc
  simprocs in the Aesop rule set 'CStarAlgebra'
 
-# aesop_CategoryTheory
+## aesop_CategoryTheory
  simp theorems in the Aesop rule set 'CategoryTheory'
 
-# aesop_CategoryTheory_proc
+## aesop_CategoryTheory_proc
  simprocs in the Aesop rule set 'CategoryTheory'
 
-# aesop_Continuous
+## aesop_Continuous
  simp theorems in the Aesop rule set 'Continuous'
 
-# aesop_Continuous_proc
+## aesop_Continuous_proc
  simprocs in the Aesop rule set 'Continuous'
 
-# aesop_IsMultiplicative
+## aesop_IsMultiplicative
  simp theorems in the Aesop rule set 'IsMultiplicative'
 
-# aesop_IsMultiplicative_proc
+## aesop_IsMultiplicative_proc
  simprocs in the Aesop rule set 'IsMultiplicative'
 
-# aesop_Matroid
+## aesop_Matroid
  simp theorems in the Aesop rule set 'Matroid'
 
-# aesop_Matroid_proc
+## aesop_Matroid_proc
  simprocs in the Aesop rule set 'Matroid'
 
-# aesop_Measurable
+## aesop_Measurable
  simp theorems in the Aesop rule set 'Measurable'
 
-# aesop_Measurable_proc
+## aesop_Measurable_proc
  simprocs in the Aesop rule set 'Measurable'
 
-# aesop_Restrict
+## aesop_Restrict
  simp theorems in the Aesop rule set 'Restrict'
 
-# aesop_Restrict_proc
+## aesop_Restrict_proc
  simprocs in the Aesop rule set 'Restrict'
 
-# aesop_SetLike
+## aesop_SetLike
  simp theorems in the Aesop rule set 'SetLike'
 
-# aesop_SetLike_proc
+## aesop_SetLike_proc
  simprocs in the Aesop rule set 'SetLike'
 
-# aesop_SimpleGraph
+## aesop_SimpleGraph
  simp theorems in the Aesop rule set 'SimpleGraph'
 
-# aesop_SimpleGraph_proc
+## aesop_SimpleGraph_proc
  simprocs in the Aesop rule set 'SimpleGraph'
 
-# aesop_Sym2
+## aesop_Sym2
  simp theorems in the Aesop rule set 'Sym2'
 
-# aesop_Sym2_proc
+## aesop_Sym2_proc
  simprocs in the Aesop rule set 'Sym2'
 
-# aesop_builtin
+## aesop_builtin
  simp theorems in the Aesop rule set 'builtin'
 
-# aesop_builtin_proc
+## aesop_builtin_proc
  simprocs in the Aesop rule set 'builtin'
 
-# aesop_default
+## aesop_default
  simp theorems in the Aesop rule set 'default'
 
-# aesop_default_proc
+## aesop_default_proc
  simprocs in the Aesop rule set 'default'
 
-# aesop_finsetNonempty
+## aesop_finsetNonempty
  simp theorems in the Aesop rule set 'finsetNonempty'
 
-# aesop_finsetNonempty_proc
+## aesop_finsetNonempty_proc
  simprocs in the Aesop rule set 'finsetNonempty'
 
-# algebraize
+## algebraize
  Tag that lets the `algebraize` tactic know which `Algebra` property corresponds to this `RingHom`
 property.
 A user attribute that is used to tag `RingHom` properties that can be converted to `Algebra`
@@ -107,23 +107,23 @@ Finally, if no argument is provided to the `algebraize` attribute, it is assumed
 declaration has name `RingHom.Property` and that the corresponding `Algebra` property has name
 `Algebra.Property`. The attribute then returns `Algebra.Property` (so assume case 1 above).
 
-# always_inline
+## always_inline
  mark definition to be always inlined
 
-# app_unexpander
+## app_unexpander
  Register an unexpander for applications of a given constant.
 
 [app_unexpander c] registers a `Lean.PrettyPrinter.Unexpander` for applications of the constant `c`. The unexpander is
 passed the result of pre-pretty printing the application *without* implicitly passed arguments. If `pp.explicit` is set
 to true or `pp.notation` is set to false, it will not be called at all.
 
-# attr_parser
+## attr_parser
  parser
 
-# boolToPropSimps
+## boolToPropSimps
  simp lemmas converting boolean expressions in terms of `decide` into propositional statements
 
-# bound
+## bound
  Register a theorem as an apply rule for the `bound` tactic.
 Register a lemma as an `apply` rule for the `bound` tactic.
 
@@ -153,10 +153,10 @@ uses specialized lemmas for goals of the form `1 ≤ x, 1 < x, x ≤ 1, x < 1`.
 See also `@[bound_forward]` which marks a lemma as a forward rule for `bound`: these lemmas are
 applied to hypotheses to extract inequalities (e.g. `HasPowerSeriesOnBall.r_pos`).
 
-# builtin_attr_parser
+## builtin_attr_parser
  Builtin parser
 
-# builtin_category_parenthesizer
+## builtin_category_parenthesizer
  (builtin) Register a parenthesizer for a syntax category.
 
   [category_parenthesizer cat] registers a declaration of type `Lean.PrettyPrinter.CategoryParenthesizer` for the category `cat`,
@@ -164,19 +164,19 @@ applied to hypotheses to extract inequalities (e.g. `HasPowerSeriesOnBall.r_pos`
   with the precedence and `cat`. If no category parenthesizer is registered, the category will never be parenthesized,
   but still be traversed for parenthesizing nested categories.
 
-# builtin_code_action_provider
+## builtin_code_action_provider
  (builtin) Use to decorate methods for suggesting code actions. This is a low-level interface for making code actions.
 
-# builtin_command_code_action
+## builtin_command_code_action
  Declare a new builtin command code action, to appear in the code actions on commands
 
-# builtin_command_elab
+## builtin_command_elab
  (builtin) command elaborator
 
-# builtin_command_parser
+## builtin_command_parser
  Builtin parser
 
-# builtin_delab
+## builtin_delab
  (builtin) Register a delaborator.
 
   [delab k] registers a declaration of type `Lean.PrettyPrinter.Delaborator.Delab` for the `Lean.Expr`
@@ -186,44 +186,44 @@ applied to hypotheses to extract inequalities (e.g. `HasPowerSeriesOnBall.r_pos`
   to reduce special casing. If the term is an `Expr.mdata` with a single key `k`, `mdata.k`
   is tried first.
 
-# builtin_doElem_parser
+## builtin_doElem_parser
  Builtin parser
 
-# builtin_doc
+## builtin_doc
  make the docs and location of this declaration available as a builtin
 
-# builtin_formatter
+## builtin_formatter
  (builtin) Register a formatter for a parser.
 
   [formatter k] registers a declaration of type `Lean.PrettyPrinter.Formatter` for the `SyntaxNodeKind` `k`.
 
-# builtin_incremental
+## builtin_incremental
  (builtin) Marks an elaborator (tactic or command, currently) as supporting incremental elaboration. For unmarked elaborators, the corresponding snapshot bundle field in the elaboration context is unset so as to prevent accidental, incorrect reuse.
 
-# builtin_init
+## builtin_init
  initialization procedure for global references
 
-# builtin_level_parser
+## builtin_level_parser
  Builtin parser
 
-# builtin_macro
+## builtin_macro
  (builtin) macro elaborator
 
-# builtin_missing_docs_handler
+## builtin_missing_docs_handler
  (builtin) adds a syntax traversal for the missing docs linter
 
-# builtin_parenthesizer
+## builtin_parenthesizer
  (builtin) Register a parenthesizer for a parser.
 
   [parenthesizer k] registers a declaration of type `Lean.PrettyPrinter.Parenthesizer` for the `SyntaxNodeKind` `k`.
 
-# builtin_prec_parser
+## builtin_prec_parser
  Builtin parser
 
-# builtin_prio_parser
+## builtin_prio_parser
  Builtin parser
 
-# builtin_quot_precheck
+## builtin_quot_precheck
  (builtin) Register a double backtick syntax quotation pre-check.
 
 [quot_precheck k] registers a declaration of type `Lean.Elab.Term.Quotation.Precheck` for the `SyntaxNodeKind` `k`.
@@ -231,46 +231,46 @@ It should implement eager name analysis on the passed syntax by throwing an exce
 and calling `precheck` recursively on nested terms, potentially with an extended local context (`withNewLocal`).
 Macros without registered precheck hook are unfolded, and identifier-less syntax is ultimately assumed to be well-formed.
 
-# builtin_syntax_parser
+## builtin_syntax_parser
  Builtin parser
 
-# builtin_tactic
+## builtin_tactic
  (builtin) tactic elaborator
 
-# builtin_tactic_parser
+## builtin_tactic_parser
  Builtin parser
 
-# builtin_term_elab
+## builtin_term_elab
  (builtin) term elaborator
 
-# builtin_term_parser
+## builtin_term_parser
  Builtin parser
 
-# builtin_unused_variables_ignore_fn
+## builtin_unused_variables_ignore_fn
  (builtin) Marks a function of type `Lean.Linter.IgnoreFunction` for suppressing unused variable warnings
 Adds the `@[{builtin_}unused_variables_ignore_fn]` attribute, which is applied
 to declarations of type `IgnoreFunction` for use by the unused variables linter.
 
-# builtin_widget_module
+## builtin_widget_module
  (builtin) Registers a widget module. Its type must implement Lean.Widget.ToModule.
 Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
 
-# bvNormalizeProcBuiltinAttr
+## bvNormalizeProcBuiltinAttr
  Builtin bv_normalize simproc
 
-# bv_normalize
+## bv_normalize
  simp theorems used by bv_normalize
 
-# bv_normalize_proc
+## bv_normalize_proc
  simprocs used by bv_normalize
 
-# bv_toNat
+## bv_toNat
  simp lemmas converting `BitVec` goals to `Nat` goals, for the `bv_omega` preprocessor
 
-# cases_eliminator
+## cases_eliminator
  custom `casesOn`-like eliminator for the `cases` tactic
 
-# category_parenthesizer
+## category_parenthesizer
  Register a parenthesizer for a syntax category.
 
   [category_parenthesizer cat] registers a declaration of type `Lean.PrettyPrinter.CategoryParenthesizer` for the category `cat`,
@@ -278,19 +278,19 @@ Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
   with the precedence and `cat`. If no category parenthesizer is registered, the category will never be parenthesized,
   but still be traversed for parenthesizing nested categories.
 
-# class
+## class
  type class
 
-# code_action_provider
+## code_action_provider
  Use to decorate methods for suggesting code actions. This is a low-level interface for making code actions.
 
-# coe
+## coe
  Adds a definition as a coercion
 
-# coe_decl
+## coe_decl
  auxiliary definition used to implement coercion (unfolded during elaboration)
 
-# combinator_formatter
+## combinator_formatter
  Register a formatter for a parser combinator.
 
   [combinator_formatter c] registers a declaration of type `Lean.PrettyPrinter.Formatter` for the `Parser` declaration `c`.
@@ -298,7 +298,7 @@ Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
   The tagged declaration may optionally accept parameters corresponding to (a prefix of) those of `c`, where `Parser` is replaced
   with `Formatter` in the parameter types.
 
-# combinator_parenthesizer
+## combinator_parenthesizer
  Register a parenthesizer for a parser combinator.
 
   [combinator_parenthesizer c] registers a declaration of type `Lean.PrettyPrinter.Parenthesizer` for the `Parser` declaration `c`.
@@ -306,31 +306,31 @@ Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
   The tagged declaration may optionally accept parameters corresponding to (a prefix of) those of `c`, where `Parser` is replaced
   with `Parenthesizer` in the parameter types.
 
-# command_code_action
+## command_code_action
  Declare a new command code action, to appear in the code actions on commands
 
-# command_elab
+## command_elab
  command elaborator
 
-# command_parser
+## command_parser
  parser
 
-# computed_field
+## computed_field
  Marks a function as a computed field of an inductive
 
-# congr
+## congr
  congruence theorem
 
-# cpass
+## cpass
  compiler passes for the code generator
 
-# csimp
+## csimp
  simplification theorem for the compiler
 
-# default_instance
+## default_instance
  type class default instance
 
-# delab
+## delab
  Register a delaborator.
 
   [delab k] registers a declaration of type `Lean.PrettyPrinter.Delaborator.Delab` for the `Lean.Expr`
@@ -340,75 +340,75 @@ Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
   to reduce special casing. If the term is an `Expr.mdata` with a single key `k`, `mdata.k`
   is tried first.
 
-# deprecated
+## deprecated
  mark declaration as deprecated
 
-# doElem_parser
+## doElem_parser
  parser
 
-# dummy_label_attr
+## dummy_label_attr
  A dummy label attribute, which can be used for testing. 
 
-# elab_as_elim
+## elab_as_elim
  instructs elaborator that the arguments of the function application should be elaborated as were an eliminator
 
-# elab_without_expected_type
+## elab_without_expected_type
  mark that applications of the given declaration should be elaborated without the expected type
 
-# elementwise
+## elementwise
  
 
-# env_linter
+## env_linter
  Use this declaration as a linting test in #lint
 
-# eqns
+## eqns
  Overrides the equation lemmas for a declaration to the provided list
 Similar to `registerParametricAttribute` except that attributes do not
 have to be assigned in the same file as the declaration.
 
-# export
+## export
  name to be used by code generators
 
-# expr_presenter
+## expr_presenter
  Register an Expr presenter. It must have the type `ProofWidgets.ExprPresenter`.
 Register an Expr presenter. It must have the type `ProofWidgets.ExprPresenter`.
 
-# ext
+## ext
  Marks a theorem as an extensionality theorem
 
-# extern
+## extern
  builtin and foreign functions
 
-# field_simps
+## field_simps
  The simpset `field_simps` is used by the tactic `field_simp` to
 reduce an expression in a field to an expression of the form `n / d` where `n` and `d` are
 division-free. 
 
-# field_simps_proc
+## field_simps_proc
  simproc set for field_simps_proc
 
-# fin_omega
+## fin_omega
  A simp set for the `fin_omega` wrapper around `omega`. 
 
-# fin_omega_proc
+## fin_omega_proc
  simproc set for fin_omega_proc
 
-# formatter
+## formatter
  Register a formatter for a parser.
 
   [formatter k] registers a declaration of type `Lean.PrettyPrinter.Formatter` for the `SyntaxNodeKind` `k`.
 
-# fun_prop
+## fun_prop
  `fun_prop` tactic to prove function properties like `Continuous`, `Differentiable`, `IsLinearMap`
 Initialization of `funProp` attribute
 
-# functor_norm
+## functor_norm
  Simp set for `functor_norm` 
 
-# functor_norm_proc
+## functor_norm_proc
  simproc set for functor_norm_proc
 
-# gcongr
+## gcongr
  generalized congruence
 Attribute marking "generalized congruence" (`gcongr`) lemmas.  Such lemmas must have a
 conclusion of a form such as `f x₁ y z₁ ∼ f x₂ y z₂`; that is, a relation between the application of
@@ -423,25 +423,25 @@ pair `f₁`/`f₂`. (Other antecedents are considered to generate "side goals".)
 
 Lemmas involving `<` or `≤` can also be marked `@[bound]` for use in the related `bound` tactic.
 
-# gcongr_forward
+## gcongr_forward
  adds a gcongr_forward extension
 
-# ghost_simps
+## ghost_simps
  Simplification rules for ghost equations. 
 
-# ghost_simps_proc
+## ghost_simps_proc
  simproc set for ghost_simps_proc
 
-# grind_cases
+## grind_cases
  `grind` tactic applies `cases` to (non-recursive) inductives during pre-processing step
 
-# grind_norm
+## grind_norm
  simplification/normalization theorems for `grind`
 
-# grind_norm_proc
+## grind_norm_proc
  simplification/normalization procedured for `grind`
 
-# higherOrder
+## higherOrder
  From a lemma of the shape `∀ x, f (g x) = h x` derive an auxiliary lemma of the
 form `f ∘ g = h` for reasoning about higher-order functions.
 
@@ -453,55 +453,55 @@ auxiliary lemma of the form `f ∘ g = h` for reasoning about higher-order funct
 Syntax: `[higher_order]` or `[higher_order name]` where the given name is used for the
 generated theorem.
 
-# hole_code_action
+## hole_code_action
  Declare a new hole code action, to appear in the code actions on ?_ and _
 
-# implemented_by
+## implemented_by
  name of the Lean (probably unsafe) function that implements opaque constant
 
-# incremental
+## incremental
  Marks an elaborator (tactic or command, currently) as supporting incremental elaboration. For unmarked elaborators, the corresponding snapshot bundle field in the elaboration context is unset so as to prevent accidental, incorrect reuse.
 
-# induction_eliminator
+## induction_eliminator
  custom `rec`-like eliminator for the `induction` tactic
 
-# inherit_doc
+## inherit_doc
  inherit documentation from a specified declaration
 
-# init
+## init
  initialization procedure for global references
 
-# inline
+## inline
  mark definition to be inlined
 
-# inline_if_reduce
+## inline_if_reduce
  mark definition to be inlined when resultant term after reduction is not a `cases_on` application
 
-# instance
+## instance
  type class instance
 
-# integral_simps
+## integral_simps
  Simp set for integral rules. 
 
-# integral_simps_proc
+## integral_simps_proc
  simproc set for integral_simps_proc
 
-# irreducible
+## irreducible
  irreducible declaration
 
-# is_poly
+## is_poly
  A stub attribute for `is_poly`. 
 
-# macro
+## macro
  macro elaborator
 
-# macro_inline
+## macro_inline
  mark definition to always be inlined before ANF conversion
 
-# match_pattern
+## match_pattern
  mark that a definition can be used in a pattern (remark: the dependent pattern matching compiler will unfold the definition)
 
-# mfld_simps
+## mfld_simps
  The simpset `mfld_simps` records several simp lemmas that are
 especially useful in manifolds. It is a subset of the whole set of simp lemmas, but it makes it
 possible to have quicker proofs (when used with `squeeze_simp` or `simp only`) while retaining
@@ -514,108 +514,108 @@ its output. The list of lemmas should be reasonable (contrary to the output of
 enough.
 
 
-# mfld_simps_proc
+## mfld_simps_proc
  simproc set for mfld_simps_proc
 
-# missing_docs_handler
+## missing_docs_handler
  adds a syntax traversal for the missing docs linter
 
-# mkIff
+## mkIff
  Generate an `iff` lemma for an inductive `Prop`.
 
-# monad_norm
+## monad_norm
  Simp set for `functor_norm` 
 
-# monad_norm_proc
+## monad_norm_proc
  simproc set for monad_norm_proc
 
-# mono
+## mono
  A lemma stating the monotonicity of some function, with respect to appropriate
 relations on its domain and range, and possibly with side conditions.
 
-# multigoal
+## multigoal
  this tactic acts on multiple goals
 The `multigoal` attribute keeps track of tactics that operate on multiple goals,
 meaning that `tac` acts differently from `focus tac`. This is used by the
 'unnecessary `<;>`' linter to prevent false positives where `tac <;> tac'` cannot
 be replaced by `(tac; tac')` because the latter would expose `tac` to a different set of goals.
 
-# never_extract
+## never_extract
  instruct the compiler that function applications using the tagged declaration should not be extracted when they are closed terms, nor common subexpression should be performed. This is useful for declarations that have implicit effects.
 
-# noinline
+## noinline
  mark definition to never be inlined
 
-# nolint
+## nolint
  Do not report this declaration in any of the tests of `#lint`
 Defines the user attribute `nolint` for skipping `#lint`
 
-# nontriviality
+## nontriviality
  The `@[nontriviality]` simp set is used by the `nontriviality` tactic to automatically
 discharge theorems about the trivial case (where we know `Subsingleton α` and many theorems
 in e.g. groups are trivially true). 
 
-# nontriviality_proc
+## nontriviality_proc
  simproc set for nontriviality_proc
 
-# norm_cast
+## norm_cast
  attribute for norm_cast
 
-# norm_num
+## norm_num
  adds a norm_num extension
 
-# nospecialize
+## nospecialize
  mark definition to never be specialized
 
-# notation_class
+## notation_class
  An attribute specifying that this is a notation class. Used by @[simps].
 `@[notation_class]` attribute. Note: this is *not* a `NameMapAttribute` because we key on the
 argument of the attribute, not the declaration name.
 
-# parenthesizer
+## parenthesizer
  Register a parenthesizer for a parser.
 
   [parenthesizer k] registers a declaration of type `Lean.PrettyPrinter.Parenthesizer` for the `SyntaxNodeKind` `k`.
 
-# parity_simps
+## parity_simps
  Simp attribute for lemmas about `Even` 
 
-# parity_simps_proc
+## parity_simps_proc
  simproc set for parity_simps_proc
 
-# positivity
+## positivity
  adds a positivity extension
 
-# ppDotAttr
+## ppDotAttr
  
 
-# ppWithUnivAttr
+## ppWithUnivAttr
  
 
-# pp_nodot
+## pp_nodot
  mark declaration to never be pretty printed using field notation
 
-# pp_using_anonymous_constructor
+## pp_using_anonymous_constructor
  mark structure to be pretty printed using `⟨a,b,c⟩` notation
 
-# prec_parser
+## prec_parser
  parser
 
-# prio_parser
+## prio_parser
  parser
 
-# push_cast
+## push_cast
  The `push_cast` simp attribute uses `norm_cast` lemmas to move casts toward the leaf nodes of the expression.
 The `push_cast` simp attribute.
 
-# qify_simps
+## qify_simps
  The simpset `qify_simps` is used by the tactic `qify` to move expressions from `ℕ` or `ℤ` to `ℚ`
 which gives a well-behaved division. 
 
-# qify_simps_proc
+## qify_simps_proc
  simproc set for qify_simps_proc
 
-# quot_precheck
+## quot_precheck
  Register a double backtick syntax quotation pre-check.
 
 [quot_precheck k] registers a declaration of type `Lean.Elab.Term.Quotation.Precheck` for the `SyntaxNodeKind` `k`.
@@ -623,114 +623,114 @@ It should implement eager name analysis on the passed syntax by throwing an exce
 and calling `precheck` recursively on nested terms, potentially with an extended local context (`withNewLocal`).
 Macros without registered precheck hook are unfolded, and identifier-less syntax is ultimately assumed to be well-formed.
 
-# rclike_simps
+## rclike_simps
  "Simp attribute for lemmas about `RCLike`" 
 
-# rclike_simps_proc
+## rclike_simps_proc
  simproc set for rclike_simps_proc
 
-# reassoc
+## reassoc
  
 
-# recursor
+## recursor
  user defined recursor, numerical parameter specifies position of the major premise
 
-# reduce_mod_char
+## reduce_mod_char
  lemmas for preprocessing and cleanup in the `reduce_mod_char` tactic
 `@[reduce_mod_char]` is an attribute that tags lemmas for preprocessing and cleanup in the
 `reduce_mod_char` tactic
 
-# reducible
+## reducible
  reducible declaration
 
-# refl
+## refl
  reflexivity relation
 
-# rify_simps
+## rify_simps
  The simpset `rify_simps` is used by the tactic `rify` to move expressions from `ℕ`, `ℤ`, or
 `ℚ` to `ℝ`. 
 
-# rify_simps_proc
+## rify_simps_proc
  simproc set for rify_simps_proc
 
-# run_builtin_parser_attribute_hooks
+## run_builtin_parser_attribute_hooks
  explicitly run hooks normally activated by builtin parser attributes
 
-# run_parser_attribute_hooks
+## run_parser_attribute_hooks
  explicitly run hooks normally activated by parser attributes
 
-# semireducible
+## semireducible
  semireducible declaration
 
-# server_rpc_method
+## server_rpc_method
  Marks a function as a Lean server RPC method.
     Shorthand for `registerRpcProcedure`.
     The function must have type `α → RequestM (RequestTask β)` with
     `[RpcEncodable α]` and `[RpcEncodable β]`.
 
-# server_rpc_method_cancellable
+## server_rpc_method_cancellable
  Like `server_rpc_method`, but requests for this method can be cancelled. The method should check for that using `IO.checkCanceled`. Cancellable methods are invoked differently from JavaScript: see `callCancellable` in `cancellable.ts`.
 Like `server_rpc_method`, but requests for this method can be cancelled.
 The method should check for that using `IO.checkCanceled`.
 Cancellable methods are invoked differently from JavaScript:
 see `callCancellable` in `cancellable.ts`.
 
-# seval
+## seval
  symbolic evaluator theorem
 
-# sevalprocAttr
+## sevalprocAttr
  Symbolic evaluator procedure
 
-# sevalprocBuiltinAttr
+## sevalprocBuiltinAttr
  Builtin symbolic evaluation procedure
 
-# simp
+## simp
  simplification theorem
 
-# simprocAttr
+## simprocAttr
  Simplification procedure
 
-# simprocBuiltinAttr
+## simprocBuiltinAttr
  Builtin simplification procedure
 
-# simps
+## simps
  Automatically derive lemmas specifying the projections of this declaration.
 The `simps` attribute.
 
-# specialize
+## specialize
  mark definition to always be specialized
 
-# stacksTag
+## stacksTag
  Apply a Stacks or Kerodon project tag to a theorem.
 
-# stx_parser
+## stx_parser
  parser
 
-# symm
+## symm
  symmetric relation
 
-# tactic
+## tactic
  tactic elaborator
 
-# tactic_alt
+## tactic_alt
  Register a tactic parser as an alternative form of an existing tactic, so they can be grouped together in documentation.
 
-# tactic_code_action
+## tactic_code_action
  Declare a new tactic code action, to appear in the code actions on tactics
 
-# tactic_parser
+## tactic_parser
  parser
 
-# tactic_tag
+## tactic_tag
  Register a tactic parser as an alternative of an existing tactic, so they can be grouped together in documentation.
 
-# term_elab
+## term_elab
  term elaborator
 
-# term_parser
+## term_parser
  parser
 
-# to_additive
+## to_additive
  Transport multiplicative to additive
 The attribute `to_additive` can be used to automatically transport theorems
 and definitions (but not inductive types and structures) from a multiplicative
@@ -941,50 +941,50 @@ In this case `to_additive` adds all structure fields to its mapping.
 As a safety check, in the first case `to_additive` double checks
 that the new name differs from the original one.
 
-# to_additive_change_numeral
+## to_additive_change_numeral
  Auxiliary attribute for `to_additive` that stores functions that have numerals as argument.
 Similar to `registerParametricAttribute` except that attributes do not
 have to be assigned in the same file as the declaration.
 
-# to_additive_ignore_args
+## to_additive_ignore_args
  Auxiliary attribute for `to_additive` stating that certain arguments are not additivized.
 Similar to `registerParametricAttribute` except that attributes do not
 have to be assigned in the same file as the declaration.
 
-# to_additive_relevant_arg
+## to_additive_relevant_arg
  Auxiliary attribute for `to_additive` stating which arguments are the types with a multiplicative structure.
 Similar to `registerParametricAttribute` except that attributes do not
 have to be assigned in the same file as the declaration.
 
-# to_additive_reorder
+## to_additive_reorder
  Auxiliary attribute for `to_additive` that stores arguments that need to be reordered. This should not appear in any file. We keep it as an attribute for now so that mathport can still use it, and it can generate a warning.
 Similar to `registerParametricAttribute` except that attributes do not
 have to be assigned in the same file as the declaration.
 
-# to_app
+## to_app
  
 
-# trans
+## trans
  transitive relation
 
-# typevec
+## typevec
  simp set for the manipulation of typevec and arrow expressions 
 
-# typevec_proc
+## typevec_proc
  simproc set for typevec_proc
 
-# unbox
+## unbox
  compiler tries to unbox result values if their types are tagged with `[unbox]`
 
-# unification_hint
+## unification_hint
  unification hint
 
-# unused_variables_ignore_fn
+## unused_variables_ignore_fn
  Marks a function of type `Lean.Linter.IgnoreFunction` for suppressing unused variable warnings
 Adds the `@[{builtin_}unused_variables_ignore_fn]` attribute, which is applied
 to declarations of type `IgnoreFunction` for use by the unused variables linter.
 
-# variable_alias
+## variable_alias
  Attribute to record aliases for the `variable?` command.
 Attribute to record aliases for the `variable?` command. Aliases are structures that have no
 fields, and additional typeclasses are recorded as *arguments* to the structure.
@@ -1002,11 +1002,11 @@ constructor. You should not have any fields in `variable_alias` structures.
 Notice that `VectorSpace` is not a class; the `variable?` command allows non-classes with the
 `variable_alias` attribute to use instance binders.
 
-# widget_module
+## widget_module
  Registers a widget module. Its type must implement Lean.Widget.ToModule.
 Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
 
-# zify_simps
+## zify_simps
  The simpset `zify_simps` is used by the tactic `zify` to move expressions from `ℕ` to `ℤ`
-which gives a well-behaved subtraction.   # zify_simps_proc
+which gives a well-behaved subtraction.   ## zify_simps_proc
  simproc set for zify_simps_proc  
