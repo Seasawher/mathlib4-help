@@ -365,6 +365,31 @@ For example, `#guard_msgs (error, drop all) in cmd` means to check warnings and 
 everything else.
 
 # \#help
+Defined in: `Batteries.Tactic.«command#help_Term+____»`
+
+The command `#help term` shows all term syntaxes that have been defined in the current environment.
+See `#help cat` for more information.
+
+# \#help
+Defined in: `Batteries.Tactic.«command#help_Cat+______»`
+
+The command `#help cat C` shows all syntaxes that have been defined in syntax category `C` in the
+current environment.
+Each syntax has a format like:
+```lean
+# first
+Defined in: `Parser.tactic.first`
+
+  `first | tac | ...` runs each `tac` until one succeeds, or else fails.
+```lean
+The quoted string is the leading token of the syntax, if applicable. It is followed by the full
+name of the syntax (which you can also click to go to the definition), and the documentation.
+
+* The form `#help cat C id` will show only attributes that begin with `id`.
+* The form `#help cat+ C` will also show information about any `macro`s and `elab`s
+  associated to the listed syntaxes.
+
+# \#help
 Defined in: `Mathlib.Tactic.«command#help_Cats___»`
 
 The command `#help cats` shows all syntax categories that have been defined in the
@@ -378,6 +403,28 @@ name of the declaration that introduced it. (It is often an anonymous declaratio
 but you can click to go to the definition.) It also shows the doc string if available.
 
 The form `#help cats id` will show only syntax categories that begin with `id`.
+
+# \#help
+Defined in: `Batteries.Tactic.«command#help_Command+____»`
+
+The command `#help command` shows all commands that have been defined in the current environment.
+See `#help cat` for more information.
+
+# \#help
+Defined in: `Batteries.Tactic.«command#help_AttrAttribute___»`
+
+The command `#help attribute` (or the short form `#help attr`) shows all attributes that have been
+defined in the current environment.
+Each attribute has a format like:
+```lean
+[inline]: mark definition to always be inlined
+```
+This says that `inline` is an attribute that can be placed on definitions like
+`@[inline] def foo := 1`. (Individual attributes may have restrictions on where they can be
+applied; see the attribute's documentation for details.) Both the attribute's `descr` field as well
+as the docstring will be displayed here.
+
+The form `#help attr id` will show only attributes that begin with `id`.
 
 # \#help
 Defined in: `Mathlib.Tactic.«command#help_Tactic+____»`
@@ -433,6 +480,21 @@ name of the syntax (which you can also click to go to the definition), and the d
   associated to the listed syntaxes.
 
 # \#help
+Defined in: `Batteries.Tactic.«command#help_Cats___»`
+
+The command `#help cats` shows all syntax categories that have been defined in the
+current environment.
+Each syntax has a format like:
+```lean
+category command [Lean.Parser.initFn✝]
+```
+The name of the syntax category in this case is `command`, and `Lean.Parser.initFn✝` is the
+name of the declaration that introduced it. (It is often an anonymous declaration like this,
+but you can click to go to the definition.) It also shows the doc string if available.
+
+The form `#help cats id` will show only syntax categories that begin with `id`.
+
+# \#help
 Defined in: `Mathlib.Tactic.«command#help_Command+____»`
 
 The command `#help command` shows all commands that have been defined in the current environment.
@@ -453,6 +515,34 @@ applied; see the attribute's documentation for details.) Both the attribute's `d
 as the docstring will be displayed here.
 
 The form `#help attr id` will show only attributes that begin with `id`.
+
+# \#help
+Defined in: `Batteries.Tactic.«command#help_Tactic+____»`
+
+The command `#help tactic` shows all tactics that have been defined in the current environment.
+See `#help cat` for more information.
+
+# \#help
+Defined in: `Batteries.Tactic.«command#help_Conv+____»`
+
+The command `#help conv` shows all tactics that have been defined in the current environment.
+See `#help cat` for more information.
+
+# \#help
+Defined in: `Batteries.Tactic.«command#help_Option___»`
+
+The command `#help option` shows all options that have been defined in the current environment.
+Each option has a format like:
+```lean
+option pp.all : Bool := false
+  (pretty printer) display coercions, implicit parameters, proof terms, fully qualified names,
+  universe, and disable beta reduction and notations during pretty printing
+```
+This says that `pp.all` is an option which can be set to a `Bool` value, and the default value is
+`false`. If an option has been modified from the default using e.g. `set_option pp.all true`,
+it will appear as a `(currently: true)` note next to the option.
+
+The form `#help option id` will show only options that begin with `id`.
 
 # \#html
 Defined in: `ProofWidgets.HtmlCommand.htmlCmd`
