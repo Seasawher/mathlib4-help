@@ -1,6 +1,6 @@
 # Mathlib4 Tactics
 
-This is a list of the output of `#help` command of mathlib4. see [GitHub Page](https://seasawher.github.io/mathlib4-tactics/)!
+This is a list of the output of `#help` command of mathlib4. see [GitHub Page](https://seasawher.github.io/mathlib4-help/)!
 
 This is heavily inspired by [haruhisa-enomoto/mathlib4-all-tactics](https://github.com/haruhisa-enomoto/mathlib4-all-tactics).
 
