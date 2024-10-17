@@ -10,8 +10,7 @@ This web page is automatically updated by GitHub Action.
 
 First, install Lean and Python 3.10, and then run the following commands:
 
-```bash
-rm .\src\tactics.md
-lake env lean --run Tactic.lean > src/tactics.md
+```pwsh
+./scripts/build.ps1
 python3 script.py
 ```
