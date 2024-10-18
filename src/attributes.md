@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `035f251efa085d58f145e0d72477526d100c271e`
+Mathlib version: `9b16c5d7fb54a2f624ce50e9b4f9de1e2a26b963`
 
 ## aesop
  Register a declaration as an Aesop rule.
@@ -101,9 +101,9 @@ There are two cases for what declaration corresponding to this `Name` can be.
 1. An inductive type (i.e. the `Algebra` property itself), in this case it is assumed that the
 `RingHom` and the `Algebra` property are definitionally the same, and the tactic will construct the
 `Algebra` property by giving the `RingHom` property as a term.
-2. A constructor for the `Algebra` property. In this case it is assumed that the `RingHom` property
-is the last argument of the constructor, and that no other explicit argument is needed. The tactic
-then constructs the `Algebra` property by applying the constructor to the `RingHom` property.
+2. A lemma (or constructor) proving the `Algebra` property from the `RingHom` property. In this case
+it is assumed that the `RingHom` property is the final argument, and that no other explicit argument
+is needed. The tactic then constructs the `Algebra` property by applying the lemma or constructor.
 
 Finally, if no argument is provided to the `algebraize` attribute, it is assumed that the tagged
 declaration has name `RingHom.Property` and that the corresponding `Algebra` property has name
