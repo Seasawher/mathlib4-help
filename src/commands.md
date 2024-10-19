@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `9b16c5d7fb54a2f624ce50e9b4f9de1e2a26b963`
+Mathlib version: `418a5eb7aec3fb639097cb13f74fc031ac4057f2`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1479,8 +1479,7 @@ Some common uses:
   This will generate `foo_apply` lemmas for each declaration `foo`.
 * If you prefer `coe_foo` lemmas that state equalities between functions, use
   `initialize_simps_projections MulHom (toFun → coe, as_prefix coe)`
-  In this case you have to use `@[simps (config := .asFn)]` or equivalently
-  `@[simps (config := .asFn)]` whenever you call `@[simps]`.
+  In this case you have to use `@[simps (config := .asFn)]` whenever you call `@[simps]`.
 * You can also initialize to use both, in which case you have to choose which one to use by default,
   by using either of the following
   ```
@@ -1553,8 +1552,7 @@ Some common uses:
   This will generate `foo_apply` lemmas for each declaration `foo`.
 * If you prefer `coe_foo` lemmas that state equalities between functions, use
   `initialize_simps_projections MulHom (toFun → coe, as_prefix coe)`
-  In this case you have to use `@[simps (config := .asFn)]` or equivalently
-  `@[simps (config := .asFn)]` whenever you call `@[simps]`.
+  In this case you have to use `@[simps (config := .asFn)]` whenever you call `@[simps]`.
 * You can also initialize to use both, in which case you have to choose which one to use by default,
   by using either of the following
   ```
