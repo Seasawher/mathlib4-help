@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `418a5eb7aec3fb639097cb13f74fc031ac4057f2`
+Mathlib version: `2f60fa67d7c9457a0e591806fc3201269c401030`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -5672,7 +5672,7 @@ Defined in: `Lean.Parser.Tactic.traceState`
 `trace_state` displays the current state in the info view.
 
 ## trans
-Defined in: `Mathlib.Tactic.tacticTrans___`
+Defined in: `Batteries.Tactic.tacticTrans___`
 
 `trans` applies to a goal whose target has the form `t ~ u` where `~` is a transitive relation,
 that is, a relation which has a transitivity lemma tagged with the attribute [trans].
@@ -5684,8 +5684,9 @@ Additionally, `trans` also applies to a goal whose target has the form `t → u`
 in which case it replaces the goal with `t → s` and `s → u`.
 
 ## transitivity
-Defined in: `Mathlib.Tactic.tacticTransitivity___`
+Defined in: `Batteries.Tactic.tacticTransitivity___`
 
+Synonym for `trans` tactic.
 
 ## triv
 Defined in: `Batteries.Tactic.triv`
