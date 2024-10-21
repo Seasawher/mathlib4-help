@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `2f60fa67d7c9457a0e591806fc3201269c401030`
+Mathlib version: `a60b09cd54613409d215c944aebb2cf75991287c`
 
 ## aesop.check.all
 type: `Bool`
@@ -600,6 +600,13 @@ type: `Bool`
 default: `false`
 
 enable the missing end linter
+
+## linter.style.multiGoal
+type: `Bool`
+
+default: `false`
+
+enable the multiGoal linter
 
 ## linter.style.setOption
 type: `Bool`
