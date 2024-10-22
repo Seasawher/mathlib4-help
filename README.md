@@ -6,6 +6,13 @@ This is heavily inspired by [haruhisa-enomoto/mathlib4-all-tactics](https://gith
 
 This web page is automatically updated by GitHub Action.
 
+## How to activate virtual environment
+
+```pwsh
+py -m venv .venv
+.venv\Scripts\activate
+```
+
 ## How to generate markdown file
 
 First, install Lean and Python 3.10, and then run the following commands:
