@@ -36,7 +36,7 @@ jobs:
         run: |
           ./scripts/build.ps1
           python3 script.py
-          $diff = git diff -w "src"
+          $diff = git diff -w "docs"
           if ([string]::IsNullOrEmpty($diff)) {
               "files_changed=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           } else {

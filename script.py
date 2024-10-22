@@ -4,10 +4,10 @@ from json import load
 targets = ["tactic", "option", "command", "attribute"]
 
 file_path_dict = {
-  "tactic": "src/tactics.md",
-  "option": "src/options.md",
-  "command": "src/commands.md",
-  "attribute": "src/attributes.md"
+  "tactic": "docs/tactics.md",
+  "option": "docs/options.md",
+  "command": "docs/commands.md",
+  "attribute": "docs/attributes.md"
 }
 
 pattern_dict = {
