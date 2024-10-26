@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `f8829a66213bebeab14f58c568eeea9442dd607b`
+Mathlib version: `e91cdbcf5a387801a6225b41b0056c63206a9f7f`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -4483,13 +4483,13 @@ You can use `rename' a => b, b => a` to swap two variables.
 ## rename_bvar
 Defined in: `Mathlib.Tactic.«tacticRename_bvar_→__»`
 
-* `rename_bvar old new` renames all bound variables named `old` to `new` in the target.
-* `rename_bvar old new at h` does the same in hypothesis `h`.
+* `rename_bvar old → new` renames all bound variables named `old` to `new` in the target.
+* `rename_bvar old → new at h` does the same in hypothesis `h`.
 
 ```lean
 example (P : ℕ → ℕ → Prop) (h : ∀ n, ∃ m, P n m) : ∀ l, ∃ m, P l m := by
-  rename_bvar n q at h -- h is now ∀ (q : ℕ), ∃ (m : ℕ), P q m,
-  rename_bvar m n -- target is now ∀ (l : ℕ), ∃ (n : ℕ), P k n,
+  rename_bvar n → q at h -- h is now ∀ (q : ℕ), ∃ (m : ℕ), P q m,
+  rename_bvar m → n -- target is now ∀ (l : ℕ), ∃ (n : ℕ), P k n,
   exact h -- Lean does not care about those bound variable names
 ```
 Note: name clashes are resolved automatically.
