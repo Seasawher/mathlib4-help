@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `e0bd65eedfa4ffe9616fd33085402c213c4cb01f`
+Mathlib version: `9fc60c1ad982f142d6d0671bef8f4cda3b1590cd`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -455,6 +455,15 @@ This says that `pp.all` is an option which can be set to a `Bool` value, and the
 it will appear as a `(currently: true)` note next to the option.
 
 The form `#help option id` will show only options that begin with `id`.
+
+## \#help
+Defined in: `Batteries.Tactic.«command#help_Note___»`
+
+`#help note "foo"` searches for all library notes whose
+label starts with "foo", then displays those library notes sorted alphabetically by label,
+grouped by label.
+The command only displays the library notes that are declared in
+imported files or in the same file above the line containing the command.
 
 ## \#help
 Defined in: `Mathlib.Tactic.«command#help_Term+____»`
@@ -1595,6 +1604,8 @@ creates a new "library note", which can then be cross-referenced using
 -- See note [some tag]
 ```
 in doc-comments.
+Use `#help note "some tag"` to display all notes with the tag `"some tag"` in the infoview.
+This command can be imported from Batteries.Tactic.HelpCmd .
 
 ## lrat_proof
 Defined in: `Mathlib.Tactic.Sat.commandLrat_proof_Example____`
