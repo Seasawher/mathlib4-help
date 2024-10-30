@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `7bf290184508102d1486d560f8ca6d34a27c9b4d`
+Mathlib version: `39773322976301b2a422894189a25720c48fe95d`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1415,6 +1415,19 @@ Defined in: `Lean.Parser.Command.genInjectiveTheorems`
 This is an auxiliary command for generation constructor injectivity theorems for
 inductive types defined at `Prelude.lean`.
 It is meant for bootstrapping purposes only.
+
+## guard_min_heartbeats
+Defined in: `Mathlib.CountHeartbeats.commandGuard_min_heartbeats_In__`
+
+Guard the minimal number of heartbeats used in the enclosed command.
+
+This is most useful in the context of debugging and minimizing an example of a slow declaration.
+By guarding the number of heartbeats used in the slow declaration,
+an error message will be generated if a minimization step makes the slow behaviour go away.
+
+The default number of minimal heartbeats is the value of `maxHeartbeats` (typically 200000).
+Alternatively, you can specify a number of heartbeats to guard against,
+using the syntax `guard_min_heartbeats n in cmd`.
 
 ## import
 Defined in: `Lean.Parser.Command.import`

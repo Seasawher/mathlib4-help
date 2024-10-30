@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `7bf290184508102d1486d560f8ca6d34a27c9b4d`
+Mathlib version: `39773322976301b2a422894189a25720c48fe95d`
 
 ## aesop.check.all
 type: `Bool`
@@ -495,6 +495,13 @@ type: `Bool`
 default: `false`
 
 enable the minImports linter
+
+## linter.minImports.increases
+type: `Bool`
+
+default: `true`
+
+enable reporting increase-size change in the minImports linter
 
 ## linter.missingDocs
 type: `Bool`
