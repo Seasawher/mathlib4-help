@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `7bf290184508102d1486d560f8ca6d34a27c9b4d`
+Mathlib version: `39773322976301b2a422894189a25720c48fe95d`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2208,6 +2208,24 @@ Note that this involves a lot of case splitting, so may be slow.
 ## find
 Defined in: `Mathlib.Tactic.Find.tacticFind`
 
+
+## finiteness
+Defined in: `finiteness`
+
+Tactic to solve goals of the form `*** < ∞` and (equivalently) `*** ≠ ∞` in the extended
+nonnegative reals (`ℝ≥0∞`).
+
+## finiteness?
+Defined in: `finiteness?`
+
+Tactic to solve goals of the form `*** < ∞` and (equivalently) `*** ≠ ∞` in the extended
+nonnegative reals (`ℝ≥0∞`).
+
+## finiteness_nonterminal
+Defined in: `finiteness_nonterminal`
+
+Tactic to solve goals of the form `*** < ∞` and (equivalently) `*** ≠ ∞` in the extended
+nonnegative reals (`ℝ≥0∞`).
 
 ## first
 Defined in: `Lean.Parser.Tactic.first`
