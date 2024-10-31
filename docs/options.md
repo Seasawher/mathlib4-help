@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `39773322976301b2a422894189a25720c48fe95d`
+Mathlib version: `348232e527e0363cd27a7a49302dad2de3817be6`
 
 ## aesop.check.all
 type: `Bool`
