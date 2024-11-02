@@ -1,6 +1,13 @@
 # Options
 
-Mathlib version: `348232e527e0363cd27a7a49302dad2de3817be6`
+Mathlib version: `df174a8a32fb9b7661ec4faa48a6a6a6bb4cf0d5`
+
+## Mathlib.Tactic.TFAE.useDeprecated
+type: `Bool`
+
+default: `false`
+
+Re-enable "goal-style" 'tfae_have' syntax
 
 ## aesop.check.all
 type: `Bool`
@@ -3458,48 +3465,6 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.simps.verbose
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.slim_check.decoration
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.slim_check.discarded
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.slim_check.instance
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.slim_check.shrink.candidates
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.slim_check.shrink.steps
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.slim_check.success
 type: `Bool`
 
 default: `false`
