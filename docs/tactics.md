@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `348232e527e0363cd27a7a49302dad2de3817be6`
+Mathlib version: `df174a8a32fb9b7661ec4faa48a6a6a6bb4cf0d5`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -5231,59 +5231,6 @@ Defined in: `sliceRHS`
 `slice_rhs a b => tac` zooms to the right hand side, uses associativity for categorical
 composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invokes `tac`.
 
-## slim_check
-Defined in: `slimCheckSyntax`
-
-`slim_check` considers a proof goal and tries to generate examples
-that would contradict the statement.
-
-Let's consider the following proof goal.
-
-```lean
-xs : List ℕ,
-h : ∃ (x : ℕ) (H : x ∈ xs), x < 3
-⊢ ∀ (y : ℕ), y ∈ xs → y < 5
-```
-
-The local constants will be reverted and an instance will be found for
-`Testable (∀ (xs : List ℕ), (∃ x ∈ xs, x < 3) → (∀ y ∈ xs, y < 5))`.
-The `Testable` instance is supported by an instance of `Sampleable (List ℕ)`,
-`Decidable (x < 3)` and `Decidable (y < 5)`.
-
-Examples will be created in ascending order of size (more or less)
-
-The first counter-examples found will be printed and will result in an error:
-
-```
-===================
-Found problems!
-xs := [1, 28]
-x := 1
-y := 28
--------------------
-```
-
-If `slim_check` successfully tests 100 examples, it acts like
-admit. If it gives up or finds a counter-example, it reports an error.
-
-For more information on writing your own `Sampleable` and `Testable`
-instances, see `Testing.SlimCheck.Testable`.
-
-Optional arguments given with `slim_check (config : { ... })`
-* `numInst` (default 100): number of examples to test properties with
-* `maxSize` (default 100): final size argument
-
-Options:
-* `set_option trace.slim_check.decoration true`: print the proposition with quantifier annotations
-* `set_option trace.slim_check.discarded true`: print the examples discarded because they do not
-  satisfy assumptions
-* `set_option trace.slim_check.shrink.steps true`: trace the shrinking of counter-example
-* `set_option trace.slim_check.shrink.candidates true`: print the lists of candidates considered
-  when shrinking each variable
-* `set_option trace.slim_check.instance true`: print the instances of `testable` being used to test
-  the proposition
-* `set_option trace.slim_check.success true`: print the tested samples that satisfy a property
-
 ## smul_tac
 Defined in: `RatFunc.tacticSmul_tac`
 
@@ -5555,7 +5502,7 @@ of hypotheses of the form `Pᵢ → Pⱼ` or `Pᵢ ↔ Pⱼ` have been introduce
 `tfae_have` can be used to conveniently introduce these hypotheses; see `tfae_have`.
 
 Example:
-```lean
+```lean4
 example : TFAE [P, Q, R] := by
   tfae_have 1 → 2 := sorry /- proof of P → Q -/
   tfae_have 2 → 1 := sorry /- proof of Q → P -/
@@ -5571,7 +5518,7 @@ Defined in: `Mathlib.Tactic.TFAE.tfaeHave`
 context, where `<arrow>` can be `→`, `←`, or `↔`. Note that `i` and `j` are natural number indices
 (beginning at 1) used to specify the propositions `P₁, P₂, ...` that appear in the goal.
 
-```lean
+```lean4
 example (h : P → R) : TFAE [P, Q, R] := by
   tfae_have 1 → 3 := h
   ...
@@ -5581,7 +5528,7 @@ The resulting context now includes `tfae_1_to_3 : P → R`.
 Once sufficient hypotheses have been introduced by `tfae_have`, `tfae_finish` can be used to close
 the goal. For example,
 
-```lean
+```lean4
 example : TFAE [P, Q, R] := by
   tfae_have 1 → 2 := sorry /- proof of P → Q -/
   tfae_have 2 → 1 := sorry /- proof of Q → P -/
@@ -5589,27 +5536,26 @@ example : TFAE [P, Q, R] := by
   tfae_finish
 ```
 
-All relevant features of `have` are supported by `tfae_have`, including naming, destructuring, goal
-creation, and matching. These are demonstrated below.
+All features of `have` are supported by `tfae_have`, including naming, matching,
+destructuring, and goal creation. These are demonstrated below.
 
-```lean
+```lean4
 example : TFAE [P, Q] := by
-  -- `tfae_1_to_2 : P → Q`:
+  -- assert `tfae_1_to_2 : P → Q`:
   tfae_have 1 → 2 := sorry
-  -- `hpq : P → Q`:
+
+  -- assert `hpq : P → Q`:
   tfae_have hpq : 1 → 2 := sorry
-  -- inaccessible `h✝ : P → Q`:
-  tfae_have _ : 1 → 2 := sorry
-  -- `tfae_1_to_2 : P → Q`, and `?a` is a new goal:
-  tfae_have 1 → 2 := f ?a
-  -- create a goal of type `P → Q`:
-  tfae_have 1 → 2
-  · exact (sorry : P → Q)
-  -- match on `p : P` and prove `Q`:
+
+  -- match on `p : P` and prove `Q` via `f p`:
   tfae_have 1 → 2
   | p => f p
-  -- introduces `pq : P → Q`, `qp : Q → P`:
+
+  -- assert `pq : P → Q`, `qp : Q → P`:
   tfae_have ⟨pq, qp⟩ : 1 ↔ 2 := sorry
+
+  -- assert `h : P → Q`; `?a` is a new goal:
+  tfae_have h : 1 → 2 := f ?a
   ...
 ```
 
@@ -5621,7 +5567,7 @@ Defined in: `Mathlib.Tactic.TFAE.tfaeHave'`
 context, where `<arrow>` can be `→`, `←`, or `↔`. Note that `i` and `j` are natural number indices
 (beginning at 1) used to specify the propositions `P₁, P₂, ...` that appear in the goal.
 
-```lean
+```lean4
 example (h : P → R) : TFAE [P, Q, R] := by
   tfae_have 1 → 3 := h
   ...
@@ -5631,7 +5577,7 @@ The resulting context now includes `tfae_1_to_3 : P → R`.
 Once sufficient hypotheses have been introduced by `tfae_have`, `tfae_finish` can be used to close
 the goal. For example,
 
-```lean
+```lean4
 example : TFAE [P, Q, R] := by
   tfae_have 1 → 2 := sorry /- proof of P → Q -/
   tfae_have 2 → 1 := sorry /- proof of Q → P -/
@@ -5639,27 +5585,26 @@ example : TFAE [P, Q, R] := by
   tfae_finish
 ```
 
-All relevant features of `have` are supported by `tfae_have`, including naming, destructuring, goal
-creation, and matching. These are demonstrated below.
+All features of `have` are supported by `tfae_have`, including naming, matching,
+destructuring, and goal creation. These are demonstrated below.
 
-```lean
+```lean4
 example : TFAE [P, Q] := by
-  -- `tfae_1_to_2 : P → Q`:
+  -- assert `tfae_1_to_2 : P → Q`:
   tfae_have 1 → 2 := sorry
-  -- `hpq : P → Q`:
+
+  -- assert `hpq : P → Q`:
   tfae_have hpq : 1 → 2 := sorry
-  -- inaccessible `h✝ : P → Q`:
-  tfae_have _ : 1 → 2 := sorry
-  -- `tfae_1_to_2 : P → Q`, and `?a` is a new goal:
-  tfae_have 1 → 2 := f ?a
-  -- create a goal of type `P → Q`:
-  tfae_have 1 → 2
-  · exact (sorry : P → Q)
-  -- match on `p : P` and prove `Q`:
+
+  -- match on `p : P` and prove `Q` via `f p`:
   tfae_have 1 → 2
   | p => f p
-  -- introduces `pq : P → Q`, `qp : Q → P`:
+
+  -- assert `pq : P → Q`, `qp : Q → P`:
   tfae_have ⟨pq, qp⟩ : 1 ↔ 2 := sorry
+
+  -- assert `h : P → Q`; `?a` is a new goal:
+  tfae_have h : 1 → 2 := f ?a
   ...
 ```
 

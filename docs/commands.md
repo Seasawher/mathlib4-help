@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `348232e527e0363cd27a7a49302dad2de3817be6`
+Mathlib version: `df174a8a32fb9b7661ec4faa48a6a6a6bb4cf0d5`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -918,7 +918,7 @@ Defined in: `Mathlib.Linter.«command#reset_min_imports»`
 `#reset_min_imports` sets to empty the current list of cumulative imports.
 
 ## \#sample
-Defined in: `SlimCheck.«command#sample_»`
+Defined in: `Plausible.«command#sample_»`
 
 `#sample type`, where `type` has an instance of `SampleableExt`, prints ten random
 values of type `type` using an increasing size parameter.
@@ -1006,7 +1006,7 @@ Defined in: `Lean.Parser.Command.synth`
 
 
 ## \#test
-Defined in: `SlimCheck.«command#test_»`
+Defined in: `Plausible.«command#test_»`
 
 
 ## \#time
