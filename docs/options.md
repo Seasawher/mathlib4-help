@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `2e8dbf68904ffbccb7529f87a2207d6289e6a2e7`
+Mathlib version: `079e5ca5a630dabf441b6b74924402b266c3f748`
 
 ## Mathlib.Tactic.TFAE.useDeprecated
 type: `Bool`
@@ -163,6 +163,13 @@ default: `true`
 
 by default the `inductive`/`structure` commands report an error if the resulting universe is not zero, but may be zero for some universe parameters. Reason: unless this type is a subsingleton, it is hardly what the user wants since it can only eliminate into `Prop`. In the `Init` package, we define subsingletons, and we use this option to disable the check. This option may be deleted in the future after we improve the validator
 
+## bv.ac_nf
+type: `Bool`
+
+default: `false`
+
+Canonicalize with respect to associativity and commutativitiy.
+
 ## checkBinderAnnotations
 type: `Bool`
 
@@ -289,6 +296,27 @@ type: `Nat`
 default: `16384`
 
 only display proof statistics when proof has at least this number of terms
+
+## eval.derive.repr
+type: `Bool`
+
+default: `true`
+
+('#eval' command) enables auto-deriving 'Repr' instances as a fallback
+
+## eval.pp
+type: `Bool`
+
+default: `true`
+
+('#eval' command) enables using 'ToExpr' instances to pretty print the result, otherwise uses 'Repr' or 'ToString' instances
+
+## eval.type
+type: `Bool`
+
+default: `false`
+
+('#eval' command) enables pretty printing the type of the result
 
 ## exponentiation.threshold
 type: `Nat`
@@ -707,6 +735,15 @@ default: `true`
 
 enable the 'unused variables' linter
 
+## linter.unusedVariables.analyzeTactics
+type: `Bool`
+
+default: `false`
+
+enable analysis of local variables in presence of tactic proofs
+
+By default, the linter will limit itself to linting a declaration's parameters whenever tactic proofs are present as these can be expensive to analyze. Enabling this option extends linting to local variables both inside and outside tactic proofs, though it can also lead to some false negatives as intermediate tactic states may reference some variables without the declaration ultimately depending on them.
+
 ## linter.unusedVariables.funArgs
 type: `Bool`
 
@@ -1036,6 +1073,27 @@ default: `true`
 
 (pretty printer) display names of metavariables when true, and otherwise display them as '?_' (for expression metavariables) and as '_' (for universe level metavariables)
 
+## pp.mvars.anonymous
+type: `Bool`
+
+default: `true`
+
+(pretty printer) display names for auto-generated metavariables such as `?m.22` when true, and otherwise display them as '?_' (for expression metavariables) and as '_' (for universe level metavariables). When 'pp.mvars' is false, this is 'false' as well.
+
+## pp.mvars.delayed
+type: `Bool`
+
+default: `false`
+
+(pretty printer) display delayed assigned metavariables when true, otherwise display what they are assigned to
+
+## pp.mvars.levels
+type: `Bool`
+
+default: `true`
+
+(pretty printer) display universe level metavariables as `?u.22` when true, and otherwise display them as '_'. When either 'pp.mvars' or 'pp.mvars.anonymous' is false, this is 'false' as well.
+
 ## pp.mvars.withType
 type: `Bool`
 
@@ -1355,12 +1413,19 @@ default: `true`
 
 (server) capture output to the Lean stderr channel (such as from `dbg_trace`) during elaboration of a command as a diagnostic message
 
+## structure.strictResolutionOrder
+type: `Bool`
+
+default: `false`
+
+if true, require a strict resolution order for structures
+
 ## structureDiamondWarning
 type: `Bool`
 
 default: `false`
 
-enable/disable warning messages for structure diamonds
+if true, enable warnings when a structure has diamond inheritance
 
 ## synthInstance.checkSynthOrder
 type: `Bool`
@@ -1978,6 +2043,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Elab.eval
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Elab.fbinop
 type: `Bool`
 
@@ -2147,6 +2219,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Elab.structure
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Elab.structure.resolutionOrder
 type: `Bool`
 
 default: `false`
