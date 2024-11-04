@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `2e8dbf68904ffbccb7529f87a2207d6289e6a2e7`
+Mathlib version: `079e5ca5a630dabf441b6b74924402b266c3f748`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -134,10 +134,54 @@ left-hand side.
 ## \#eval
 Defined in: `Lean.Parser.Command.eval`
 
+`#eval e` evaluates the expression `e` by compiling and evaluating it.
+
+* The command attempts to use `ToExpr`, `Repr`, or `ToString` instances to print the result.
+* If `e` is a monadic value of type `m ty`, then the command tries to adapt the monad `m`
+  to one of the monads that `#eval` supports, which include `IO`, `CoreM`, `MetaM`, `TermElabM`, and `CommandElabM`.
+  Users can define `MonadEval` instances to extend the list of supported monads.
+
+The `#eval` command gracefully degrades in capability depending on what is imported.
+Importing the `Lean.Elab.Command` module provides full capabilities.
+
+Due to unsoundness, `#eval` refuses to evaluate expressions that depend on `sorry`, even indirectly,
+since the presence of `sorry` can lead to runtime instability and crashes.
+This check can be overridden with the `#eval! e` command.
+
+Options:
+* If `eval.pp` is true (default: true) then tries to use `ToExpr` instances to make use of the
+  usual pretty printer. Otherwise, only tries using `Repr` and `ToString` instances.
+* If `eval.type` is true (default: false) then pretty prints the type of the evaluated value.
+* If `eval.derive.repr` is true (default: true) then attempts to auto-derive a `Repr` instance
+  when there is no other way to print the result.
+
+See also: `#reduce e` for evaluation by term reduction.
 
 ## \#eval!
 Defined in: `Lean.Parser.Command.evalBang`
 
+`#eval e` evaluates the expression `e` by compiling and evaluating it.
+
+* The command attempts to use `ToExpr`, `Repr`, or `ToString` instances to print the result.
+* If `e` is a monadic value of type `m ty`, then the command tries to adapt the monad `m`
+  to one of the monads that `#eval` supports, which include `IO`, `CoreM`, `MetaM`, `TermElabM`, and `CommandElabM`.
+  Users can define `MonadEval` instances to extend the list of supported monads.
+
+The `#eval` command gracefully degrades in capability depending on what is imported.
+Importing the `Lean.Elab.Command` module provides full capabilities.
+
+Due to unsoundness, `#eval` refuses to evaluate expressions that depend on `sorry`, even indirectly,
+since the presence of `sorry` can lead to runtime instability and crashes.
+This check can be overridden with the `#eval! e` command.
+
+Options:
+* If `eval.pp` is true (default: true) then tries to use `ToExpr` instances to make use of the
+  usual pretty printer. Otherwise, only tries using `Repr` and `ToString` instances.
+* If `eval.type` is true (default: false) then pretty prints the type of the evaluated value.
+* If `eval.derive.repr` is true (default: true) then attempts to auto-derive a `Repr` instance
+  when there is no other way to print the result.
+
+See also: `#reduce e` for evaluation by term reduction.
 
 ## \#exit
 Defined in: `Lean.Parser.Command.exit`
@@ -366,6 +410,13 @@ Message ordering:
 For example, `#guard_msgs (error, drop all) in cmd` means to check warnings and drop
 everything else.
 
+The command elaborator has special support for `#guard_msgs` for linting.
+The `#guard_msgs` itself wants to capture linter warnings,
+so it elaborates the command it is attached to as if it were a top-level command.
+However, the command elaborator runs linters for *all* top-level commands,
+which would include `#guard_msgs` itself, and would cause duplicate and/or uncaptured linter warnings.
+The top-level command elaborator only runs the linters if `#guard_msgs` is not present.
+
 ## \#help
 Defined in: `Batteries.Tactic.«command#help_Term+____»`
 
@@ -392,21 +443,6 @@ name of the syntax (which you can also click to go to the definition), and the d
   associated to the listed syntaxes.
 
 ## \#help
-Defined in: `Mathlib.Tactic.«command#help_Cats___»`
-
-The command `#help cats` shows all syntax categories that have been defined in the
-current environment.
-Each syntax has a format like:
-```lean
-category command [Lean.Parser.initFn✝]
-```
-The name of the syntax category in this case is `command`, and `Lean.Parser.initFn✝` is the
-name of the declaration that introduced it. (It is often an anonymous declaration like this,
-but you can click to go to the definition.) It also shows the doc string if available.
-
-The form `#help cats id` will show only syntax categories that begin with `id`.
-
-## \#help
 Defined in: `Batteries.Tactic.«command#help_Command+____»`
 
 The command `#help command` shows all commands that have been defined in the current environment.
@@ -429,34 +465,6 @@ as the docstring will be displayed here.
 The form `#help attr id` will show only attributes that begin with `id`.
 
 ## \#help
-Defined in: `Mathlib.Tactic.«command#help_Tactic+____»`
-
-The command `#help tactic` shows all tactics that have been defined in the current environment.
-See `#help cat` for more information.
-
-## \#help
-Defined in: `Mathlib.Tactic.«command#help_Conv+____»`
-
-The command `#help conv` shows all tactics that have been defined in the current environment.
-See `#help cat` for more information.
-
-## \#help
-Defined in: `Mathlib.Tactic.«command#help_Option___»`
-
-The command `#help option` shows all options that have been defined in the current environment.
-Each option has a format like:
-```lean
-option pp.all : Bool := false
-  (pretty printer) display coercions, implicit parameters, proof terms, fully qualified names,
-  universe, and disable beta reduction and notations during pretty printing
-```
-This says that `pp.all` is an option which can be set to a `Bool` value, and the default value is
-`false`. If an option has been modified from the default using e.g. `set_option pp.all true`,
-it will appear as a `(currently: true)` note next to the option.
-
-The form `#help option id` will show only options that begin with `id`.
-
-## \#help
 Defined in: `Batteries.Tactic.«command#help_Note___»`
 
 `#help note "foo"` searches for all library notes whose
@@ -464,31 +472,6 @@ label starts with "foo", then displays those library notes sorted alphabetically
 grouped by label.
 The command only displays the library notes that are declared in
 imported files or in the same file above the line containing the command.
-
-## \#help
-Defined in: `Mathlib.Tactic.«command#help_Term+____»`
-
-The command `#help term` shows all term syntaxes that have been defined in the current environment.
-See `#help cat` for more information.
-
-## \#help
-Defined in: `Mathlib.Tactic.«command#help_Cat+______»`
-
-The command `#help cat C` shows all syntaxes that have been defined in syntax category `C` in the
-current environment.
-Each syntax has a format like:
-```lean
-## first
-Defined in: `Parser.tactic.first`
-
-  `first | tac | ...` runs each `tac` until one succeeds, or else fails.
-```lean
-The quoted string is the leading token of the syntax, if applicable. It is followed by the full
-name of the syntax (which you can also click to go to the definition), and the documentation.
-
-* The form `#help cat C id` will show only attributes that begin with `id`.
-* The form `#help cat+ C` will also show information about any `macro`s and `elab`s
-  associated to the listed syntaxes.
 
 ## \#help
 Defined in: `Batteries.Tactic.«command#help_Cats___»`
@@ -504,28 +487,6 @@ name of the declaration that introduced it. (It is often an anonymous declaratio
 but you can click to go to the definition.) It also shows the doc string if available.
 
 The form `#help cats id` will show only syntax categories that begin with `id`.
-
-## \#help
-Defined in: `Mathlib.Tactic.«command#help_Command+____»`
-
-The command `#help command` shows all commands that have been defined in the current environment.
-See `#help cat` for more information.
-
-## \#help
-Defined in: `Mathlib.Tactic.«command#help_AttrAttribute___»`
-
-The command `#help attribute` (or the short form `#help attr`) shows all attributes that have been
-defined in the current environment.
-Each attribute has a format like:
-```lean
-[inline]: mark definition to always be inlined
-```
-This says that `inline` is an attribute that can be placed on definitions like
-`@[inline] def foo := 1`. (Individual attributes may have restrictions on where they can be
-applied; see the attribute's documentation for details.) Both the attribute's `descr` field as well
-as the docstring will be displayed here.
-
-The form `#help attr id` will show only attributes that begin with `id`.
 
 ## \#help
 Defined in: `Batteries.Tactic.«command#help_Tactic+____»`
@@ -1026,11 +987,23 @@ Defined in: `Mathlib.Tactic.InteractiveUnfold.unfoldCommand`
 `#unfold? e` gives all unfolds of `e`.
 In tactic mode, use `unfold?` instead.
 
+## \#version
+Defined in: `Lean.Parser.Command.version`
+
+Shows the current Lean version. Prints `Lean.versionString`.
+
 ## \#where
 Defined in: `Batteries.Tactic.Where.«command#where»`
 
 `#where` gives a description of the global scope at this point in the module.
 This includes the namespace, `open` namespaces, `universe` and `variable` commands,
+and options set with `set_option`.
+
+## \#where
+Defined in: `Lean.Parser.Command.where`
+
+`#where` gives a description of the state of the current scope scope.
+This includes the current namespace, `open` namespaces, `universe` and `variable` commands,
 and options set with `set_option`.
 
 ## \#whnf
@@ -1269,6 +1242,10 @@ Defined in: `Aesop.Frontend.Parser.declareRuleSets`
 
 ## declare_bitwise_uint_theorems
 Defined in: `commandDeclare_bitwise_uint_theorems_`
+
+
+## declare_command_config_elab
+Defined in: `Lean.Elab.Tactic.commandConfigElab`
 
 
 ## declare_config_elab
@@ -1935,24 +1912,21 @@ Tactic tags can be used by documentation generation tools to classify related ta
 Defined in: `Lean.runCmd`
 
 The `run_cmd doSeq` command executes code in `CommandElabM Unit`.
-This is almost the same as `#eval show CommandElabM Unit from do doSeq`,
-except that it doesn't print an empty diagnostic.
+This is the same as `#eval show CommandElabM Unit from discard do doSeq`.
 
 ## run_elab
 Defined in: `Lean.runElab`
 
 The `run_elab doSeq` command executes code in `TermElabM Unit`.
-This is almost the same as `#eval show TermElabM Unit from do doSeq`,
-except that it doesn't print an empty diagnostic.
+This is the same as `#eval show TermElabM Unit from discard do doSeq`.
 
 ## run_meta
 Defined in: `Lean.runMeta`
 
 The `run_meta doSeq` command executes code in `MetaM Unit`.
-This is almost the same as `#eval show MetaM Unit from do doSeq`,
-except that it doesn't print an empty diagnostic.
+This is the same as `#eval show MetaM Unit from do discard doSeq`.
 
-(This is effectively a synonym for `run_elab`.)
+(This is effectively a synonym for `run_elab` since `MetaM` lifts to `TermElabM`.)
 
 ## scoped
 Defined in: `Mathlib.Tactic.scopedNS`

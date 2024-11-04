@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `2e8dbf68904ffbccb7529f87a2207d6289e6a2e7`
+Mathlib version: `079e5ca5a630dabf441b6b74924402b266c3f748`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -244,9 +244,13 @@ example (a b c d e f g N : ℕ) : (a + b) + (c + d) + (e + f) + g ≤ N := by
 ```
 
 ## ac_nf
-Defined in: `Lean.Parser.Tactic.acNf`
+Defined in: `Lean.Parser.Tactic.tacticAc_nf_`
 
 `ac_nf` normalizes equalities up to application of an associative and commutative operator.
+- `ac_nf` normalizes all hypotheses and the goal target of the goal.
+- `ac_nf at l` normalizes at location(s) `l`, where `l` is either `*` or a
+  list of hypotheses in the local context. In the latter case, a turnstile `⊢` or `|-`
+  can also be used, to signify the target of the goal.
 ```lean
 instance : Associative (α := Nat) (.+.) := ⟨Nat.add_assoc⟩
 instance : Commutative (α := Nat) (.+.) := ⟨Nat.add_comm⟩
@@ -255,6 +259,11 @@ example (a b c d : Nat) : a + b + c + d = d + (b + c) + a := by
  ac_nf
  -- goal: a + (b + (c + d)) = a + (b + (c + d))
 ```
+
+## ac_nf0
+Defined in: `Lean.Parser.Tactic.acNf0`
+
+Implementation of `ac_nf` (the full `ac_nf` calls `trivial` afterwards).
 
 ## ac_rfl
 Defined in: `Lean.Parser.Tactic.acRfl`
@@ -749,11 +758,7 @@ Defined in: `Lean.Parser.Tactic.bvDecide`
 
 Close fixed-width `BitVec` and `Bool` goals by obtaining a proof from an external SAT solver and
 verifying it inside Lean. The solvable goals are currently limited to the Lean equivalent of
-[`QF_BV`](https://smt-lib.org/logics-all.shtml#QF_BV) with the following changes:
-- Division and remainder operations are not yet implemented.
-- if-then-else is not yet implemented.
-- `BitVec.ofBool` is not yet implemented.
-
+[`QF_BV`](https://smt-lib.org/logics-all.shtml#QF_BV):
 ```lean
 example : ∀ (a b : BitVec 64), (a &&& b) + (a ^^^ b) = a ||| b := by
   intros
@@ -768,6 +773,10 @@ If `bv_decide` fails to close a goal it provides a counter-example, containing a
 terms that were considered as variables.
 
 In order to avoid calling a SAT solver every time, the proof can be cached with `bv_decide?`.
+
+If solving your problem relies inherently on using associativity or commutativity, consider enabling
+the `bv.ac_nf` option.
+
 
 Note: `bv_decide` uses `ofReduceBool` and thus trusts the correctness of the code generator.
 
@@ -1198,18 +1207,13 @@ example (h : ∀ i : ℕ, i < 7 → ∃ j, i < j ∧ j < i+i) : True := by
 ```
 
 ## classical
-Defined in: `Batteries.Tactic.tacticClassical_`
+Defined in: `Lean.Parser.Tactic.classical`
 
 `classical tacs` runs `tacs` in a scope where `Classical.propDecidable` is a low priority
 local instance.
 
-Note that (unlike lean 3) `classical` is a scoping tactic - it adds the instance only within the
+Note that `classical` is a scoping tactic: it adds the instance only within the
 scope of the tactic.
-
-## classical!
-Defined in: `Batteries.Tactic.tacticClassical!`
-
-`classical!` has been removed; use `classical` instead
 
 ## clean
 Defined in: `Mathlib.Tactic.tacticClean_`
@@ -1745,6 +1749,15 @@ example : 1 + 1 = 2 := by decide
 example : 1 + 1 = 2 := by rfl
 ```
 
+## decide!
+Defined in: `Lean.Parser.Tactic.decideBang`
+
+`decide!` is a variant of the `decide` tactic that uses kernel reduction to prove the goal.
+It has the following properties:
+- Since it uses kernel reduction instead of elaborator reduction, it ignores transparency and can unfold everything.
+- While `decide` needs to reduce the `Decidable` instance twice (once during elaboration to verify whether the tactic succeeds,
+  and once during kernel type checking), the `decide!` tactic reduces it exactly once.
+
 ## decreasing_tactic
 Defined in: `tacticDecreasing_tactic`
 
@@ -1900,9 +1913,9 @@ Defined in: `Lean.Parser.Tactic.eqRefl`
 `eq_refl` is equivalent to `exact rfl`, but has a few optimizations.
 
 ## erw
-Defined in: `Lean.Parser.Tactic.tacticErw__`
+Defined in: `Lean.Parser.Tactic.tacticErw___`
 
-`erw [rules]` is a shorthand for `rw (config := { transparency := .default }) [rules]`.
+`erw [rules]` is a shorthand for `rw (transparency := .default) [rules]`.
 This does rewriting up to unfolding of regular definitions (by comparison to regular `rw`
 which only unfolds `@[reducible]` definitions).
 
@@ -4023,8 +4036,7 @@ a natural subtraction appearing in a hypothesis, and try again.
 
 The options
 ```
-omega (config :=
-  { splitDisjunctions := true, splitNatSub := true, splitNatAbs := true, splitMinMax := true })
+omega +splitDisjunctions +splitNatSub +splitNatAbs +splitMinMax
 ```
 can be used to:
 * `splitDisjunctions`: split any disjunctions found in the context,
@@ -4649,14 +4661,14 @@ This provides a convenient way to unfold `e`.
   list of hypotheses in the local context. In the latter case, a turnstile `⊢` or `|-`
   can also be used, to signify the target of the goal.
 
-Using `rw (config := {occs := .pos L}) [e]`,
+Using `rw (occs := .pos L) [e]`,
 where `L : List Nat`, you can control which "occurrences" are rewritten.
 (This option applies to each rule, so usually this will only be used with a single rule.)
 Occurrences count from `1`.
 At each allowed occurrence, arguments of the rewrite rule `e` may be instantiated,
 restricting which later rewrites can be found.
 (Disallowed occurrences do not result in instantiation.)
-`{occs := .neg L}` allows skipping specified occurrences.
+`(occs := .neg L)` allows skipping specified occurrences.
 
 ## rfl
 Defined in: `Lean.Parser.Tactic.tacticRfl`
@@ -4898,7 +4910,7 @@ to prevent `rw_search` from using the names theorems.
 ## rwa
 Defined in: `Lean.Parser.Tactic.tacticRwa__`
 
-`rwa` calls `rw`, then closes any remaining goals using `assumption`.
+`rwa` is short-hand for `rw; assumption`.
 
 ## saturate
 Defined in: `Aesop.Frontend.tacticSaturate_____`
@@ -5561,6 +5573,10 @@ example : TFAE [P, Q] := by
 
 ## tfae_have
 Defined in: `Mathlib.Tactic.TFAE.tfaeHave'`
+
+"Goal-style" `tfae_have` syntax is deprecated. Now, `tfae_have ...` should be followedby  `:= ...`; see below for the new behavior. This warning can be turned off with `set_option Mathlib.Tactic.TFAE.useDeprecated true`.
+
+***
 
 `tfae_have` introduces hypotheses for proving goals of the form `TFAE [P₁, P₂, ...]`. Specifically,
 `tfae_have i <arrow> j := ...` introduces a hypothesis of type `Pᵢ <arrow> Pⱼ` to the local
