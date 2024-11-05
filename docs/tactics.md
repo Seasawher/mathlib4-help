@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `079e5ca5a630dabf441b6b74924402b266c3f748`
+Mathlib version: `76ffa613a406252a5f5bc4f5126d8dfed73ce8df`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
