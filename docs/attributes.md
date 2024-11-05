@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `079e5ca5a630dabf441b6b74924402b266c3f748`
+Mathlib version: `76ffa613a406252a5f5bc4f5126d8dfed73ce8df`
 
 ## aesop
  Register a declaration as an Aesop rule.
@@ -353,9 +353,6 @@ Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
 
 ## doElem_parser
  parser
-
-## dummy_label_attr
- A dummy label attribute, which can be used for testing. 
 
 ## elab_as_elim
  instructs elaborator that the arguments of the function application should be elaborated as were an eliminator
