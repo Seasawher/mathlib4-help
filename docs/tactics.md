@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `ea4bde991577ee976f664313b17a2ea98c94ef1e`
+Mathlib version: `61ccb312808a1e28bff528aa96811d45fc51ce0e`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -396,7 +396,7 @@ Defined in: `Aesop.tacticAesop_unfold_At_`
 
 
 ## algebraize
-Defined in: `Mathlib.Tactic.tacticAlgebraize____`
+Defined in: `Mathlib.Tactic.tacticAlgebraize__`
 
 Tactic that, given `RingHom`s, adds the corresponding `Algebra` and (if possible)
 `IsScalarTower` instances, as well as `Algebra` corresponding to `RingHom` properties available
@@ -3469,7 +3469,7 @@ Defined in: `Mathlib.Tactic.tacticMatch_target_`
 
 
 ## measurability
-Defined in: `tacticMeasurability_`
+Defined in: `tacticMeasurability`
 
 The tactic `measurability` solves goals of the form `Measurable f`, `AEMeasurable f`,
 `StronglyMeasurable f`, `AEStronglyMeasurable f μ`, or `MeasurableSet s` by applying lemmas tagged
@@ -3484,7 +3484,7 @@ Defined in: `measurability!?`
 
 
 ## measurability?
-Defined in: `tacticMeasurability?_`
+Defined in: `tacticMeasurability?`
 
 The tactic `measurability?` solves goals of the form `Measurable f`, `AEMeasurable f`,
 `StronglyMeasurable f`, `AEStronglyMeasurable f μ`, or `MeasurableSet s` by applying lemmas tagged
