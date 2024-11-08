@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `61ccb312808a1e28bff528aa96811d45fc51ce0e`
+Mathlib version: `48b340091dc38c6be2696ba59b63bc4f1cd86d24`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -5724,18 +5724,6 @@ Replace the selected expression with a definitional unfolding.
 To use `unfold?`, shift-click an expression in the tactic state.
 This gives a list of rewrite suggestions for the selected expression.
 Click on a suggestion to replace `unfold?` by a tactic that performs this rewrite.
-
-## unfold_let
-Defined in: `Mathlib.Tactic.unfoldLetStx`
-
-`unfold_let x y z at loc` unfolds the local definitions `x`, `y`, and `z` at the given
-location, which is known as "zeta reduction."
-This also exists as a `conv`-mode tactic.
-
-If no local definitions are given, then all local definitions are unfolded.
-This variant also exists as the `conv`-mode tactic `zeta`.
-
-This is similar to the `unfold` tactic, which instead is for unfolding global definitions.
 
 ## unfold_projs
 Defined in: `Mathlib.Tactic.unfoldProjsStx`
