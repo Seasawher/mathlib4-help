@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `395140bc16632d76426ee2da966b4add3c9a6215`
+Mathlib version: `334be41cd6a4737ac24813c926c6f61fcedd1998`
 
 ## Mathlib.Tactic.TFAE.useDeprecated
 type: `Bool`
