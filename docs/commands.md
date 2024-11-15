@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `334be41cd6a4737ac24813c926c6f61fcedd1998`
+Mathlib version: `b4c2e269ca306430873e1b8ff0dd5b36b422387d`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -2052,7 +2052,7 @@ Defined in: `commandSuppress_compilation`
 
 Replacing `def` and `instance` by `noncomputable def` and `noncomputable instance`, designed
 to disable the compiler in a given file or a given section.
-This is a hack to work around mathlib4#7103.
+This is a hack to work around https://github.com/leanprover-community/mathlib4/issues/7103.
 Note that it does not work with `notation3`. You need to prefix such a notation declaration with
 `unsuppress_compilation` if `suppress_compilation` is active.
 
