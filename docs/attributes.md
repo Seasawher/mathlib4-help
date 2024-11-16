@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `b4c2e269ca306430873e1b8ff0dd5b36b422387d`
+Mathlib version: `aa5b6a4acd12e898badba2f2cf7aaaff253feb20`
 
 ## aesop
  Register a declaration as an Aesop rule.
