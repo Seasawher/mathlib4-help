@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `6d297a4172e6c37d3bf82e68924c45d72621ac5d`
+Mathlib version: `955e8f97a6372ceeeb97f4acc87f71ae1fea7d85`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1269,7 +1269,7 @@ Defined in: `commandDeclare_uint_theorems_`
 
 
 ## deprecate to
-Defined in: `Mathlib.Tactic.DeprecateMe.commandDeprecate_to______`
+Defined in: `Mathlib.Tactic.DeprecateTo.commandDeprecate_to______`
 
 Writing
 ```lean
@@ -1367,7 +1367,7 @@ end Evening.Sky
 #check Evening.Sky.star
 ```
 
-## export private
+## export
 Defined in: `Lean.Elab.Command.exportPrivate`
 
 The command `export private a b c in foo bar` is similar to `open private`, but instead of opening
@@ -1713,6 +1713,19 @@ which case all instance variables that unify with the given type are omitted. `o
 only be used in conjunction with `in` in order to keep the section structure simple.
 
 ## open
+Defined in: `Lean.Elab.Command.openPrivate`
+
+The command `open private a b c in foo bar` will look for private definitions named `a`, `b`, `c`
+in declarations `foo` and `bar` and open them in the current scope. This does not make the
+definitions public, but rather makes them accessible in the current section by the short name `a`
+instead of the (unnameable) internal name for the private declaration, something like
+`_private.Other.Module.0.Other.Namespace.foo.a`, which cannot be typed directly because of the `0`
+name component.
+
+It is also possible to specify the module instead with
+`open private a b c from Other.Module`.
+
+## open
 Defined in: `Lean.Parser.Command.open`
 
 Makes names from other namespaces visible without writing the namespace prefix.
@@ -1826,19 +1839,6 @@ section
   -- #check Alias -- unknown identifier 'Alias'
 end
 ```
-
-## open private
-Defined in: `Lean.Elab.Command.openPrivate`
-
-The command `open private a b c in foo bar` will look for private definitions named `a`, `b`, `c`
-in declarations `foo` and `bar` and open them in the current scope. This does not make the
-definitions public, but rather makes them accessible in the current section by the short name `a`
-instead of the (unnameable) internal name for the private declaration, something like
-`_private.Other.Module.0.Other.Namespace.foo.a`, which cannot be typed directly because of the `0`
-name component.
-
-It is also possible to specify the module instead with
-`open private a b c from Other.Module`.
 
 ## proof_wanted
 Defined in: `«proof_wanted»`

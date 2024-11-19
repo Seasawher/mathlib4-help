@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `6d297a4172e6c37d3bf82e68924c45d72621ac5d`
+Mathlib version: `955e8f97a6372ceeeb97f4acc87f71ae1fea7d85`
 
 ## Mathlib.Tactic.TFAE.useDeprecated
 type: `Bool`
@@ -757,6 +757,13 @@ type: `Bool`
 default: `true`
 
 enable the 'unused variables' linter to mark unused pattern variables
+
+## linter.upstreamableDecl
+type: `Bool`
+
+default: `false`
+
+enable the upstreamableDecl linter
 
 ## loogle.queries
 type: `Nat`
