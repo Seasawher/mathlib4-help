@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `955e8f97a6372ceeeb97f4acc87f71ae1fea7d85`
+Mathlib version: `0e836d6e1a3c5ed008688622e261e19fbef05e0e`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -771,6 +771,24 @@ Unlike `norm_num`, this command does not fail when no simplifications are made.
 
 `#norm_num` understands local variables, so you can use them to introduce parameters.
 
+## \#parse
+Defined in: `Mathlib.GuardExceptions.parseCmd`
+
+`#parse parserFnId => str` allows to capture parsing exceptions.
+`parserFnId` is the identifier of a `ParserFn` and `str` is the string that
+`parserFnId` should parse.
+
+If the parse is successful, then the output is logged;
+if the parse is successful, then the output is captured in an exception.
+
+In either case, `#guard_msgs` can then be used to capture the resulting parsing errors.
+
+For instance, `#parse` can be used as follows
+```lean
+/-- error: <input>:1:3: Stacks tags must be exactly 4 characters -/
+#guard_msgs in #parse Mathlib.Stacks.stacksTagFn => "A05"
+```
+
 ## \#print
 Defined in: `Batteries.Tactic.printPrefix`
 
@@ -842,6 +860,34 @@ theorem bar' : 1 = 1 ∨ 1 ≠ 1 := foo
 ## \#print
 Defined in: `Lean.Parser.Command.print`
 
+
+## \#print_fun_prop_theorems
+Defined in: `Mathlib.Meta.FunProp.«command#print_fun_prop_theorems__»`
+
+Command that printins all function properties attached to a function.
+
+For example
+```
+#print_fun_prop_theorems HAdd.hAdd
+```
+might print out
+```
+Continuous
+  continuous_add, args: [4,5], priority: 1000
+  continuous_add_left, args: [5], priority: 1000
+  continuous_add_right, args [4], priority: 1000
+  ...
+Diferentiable
+  Differentiable.add, args: [4,5], priority: 1000
+  Differentiable.add_const, args: [4], priority: 1000
+  Differentiable.const_add, args: [5], priority: 1000
+  ...
+```
+
+You can also see only theorems about a concrete function property
+```
+#print_fun_prop_theorems HAdd.hAdd Continuous
+```
 
 ## \#push_neg
 Defined in: `Mathlib.Tactic.PushNeg.pushNeg`
