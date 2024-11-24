@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `409137130c4c0e7033eea0a7e369aa8607fd0973`
+Mathlib version: `3ece930d0a4a55679efa52b1a825ac93b2469a06`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -4158,6 +4158,59 @@ Defined in: `Batteries.Tactic.«tacticPick_goal-_»`
 `pick_goal -n` will move the `n`-th goal (counting from the bottom) to the front.
 
 See also `Tactic.rotate_goals`, which moves goals from the front to the back and vice-versa.
+
+## plausible
+Defined in: `plausibleSyntax`
+
+`plausible` considers a proof goal and tries to generate examples
+that would contradict the statement.
+
+Let's consider the following proof goal.
+
+```lean
+xs : List Nat,
+h : ∃ (x : Nat) (H : x ∈ xs), x < 3
+⊢ ∀ (y : Nat), y ∈ xs → y < 5
+```
+
+The local constants will be reverted and an instance will be found for
+`Testable (∀ (xs : List Nat), (∃ x ∈ xs, x < 3) → (∀ y ∈ xs, y < 5))`.
+The `Testable` instance is supported by an instance of `Sampleable (List Nat)`,
+`Decidable (x < 3)` and `Decidable (y < 5)`.
+
+Examples will be created in ascending order of size (more or less)
+
+The first counter-examples found will be printed and will result in an error:
+
+```
+===================
+Found problems!
+xs := [1, 28]
+x := 1
+y := 28
+-------------------
+```
+
+If `plausible` successfully tests 100 examples, it acts like
+admit. If it gives up or finds a counter-example, it reports an error.
+
+For more information on writing your own `Sampleable` and `Testable`
+instances, see `Testing.Plausible.Testable`.
+
+Optional arguments given with `plausible (config : { ... })`
+* `numInst` (default 100): number of examples to test properties with
+* `maxSize` (default 100): final size argument
+
+Options:
+* `set_option trace.plausible.decoration true`: print the proposition with quantifier annotations
+* `set_option trace.plausible.discarded true`: print the examples discarded because they do not
+  satisfy assumptions
+* `set_option trace.plausible.shrink.steps true`: trace the shrinking of counter-example
+* `set_option trace.plausible.shrink.candidates true`: print the lists of candidates considered
+  when shrinking each variable
+* `set_option trace.plausible.instance true`: print the instances of `testable` being used to test
+  the proposition
+* `set_option trace.plausible.success true`: print the tested samples that satisfy a property
 
 ## polyrith
 Defined in: `Mathlib.Tactic.Polyrith.«tacticPolyrithOnly[_]»`
