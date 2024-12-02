@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `a1f01bd5d16151d917c810909a2aa2e7b7ad64a0`
+Mathlib version: `e3df8ff92c33abe105e2a42a56b3646e9ae3ef62`
 
 ## aesop
  Register a declaration as an Aesop rule.
@@ -208,6 +208,10 @@ applied to hypotheses to extract inequalities (e.g. `HasPowerSeriesOnBall.r_pos`
 ## builtin_incremental
  (builtin) Marks an elaborator (tactic or command, currently) as supporting incremental elaboration. For unmarked elaborators, the corresponding snapshot bundle field in the elaboration context is unset so as to prevent accidental, incorrect reuse.
 
+## builtin_inductive_elab
+ (builtin) Register an elaborator for inductive types
+Environment extension to register inductive type elaborator commands.
+
 ## builtin_init
  initialization procedure for global references
 
@@ -238,6 +242,9 @@ applied to hypotheses to extract inequalities (e.g. `HasPowerSeriesOnBall.r_pos`
 It should implement eager name analysis on the passed syntax by throwing an exception on unbound identifiers,
 and calling `precheck` recursively on nested terms, potentially with an extended local context (`withNewLocal`).
 Macros without registered precheck hook are unfolded, and identifier-less syntax is ultimately assumed to be well-formed.
+
+## builtin_structInstFieldDecl_parser
+ Builtin parser
 
 ## builtin_syntax_parser
  Builtin parser
@@ -469,6 +476,10 @@ generated theorem.
 
 ## induction_eliminator
  custom `rec`-like eliminator for the `induction` tactic
+
+## inductive_elab
+ Register an elaborator for inductive types
+Environment extension to register inductive type elaborator commands.
 
 ## inherit_doc
  inherit documentation from a specified declaration

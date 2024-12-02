@@ -1,6 +1,13 @@
 # Options
 
-Mathlib version: `a1f01bd5d16151d917c810909a2aa2e7b7ad64a0`
+Mathlib version: `e3df8ff92c33abe105e2a42a56b3646e9ae3ef62`
+
+## Elab.async
+type: `Bool`
+
+default: `false`
+
+perform elaboration using multiple threads where possible
 
 ## Mathlib.Tactic.TFAE.useDeprecated
 type: `Bool`
@@ -163,13 +170,6 @@ default: `true`
 
 by default the `inductive`/`structure` commands report an error if the resulting universe is not zero, but may be zero for some universe parameters. Reason: unless this type is a subsingleton, it is hardly what the user wants since it can only eliminate into `Prop`. In the `Init` package, we define subsingletons, and we use this option to disable the check. This option may be deleted in the future after we improve the validator
 
-## bv.ac_nf
-type: `Bool`
-
-default: `false`
-
-Canonicalize with respect to associativity and commutativitiy.
-
 ## checkBinderAnnotations
 type: `Bool`
 
@@ -232,13 +232,6 @@ type: `Nat`
 default: `1`
 
 (compiler) function declarations with size `≤ small` is inlined even if there are multiple occurrences.
-
-## debug.bv.graphviz
-type: `Bool`
-
-default: `false`
-
-Output the AIG of bv_decide as graphviz into a file called aig.gv in the working directory of the Lean process.
 
 ## debug.byAsSorry
 type: `Bool`
@@ -407,7 +400,7 @@ type: `Bool`
 
 default: `false`
 
-mark persistent and reduce information stored in snapshots to the minimum necessary for the cmdline driver: diagnostics per command and final full snapshot
+reduce information stored in snapshots to the minimum necessary for the cmdline driver: diagnostics per command and final full snapshot
 
 ## internal.parseQuotWithCurrentStage
 type: `Bool`
@@ -933,6 +926,13 @@ default: `true`
 
 (pretty printer) hide coercion applications
 
+## pp.coercions.types
+type: `Bool`
+
+default: `false`
+
+(pretty printer) display coercion applications with a type ascription
+
 ## pp.deepTerms
 type: `Bool`
 
@@ -1136,6 +1136,13 @@ default: `false`
 
 (pretty printer) elide all but first line of pretty printer output
 
+## pp.parens
+type: `Bool`
+
+default: `false`
+
+(pretty printer) if set to true, notation is wrapped in parentheses regardless of precedence
+
 ## pp.piBinderTypes
 type: `Bool`
 
@@ -1321,13 +1328,6 @@ default: `true`
 
 When "relaxed" mode is enabled, any atomic nonempty identifier is eligible for auto bound implicit locals (see option `autoImplicit`).
 
-## sat.binaryProofs
-type: `Bool`
-
-default: `true`
-
-Whether to use the binary LRAT proof format. Currently set to false and ignored on Windows due to a bug in CaDiCal.
-
 ## sat.solver
 type: `String`
 
@@ -1340,20 +1340,6 @@ Name of the SAT solver used by Lean.Elab.Tactic.BVDecide tactics.
      2. If this is set to the empty string they will check if there is a cadical binary next to theexecuting program. Usually that program is going to be `lean` itself and we do ship a`cadical` next to it.
 
      3. If that does not succeed try to call `cadical` from PATH. The empty string default indicatesto use the one that ships with Lean.
-
-## sat.timeout
-type: `Nat`
-
-default: `10`
-
-the number of seconds that the sat solver is run before aborting
-
-## sat.trimProofs
-type: `Bool`
-
-default: `true`
-
-Whether to run the trimming algorithm on LRAT proofs
 
 ## says.no_verify_in_CI
 type: `Bool`
@@ -2555,6 +2541,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Meta.injective
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.instantiateMVars
 type: `Bool`
 
 default: `false`
