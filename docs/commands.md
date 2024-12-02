@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `a1f01bd5d16151d917c810909a2aa2e7b7ad64a0`
+Mathlib version: `e3df8ff92c33abe105e2a42a56b3646e9ae3ef62`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -711,6 +711,18 @@ If you pass more than one such search filter, separated by commas Loogle will re
 woould find all lemmas which mention the constants Real.sin and tsum, have \"two\" as a substring of the lemma name, include a product and a power somewhere in the type, and have a hypothesis of the form _ < _ (if there were any such lemmas). Metavariables (?a) are assigned independently in each filter.
 
 ## \#min_imports
+Defined in: `Mathlib.Command.MinImports.minImpsStx`
+
+`#min_imports in cmd` scans the syntax `cmd` and the declaration obtained by elaborating `cmd`
+to find a collection of minimal imports that should be sufficient for `cmd` to work.
+
+## \#min_imports
+Defined in: `Mathlib.Command.MinImports.«command#min_importsIn_»`
+
+`#min_imports in cmd` scans the syntax `cmd` and the declaration obtained by elaborating `cmd`
+to find a collection of minimal imports that should be sufficient for `cmd` to work.
+
+## \#min_imports
 Defined in: `«command#min_imports»`
 
 Try to compute a minimal set of imports for this file,
@@ -719,18 +731,6 @@ by analyzing the declarations.
 This must be run at the end of the file,
 and is not aware of syntax and tactics,
 so the results will likely need to be adjusted by hand.
-
-## \#min_imports in
-Defined in: `Mathlib.Command.MinImports.minImpsStx`
-
-`#min_imports in cmd` scans the syntax `cmd` and the declaration obtained by elaborating `cmd`
-to find a collection of minimal imports that should be sufficient for `cmd` to work.
-
-## \#min_imports in
-Defined in: `Mathlib.Command.MinImports.«command#min_imports_in_»`
-
-`#min_imports in cmd` scans the syntax `cmd` and the declaration obtained by elaborating `cmd`
-to find a collection of minimal imports that should be sufficient for `cmd` to work.
 
 ## \#minimize_imports
 Defined in: `«command#minimize_imports»`
@@ -1287,7 +1287,7 @@ Defined in: `Aesop.Frontend.Parser.declareRuleSets`
 
 
 ## declare_bitwise_uint_theorems
-Defined in: `commandDeclare_bitwise_uint_theorems_`
+Defined in: `commandDeclare_bitwise_uint_theorems__`
 
 
 ## declare_command_config_elab
@@ -1311,11 +1311,11 @@ Defined in: `commandDeclare_uint_simprocs_`
 
 
 ## declare_uint_theorems
-Defined in: `commandDeclare_uint_theorems_`
+Defined in: `commandDeclare_uint_theorems__`
 
 
-## deprecate to
-Defined in: `Mathlib.Tactic.DeprecateTo.commandDeprecate_to______`
+## deprecate
+Defined in: `Mathlib.Tactic.DeprecateTo.commandDeprecateTo______`
 
 Writing
 ```lean
