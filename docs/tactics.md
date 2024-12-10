@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `65c00859d05eb8ff717bb0f06ff355609be271b2`
+Mathlib version: `783026989dcdad61379854036e571fbe45ece043`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -5755,7 +5755,7 @@ Defined in: `Lean.Parser.Tactic.tacticTry_`
 `try tac` runs `tac` and succeeds even if `tac` failed.
 
 ## try_this
-Defined in: `Mathlib.Tactic.tacticTry_this_`
+Defined in: `Mathlib.Tactic.tacticTry_this__`
 
 Produces the text `Try this: <tac>` with the given tactic, and then executes it.
 
