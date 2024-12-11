@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `783026989dcdad61379854036e571fbe45ece043`
+Mathlib version: `097f9d2dc4052c4d70552604b5b36102e3ea710f`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1026,6 +1026,17 @@ Example usage:
 set_option maxRecDepth 100000 in
 #time example : (List.range 500).length = 500 := rfl
 ```
+
+## \#trans_imports
+Defined in: `transImportsStx`
+
+`#trans_imports` reports how many transitive imports the current module has.
+The command takes an optional string input: `#trans_imports str` also shows the transitively
+imported modules whose name begins with `str`.
+
+Mostly for the sake of tests, the command also takes an optional `at_most x` input:
+if the number of imports does not exceed `x`, then the message involves `x`, rather than the
+actual, possibly varying, number of imports.
 
 ## \#unfold?
 Defined in: `Mathlib.Tactic.InteractiveUnfold.unfoldCommand`
