@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `933ad5493803f4c495f252678466ede6e1e2ee79`
+Mathlib version: `8854cbcbb3fbf505347e332c8709e5b0230eb9a3`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1991,8 +1991,8 @@ Defined in: `Mathlib.Tactic.scopedNS`
 `scoped[NS]` is similar to the `scoped` modifier on attributes and notations,
 but it scopes the syntax in the specified namespace instead of the current namespace.
 ```lean
-scoped[Matrix] infixl:72 " ⬝ᵥ " => Matrix.dotProduct
--- declares `*` as a notation for vector dot productss
+scoped[Matrix] postfix:1024 "ᵀ" => Matrix.transpose
+-- declares `ᵀ` as a notation for matrix transposition
 -- which is only accessible if you `open Matrix` or `open scoped Matrix`.
 
 namespace Nat
