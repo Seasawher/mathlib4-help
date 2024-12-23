@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `6a4c4e26c98ab64b78f66164fb1bc5ff6b74e1d4`
+Mathlib version: `e820917259520b4e035454ee49f8de03c0439e3b`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -826,6 +826,29 @@ Defined in: `Lean.Parser.Command.printAxioms`
 Defined in: `Lean.Parser.Command.printTacTags`
 
 Displays all available tactic tags, with documentation.
+
+## \#print
+Defined in: `Batteries.Tactic.«command#printOpaques_»`
+
+The command `#print opaques X` prints all opaque definitions that `X` depends on.
+
+Opaque definitions include partial definitions and axioms. Only dependencies that occur in a
+computationally relevant context are listed, occurrences within proof terms are omitted. This is
+useful to determine whether and how a definition is possibly platform dependent, possibly partial,
+or possibly noncomputable.
+
+The command `#print opaques Std.HashMap.insert` shows that `Std.HashMap.insert` depends on the
+opaque definitions: `System.Platform.getNumBits` and `UInt64.toUSize`. Thus `Std.HashMap.insert`
+may have different behavior when compiled on a 32 bit or 64 bit platform.
+
+The command `#print opaques Stream.forIn` shows that `Stream.forIn` is possibly partial since it
+depends on the partial definition `Stream.forIn.visit`. Indeed, `Stream.forIn` may not terminate
+when the input stream is unbounded.
+
+The command `#print opaques Classical.choice` shows that `Classical.choice` is itself an opaque
+definition: it is an axiom. However, `#print opaques Classical.axiomOfChoice` returns nothing
+since it is a proposition, hence not computationally relevant. (The command `#print axioms` does
+reveal that `Classical.axiomOfChoice` depends on the `Classical.choice` axiom.)
 
 ## \#print
 Defined in: `Lean.Parser.Command.printEqns`
