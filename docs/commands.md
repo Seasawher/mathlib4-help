@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `8159be8d9895dd8b9a128d2f1b371a2dd8233e4c`
+Mathlib version: `d5e4a9182e9a23c4dd8bec6380816e7fdcc369f5`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -2395,7 +2395,7 @@ structure VectorSpace (k V : Type*) [Field k] [AddCommGroup V] [Module k V]
 then `variable? [VectorSpace k V]` is
 equivalent to `variable {k V : Type*} [Field k] [AddCommGroup V] [Module k V]`, assuming
 that there are no pre-existing instances on `k` and `V`.
-Note that this is not a simple replacement: it only adds instances not inferrable
+Note that this is not a simple replacement: it only adds instances not inferable
 from others in the current scope.
 
 A word of warning: the core algorithm depends on pretty printing, so if terms that appear
