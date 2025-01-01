@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `5bf0f3993d81f682aab73c6129b25b49da7144fa`
+Mathlib version: `7178aee7a431bb7527da15c3507836d8dfefcda4`
 
 ## Elab.async
 type: `Bool`
@@ -2240,6 +2240,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Kernel
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Mathlib.Deriving.countable
 type: `Bool`
 
 default: `false`
