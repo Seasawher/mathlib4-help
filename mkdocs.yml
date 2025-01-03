@@ -1,5 +1,7 @@
 site_name: Mathlib4 Help
 site_url: https://seasawher.github.io/mathlib4-help/
+repo_name: Seasawher/mathlib4-help
+repo_url: https://github.com/Seasawher/mathlib4-help
 nav:
   - attributes: attributes.md
   - commands: commands.md
