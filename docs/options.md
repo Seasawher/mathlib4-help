@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `b2158cc40abd16b858e8aa3b0e6f452789b4b28b`
+Mathlib version: `e71f6e9769283aa927ec7842e7e75e45f6f30324`
 
 ## Elab.async
 type: `Bool`
@@ -1121,6 +1121,13 @@ type: `Bool`
 default: `true`
 
 (pretty printer) disable/enable notation (infix, mixfix, postfix operators and unicode characters)
+
+## pp.numericProj.prod
+type: `Bool`
+
+default: `true`
+
+enable pretty printing `Prod.fst x` as `x.1` and `Prod.snd x` as `x.2`.
 
 ## pp.numericTypes
 type: `Bool`
