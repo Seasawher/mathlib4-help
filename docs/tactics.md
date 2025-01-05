@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `e71f6e9769283aa927ec7842e7e75e45f6f30324`
+Mathlib version: `3c125512032771407147a2b35348eb1f4c3a12ba`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -279,7 +279,7 @@ example (a b c d : Nat) : a + b + c + d = d + (b + c) + a := by ac_rfl
 ## admit
 Defined in: `Lean.Parser.Tactic.tacticAdmit`
 
-`admit` is a shorthand for `exact sorry`.
+`admit` is a synonym for `sorry`.
 
 ## aesop
 Defined in: `Aesop.Frontend.Parser.aesopTactic`
@@ -627,7 +627,7 @@ Defined in: `Mathlib.Tactic.tacticAssumption'`
 Try calling `assumption` on all goals; succeeds if it closes at least one goal.
 
 ## assumption_mod_cast
-Defined in: `Lean.Parser.Tactic.tacticAssumption_mod_cast`
+Defined in: `Lean.Parser.Tactic.tacticAssumption_mod_cast_`
 
 `assumption_mod_cast` is a variant of `assumption` that solves the goal
 using a hypothesis. Unlike `assumption`, it first pre-processes the goal and
@@ -2450,6 +2450,10 @@ Defined in: `WittVector.Tactic.ghostSimp`
 
 A macro for a common simplification when rewriting with ghost component equations.
 
+## grind
+Defined in: `Lean.Parser.Tactic.grind`
+
+
 ## group
 Defined in: `Mathlib.Tactic.Group.group`
 
@@ -3812,7 +3816,7 @@ example {α : Type} (a b : α) (h : a = b) : myeq a b := by
 ```
 
 ## norm_cast
-Defined in: `Lean.Parser.Tactic.tacticNorm_cast_`
+Defined in: `Lean.Parser.Tactic.tacticNorm_cast__`
 
 The `norm_cast` family of tactics is used to normalize certain coercions (*casts*) in expressions.
 - `norm_cast` normalizes casts in the target.
@@ -5362,11 +5366,13 @@ Both `apply_assumption` and `apply_rules` are implemented via these hooks.
 ## sorry
 Defined in: `Lean.Parser.Tactic.tacticSorry`
 
-The `sorry` tactic closes the goal using `sorryAx`. This is intended for stubbing out incomplete
-parts of a proof while still having a syntactically correct proof skeleton. Lean will give
-a warning whenever a proof uses `sorry`, so you aren't likely to miss it, but
-you can double check if a theorem depends on `sorry` by using
-`#print axioms my_thm` and looking for `sorryAx` in the axiom list.
+The `sorry` tactic is a temporary placeholder for an incomplete tactic proof,
+closing the main goal using `exact sorry`.
+
+This is intended for stubbing-out incomplete parts of a proof while still having a syntactically correct proof skeleton.
+Lean will give a warning whenever a proof uses `sorry`, so you aren't likely to miss it,
+but you can double check if a theorem depends on `sorry` by looking for `sorryAx` in the output
+of the `#print axioms my_thm` command, the axiom used by the implementation of `sorry`.
 
 ## sorry_if_sorry
 Defined in: `CategoryTheory.sorryIfSorry`

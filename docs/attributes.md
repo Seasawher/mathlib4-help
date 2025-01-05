@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `e71f6e9769283aa927ec7842e7e75e45f6f30324`
+Mathlib version: `3c125512032771407147a2b35348eb1f4c3a12ba`
 
 ## aesop
  Register a declaration as an Aesop rule.
@@ -444,6 +444,9 @@ Lemmas involving `<` or `≤` can also be marked `@[bound]` for use in the relat
 ## ghost_simps_proc
  simproc set for ghost_simps_proc
 
+## grindPropagatorBuiltinAttr
+ Builtin `grind` propagator procedure
+
 ## grind_cases
  `grind` tactic applies `cases` to (non-recursive) inductives during pre-processing step
 
@@ -598,6 +601,9 @@ argument of the attribute, not the declaration name.
 
 ## parity_simps_proc
  simproc set for parity_simps_proc
+
+## partial_fixpoint_monotone
+ monotonicity theorem
 
 ## positivity
  adds a positivity extension

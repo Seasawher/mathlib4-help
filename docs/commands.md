@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `e71f6e9769283aa927ec7842e7e75e45f6f30324`
+Mathlib version: `3c125512032771407147a2b35348eb1f4c3a12ba`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1073,13 +1073,6 @@ Defined in: `Lean.Parser.Command.version`
 Shows the current Lean version. Prints `Lean.versionString`.
 
 ## \#where
-Defined in: `Batteries.Tactic.Where.«command#where»`
-
-`#where` gives a description of the global scope at this point in the module.
-This includes the namespace, `open` namespaces, `universe` and `variable` commands,
-and options set with `set_option`.
-
-## \#where
 Defined in: `Lean.Parser.Command.where`
 
 `#where` gives a description of the state of the current scope scope.
@@ -1240,6 +1233,11 @@ A builtin defeq simplification procedure.
 Defined in: `Lean.Parser.«command_Builtin_dsimproc_decl_(_):=_»`
 
 A builtin defeq simplification procedure declaration.
+
+## builtin_grind_propagator
+Defined in: `Lean.Parser.«command_Builtin_grind_propagator____:=_»`
+
+A builtin propagator for the `grind` tactic.
 
 ## builtin_simproc
 Defined in: `Lean.Parser.«command__Builtin_simproc__[_]_(_):=_»`
@@ -1472,6 +1470,15 @@ Defined in: `Lean.Parser.Command.genInjectiveTheorems`
 This is an auxiliary command for generation constructor injectivity theorems for
 inductive types defined at `Prelude.lean`.
 It is meant for bootstrapping purposes only.
+
+## grind_pattern
+Defined in: `Lean.Parser.Command.grindPattern`
+
+
+## grind_propagator
+Defined in: `Lean.Parser.«command_Grind_propagator___(_):=_»`
+
+A user-defined propagator for the `grind` tactic.
 
 ## guard_min_heartbeats
 Defined in: `Mathlib.CountHeartbeats.commandGuard_min_heartbeats_In__`

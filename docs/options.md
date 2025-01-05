@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `e71f6e9769283aa927ec7842e7e75e45f6f30324`
+Mathlib version: `3c125512032771407147a2b35348eb1f4c3a12ba`
 
 ## Elab.async
 type: `Bool`
@@ -8,6 +8,8 @@ type: `Bool`
 default: `false`
 
 perform elaboration using multiple threads where possible
+
+This option defaults to `false` but (when not explicitly set) is overridden to `true` in `Lean.Language.Lean.process` as used by the cmdline driver and language server. Metaprogramming users driving elaboration directly via e.g. `Lean.Elab.Command.elabCommandTopLevel` can opt into asynchronous elaboration by setting this option but then are responsible for processing messages and other data not only in the resulting command state but also from async tasks in `Lean.Command.Context.snap?` and `Lean.Command.State.snapshotTasks`.
 
 ## Mathlib.Tactic.TFAE.useDeprecated
 type: `Bool`
@@ -248,6 +250,13 @@ default: `true`
 include module name in deterministic timeout error messages.
 Remark: we set this option to false to increase the stability of our test suite
 
+## debug.proofAsSorry
+type: `Bool`
+
+default: `false`
+
+replace the bodies (proofs) of theorems with `sorry`
+
 ## debug.rawDecreasingByGoal
 type: `Bool`
 
@@ -366,6 +375,20 @@ type: `Bool`
 default: `true`
 
 generate `SizeOf` specification theorems for automatically generated instances
+
+## grind.debug
+type: `Bool`
+
+default: `false`
+
+check invariants after updates
+
+## grind.debug.proofs
+type: `Bool`
+
+default: `false`
+
+check proofs between the elements of all equivalence classes
 
 ## guard_msgs.diff
 type: `Bool`
@@ -1241,6 +1264,13 @@ default: `true`
 
 display let-declaration values in the info view
 
+## pp.sorrySource
+type: `Bool`
+
+default: `false`
+
+(pretty printer) if true, pretty print 'sorry' with its originating source position, if available
+
 ## pp.structureInstanceTypes
 type: `Bool`
 
@@ -1855,6 +1885,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Elab.ProxyType
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Elab.Tactic.monotonicity
 type: `Bool`
 
 default: `false`
@@ -3423,6 +3460,125 @@ default: `false`
 (trace) enable/disable tracing for the given module and submodules
 
 ## trace.explode
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.assert
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.congr
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.final
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.parent
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.proj
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.proof
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.proofs
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ematch
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ematch.instance
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ematch.instance.assignment
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ematch.pattern
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.eqc
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.internalize
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.issues
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.simp
 type: `Bool`
 
 default: `false`
