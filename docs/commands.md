@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `d4891b46ecc82d3f6050dd51c2699fee91a2347b`
+Mathlib version: `220e307b07f1ea9efa7fb3bf23fcafb03565e8ae`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -317,6 +317,20 @@ the current file itself and looks for all least upper bounds of such files.
 
 For a simple example, if `lemma` is in a file importing only `A.lean` and `B.lean` and
 uses one lemma from each, then `#find_home! lemma` returns the current file.
+
+## \#find_syntax
+Defined in: `Mathlib.FindSyntax.«command#find_syntax_Approx»`
+
+The `#find_syntax` command takes as input a string `str` and retrieves from the environment
+all the candidates for `syntax` terms that contain the string `str`.
+
+It also makes a very crude effort at regenerating what the syntax looks like:
+this is supposed to be just indicative of what the syntax may look like, but there is no
+guarantee or expectation of correctness.
+
+The optional trailing `approx`, as in `#find_syntax "∘" approx`, is only intended to make tests
+more stable: rather than outputting the exact count of the overall number of existing syntax
+declarations, it returns its round-down to the previous multiple of 100.
 
 ## \#guard
 Defined in: `Lean.Parser.Command.guardCmd`
