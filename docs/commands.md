@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `e81777e24e09968a273fe9120837f0a500381119`
+Mathlib version: `666dd63743750d3bf814c328bd6a1c86ffb52c8e`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1201,8 +1201,8 @@ Throws an error if the given identifier uses sorryAx.
 ## assert_not_exists
 Defined in: `commandAssert_not_exists_`
 
-`assert_not_exists n` is a user command that asserts that a declaration named `n` *does not exist*
-in the current import scope.
+`assert_not_exists d₁ d₂ ... dₙ` is a user command that asserts that the declarations named
+`d₁ d₂ ... dₙ` *do not exist* in the current import scope.
 
 Be careful to use names (e.g. `Rat`) rather than notations (e.g. `ℚ`).
 
