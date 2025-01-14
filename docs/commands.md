@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `666dd63743750d3bf814c328bd6a1c86ffb52c8e`
+Mathlib version: `9c0bf76ac298a4b44d6fc4cfc595a4d49f9b0289`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -92,6 +92,52 @@ There are also shorthand commands for several common conv tactics:
 * `#simp e` is short for `#conv simp => e`
 * `#norm_num e` is short for `#conv norm_num => e`
 * `#push_neg e` is short for `#conv push_neg => e`
+
+## \#count_heartbeats
+Defined in: `Mathlib.CountHeartbeats.«command#count_heartbeatsIn__»`
+
+`#count_heartbeats in cmd` counts the heartbeats used in the enclosed command `cmd`.
+Use `#count_heartbeats` to count the heartbeats in *all* the following declarations.
+
+This is most useful for setting sufficient but reasonable limits via `set_option maxHeartbeats`
+for long running declarations.
+
+If you do so, please resist the temptation to set the limit as low as possible.
+As the `simp` set and other features of the library evolve,
+other contributors will find that their (likely unrelated) changes
+have pushed the declaration over the limit.
+`count_heartbearts in` will automatically suggest a `set_option maxHeartbeats` via "Try this:"
+using the least number of the form `2^k * 200000` that suffices.
+
+Note that that internal heartbeat counter accessible via `IO.getNumHeartbeats`
+has granularity 1000 times finer that the limits set by `set_option maxHeartbeats`.
+As this is intended as a user command, we divide by 1000.
+
+## \#count_heartbeats
+Defined in: `Mathlib.Linter.CountHeartbeats.«command#count_heartbeats»`
+
+The "countHeartbeats" linter counts the heartbeats of every declaration.
+
+The effect of the linter is similar to `#count_heartbeats in xxx`, except that it applies
+to all declarations.
+
+Note that the linter only counts heartbeats in "top-level" declarations:
+it looks inside `set_option ... in`, but not, for instance, inside `mutual` blocks.
+
+There is a convenience notation `#count_heartbeats` that simply sets the linter option to true.
+
+## \#count_heartbeats!
+Defined in: `Mathlib.CountHeartbeats.«command#count_heartbeats!_In__»`
+
+`#count_heartbeats! in cmd` runs a command `10` times, reporting the range in heartbeats, and the
+standard deviation. The command `#count_heartbeats! n in cmd` runs it `n` times instead.
+
+Example usage:
+```lean
+#count_heartbeats! in
+def f := 37
+```
+displays the info message `Min: 7 Max: 8 StdDev: 14%`.
 
 ## \#discr_tree_key
 Defined in: `Lean.Parser.discrTreeKeyCmd`
@@ -1297,36 +1343,9 @@ so that `Foo.rec` can be used in a definition
 without having to mark the definition as `noncomputable`.
 
 ## count_heartbeats
-Defined in: `Mathlib.CountHeartbeats.commandCount_heartbeatsIn__`
+Defined in: `Mathlib.CountHeartbeats.commandCount_heartbeats`
 
-Count the heartbeats used in the enclosed command.
-
-This is most useful for setting sufficient but reasonable limits via `set_option maxHeartbeats`
-for long running declarations.
-
-If you do so, please resist the temptation to set the limit as low as possible.
-As the `simp` set and other features of the library evolve,
-other contributors will find that their (likely unrelated) changes
-have pushed the declaration over the limit.
-`count_heartbearts in` will automatically suggest a `set_option maxHeartbeats` via "Try this:"
-using the least number of the form `2^k * 200000` that suffices.
-
-Note that that internal heartbeat counter accessible via `IO.getNumHeartbeats`
-has granularity 1000 times finer that the limits set by `set_option maxHeartbeats`.
-As this is intended as a user command, we divide by 1000.
-
-## count_heartbeats!
-Defined in: `Mathlib.CountHeartbeats.commandCount_heartbeats!_In__`
-
-`count_heartbeats! in cmd` runs a command `10` times, reporting the range in heartbeats, and the
-standard deviation. The command `count_heartbeats! n in cmd` runs it `n` times instead.
-
-Example usage:
-```lean
-count_heartbeats! in
-def f := 37
-```
-displays the info message `Min: 7 Max: 8 StdDev: 14%`.
+`count_heartbeats` is deprecated in favour of `#count_heartbeats` since "2025-01-12"
 
 ## declare_aesop_rule_sets
 Defined in: `Aesop.Frontend.Parser.declareRuleSets`

@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `666dd63743750d3bf814c328bd6a1c86ffb52c8e`
+Mathlib version: `9c0bf76ac298a4b44d6fc4cfc595a4d49f9b0289`
 
 ## Elab.async
 type: `Bool`
@@ -480,6 +480,13 @@ type: `Bool`
 default: `true`
 
 enable the linter that warns when bound variable names are nullary constructor names
+
+## linter.countHeartbeats
+type: `Bool`
+
+default: `false`
+
+enable the countHeartbeats linter
 
 ## linter.deprecated
 type: `Bool`

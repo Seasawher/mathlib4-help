@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `666dd63743750d3bf814c328bd6a1c86ffb52c8e`
+Mathlib version: `9c0bf76ac298a4b44d6fc4cfc595a4d49f9b0289`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -20,6 +20,17 @@ Use `#check (t)` to pretty print it as an elaborated expression.
 
 Like the `#check` command, the `#check` tactic allows stuck typeclass instance problems.
 These become metavariables in the output.
+
+## \#count_heartbeats
+Defined in: `Mathlib.CountHeartbeats.«tactic#count_heartbeats_»`
+
+Count the heartbeats used by a tactic, e.g.: `#count_heartbeats simp`.
+
+## \#count_heartbeats!
+Defined in: `Mathlib.CountHeartbeats.«tactic#count_heartbeats!_In__»`
+
+`#count_heartbeats! in tac` runs a tactic 10 times, counting the heartbeats used, and logs the range
+and standard deviation. The tactic `#count_heartbeats! n in tac` runs it `n` times instead.
 
 ## \#find
 Defined in: `Mathlib.Tactic.Find.«tactic#find_»`
@@ -1676,15 +1687,9 @@ Note that `convert_to ty at h` may leave a copy of `h` if a later local hypothes
 depends on it, just like in `rw` or `simp`.
 
 ## count_heartbeats
-Defined in: `Mathlib.CountHeartbeats.tacticCount_heartbeats_`
+Defined in: `Mathlib.CountHeartbeats.tacticCount_heartbeats`
 
-Count the heartbeats used by a tactic, e.g.: `count_heartbeats simp`.
-
-## count_heartbeats!
-Defined in: `Mathlib.CountHeartbeats.tacticCount_heartbeats!_In__`
-
-`count_heartbeats! in tac` runs a tactic 10 times, counting the heartbeats used, and logs the range
-and standard deviation. The tactic `count_heartbeats! n in tac` runs it `n` times instead.
+`count_heartbeats` is deprecated in favour of `#count_heartbeats` since "2025-01-12"
 
 ## dbg_trace
 Defined in: `Lean.Parser.Tactic.dbgTrace`
