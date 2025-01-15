@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `9c0bf76ac298a4b44d6fc4cfc595a4d49f9b0289`
+Mathlib version: `dc5b3f0c90e6e91580442a3ec4df5cf3ee638eb0`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -5394,6 +5394,11 @@ from arguments `a₁` ... `aₙ`.
 The tactic adds a new hypothesis with the same name `h := h a₁ ... aₙ`
 and tries to clear the previous one.
 
+## specialize_all
+Defined in: `Mathlib.Tactic.TautoSet.specialize_all`
+
+`specialize_all x` runs `specialize h x` for all hypotheses `h` where this tactic succeeds.
+
 ## split
 Defined in: `Lean.Parser.Tactic.split`
 
@@ -5582,6 +5587,23 @@ This is a finishing tactic: it either closes the goal or raises an error.
 The Lean 3 version of this tactic by default attempted to avoid classical reasoning
 where possible. This Lean 4 version makes no such attempt. The `itauto` tactic
 is designed for that purpose.
+
+## tauto_set
+Defined in: `Mathlib.Tactic.TautoSet.tacticTauto_set`
+
+`tauto_set` attempts to prove tautologies involving hypotheses and goals of the form `X ⊆ Y`
+or `X = Y`, where `X`, `Y` are expressions built using ∪, ∩, \, and ᶜ from finitely many
+variables of type `Set α`. It also unfolds expressions of the form `Disjoint A B` and
+`symmDiff A B`.
+
+Examples:
+```lean
+example {α} (A B C D : Set α) (h1 : A ⊆ B) (h2 : C ⊆ D) : C \ B ⊆ D \ A := by
+  tauto_set
+
+example {α} (A B C : Set α) (h1 : A ⊆ B ∪ C) : (A ∩ B) ∪ (A ∩ C) = A := by
+  tauto_set
+```
 
 ## tfae_finish
 Defined in: `Mathlib.Tactic.TFAE.tfaeFinish`
