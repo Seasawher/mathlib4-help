@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `0f52dbc81e1f931efb1b41f8ced91dae40d1d4f4`
+Mathlib version: `1264ce95ed09c73b4aadc6ec45fc7db15897e79d`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1054,6 +1054,23 @@ Defined in: `Mathlib.Tactic.casesM`
   if `type` matches one of the given patterns.
 * `casesm* p` is a more efficient and compact version of `· repeat casesm p`.
   It is more efficient because the pattern is compiled once.
+* `casesm! p` only applies `cases` if the number of resulting subgoals is <= 1.
+
+Example: The following tactic destructs all conjunctions and disjunctions in the current context.
+```lean
+casesm* _ ∨ _, _ ∧ _
+```
+
+## casesm!
+Defined in: `Mathlib.Tactic.casesm!`
+
+* `casesm p` applies the `cases` tactic to a hypothesis `h : type`
+  if `type` matches the pattern `p`.
+* `casesm p_1, ..., p_n` applies the `cases` tactic to a hypothesis `h : type`
+  if `type` matches one of the given patterns.
+* `casesm* p` is a more efficient and compact version of `· repeat casesm p`.
+  It is more efficient because the pattern is compiled once.
+* `casesm! p` only applies `cases` if the number of resulting subgoals is <= 1.
 
 Example: The following tactic destructs all conjunctions and disjunctions in the current context.
 ```lean
