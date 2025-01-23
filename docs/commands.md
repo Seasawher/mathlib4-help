@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `3197a5fe9d5c6575ce03fdee1ce1c2c9a5e6b278`
+Mathlib version: `8bec6200deecb59db5cd3c348305e53fa017e5bd`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -584,6 +584,22 @@ Display a value of type `Html` in the infoview.
 The input can be a pure value
 or a computation in any Lean metaprogramming monad
 (e.g. `CommandElabM Html`).
+
+## \#import_bumps
+Defined in: `Mathlib.Linter.MinImports.«command#import_bumps»`
+
+The `minImports` linter incrementally computes the minimal imports needed for each file to build.
+Whenever it detects that a new command requires an increase in the (transitive) imports that it
+computed so far, it emits a warning mentioning the bigger minimal imports.
+
+Unlike the related `#min_imports` command, the linter takes into account notation and tactic
+information.
+It also works incrementally, providing information that is better suited, for instance, to split
+files.
+
+Another important difference is that the `minImports` *linter* starts counting imports from
+where the option is set to `true` *downwards*, whereas the `#min_imports` *command* looks at the
+imports needed from the command *upwards*.
 
 ## \#instances
 Defined in: `Batteries.Tactic.Instances.instancesCmd`
