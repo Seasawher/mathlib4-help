@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `8bec6200deecb59db5cd3c348305e53fa017e5bd`
+Mathlib version: `5fb85e0f4821f65b24314b64c00db24605b30438`
 
 ## Elab.async
 type: `Bool`
@@ -2088,6 +2088,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Elab.eval
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Elab.fast_instance
 type: `Bool`
 
 default: `false`
