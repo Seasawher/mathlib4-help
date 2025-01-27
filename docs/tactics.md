@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `af8c17b2c995e84c8d44e1c7592136845c590307`
+Mathlib version: `413249c638b4c9453166d2b94c9a7f13f6238b14`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1338,14 +1338,14 @@ Defined in: `Mathlib.Tactic.ComputeDegree.computeDegree`
 *  `degree f ≤ d`,
 *  `coeff f d = r`, if `d` is the degree of `f`.
 
-The tactic may leave goals of the form `d' = d` `d' ≤ d`, or `r ≠ 0`, where `d'` in `ℕ` or
+The tactic may leave goals of the form `d' = d`, `d' ≤ d`, or `r ≠ 0`, where `d'` in `ℕ` or
 `WithBot ℕ` is the tactic's guess of the degree, and `r` is the coefficient's guess of the
 leading coefficient of `f`.
 
 `compute_degree` applies `norm_num` to the left-hand side of all side goals, trying to close them.
 
 The variant `compute_degree!` first applies `compute_degree`.
-Then it uses `norm_num` on all the whole remaining goals and tries `assumption`.
+Then it uses `norm_num` on all the remaining goals and tries `assumption`.
 
 ## compute_degree!
 Defined in: `Mathlib.Tactic.ComputeDegree.tacticCompute_degree!`
@@ -1357,14 +1357,14 @@ Defined in: `Mathlib.Tactic.ComputeDegree.tacticCompute_degree!`
 *  `degree f ≤ d`,
 *  `coeff f d = r`, if `d` is the degree of `f`.
 
-The tactic may leave goals of the form `d' = d` `d' ≤ d`, or `r ≠ 0`, where `d'` in `ℕ` or
+The tactic may leave goals of the form `d' = d`, `d' ≤ d`, or `r ≠ 0`, where `d'` in `ℕ` or
 `WithBot ℕ` is the tactic's guess of the degree, and `r` is the coefficient's guess of the
 leading coefficient of `f`.
 
 `compute_degree` applies `norm_num` to the left-hand side of all side goals, trying to close them.
 
 The variant `compute_degree!` first applies `compute_degree`.
-Then it uses `norm_num` on all the whole remaining goals and tries `assumption`.
+Then it uses `norm_num` on all the remaining goals and tries `assumption`.
 
 ## congr
 Defined in: `Lean.Parser.Tactic.congr`
@@ -4262,8 +4262,7 @@ Notes:
 * This tactic only works with a working internet connection, since it calls Sage
   using the SageCell web API at <https://sagecell.sagemath.org/>.
   Many thanks to the Sage team and organization for allowing this use.
-* This tactic assumes that the user has `python3` installed and available on the path.
-  (Test by opening a terminal and executing `python3 --version`.)
+* This tactic assumes that the user has `curl` available on path.
 
 Examples:
 
@@ -4277,7 +4276,7 @@ example (x y z w : ℚ) (hzw : z = w) : x*z + 2*y*z = x*w + 2*y*w := by
   polyrith
 -- Try this: linear_combination (2 * y + x) * hzw
 
-constant scary : ∀ a b : ℚ, a + b = 0
+axiom scary : ∀ a b : ℚ, a + b = 0
 
 example (a b c d : ℚ) (h : a + b = 0) (h2: b + c = 0) : a + b + c + d = 0 := by
   polyrith only [scary c d, h]
