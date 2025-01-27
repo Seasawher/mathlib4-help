@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `af8c17b2c995e84c8d44e1c7592136845c590307`
+Mathlib version: `413249c638b4c9453166d2b94c9a7f13f6238b14`
 
 ## Elab.async
 type: `Bool`
@@ -843,6 +843,13 @@ type: `Nat`
 default: `6`
 
 Number of results requested from moogle (default 6)
+
+## polyrith.sageUserAgent
+type: `String`
+
+default: `"LeanProver (https://leanprover-community.github.io/)"`
+
+The User-Agent header value for HTTP calls to SageMath API
 
 ## pp.all
 type: `Bool`
