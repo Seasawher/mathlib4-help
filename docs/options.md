@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `132efc702f743d24550d2b85b029ea64ffafbcab`
+Mathlib version: `fa4f54a63be7a0e84ff9eb5b32fdee96e6ead1f2`
 
 ## Elab.async
 type: `Bool`
@@ -487,6 +487,13 @@ type: `Bool`
 default: `false`
 
 enable the countHeartbeats linter
+
+## linter.countHeartbeatsApprox
+type: `Bool`
+
+default: `false`
+
+if set to `true`, then the countHeartbeats linter rounds down to the nearest 1000 the heartbeat count
 
 ## linter.deprecated
 type: `Bool`
