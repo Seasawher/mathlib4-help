@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `132efc702f743d24550d2b85b029ea64ffafbcab`
+Mathlib version: `fa4f54a63be7a0e84ff9eb5b32fdee96e6ead1f2`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -94,7 +94,7 @@ There are also shorthand commands for several common conv tactics:
 * `#push_neg e` is short for `#conv push_neg => e`
 
 ## \#count_heartbeats
-Defined in: `Mathlib.CountHeartbeats.«command#count_heartbeatsIn__»`
+Defined in: `Mathlib.CountHeartbeats.«command#count_heartbeatsApproximatelyIn__»`
 
 `#count_heartbeats in cmd` counts the heartbeats used in the enclosed command `cmd`.
 Use `#count_heartbeats` to count the heartbeats in *all* the following declarations.
@@ -113,8 +113,12 @@ Note that that internal heartbeat counter accessible via `IO.getNumHeartbeats`
 has granularity 1000 times finer that the limits set by `set_option maxHeartbeats`.
 As this is intended as a user command, we divide by 1000.
 
+The optional `approximately` keyword rounds down the heartbeats to the nearest thousand.
+This is helps make the tests more stable to small changes in heartbeats.
+To use this functionality, use `#count_heartbeats approximately in cmd`.
+
 ## \#count_heartbeats
-Defined in: `Mathlib.Linter.CountHeartbeats.«command#count_heartbeats»`
+Defined in: `Mathlib.Linter.CountHeartbeats.«command#count_heartbeatsApproximately»`
 
 The "countHeartbeats" linter counts the heartbeats of every declaration.
 
