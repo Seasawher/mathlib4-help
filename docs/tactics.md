@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `5608064d3be9600af7deea2cbb3955c2805dfc01`
+Mathlib version: `da0385c6b53c7c67ae697b0bc833f0d47e5d007f`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1146,6 +1146,15 @@ tactic calls can then be deleted.
 example : (fun x : Nat => x) 0 = 1 := by
   change? 0 = _  -- `Try this: change 0 = 1`
 ```
+
+## check_compositions
+Defined in: `Mathlib.Tactic.CheckCompositions.tacticCheck_compositions`
+
+For each composition `f ≫ g` in the goal,
+which internally is represented as `CategoryStruct.comp C inst X Y Z f g`,
+infer the types of `f` and `g` and check whether their sources and targets agree
+with `X`, `Y`, and `Z` at "instances and reducible" transparency,
+reporting any discrepancies.
 
 ## checkpoint
 Defined in: `Lean.Parser.Tactic.checkpoint`
