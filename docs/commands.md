@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `da0385c6b53c7c67ae697b0bc833f0d47e5d007f`
+Mathlib version: `e13a712b1a981526ce626085abf1dad8832a4dec`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1196,6 +1196,11 @@ The type of `<widget>` must implement `Widget.ToModule`,
 and the type of `<props>` must implement `Server.RpcEncodable`.
 In particular, `<props> : Json` works.
 
+## %reset_grind_attrs
+Defined in: `Lean.Parser.resetGrindAttrs`
+
+Reset all `grind` attributes. This command is intended for testing purposes only and should not be used in applications.
+
 ## /-!
 Defined in: `Lean.Parser.Command.moduleDoc`
 
@@ -1562,6 +1567,10 @@ theorems in the remainder of the current section, differing from the default beh
 conditionally including variables based on use in the theorem header. Other commands are
 not affected. `include` is usually followed by `in theorem ...` to limit the inclusion
 to the subsequent declaration.
+
+## init_grind_norm
+Defined in: `Lean.Parser.Command.initGrindNorm`
+
 
 ## init_quot
 Defined in: `Lean.Parser.Command.init_quot`

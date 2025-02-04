@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `da0385c6b53c7c67ae697b0bc833f0d47e5d007f`
+Mathlib version: `e13a712b1a981526ce626085abf1dad8832a4dec`
 
 ## Elab.async
 type: `Bool`
@@ -9,7 +9,7 @@ default: `false`
 
 perform elaboration using multiple threads where possible
 
-This option defaults to `false` but (when not explicitly set) is overridden to `true` in `Lean.Language.Lean.process` as used by the cmdline driver and language server. Metaprogramming users driving elaboration directly via e.g. `Lean.Elab.Command.elabCommandTopLevel` can opt into asynchronous elaboration by setting this option but then are responsible for processing messages and other data not only in the resulting command state but also from async tasks in `Lean.Command.Context.snap?` and `Lean.Command.State.snapshotTasks`.
+This option defaults to `false` but (when not explicitly set) is overridden to `true` in the language server. Metaprogramming users driving elaboration directly via e.g. `Lean.Elab.Command.elabCommandTopLevel` can opt into asynchronous elaboration by setting this option but then are responsible for processing messages and other data not only in the resulting command state but also from async tasks in `Lean.Command.Context.snap?` and `Lean.Command.State.snapshotTasks`.
 
 ## Mathlib.Tactic.TFAE.useDeprecated
 type: `Bool`
@@ -390,6 +390,13 @@ default: `false`
 
 check proofs between the elements of all equivalence classes
 
+## grind.warning
+type: `Bool`
+
+default: `true`
+
+disable `grind` usage warning
+
 ## guard_msgs.diff
 type: `Bool`
 
@@ -410,13 +417,6 @@ type: `Bool`
 default: `true`
 
 Promote indices to parameters in inductive types whenever possible.
-
-## infoview.maxTraceChildren
-type: `Nat`
-
-default: `50`
-
-Number of trace node children to display by default
 
 ## internal.cmdlineSnapshots
 type: `Bool`
@@ -795,6 +795,20 @@ default: `false`
 
 enable the upstreamableDecl linter
 
+## linter.upstreamableDecl.defs
+type: `Bool`
+
+default: `false`
+
+upstreamableDecl warns on definitions
+
+## linter.upstreamableDecl.private
+type: `Bool`
+
+default: `false`
+
+upstreamableDecl warns on private declarations
+
 ## loogle.queries
 type: `Nat`
 
@@ -837,6 +851,13 @@ default: `1`
 
 maximum number of nested `synthPending` invocations. When resolving unification constraints, pending type class problems may need to be synthesized. These type class problems may create new unification constraints that again require solving new type class problems. This option puts a threshold on how many nested problems are created.
 
+## maxTraceChildren
+type: `Nat`
+
+default: `50`
+
+Maximum number of trace node children to display
+
 ## maxUniverseOffset
 type: `Nat`
 
@@ -870,7 +891,7 @@ type: `Bool`
 
 default: `false`
 
-(pretty printer analyzer) determine annotations sufficient to ensure round-tripping
+(pretty printer analyzer) try to determine annotations sufficient to ensure round-tripping
 
 ## pp.analyze.checkInstances
 type: `Bool`
@@ -2046,6 +2067,20 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Elab.definition.mkClosure
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Elab.definition.partialFixpoint
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Elab.definition.partialFixpoint.induction
 type: `Bool`
 
 default: `false`
@@ -3508,7 +3543,28 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.beta
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.debug
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.beta
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.canon
 type: `Bool`
 
 default: `false`
@@ -3522,7 +3578,63 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.debug.ematch.pattern
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.debug.final
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.forallPropagator
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.internalize
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.matchCond
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.matchCond.lambda
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.matchCond.proveFalse
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.offset
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.offset.proof
 type: `Bool`
 
 default: `false`
@@ -3557,6 +3669,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.debug.split
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.ematch
 type: `Bool`
 
@@ -3585,6 +3704,20 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.ematch.pattern.search
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.eqResolution
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.eqc
 type: `Bool`
 
@@ -3606,7 +3739,91 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.offset
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.offset.dist
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.offset.eq
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.offset.eq.from
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.offset.eq.to
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.offset.internalize
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.offset.internalize.term
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.offset.propagate
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.simp
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.split
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.split.candidate
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.split.resolved
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.trace
 type: `Bool`
 
 default: `false`
@@ -3833,6 +4050,34 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.to_additive_detail
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.try
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.try.collect
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.try.collect.funInd
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.try.debug.funInd
 type: `Bool`
 
 default: `false`
