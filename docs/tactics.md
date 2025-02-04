@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `da0385c6b53c7c67ae697b0bc833f0d47e5d007f`
+Mathlib version: `e13a712b1a981526ce626085abf1dad8832a4dec`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -774,8 +774,9 @@ bv_check "proof.lrat"
 Defined in: `Lean.Parser.Tactic.bvDecide`
 
 Close fixed-width `BitVec` and `Bool` goals by obtaining a proof from an external SAT solver and
-verifying it inside Lean. The solvable goals are currently limited to the Lean equivalent of
-[`QF_BV`](https://smt-lib.org/logics-all.shtml#QF_BV):
+verifying it inside Lean. The solvable goals are currently limited to
+- the Lean equivalent of [`QF_BV`](https://smt-lib.org/logics-all.shtml#QF_BV)
+- automatically splitting up `structure`s that contain information about `BitVec` or `Bool`
 ```lean
 example : ∀ (a b : BitVec 64), (a &&& b) + (a ^^^ b) = a ||| b := by
   intros
@@ -1155,6 +1156,49 @@ which internally is represented as `CategoryStruct.comp C inst X Y Z f g`,
 infer the types of `f` and `g` and check whether their sources and targets agree
 with `X`, `Y`, and `Z` at "instances and reducible" transparency,
 reporting any discrepancies.
+
+An example:
+
+```
+example (j : J) :
+    colimit.ι ((F ⋙ G) ⋙ H) j ≫ (preservesColimitIso (G ⋙ H) F).inv =
+      H.map (G.map (colimit.ι F j)) := by
+
+  -- We know which lemma we want to use, and it's even a simp lemma, but `rw`
+  -- won't let us apply it
+  fail_if_success rw [ι_preservesColimitIso_inv]
+  fail_if_success rw [ι_preservesColimitIso_inv (G ⋙ H)]
+  fail_if_success simp only [ι_preservesColimitIso_inv]
+
+  -- This would work:
+  -- erw [ι_preservesColimitIso_inv (G ⋙ H)]
+
+  -- `check_compositions` checks if the two morphisms we're composing are
+  -- composed by abusing defeq, and indeed it tells us that we are abusing
+  -- definitional associativity of composition of functors here: it prints
+  -- the following.
+
+  -- info: In composition
+  --   colimit.ι ((F ⋙ G) ⋙ H) j ≫ (preservesColimitIso (G ⋙ H) F).inv
+  -- the source of
+  --   (preservesColimitIso (G ⋙ H) F).inv
+  -- is
+  --   colimit (F ⋙ G ⋙ H)
+  -- but should be
+  --   colimit ((F ⋙ G) ⋙ H)
+
+  check_compositions
+
+  -- In this case, we can "fix" this by reassociating in the goal, but
+  -- usually at this point the right thing to do is to back off and
+  -- check how we ended up with a bad goal in the first place.
+  dsimp only [Functor.assoc]
+
+  -- This would work now, but it is not needed, because simp works as well
+  -- rw [ι_preservesColimitIso_inv]
+
+  simp
+```
 
 ## checkpoint
 Defined in: `Lean.Parser.Tactic.checkpoint`
@@ -2483,6 +2527,10 @@ A macro for a common simplification when rewriting with ghost component equation
 
 ## grind
 Defined in: `Lean.Parser.Tactic.grind`
+
+
+## grind?
+Defined in: `Lean.Parser.Tactic.grindTrace`
 
 
 ## group
@@ -5811,6 +5859,10 @@ macro_rules | `(tactic| trivial) => `(tactic| simp)
 Defined in: `Lean.Parser.Tactic.tacticTry_`
 
 `try tac` runs `tac` and succeeds even if `tac` failed.
+
+## try?
+Defined in: `Lean.Parser.Tactic.tryTrace`
+
 
 ## try_this
 Defined in: `Mathlib.Tactic.tacticTry_this__`

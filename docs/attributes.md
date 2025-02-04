@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `da0385c6b53c7c67ae697b0bc833f0d47e5d007f`
+Mathlib version: `e13a712b1a981526ce626085abf1dad8832a4dec`
 
 ## aesop
  Register a declaration as an Aesop rule.
@@ -444,17 +444,14 @@ Lemmas involving `<` or `≤` can also be marked `@[bound]` for use in the relat
 ## ghost_simps_proc
  simproc set for ghost_simps_proc
 
+## grind
+ The `[grind]` attribute is used to annotate declarations.When applied to an equational theorem, `[grind =]`, `[grind =_]`, or `[grind _=_]`will mark the theorem for use in heuristic instantiations by the `grind` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[grind =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[grind ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[grind →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[grind]` by itself will effectively try `[grind ←]` (if the conclusion is sufficient for instantiation) and then `[grind →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[grind =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+
 ## grindPropagatorBuiltinAttr
  Builtin `grind` propagator procedure
-
-## grind_cases
- `grind` tactic applies `cases` to (non-recursive) inductives during pre-processing step
-
-## grind_norm
- simplification/normalization theorems for `grind`
-
-## grind_norm_proc
- simplification/normalization procedured for `grind`
 
 ## higherOrder
  From a lemma of the shape `∀ x, f (g x) = h x` derive an auxiliary lemma of the
@@ -498,6 +495,9 @@ Environment extension to register inductive type elaborator commands.
 
 ## instance
  type class instance
+
+## int_toBitVec
+ simp theorems used to convert UIntX/IntX statements into BitVec ones
 
 ## integral_simps
  Simp set for integral rules. 
