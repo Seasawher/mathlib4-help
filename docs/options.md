@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `387749edea971a03a6bc8942f136a56e4457f03b`
+Mathlib version: `440c3d5524efacb02f3897055bb04260cdb9019d`
 
 ## Elab.async
 type: `Bool`
@@ -1109,6 +1109,13 @@ type: `Bool`
 default: `true`
 
 (pretty printer) disable/enable 'match' notation
+
+## pp.mathlib.binderPredicates
+type: `Bool`
+
+default: `true`
+
+(pretty printer) pretty prints binders such as `∀ (x : α) (x < 2), p x` as `∀ x < 2, p x`
 
 ## pp.maxSteps
 type: `Nat`
@@ -2347,6 +2354,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Kernel
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Mathlib.Deriving.Encodable
 type: `Bool`
 
 default: `false`
