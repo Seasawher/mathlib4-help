@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `e553eabcba27a12306107c29fe88f9ce79791746`
+Mathlib version: `751f9504e84e892212aa23308aa4091c20e98651`
 
 ## Elab.async
 type: `Bool`
@@ -679,6 +679,13 @@ type: `Bool`
 default: `false`
 
 enable the multiGoal linter
+
+## linter.style.nameCheck
+type: `Bool`
+
+default: `true`
+
+enable the `nameCheck` linter
 
 ## linter.style.setOption
 type: `Bool`
