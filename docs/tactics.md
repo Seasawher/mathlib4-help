@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `751f9504e84e892212aa23308aa4091c20e98651`
+Mathlib version: `d066138f11f7fdf68dcda20d1ed2d296e9d992d7`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2005,6 +2005,13 @@ Defined in: `Lean.Parser.Tactic.tacticErw___`
 `erw [rules]` is a shorthand for `rw (transparency := .default) [rules]`.
 This does rewriting up to unfolding of regular definitions (by comparison to regular `rw`
 which only unfolds `@[reducible]` definitions).
+
+## erw?
+Defined in: `Mathlib.Tactic.Erw?.erw?`
+
+`erw? [r]` calls `erw [r]` (note that only a single step is allowed),
+and then attempts to identify any subexpression which would block the use of `rw` instead.
+It does so by identifying subexpressions which are defeq, but not at reducible transparency.
 
 ## eta_expand
 Defined in: `Mathlib.Tactic.etaExpandStx`
