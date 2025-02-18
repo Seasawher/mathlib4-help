@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `53815d4e7dfe51eef5f197cc28f93404bd97893d`
+Mathlib version: `4203807415a6e558c850c2a7d406fc948359f50e`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3975,7 +3975,8 @@ h: a = 1
 ⊢ a + 1 + 1 + a + a = 5
 -/
 ```
-Notice that the second occurrence of `a` from the left has been rewritten by `nth_rewrite`.
+Notice that the second and third occurrences of `a` from the left have been rewritten by
+`nth_rewrite`.
 
 To understand the importance of order of precedence, consider the example below
 ```lean
@@ -4027,7 +4028,8 @@ h: a = 1
 ⊢ a + 1 + 1 + a + a = 5
 -/
 ```
-Notice that the second occurrence of `a` from the left has been rewritten by `nth_rewrite`.
+Notice that the second and third occurrences of `a` from the left have been rewritten by
+`nth_rw`.
 
 To understand the importance of order of precedence, consider the example below
 ```lean
