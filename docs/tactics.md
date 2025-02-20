@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `5f10430211348821971dd00781c36e04ace6ec71`
+Mathlib version: `db136357e9a710d172951570ada107fb33b5b101`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -154,88 +154,196 @@ of goals if there are any. It is useful as a placeholder after starting a tactic
 such as `by _` to make it syntactically correct and show the current goal.
 
 ## abel
-Defined in: `Mathlib.Tactic.Abel.abel_term`
-
-Unsupported legacy syntax from mathlib3, which allowed passing additional terms to `abel`.
-
-## abel
 Defined in: `Mathlib.Tactic.Abel.abel`
 
-Tactic for evaluating expressions in abelian groups.
+Tactic for evaluating equations in the language of
+*additive*, commutative monoids and groups.
 
-* `abel!` will use a more aggressive reducibility setting to determine equality of atoms.
-* `abel1` fails if the target is not an equality.
+`abel` and its variants work as both tactics and conv tactics.
+
+* `abel1` fails if the target is not an equality that is provable by the axioms of
+  commutative monoids/groups.
+* `abel_nf` rewrites all group expressions into a normal form.
+  * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
+  * `abel_nf (config := cfg)` allows for additional configuration:
+    * `red`: the reducibility setting (overridden by `!`)
+    * `recursive`: if true, `abel_nf` will also recurse into atoms
+* `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
 
 For example:
-```lean
+
+```
 example [AddCommMonoid α] (a b : α) : a + (b + a) = a + a + b := by abel
 example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by abel
 ```
 
-## abel!
-Defined in: `Mathlib.Tactic.Abel.abel!_term`
+## Future work
 
-Unsupported legacy syntax from mathlib3, which allowed passing additional terms to `abel!`.
+* In mathlib 3, `abel` accepted addtional optional arguments:
+  ```
+  syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
+  ```
+  It is undecided whether these features should be restored eventually.
 
 ## abel!
 Defined in: `Mathlib.Tactic.Abel.tacticAbel!`
 
-Tactic for evaluating expressions in abelian groups.
+Tactic for evaluating equations in the language of
+*additive*, commutative monoids and groups.
 
-* `abel!` will use a more aggressive reducibility setting to determine equality of atoms.
-* `abel1` fails if the target is not an equality.
+`abel` and its variants work as both tactics and conv tactics.
+
+* `abel1` fails if the target is not an equality that is provable by the axioms of
+  commutative monoids/groups.
+* `abel_nf` rewrites all group expressions into a normal form.
+  * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
+  * `abel_nf (config := cfg)` allows for additional configuration:
+    * `red`: the reducibility setting (overridden by `!`)
+    * `recursive`: if true, `abel_nf` will also recurse into atoms
+* `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
 
 For example:
-```lean
+
+```
 example [AddCommMonoid α] (a b : α) : a + (b + a) = a + a + b := by abel
 example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by abel
 ```
 
+## Future work
+
+* In mathlib 3, `abel` accepted addtional optional arguments:
+  ```
+  syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
+  ```
+  It is undecided whether these features should be restored eventually.
+
 ## abel1
 Defined in: `Mathlib.Tactic.Abel.abel1`
 
-Tactic for solving equations in the language of
+Tactic for evaluating equations in the language of
 *additive*, commutative monoids and groups.
-This version of `abel` fails if the target is not an equality
-that is provable by the axioms of commutative monoids/groups.
 
-`abel1!` will use a more aggressive reducibility setting to identify atoms.
-This can prove goals that `abel` cannot, but is more expensive.
+`abel` and its variants work as both tactics and conv tactics.
+
+* `abel1` fails if the target is not an equality that is provable by the axioms of
+  commutative monoids/groups.
+* `abel_nf` rewrites all group expressions into a normal form.
+  * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
+  * `abel_nf (config := cfg)` allows for additional configuration:
+    * `red`: the reducibility setting (overridden by `!`)
+    * `recursive`: if true, `abel_nf` will also recurse into atoms
+* `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
+
+For example:
+
+```
+example [AddCommMonoid α] (a b : α) : a + (b + a) = a + a + b := by abel
+example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by abel
+```
+
+## Future work
+
+* In mathlib 3, `abel` accepted addtional optional arguments:
+  ```
+  syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
+  ```
+  It is undecided whether these features should be restored eventually.
 
 ## abel1!
 Defined in: `Mathlib.Tactic.Abel.abel1!`
 
-Tactic for solving equations in the language of
+Tactic for evaluating equations in the language of
 *additive*, commutative monoids and groups.
-This version of `abel` fails if the target is not an equality
-that is provable by the axioms of commutative monoids/groups.
 
-`abel1!` will use a more aggressive reducibility setting to identify atoms.
-This can prove goals that `abel` cannot, but is more expensive.
+`abel` and its variants work as both tactics and conv tactics.
+
+* `abel1` fails if the target is not an equality that is provable by the axioms of
+  commutative monoids/groups.
+* `abel_nf` rewrites all group expressions into a normal form.
+  * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
+  * `abel_nf (config := cfg)` allows for additional configuration:
+    * `red`: the reducibility setting (overridden by `!`)
+    * `recursive`: if true, `abel_nf` will also recurse into atoms
+* `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
+
+For example:
+
+```
+example [AddCommMonoid α] (a b : α) : a + (b + a) = a + a + b := by abel
+example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by abel
+```
+
+## Future work
+
+* In mathlib 3, `abel` accepted addtional optional arguments:
+  ```
+  syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
+  ```
+  It is undecided whether these features should be restored eventually.
 
 ## abel_nf
 Defined in: `Mathlib.Tactic.Abel.abelNF`
 
-Simplification tactic for expressions in the language of abelian groups,
-which rewrites all group expressions into a normal form.
-* `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
-* `abel_nf (config := cfg)` allows for additional configuration:
-  * `red`: the reducibility setting (overridden by `!`)
-  * `recursive`: if true, `abel_nf` will also recurse into atoms
-* `abel_nf` works as both a tactic and a conv tactic.
-  In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
+Tactic for evaluating equations in the language of
+*additive*, commutative monoids and groups.
+
+`abel` and its variants work as both tactics and conv tactics.
+
+* `abel1` fails if the target is not an equality that is provable by the axioms of
+  commutative monoids/groups.
+* `abel_nf` rewrites all group expressions into a normal form.
+  * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
+  * `abel_nf (config := cfg)` allows for additional configuration:
+    * `red`: the reducibility setting (overridden by `!`)
+    * `recursive`: if true, `abel_nf` will also recurse into atoms
+* `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
+
+For example:
+
+```
+example [AddCommMonoid α] (a b : α) : a + (b + a) = a + a + b := by abel
+example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by abel
+```
+
+## Future work
+
+* In mathlib 3, `abel` accepted addtional optional arguments:
+  ```
+  syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
+  ```
+  It is undecided whether these features should be restored eventually.
 
 ## abel_nf!
 Defined in: `Mathlib.Tactic.Abel.tacticAbel_nf!__`
 
-Simplification tactic for expressions in the language of abelian groups,
-which rewrites all group expressions into a normal form.
-* `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
-* `abel_nf (config := cfg)` allows for additional configuration:
-  * `red`: the reducibility setting (overridden by `!`)
-  * `recursive`: if true, `abel_nf` will also recurse into atoms
-* `abel_nf` works as both a tactic and a conv tactic.
-  In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
+Tactic for evaluating equations in the language of
+*additive*, commutative monoids and groups.
+
+`abel` and its variants work as both tactics and conv tactics.
+
+* `abel1` fails if the target is not an equality that is provable by the axioms of
+  commutative monoids/groups.
+* `abel_nf` rewrites all group expressions into a normal form.
+  * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
+  * `abel_nf (config := cfg)` allows for additional configuration:
+    * `red`: the reducibility setting (overridden by `!`)
+    * `recursive`: if true, `abel_nf` will also recurse into atoms
+* `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
+
+For example:
+
+```
+example [AddCommMonoid α] (a b : α) : a + (b + a) = a + a + b := by abel
+example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by abel
+```
+
+## Future work
+
+* In mathlib 3, `abel` accepted addtional optional arguments:
+  ```
+  syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
+  ```
+  It is undecided whether these features should be restored eventually.
 
 ## absurd
 Defined in: `Batteries.Tactic.tacticAbsurd_`
