@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `745dc1a50a9a1a4d8a07ff604cf0ef6c107b78a4`
+Mathlib version: `8c8ef3cd84a9471f1477a9ba4c3a5667a25e32a3`
 
 ## aesop
  Register a declaration as an Aesop rule.
@@ -370,6 +370,18 @@ Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
 ## elementwise
  
 
+## enat_to_nat_coe
+ A simp set for pushing coercions from `ℕ` to `ℕ∞` in `enat_to_nat`. 
+
+## enat_to_nat_coe_proc
+ simproc set for enat_to_nat_coe_proc
+
+## enat_to_nat_top
+ A simp set for simplifying expressions involving `⊤` in `enat_to_nat`. 
+
+## enat_to_nat_top_proc
+ simproc set for enat_to_nat_top_proc
+
 ## env_linter
  Use this declaration as a linting test in #lint
 
@@ -604,6 +616,12 @@ argument of the attribute, not the declaration name.
 
 ## partial_fixpoint_monotone
  monotonicity theorem
+
+## pnat_to_nat_coe
+ A simp set for the `pnat_to_nat` tactic. 
+
+## pnat_to_nat_coe_proc
+ simproc set for pnat_to_nat_coe_proc
 
 ## positivity
  adds a positivity extension
