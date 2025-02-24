@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `745dc1a50a9a1a4d8a07ff604cf0ef6c107b78a4`
+Mathlib version: `8c8ef3cd84a9471f1477a9ba4c3a5667a25e32a3`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1002,6 +1002,11 @@ See [Theorem Proving in Lean 4][tpil4] for more information.
 
 [tpil4]: https://lean-lang.org/theorem_proving_in_lean4/quantifiers_and_equality.html#calculational-proofs
 
+## calc?
+Defined in: `Lean.Elab.Tactic.tacticCalc?`
+
+Create a `calc` proof.
+
 ## cancel_denoms
 Defined in: `tacticCancel_denoms_`
 
@@ -1126,6 +1131,12 @@ example (h : p ∨ q) : q ∨ p := by
 ```
 
 Prefer `cases` or `rcases` when possible, because these tactics promote structured proofs.
+
+## cases_first_enat
+Defined in: `Mathlib.Tactic.ENatToNat.tacticCases_first_enat`
+
+Finds the first `ENat` in the context and applies the `cases` tactic to it.
+Then simplifies expressions involving `⊤` using the `enat_to_nat_top` simp set.
 
 ## cases_type
 Defined in: `Mathlib.Tactic.casesType`
@@ -2102,6 +2113,12 @@ hypothesis, and `tac1` and `tac2` are the subproofs. (It doesn't actually use
 nondependent `if`, since this wouldn't add anything to the context and hence would be
 useless for proving theorems. To actually insert an `ite` application use
 `refine if t then ?_ else ?_`.)
+
+## enat_to_nat
+Defined in: `Mathlib.Tactic.ENatToNat.tacticEnat_to_nat`
+
+`enat_to_nat` shifts all `ENat`s in the context to `Nat`, rewriting propositions about them.
+A typical use case is `enat_to_nat; omega`.
 
 ## eq_refl
 Defined in: `Lean.Parser.Tactic.eqRefl`
@@ -4418,6 +4435,17 @@ Options:
 * `set_option trace.plausible.instance true`: print the instances of `testable` being used to test
   the proposition
 * `set_option trace.plausible.success true`: print the tested samples that satisfy a property
+
+## pnat_positivity
+Defined in: `Mathlib.Tactic.PNatToNat.tacticPnat_positivity`
+
+For each `x : PNat` in the context, add the hypothesis `0 < (↑x : ℕ)`.
+
+## pnat_to_nat
+Defined in: `Mathlib.Tactic.PNatToNat.tacticPnat_to_nat`
+
+`pnat_to_nat` shifts all `PNat`s in the context to `Nat`, rewriting propositions about them.
+A typical use case is `pnat_to_nat; omega`.
 
 ## polyrith
 Defined in: `Mathlib.Tactic.Polyrith.«tacticPolyrithOnly[_]»`
