@@ -26,9 +26,11 @@ jobs:
 
       - name: Update Lean project
         id: update-lean-mathlib
-        uses: oliver-butterley/lean-update@v1-alpha
+        uses: Seasawher/lean-update@main
         with:
           on_update_fails: issue
+          on_update_succeeds: silent
+          what_to_update: lake-manifest.json
 
       - name: When update succeeds generate markdown file
         if: steps.update-lean-mathlib.outputs.result == 'update-success'
