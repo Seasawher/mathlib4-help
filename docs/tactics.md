@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `d6d30b237e057d99c7287ff67fbe7dfa629f17b1`
+Mathlib version: `9d6c1fa862e2b24cd4e3e0622b20d36474c3e931`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -4997,7 +4997,7 @@ The proof uses `rify` to lift both assumptions to `ℝ` before calling `linarith
 ```
 example {n : ℕ} {k : ℤ} (hn : 8 ≤ n) (hk : 2 * k ≤ n + 2) :
     (0 : ℝ) < n - k - 1 := by
-  rify at hn hk /- Now have hn : 8 ≤ (n : ℝ)   hk : 2 * (k : ℝ) ≤ (n : ℝ) + 2-/
+  rify at hn hk /- Now have hn : 8 ≤ (n : ℝ)   hk : 2 * (k : ℝ) ≤ (n : ℝ) + 2 -/
   linarith
 ```
 
