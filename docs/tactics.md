@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `86a0f0103e5c950ac0393a7afebd5f1399fc7f55`
+Mathlib version: `d6d30b237e057d99c7287ff67fbe7dfa629f17b1`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -4295,6 +4295,12 @@ Defined in: `Lean.Parser.Tactic.open`
 
 `open Foo in tacs` (the tactic) acts like `open Foo` at command level,
 but it opens a namespace only within the tactics `tacs`.
+
+## order
+Defined in: `Mathlib.Tactic.Order.tacticOrder`
+
+A finishing tactic for solving goals in arbitrary `Preorder`, `PartialOrder`,
+or `LinearOrder`.
 
 ## peel
 Defined in: `Mathlib.Tactic.Peel.peel`
