@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `832d99906b16bdb24eb7b3dfd0e860e1242b48ab`
+Mathlib version: `5f3b27514d67ee9370256708f99e3b54e5e86b5e`
 
 ## Elab.async
 type: `Bool`
@@ -87,6 +87,13 @@ type: `Bool`
 default: `true`
 
 (aesop) Only for use by Aesop developers. Uses static structuring instead of dynamic structuring if no metavariables appear in the proof.
+
+## aesop.dev.statefulForward
+type: `Bool`
+
+default: `true`
+
+(aesop) Only for use by Aesop developers. Enables the new stateful forward reasoning engine.
 
 ## aesop.smallErrorMessages
 type: `Bool`
@@ -3186,12 +3193,33 @@ default: `false`
 
 (aesop) Print a trace of the proof extraction procedure.
 
+## trace.aesop.forward
+type: `Bool`
+
+default: `false`
+
+(aesop) Trace forward reasoning.
+
+## trace.aesop.forward.debug
+type: `Bool`
+
+default: `false`
+
+(aesop) Trace more information about forward reasoning. Mostly intended for performance analysis.
+
 ## trace.aesop.proof
 type: `Bool`
 
 default: `false`
 
 (aesop) If the search is successful, print the produced proof term.
+
+## trace.aesop.rpinf
+type: `Bool`
+
+default: `false`
+
+(aesop) Trace RPINF calculations.
 
 ## trace.aesop.ruleSet
 type: `Bool`
