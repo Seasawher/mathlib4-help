@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `5f3b27514d67ee9370256708f99e3b54e5e86b5e`
+Mathlib version: `fb85dc4d9b1b2228454595ca243ef3314098035a`
 
 ## Elab.async
 type: `Bool`
@@ -1453,7 +1453,7 @@ type: `Bool`
 
 default: `false`
 
-For every appearance of the `X says Y` combinator, re-verify that running `X` produces `Try this: Y`.
+Verify the output
 
 ## server.reportDelayMs
 type: `Nat`
