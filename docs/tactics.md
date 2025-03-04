@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `45a9aacac4987b0ccd4ea26b0ac7599a9d36364a`
+Mathlib version: `630d51568cc9ab82eedaf9be40a96f002c74564d`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -734,6 +734,13 @@ This tactic, added to the `decreasing_trivial` toolbox, proves that `sizeOf a < 
 provided that `a ∈ arr` which is useful for well founded recursions over a nested inductive like
 `inductive T | mk : Array T → T`.
 
+## as_aux_lemma
+Defined in: `Lean.Parser.Tactic.as_aux_lemma`
+
+`as_aux_lemma => tac` does the same as `tac`, except that it wraps the resulting expression
+into an auxiliary lemma. In some cases, this significantly reduces the size of expressions
+because the proof term is not duplicated.
+
 ## assumption
 Defined in: `Lean.Parser.Tactic.assumption`
 
@@ -755,6 +762,11 @@ in more situations.
 
 Concretely, it runs `norm_cast` on the goal. For each local hypothesis `h`, it also
 normalizes `h` with `norm_cast` and tries to use that to close the goal.
+
+## attempt_all
+Defined in: `Lean.Parser.Tactic.attemptAll`
+
+Helper internal tactic for implementing the tactic `try?`.
 
 ## aux_group₁
 Defined in: `Mathlib.Tactic.Group.aux_group₁`
@@ -907,10 +919,51 @@ the `bv.ac_nf` option.
 
 Note: `bv_decide` uses `ofReduceBool` and thus trusts the correctness of the code generator.
 
+Note: include `import Std.Tactic.BVDecide`
+
+## bv_decide
+Defined in: `Lean.Parser.Tactic.bvDecideMacro`
+
+Close fixed-width `BitVec` and `Bool` goals by obtaining a proof from an external SAT solver and
+verifying it inside Lean. The solvable goals are currently limited to
+- the Lean equivalent of [`QF_BV`](https://smt-lib.org/logics-all.shtml#QF_BV)
+- automatically splitting up `structure`s that contain information about `BitVec` or `Bool`
+```lean
+example : ∀ (a b : BitVec 64), (a &&& b) + (a ^^^ b) = a ||| b := by
+  intros
+  bv_decide
+```
+
+If `bv_decide` encounters an unknown definition it will be treated like an unconstrained `BitVec`
+variable. Sometimes this enables solving goals despite not understanding the definition because
+the precise properties of the definition do not matter in the specific proof.
+
+If `bv_decide` fails to close a goal it provides a counter-example, containing assignments for all
+terms that were considered as variables.
+
+In order to avoid calling a SAT solver every time, the proof can be cached with `bv_decide?`.
+
+If solving your problem relies inherently on using associativity or commutativity, consider enabling
+the `bv.ac_nf` option.
+
+
+Note: `bv_decide` uses `ofReduceBool` and thus trusts the correctness of the code generator.
+
+Note: include `import Std.Tactic.BVDecide`
+
+## bv_decide?
+Defined in: `Lean.Parser.Tactic.bvTraceMacro`
+
+Suggest a proof script for a `bv_decide` tactic call. Useful for caching LRAT proofs.
+
+Note: include `import Std.Tactic.BVDecide`
+
 ## bv_decide?
 Defined in: `Lean.Parser.Tactic.bvTrace`
 
 Suggest a proof script for a `bv_decide` tactic call. Useful for caching LRAT proofs.
+
+Note: include `import Std.Tactic.BVDecide`
 
 ## bv_normalize
 Defined in: `Lean.Parser.Tactic.bvNormalize`
@@ -918,12 +971,22 @@ Defined in: `Lean.Parser.Tactic.bvNormalize`
 Run the normalization procedure of `bv_decide` only. Sometimes this is enough to solve basic
 `BitVec` goals already.
 
+Note: include `import Std.Tactic.BVDecide`
+
+## bv_normalize
+Defined in: `Lean.Parser.Tactic.bvNormalizeMacro`
+
+Run the normalization procedure of `bv_decide` only. Sometimes this is enough to solve basic
+`BitVec` goals already.
+
+Note: include `import Std.Tactic.BVDecide`
+
 ## bv_omega
 Defined in: `Lean.Parser.Tactic.tacticBv_omega`
 
 `bv_omega` is `omega` with an additional preprocessor that turns statements about `BitVec` into statements about `Nat`.
-Currently the preprocessor is implemented as `try simp only [bv_toNat] at *`.
-`bv_toNat` is a `@[simp]` attribute that you can (cautiously) add to more theorems.
+Currently the preprocessor is implemented as `try simp only [bitvec_to_nat] at *`.
+`bitvec_to_nat` is a `@[simp]` attribute that you can (cautiously) add to more theorems.
 
 ## by_cases
 Defined in: `«tacticBy_cases_:_»`
@@ -1319,19 +1382,6 @@ example (j : J) :
 
   simp
 ```
-
-## checkpoint
-Defined in: `Lean.Parser.Tactic.checkpoint`
-
-`checkpoint tac` acts the same as `tac`, but it caches the input and output of `tac`,
-and if the file is re-elaborated and the input matches, the tactic is not re-run and
-its effects are reapplied to the state. This is useful for improving responsiveness
-when working on a long tactic proof, by wrapping expensive tactics with `checkpoint`.
-
-See the `save` tactic, which may be more convenient to use.
-
-(TODO: do this automatically and transparently so that users don't have to use
-this combinator explicitly.)
 
 ## choose
 Defined in: `Mathlib.Tactic.Choose.choose`
@@ -2226,6 +2276,18 @@ example : ∃ x : Nat, ∃ y : Nat, x = y := by
   rfl
 ```
 
+## expose_names
+Defined in: `Lean.Parser.Tactic.exposeNames`
+
+`expose_names` renames all inaccessible variables with accessible names, making them available
+for reference in generated tactics. However, this renaming introduces machine-generated names
+that are not fully under user control. `expose_names` is primarily intended as a preamble for
+auto-generated end-game tactic scripts. It is also useful as an alternative to
+`set_option tactic.hygienic false`. If explicit control over renaming is needed in the
+middle of a tactic script, consider using structured tactic scripts with
+`match .. with`, `induction .. with`, or `intro` with explicit user-defined names,
+as well as tactics such as `next`, `case`, and `rename_i`.
+
 ## ext
 Defined in: `Lean.Elab.Tactic.Ext.ext`
 
@@ -2484,6 +2546,61 @@ Defined in: `RatFunc.tacticFrac_tac`
 
 Solve equations for `RatFunc K` by working in `FractionRing K[X]`.
 
+## fun_cases
+Defined in: `Lean.Parser.Tactic.funCases`
+
+The `fun_cass` tactic is a convenience wrapper of the `cases` tactic when using a functional
+cases principle.
+
+The tactic invocation
+```
+fun_cases f x ... y ...`
+```
+is equivalent to
+```
+cases y, ... using f.fun_cases x ...
+```
+where the arguments of `f` are used as arguments to `f.fun_cases` or targets of the case analysis, as
+appropriate.
+
+The form
+```
+fun_cases f
+```
+(with no arguments to `f`) searches the goal for an unique eligible application of `f`, and uses
+these arguments. An application of `f` is eligible if it is saturated and the arguments that will
+become targets are free variables.
+
+The form `fun_cases f x y with | case1 => tac₁ | case2 x' ih => tac₂` works like with `cases`.
+
+## fun_induction
+Defined in: `Lean.Parser.Tactic.funInduction`
+
+The `fun_induction` tactic is a convenience wrapper of the `induction` tactic when using a functional
+induction principle.
+
+The tactic invocation
+```
+fun_induction f x₁ ... xₙ y₁ ... yₘ
+```
+where `f` is a function defined by non-mutual structural or well-founded recursion, is equivalent to
+```
+induction y₁, ... yₘ using f.induct x₁ ... xₙ
+```
+where the arguments of `f` are used as arguments to `f.induct` or targets of the induction, as
+appropriate.
+
+The form
+```
+fun_induction f
+```
+(with no arguments to `f`) searches the goal for an unique eligible application of `f`, and uses
+these arguments. An application of `f` is eligible if it is saturated and the arguments that will
+become targets are free variables.
+
+The forms `fun_induction f x y generalizing z₁ ... zₙ` and
+`fun_induction f x y with | case1 => tac₁ | case2 x' ih => tac₂` work like with `induction.`
+
 ## fun_prop
 Defined in: `Mathlib.Meta.FunProp.funPropTacStx`
 
@@ -2618,7 +2735,7 @@ Defined in: `tacticGet_elem_tactic_trivial`
 by the notation `arr[i]` to prove any side conditions that arise when
 constructing the term (e.g. the index is in bounds of the array).
 The default behavior is to just try `trivial` (which handles the case
-where `i < arr.size` is in the context) and `simp_arith` and `omega`
+where `i < arr.size` is in the context) and `simp +arith` and `omega`
 (for doing linear arithmetic in the index).
 
 ## ghost_calc
@@ -5221,18 +5338,6 @@ Defined in: `Aesop.Frontend.tacticSaturate_____`
 Defined in: `Aesop.Frontend.tacticSaturate?_____`
 
 
-## save
-Defined in: `Lean.Parser.Tactic.save`
-
-`save` is defined to be the same as `skip`, but the elaborator has
-special handling for occurrences of `save` in tactic scripts and will transform
-`by tac1; save; tac2` to `by (checkpoint tac1); tac2`, meaning that the effect of `tac1`
-will be cached and replayed. This is useful for improving responsiveness
-when working on a long tactic proof, by using `save` after expensive tactics.
-
-(TODO: do this automatically and transparently so that users don't have to use
-this combinator explicitly.)
-
 ## says
 Defined in: `Mathlib.Tactic.Says.says`
 
@@ -5375,25 +5480,26 @@ This command can also be used in `simp_all` and `dsimp`.
 ## simp_all_arith
 Defined in: `Lean.Parser.Tactic.simpAllArith`
 
-`simp_all_arith` combines the effects of `simp_all` and `simp_arith`.
+`simp_all_arith` has been deprecated. It was a shorthand for `simp_all +arith +decide`.
+Note that `+decide` is not needed for reducing arithmetic terms since simprocs have been added to Lean.
 
 ## simp_all_arith!
-Defined in: `Lean.Parser.Tactic.simpAllArithAutoUnfold`
+Defined in: `Lean.Parser.Tactic.simpAllArithBang`
 
-`simp_all_arith!` combines the effects of `simp_all`, `simp_arith` and `simp!`.
+`simp_all_arith!` has been deprecated. It was a shorthand for `simp_all! +arith +decide`.
+Note that `+decide` is not needed for reducing arithmetic terms since simprocs have been added to Lean.
 
 ## simp_arith
 Defined in: `Lean.Parser.Tactic.simpArith`
 
-`simp_arith` is shorthand for `simp` with `arith := true` and `decide := true`.
-This enables the use of normalization by linear arithmetic.
+`simp_arith` has been deprecated. It was a shorthand for `simp +arith +decide`.
+Note that `+decide` is not needed for reducing arithmetic terms since simprocs have been added to Lean.
 
 ## simp_arith!
-Defined in: `Lean.Parser.Tactic.simpArithAutoUnfold`
+Defined in: `Lean.Parser.Tactic.simpArithBang`
 
-`simp_arith!` is shorthand for `simp_arith` with `autoUnfold := true`.
-This will rewrite with all equation lemmas, which can be used to
-partially evaluate many definitions.
+`simp_arith!` has been deprecated. It was a shorthand for `simp! +arith +decide`.
+Note that `+decide` is not needed for reducing arithmetic terms since simprocs have been added to Lean.
 
 ## simp_intro
 Defined in: `Mathlib.Tactic.«tacticSimp_intro_____..Only_»`
@@ -5768,6 +5874,13 @@ If `h :` is omitted, the name `this` is used.
 Defined in: `Mathlib.Tactic.tacticSuffices_`
 
 
+## suggest_premises
+Defined in: `Lean.Parser.Tactic.suggestPremises`
+
+`#suggest_premises` will suggest premises for the current goal, using the currently registered premise selector.
+
+The suggestions are printed in the order of their confidence, from highest to lowest.
+
 ## swap
 Defined in: `Batteries.Tactic.tacticSwap`
 
@@ -6016,6 +6129,11 @@ Defined in: `Lean.Parser.Tactic.tacticTry_`
 Defined in: `Lean.Parser.Tactic.tryTrace`
 
 
+## try_suggestions
+Defined in: `Lean.Parser.Tactic.tryResult`
+
+Helper internal tactic used to implement `evalSuggest` in `try?`
+
 ## try_this
 Defined in: `Mathlib.Tactic.tacticTry_this__`
 
@@ -6210,6 +6328,13 @@ A wrapper for `omega` which prefaces it with some quick and useful attempts
 Defined in: `MeasureTheory.tacticVolume_tac`
 
 The tactic `exact volume`, to be used in optional (`autoParam`) arguments.
+
+## wait_for_unblock_async
+Defined in: `Lean.Server.Test.Cancel.tacticWait_for_unblock_async`
+
+Spawns a `logSnapshotTask` that waits for `unblock` to be called, which is expected to happen in a
+subsequent document version that does not invalidate this tactic. Complains if cancellation token
+was set before unblocking, i.e. if the tactic was invalidated after all.
 
 ## whisker_simps
 Defined in: `Mathlib.Tactic.BicategoryCoherence.whisker_simps`
