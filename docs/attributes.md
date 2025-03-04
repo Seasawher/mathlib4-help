@@ -1,6 +1,9 @@
 # Attributes
 
-Mathlib version: `45a9aacac4987b0ccd4ea26b0ac7599a9d36364a`
+Mathlib version: `630d51568cc9ab82eedaf9be40a96f002c74564d`
+
+## Std.Internal.tree_tac
+ simp theorems used by internal DTreeMap lemmas
 
 ## aesop
  Register a declaration as an Aesop rule.
@@ -128,7 +131,13 @@ to true or `pp.notation` is set to false, it will not be called at all.
 ## attr_parser
  parser
 
+## bitvec_to_nat
+ simp lemmas converting `BitVec` goals to `Nat` goals
+
 ## boolToPropSimps
+ simp lemmas converting boolean expressions in terms of `decide` into propositional statements
+
+## bool_to_prop
  simp lemmas converting boolean expressions in terms of `decide` into propositional statements
 
 ## bound
@@ -838,6 +847,9 @@ constructor. You should not have any fields in `variable_alias` structures.
 
 Notice that `VectorSpace` is not a class; the `variable?` command allows non-classes with the
 `variable_alias` attribute to use instance binders.
+
+## wf_preprocess
+ simp lemma used in the preprocessing of well-founded recursive function definitions, in particular to add additional hypotheses to the context. Also see `wfParam`.
 
 ## widget_module
  Registers a widget module. Its type must implement Lean.Widget.ToModule.

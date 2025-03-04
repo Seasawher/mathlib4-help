@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `45a9aacac4987b0ccd4ea26b0ac7599a9d36364a`
+Mathlib version: `630d51568cc9ab82eedaf9be40a96f002c74564d`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -610,6 +610,12 @@ files.
 Another important difference is that the `minImports` *linter* starts counting imports from
 where the option is set to `true` *downwards*, whereas the `#min_imports` *command* looks at the
 imports needed from the command *upwards*.
+
+## \#info_trees
+Defined in: `Lean.infoTreesCmd`
+
+Format and print the info trees for a given command.
+This is mostly useful for debugging info trees.
 
 ## \#instances
 Defined in: `Batteries.Tactic.Instances.instancesCmd`
@@ -1395,6 +1401,10 @@ Defined in: `Mathlib.CountHeartbeats.commandCount_heartbeats`
 Defined in: `Aesop.Frontend.Parser.declareRuleSets`
 
 
+## declare_bitwise_int_theorems
+Defined in: `commandDeclare_bitwise_int_theorems__`
+
+
 ## declare_bitwise_uint_theorems
 Defined in: `commandDeclare_bitwise_uint_theorems__`
 
@@ -1405,6 +1415,10 @@ Defined in: `Lean.Elab.Tactic.commandConfigElab`
 
 ## declare_config_elab
 Defined in: `Lean.Elab.Tactic.configElab`
+
+
+## declare_int_theorems
+Defined in: `commandDeclare_int_theorems__`
 
 
 ## declare_simp_like_tactic
@@ -2046,6 +2060,45 @@ capture some details (like binders), so the following works without error.
 recall Nat.add_comm {n m : Nat} : n + m = m + n
 ```
 
+## recommended_spelling
+Defined in: `Lean.Parser.Command.recommended_spelling`
+
+Documents a recommended spelling for a notation in identifiers.
+
+Theorems should generally be systematically named after their statement, rather than creatively.
+Non-identifier notations should be referred to consistently by their recommended spelling.
+
+```
+/-- some additional info -/
+recommended_spelling "and" for "∧" in [And, «term_∧_»]
+```
+
+will do the following:
+* Adds the sentence "The recommended spelling of `∧` in identifiers is `and` (some additional info)."
+  to the end of the docstring for `And` and for `∧`. If the additional info is more than a single
+  line, it will be placed below the sentence instead of in parentheses.
+* Registers this information in an environment extension, so that it will later be possible to
+  generate a table with all recommended spellings.
+
+You can add attach the recommended spelling to as many declarations as you want. It is recommended
+to attach the recommended spelling to all relevant parsers as well as the declaration the parsers
+refer to (if such a declaration exists). Note that the `inherit_doc` attribute does *not* copy
+recommended spellings, so even though the parser for `∧` uses `@[inherit_doc And]`, we have to
+attach the recommended spelling to both `And` and `«term_∧_»`.
+
+The `syntax`, `macro`, `elab` and `notation` commands accept a `(name := parserName)` option to
+assign a name to the created parser so that you do not have to guess the automatically generated
+name. The `synax`, `macro` and `elab` commands can be hovered to see the name of the parser.
+
+For complex notations which enclose identifiers, the convention is to use example identifiers rather
+than other placeholders. This is an example following the convention:
+```lean
+recommended_spelling "singleton" for "[a]" in [List.cons, «term[_]»]
+```
+Using `[·]` or `[⋯]` or `[…]` instead of `[a]` would be against the convention. When attaching a
+recommended spelling to a notation whose docstring already has an example, try to reuse the
+identifier names chosen in the docstring for consistency.
+
 ## register_builtin_option
 Defined in: `Lean.Option.registerBuiltinOption`
 
@@ -2072,7 +2125,7 @@ Defined in: `Lean.Parser.Command.registerSimpAttr`
 ## register_tactic_tag
 Defined in: `Lean.Parser.Command.register_tactic_tag`
 
-Register a tactic tag, saving its user-facing name and docstring.
+Registers a tactic tag, saving its user-facing name and docstring.
 
 Tactic tags can be used by documentation generation tools to classify related tactics.
 
@@ -2147,6 +2200,13 @@ set_option pp.all true in
 ```
 Similarly, `set_option <id> <value> in` can also be used inside terms and tactics to set an option
 only in a single term or tactic.
+
+## set_premise_selector
+Defined in: `Lean.setPremiseSelectorCmd`
+
+Specify a premise selection engine.
+Note that Lean does not ship a default premise selection engine,
+so this is only useful in conjunction with a downstream package which provides one.
 
 ## show_panel_widgets
 Defined in: `Lean.Widget.showPanelWidgetsCmd`
@@ -2235,7 +2295,7 @@ Defined in: `Lean.Parser.Command.syntaxAbbrev`
 ## tactic_extension
 Defined in: `Lean.Parser.Command.tactic_extension`
 
-Add more documentation as an extension of the documentation for a given tactic.
+Adds more documentation as an extension of the documentation for a given tactic.
 
 The extended documentation is placed in the command's docstring. It is shown as part of a bulleted
 list, so it should be brief.
