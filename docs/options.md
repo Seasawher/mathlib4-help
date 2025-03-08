@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `708ea06c33feeced7befb2cc175aa048852df2ab`
+Mathlib version: `2186c5fba75a91e10b40599542e35a8875814283`
 
 ## Elab.async
 type: `Bool`
@@ -644,6 +644,13 @@ type: `Bool`
 default: `false`
 
 enable the `cdot` linter
+
+## linter.style.docString
+type: `Bool`
+
+default: `false`
+
+enable the style.docString linter
 
 ## linter.style.dollarSyntax
 type: `Bool`
@@ -1512,6 +1519,20 @@ type: `Bool`
 default: `true`
 
 when computing weak head normal form, use auxiliary definition created for functions defined by structural recursion
+
+## statesearch.queries
+type: `Nat`
+
+default: `6`
+
+Number of results requested from statesearch (default 6)
+
+## statesearch.revision
+type: `String`
+
+default: `"v4.18.0-rc1"`
+
+Revision of LeanStateSearch to use
 
 ## stderrAsMessages
 type: `Bool`

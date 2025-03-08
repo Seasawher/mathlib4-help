@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `708ea06c33feeced7befb2cc175aa048852df2ab`
+Mathlib version: `2186c5fba75a91e10b40599542e35a8875814283`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -123,6 +123,25 @@ example := #moogle "If a natural number n is less than m, then the successor of 
 
 example : 3 ≤ 5 := by
   #moogle "If a natural number n is less than m, then the successor of n is less than the successor of m."
+  sorry
+```
+
+## \#statesearch
+Defined in: `LeanSearchClient.statesearch_search_tactic`
+
+Search [LeanStateSearch](https://premise-search.com) from within Lean.
+Your current main goal is sent as query. The revision to search can be set
+using the `statesearch.revision` option. The number of results can be set
+using the `statesearch.queries` option.
+
+Hint: If you want to modify the query, you need to use the web interface.
+
+```lean
+set_option statesearch.queries 1
+set_option statesearch.revision "v4.16.0"
+
+example : 0 ≤ 1 := by
+  #statesearch
   sorry
 ```
 
