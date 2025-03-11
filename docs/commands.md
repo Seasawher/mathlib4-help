@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `bdbbf57aa7f5015f2a6629bbfacf5a40ca4e90dd`
+Mathlib version: `fa9f869943415790a14a0884fe3b9dd44643c780`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1660,15 +1660,15 @@ Some common uses:
   This will generate `foo_apply` lemmas for each declaration `foo`.
 * If you prefer `coe_foo` lemmas that state equalities between functions, use
   `initialize_simps_projections MulHom (toFun → coe, as_prefix coe)`
-  In this case you have to use `@[simps (config := .asFn)]` whenever you call `@[simps]`.
+  In this case you have to use `@[simps -fullyApplied]` whenever you call `@[simps]`.
 * You can also initialize to use both, in which case you have to choose which one to use by default,
   by using either of the following
   ```
     initialize_simps_projections MulHom (toFun → apply, toFun → coe, as_prefix coe, -coe)
     initialize_simps_projections MulHom (toFun → apply, toFun → coe, as_prefix coe, -apply)
   ```
-  In the first case, you can get both lemmas using `@[simps, simps (config := .asFn) coe]` and in
-  the second case you can get both lemmas using `@[simps (config := .asFn), simps apply]`.
+  In the first case, you can get both lemmas using `@[simps, simps -fullyApplied coe]` and in
+  the second case you can get both lemmas using `@[simps -fullyApplied, simps apply]`.
 * If you declare a new homomorphism-like structure (like `RelEmbedding`),
   then `initialize_simps_projections` will automatically find any `DFunLike` coercions
   that will be used as the default projection for the `toFun` field.
@@ -1733,15 +1733,15 @@ Some common uses:
   This will generate `foo_apply` lemmas for each declaration `foo`.
 * If you prefer `coe_foo` lemmas that state equalities between functions, use
   `initialize_simps_projections MulHom (toFun → coe, as_prefix coe)`
-  In this case you have to use `@[simps (config := .asFn)]` whenever you call `@[simps]`.
+  In this case you have to use `@[simps -fullyApplied]` whenever you call `@[simps]`.
 * You can also initialize to use both, in which case you have to choose which one to use by default,
   by using either of the following
   ```
     initialize_simps_projections MulHom (toFun → apply, toFun → coe, as_prefix coe, -coe)
     initialize_simps_projections MulHom (toFun → apply, toFun → coe, as_prefix coe, -apply)
   ```
-  In the first case, you can get both lemmas using `@[simps, simps (config := .asFn) coe]` and in
-  the second case you can get both lemmas using `@[simps (config := .asFn), simps apply]`.
+  In the first case, you can get both lemmas using `@[simps, simps -fullyApplied coe]` and in
+  the second case you can get both lemmas using `@[simps -fullyApplied, simps apply]`.
 * If you declare a new homomorphism-like structure (like `RelEmbedding`),
   then `initialize_simps_projections` will automatically find any `DFunLike` coercions
   that will be used as the default projection for the `toFun` field.

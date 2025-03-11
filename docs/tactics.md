@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `bdbbf57aa7f5015f2a6629bbfacf5a40ca4e90dd`
+Mathlib version: `fa9f869943415790a14a0884fe3b9dd44643c780`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -186,6 +186,7 @@ Tactic for evaluating equations in the language of
   * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
   * `abel_nf (config := cfg)` allows for additional configuration:
     * `red`: the reducibility setting (overridden by `!`)
+    * `zetaDelta`: if true, local let variables can be unfolded (overridden by `!`)
     * `recursive`: if true, `abel_nf` will also recurse into atoms
 * `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
 
@@ -218,6 +219,7 @@ Tactic for evaluating equations in the language of
   * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
   * `abel_nf (config := cfg)` allows for additional configuration:
     * `red`: the reducibility setting (overridden by `!`)
+    * `zetaDelta`: if true, local let variables can be unfolded (overridden by `!`)
     * `recursive`: if true, `abel_nf` will also recurse into atoms
 * `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
 
@@ -250,6 +252,7 @@ Tactic for evaluating equations in the language of
   * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
   * `abel_nf (config := cfg)` allows for additional configuration:
     * `red`: the reducibility setting (overridden by `!`)
+    * `zetaDelta`: if true, local let variables can be unfolded (overridden by `!`)
     * `recursive`: if true, `abel_nf` will also recurse into atoms
 * `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
 
@@ -282,6 +285,7 @@ Tactic for evaluating equations in the language of
   * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
   * `abel_nf (config := cfg)` allows for additional configuration:
     * `red`: the reducibility setting (overridden by `!`)
+    * `zetaDelta`: if true, local let variables can be unfolded (overridden by `!`)
     * `recursive`: if true, `abel_nf` will also recurse into atoms
 * `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
 
@@ -314,6 +318,7 @@ Tactic for evaluating equations in the language of
   * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
   * `abel_nf (config := cfg)` allows for additional configuration:
     * `red`: the reducibility setting (overridden by `!`)
+    * `zetaDelta`: if true, local let variables can be unfolded (overridden by `!`)
     * `recursive`: if true, `abel_nf` will also recurse into atoms
 * `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
 
@@ -346,6 +351,7 @@ Tactic for evaluating equations in the language of
   * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
   * `abel_nf (config := cfg)` allows for additional configuration:
     * `red`: the reducibility setting (overridden by `!`)
+    * `zetaDelta`: if true, local let variables can be unfolded (overridden by `!`)
     * `recursive`: if true, `abel_nf` will also recurse into atoms
 * `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
 
@@ -5243,6 +5249,7 @@ which rewrites all ring expressions into a normal form.
 * `ring_nf!` will use a more aggressive reducibility setting to identify atoms.
 * `ring_nf (config := cfg)` allows for additional configuration:
   * `red`: the reducibility setting (overridden by `!`)
+  * `zetaDelta`: if true, local let variables can be unfolded (overridden by `!`)
   * `recursive`: if true, `ring_nf` will also recurse into atoms
 * `ring_nf` works as both a tactic and a conv tactic.
   In tactic mode, `ring_nf at h` can be used to rewrite in a hypothesis.
@@ -5260,6 +5267,7 @@ which rewrites all ring expressions into a normal form.
 * `ring_nf!` will use a more aggressive reducibility setting to identify atoms.
 * `ring_nf (config := cfg)` allows for additional configuration:
   * `red`: the reducibility setting (overridden by `!`)
+  * `zetaDelta`: if true, local let variables can be unfolded (overridden by `!`)
   * `recursive`: if true, `ring_nf` will also recurse into atoms
 * `ring_nf` works as both a tactic and a conv tactic.
   In tactic mode, `ring_nf at h` can be used to rewrite in a hypothesis.
