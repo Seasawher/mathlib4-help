@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `f988aaba4e4789ad61689305a893e0495ecdff3b`
+Mathlib version: `aeb47dbc742b827ac76eeb129024164fb0a3eaf5`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -199,7 +199,7 @@ example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by
 
 ## Future work
 
-* In mathlib 3, `abel` accepted addtional optional arguments:
+* In mathlib 3, `abel` accepted additional optional arguments:
   ```
   syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
   ```
@@ -232,7 +232,7 @@ example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by
 
 ## Future work
 
-* In mathlib 3, `abel` accepted addtional optional arguments:
+* In mathlib 3, `abel` accepted additional optional arguments:
   ```
   syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
   ```
@@ -265,7 +265,7 @@ example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by
 
 ## Future work
 
-* In mathlib 3, `abel` accepted addtional optional arguments:
+* In mathlib 3, `abel` accepted additional optional arguments:
   ```
   syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
   ```
@@ -298,7 +298,7 @@ example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by
 
 ## Future work
 
-* In mathlib 3, `abel` accepted addtional optional arguments:
+* In mathlib 3, `abel` accepted additional optional arguments:
   ```
   syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
   ```
@@ -331,7 +331,7 @@ example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by
 
 ## Future work
 
-* In mathlib 3, `abel` accepted addtional optional arguments:
+* In mathlib 3, `abel` accepted additional optional arguments:
   ```
   syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
   ```
@@ -364,7 +364,7 @@ example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by
 
 ## Future work
 
-* In mathlib 3, `abel` accepted addtional optional arguments:
+* In mathlib 3, `abel` accepted additional optional arguments:
   ```
   syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
   ```
