@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `aeb47dbc742b827ac76eeb129024164fb0a3eaf5`
+Mathlib version: `96f29be0737b9f7d8c6bf45d2fc555098fdfd743`
 
 ## Elab.async
 type: `Bool`
@@ -617,13 +617,6 @@ default: `false`
 
 enable the ppRoundtrip linter
 
-## linter.refine
-type: `Bool`
-
-default: `false`
-
-enable the refine linter
-
 ## linter.simpsNoConstructor
 type: `Bool`
 
@@ -637,6 +630,13 @@ type: `Bool`
 default: `true`
 
 Linter to check that no unused custom declarations are declared for simps
+
+## linter.style.cases
+type: `Bool`
+
+default: `false`
+
+enable the cases linter
 
 ## linter.style.cdot
 type: `Bool`
@@ -714,6 +714,13 @@ type: `Bool`
 default: `true`
 
 enable the `nameCheck` linter
+
+## linter.style.refine
+type: `Bool`
+
+default: `false`
+
+enable the refine linter
 
 ## linter.style.setOption
 type: `Bool`
