@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `96f29be0737b9f7d8c6bf45d2fc555098fdfd743`
+Mathlib version: `67019e0bbfaccd3af41e6f73024551c6e80ad2d4`
 
 ## Elab.async
 type: `Bool`
@@ -714,6 +714,13 @@ type: `Bool`
 default: `true`
 
 enable the `nameCheck` linter
+
+## linter.style.openClassical
+type: `Bool`
+
+default: `false`
+
+enable the openClassical linter
 
 ## linter.style.refine
 type: `Bool`
