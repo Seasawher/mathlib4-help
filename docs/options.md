@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `67019e0bbfaccd3af41e6f73024551c6e80ad2d4`
+Mathlib version: `e4cf8333e0be712392567e370eead57e05d636a7`
 
 ## Elab.async
 type: `Bool`
@@ -459,6 +459,13 @@ type: `Nat`
 default: `6`
 
 Number of results requested from leansearch (default 6)
+
+## leansearchclient.backend
+type: `String`
+
+default: `"leansearch"`
+
+The backend to use by default, one of leansearch and moogle
 
 ## leansearchclient.useragent
 type: `String`
