@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `67019e0bbfaccd3af41e6f73024551c6e80ad2d4`
+Mathlib version: `e4cf8333e0be712392567e370eead57e05d636a7`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -125,6 +125,25 @@ example : 3 ≤ 5 := by
   #moogle "If a natural number n is less than m, then the successor of n is less than the successor of m."
   sorry
 ```
+
+## \#search
+Defined in: `LeanSearchClient.search_tactic`
+
+Search either [Moogle](https://www.moogle.ai/api/search) or [LeanSearch]((https://leansearch.net/)) from within Lean, depending on the option `leansearchclient.backend`.
+Queries should be a string that ends with a `.` or `?`. This works as a command, as a term
+and as a tactic as in the following examples. In tactic mode, only valid tactics are displayed.
+
+```lean
+#search "If a natural number n is less than m, then the successor of n is less than the successor of m."
+
+example := #search "If a natural number n is less than m, then the successor of n is less than the successor of m."
+
+example : 3 ≤ 5 := by
+  #search "If a natural number n is less than m, then the successor of n is less than the successor of m."
+  sorry
+
+In tactic mode, if the query string is not supplied, then [LeanStateSearch](https://premise-search.com) is queried based on the goal state.
+```lean
 
 ## \#statesearch
 Defined in: `LeanSearchClient.statesearch_search_tactic`
