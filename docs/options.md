@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `eab25444d0e0876a8a80fede02da98a761266d48`
+Mathlib version: `524e5aa6c2fdbff81fe1020a6da38a1ba57a11b1`
 
 ## Elab.async
 type: `Bool`
@@ -474,13 +474,6 @@ default: `"LeanSearchClient"`
 
 Username for leansearchclient
 
-## linter.admit
-type: `Bool`
-
-default: `false`
-
-enable the admit linter
-
 ## linter.all
 type: `Bool`
 
@@ -637,6 +630,13 @@ type: `Bool`
 default: `true`
 
 Linter to check that no unused custom declarations are declared for simps
+
+## linter.style.admit
+type: `Bool`
+
+default: `false`
+
+enable the admit linter
 
 ## linter.style.cases
 type: `Bool`
