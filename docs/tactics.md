@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `8c33f6b5120155a722784c30f123cdaab093f862`
+Mathlib version: `9f53c928d03d4afa040783e3948168cf8ef1d6dc`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2756,6 +2756,7 @@ with `generalize_proofs (config := { maxDepth := 0 })` turning this feature off.
 
 For example:
 ```lean
+def List.nthLe {α} (l : List α) (n : ℕ) (_h : n < l.length) : α := sorry
 example : List.nthLe [1, 2] 1 (by simp) = 2 := by
   -- ⊢ [1, 2].nthLe 1 ⋯ = 2
   generalize_proofs h
