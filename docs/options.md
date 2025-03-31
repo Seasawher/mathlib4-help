@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `e45f6a2887d7a4caabfa74acc7488afc1cba02b1`
+Mathlib version: `c9db85e26fb252d864f62eed67e475883168b267`
 
 ## Elab.async
 type: `Bool`
@@ -508,6 +508,13 @@ type: `Bool`
 default: `true`
 
 if true, generate deprecation warnings
+
+## linter.directoryDependency
+type: `Bool`
+
+default: `true`
+
+enable the directoryDependency linter
 
 ## linter.docPrime
 type: `Bool`
