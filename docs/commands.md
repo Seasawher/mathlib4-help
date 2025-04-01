@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `c9db85e26fb252d864f62eed67e475883168b267`
+Mathlib version: `f926055d78ba4e699f1b0ad2faca8c9947f6abf1`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -120,7 +120,7 @@ has granularity 1000 times finer that the limits set by `set_option maxHeartbeat
 As this is intended as a user command, we divide by 1000.
 
 The optional `approximately` keyword rounds down the heartbeats to the nearest thousand.
-This is helps make the tests more stable to small changes in heartbeats.
+This helps make the tests more stable to small changes in heartbeats.
 To use this functionality, use `#count_heartbeats approximately in cmd`.
 
 ## \#count_heartbeats
@@ -1591,7 +1591,7 @@ Defined in: `Lean.Parser.«command_Grind_propagator___(_):=_»`
 A user-defined propagator for the `grind` tactic.
 
 ## guard_min_heartbeats
-Defined in: `Mathlib.CountHeartbeats.commandGuard_min_heartbeats_In__`
+Defined in: `Mathlib.CountHeartbeats.commandGuard_min_heartbeatsApproximately_In__`
 
 Guard the minimal number of heartbeats used in the enclosed command.
 
@@ -1602,6 +1602,10 @@ an error message will be generated if a minimization step makes the slow behavio
 The default number of minimal heartbeats is the value of `maxHeartbeats` (typically 200000).
 Alternatively, you can specify a number of heartbeats to guard against,
 using the syntax `guard_min_heartbeats n in cmd`.
+
+The optional `approximately` keyword rounds down the heartbeats to the nearest thousand.
+This helps make the tests more stable to small changes in heartbeats.
+To use this functionality, use `guard_min_heartbeats approximately (n)? in cmd`.
 
 ## import
 Defined in: `Lean.Parser.Command.import`
