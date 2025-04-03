@@ -26,7 +26,7 @@ jobs:
 
       - name: Update Lean project
         id: update-lean-mathlib
-        uses: leanprover-community/lean-update@main
+        uses: leanprover-community/lean-update@develop # 開発バージョンを使用する
         with:
           on_update_succeeds: silent
 
