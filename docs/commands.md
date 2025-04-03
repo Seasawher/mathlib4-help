@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `f926055d78ba4e699f1b0ad2faca8c9947f6abf1`
+Mathlib version: `6ff1e76186c48fab2130020e197eb9cf0e53112e`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1240,11 +1240,6 @@ The type of `<widget>` must implement `Widget.ToModule`,
 and the type of `<props>` must implement `Server.RpcEncodable`.
 In particular, `<props> : Json` works.
 
-## %reset_grind_attrs
-Defined in: `Lean.Parser.resetGrindAttrs`
-
-Reset all `grind` attributes. This command is intended for testing purposes only and should not be used in applications.
-
 ## /-!
 Defined in: `Lean.Parser.Command.moduleDoc`
 
@@ -1442,6 +1437,10 @@ Defined in: `commandDeclare_int_theorems__`
 
 ## declare_simp_like_tactic
 Defined in: `Lean.Parser.Tactic.declareSimpLikeTactic`
+
+
+## declare_sint_simprocs
+Defined in: `commandDeclare_sint_simprocs_`
 
 
 ## declare_syntax_cat
@@ -2151,6 +2150,11 @@ Defined in: `Lean.Parser.Command.register_tactic_tag`
 Registers a tactic tag, saving its user-facing name and docstring.
 
 Tactic tags can be used by documentation generation tools to classify related tactics.
+
+## reset_grind_attrs%
+Defined in: `Lean.Parser.resetGrindAttrs`
+
+Reset all `grind` attributes. This command is intended for testing purposes only and should not be used in applications.
 
 ## run_cmd
 Defined in: `Lean.runCmd`

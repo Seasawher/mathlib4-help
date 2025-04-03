@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `f926055d78ba4e699f1b0ad2faca8c9947f6abf1`
+Mathlib version: `6ff1e76186c48fab2130020e197eb9cf0e53112e`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -5145,6 +5145,22 @@ Defined in: `Lean.Parser.Tactic.tacticRfl'`
 
 `rfl'` is similar to `rfl`, but disables smart unfolding and unfolds all kinds of definitions,
 theorems included (relevant for declarations defined by well-founded recursion).
+
+## rfl_cat
+Defined in: `CategoryTheory.rfl_cat`
+
+`rfl_cat` is a macro for `intros; rfl` which is attempted in `aesop_cat` before
+doing the more expensive `aesop` tactic.
+
+This gives a speedup because `simp` (called by `aesop`) is too slow.
+There is a fix for this slowness in https://github.com/leanprover/lean4/pull/7428.
+So, when that is resolved, the performance impact of `rfl_cat` should be measured again.
+
+Note on `refine id ?_`:
+In some cases it is important that the type of the proof matches the expected type exactly.
+e.g. if the goal is `2 = 1 + 1`, the `rfl` tactic will give a proof of type `2 = 2`.
+Starting a proof with `refine id ?_` is a trick to make sure that the proof has exactly
+the expected type, in this case `2 = 1 + 1`.
 
 ## rify
 Defined in: `Mathlib.Tactic.Rify.rify`
