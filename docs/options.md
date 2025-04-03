@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `f926055d78ba4e699f1b0ad2faca8c9947f6abf1`
+Mathlib version: `6ff1e76186c48fab2130020e197eb9cf0e53112e`
 
 ## Elab.async
 type: `Bool`
@@ -9,7 +9,7 @@ default: `false`
 
 perform elaboration using multiple threads where possible
 
-This option defaults to `false` but (when not explicitly set) is overridden to `true` in the language server. Metaprogramming users driving elaboration directly via e.g. `Lean.Elab.Command.elabCommandTopLevel` can opt into asynchronous elaboration by setting this option but then are responsible for processing messages and other data not only in the resulting command state but also from async tasks in `Lean.Command.Context.snap?` and `Lean.Command.State.snapshotTasks`.
+This option defaults to `false` but (when not explicitly set) is overridden to `true` in the Lean language server and cmdline. Metaprogramming users driving elaboration directly via e.g. `Lean.Elab.Command.elabCommandTopLevel` can opt into asynchronous elaboration by setting this option but then are responsible for processing messages and other data not only in the resulting command state but also from async tasks in `Lean.Command.Context.snap?` and `Lean.Command.State.snapshotTasks`.
 
 ## Mathlib.Tactic.TFAE.useDeprecated
 type: `Bool`
@@ -128,7 +128,7 @@ type: `Bool`
 
 default: `true`
 
-insert monadic lifts (i.e., `liftM` and coercions) when needed
+Insert monadic lifts (i.e., `liftM` and coercions) when needed.
 
 ## backward.eqns.deepRecursiveSplit
 type: `Bool`
@@ -249,6 +249,13 @@ default: `false`
 
 replace `by ..` blocks with `sorry` IF the expected type is a proposition
 
+## debug.definition.wf.replaceRecApps
+type: `Bool`
+
+default: `false`
+
+Type check every step of the well-founded definition translation
+
 ## debug.moduleNameAtTimeout
 type: `Bool`
 
@@ -277,6 +284,15 @@ type: `Bool`
 default: `false`
 
 skip kernel type checker. WARNING: setting this option to true may compromise soundness because your proofs will not be checked by the Lean kernel
+
+## debugAssertions
+type: `Bool`
+
+default: `false`
+
+enable `debug_assert!` statements
+
+Defaults to `false` unless the Lake `buildType` is `debug`.
 
 ## deprecated.oldSectionVars
 type: `Bool`
@@ -1397,6 +1413,13 @@ default: `true`
 
 (pretty printer) display structure instances using the '{ fieldName := fieldValue, ... }' notation, or using '⟨fieldValue, ... ⟩' if structure is tagged with the '@[pp_using_anonymous_constructor]' attribute
 
+## pp.structureInstances.defaults
+type: `Bool`
+
+default: `false`
+
+(pretty printer) if false, omit structure instance fields that equal their default values
+
 ## pp.structureInstances.flatten
 type: `Bool`
 
@@ -1558,7 +1581,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.18.0"`
+default: `"v4.19.0-rc2"`
 
 Revision of LeanStateSearch to use
 
@@ -2164,6 +2187,20 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Elab.definition.fixedParams
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Elab.definition.header
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Elab.definition.mkClosure
 type: `Bool`
 
@@ -2207,6 +2244,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Elab.definition.unfoldEqn
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Elab.definition.value
 type: `Bool`
 
 default: `false`
@@ -3900,7 +3944,35 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.debug.cutsat.assign
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.debug.cutsat.backtrack
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.cutsat.conflict
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.cutsat.cooper
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.cutsat.cooper.diseq
 type: `Bool`
 
 default: `false`
@@ -3921,7 +3993,63 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.debug.cutsat.dvd.le
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.debug.cutsat.eq
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.cutsat.getBestLower
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.cutsat.internalize
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.cutsat.nat
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.cutsat.proof
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.cutsat.search
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.cutsat.subst
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.ematch
 type: `Bool`
 
 default: `false`
@@ -3977,6 +4105,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.debug.mbtc
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.debug.offset
 type: `Bool`
 
@@ -4013,6 +4148,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.debug.proofs
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.proveEq
 type: `Bool`
 
 default: `false`
@@ -4089,6 +4231,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.mbtc
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.offset
 type: `Bool`
 
@@ -4132,6 +4281,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.offset.internalize.term
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.offset.model
 type: `Bool`
 
 default: `false`
