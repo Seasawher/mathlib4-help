@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `b8b5d1956db722d866bcaa9ed0cd848a3e6922ff`
+Mathlib version: `1a43393f0de1e45dcf8617046712b8dbbf612922`
 
 ## Elab.async
 type: `Bool`
@@ -723,6 +723,13 @@ type: `Bool`
 default: `false`
 
 enable the longLine linter
+
+## linter.style.maxHeartbeats
+type: `Bool`
+
+default: `false`
+
+enable the maxHeartbeats linter
 
 ## linter.style.missingEnd
 type: `Bool`
