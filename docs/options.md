@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `a05b6593487f76c10eece4eabb028d0ce09f6dd3`
+Mathlib version: `360bf0d2fd4b3f63857df76bdd9b2d0929e5ebe5`
 
 ## Elab.async
 type: `Bool`
@@ -524,6 +524,13 @@ type: `Bool`
 default: `true`
 
 if true, generate deprecation warnings
+
+## linter.deprecated.module
+type: `Bool`
+
+default: `true`
+
+enable the `deprecated.module` linter
 
 ## linter.directoryDependency
 type: `Bool`

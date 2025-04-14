@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `a05b6593487f76c10eece4eabb028d0ce09f6dd3`
+Mathlib version: `360bf0d2fd4b3f63857df76bdd9b2d0929e5ebe5`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1094,6 +1094,20 @@ example : 3 ≤ 5 := by
 In tactic mode, if the query string is not supplied, then [LeanStateSearch](https://premise-search.com) is queried based on the goal state.
 ```lean
 
+## \#show_deprecated_modules
+Defined in: `Mathlib.Linter.«command#show_deprecated_modules»`
+
+A utility command to show the current entries of the `deprecatedModuleExt` in the format:
+```lean
+Deprecated modules
+
+'MathlibTest.DeprecatedModule' deprecates to
+#[Mathlib.Tactic.Linter.DocPrime, Mathlib.Tactic.Linter.DocString]
+with message 'We can also give more details about the deprecation'
+
+...
+```
+
 ## \#show_kind
 Defined in: `Mathlib.Linter.UnusedTactic.«command#show_kind_»`
 
@@ -1489,6 +1503,14 @@ declarations besides itself, the alphabetical sorting is irrelevant.
 Technically, the command also take an optional `String` argument to fill in the date in `since`.
 However, its use is mostly intended for debugging purposes, where having a variable date would
 make tests time-dependent.
+
+## deprecated_module
+Defined in: `Mathlib.Linter.deprecated_modules`
+
+`deprecated_module "Optional string" (since "yyyy-mm-dd")` deprecates the current module `A`
+in favour of its direct imports.
+This means that any file that directly imports `A` will get a notification on the `import A` line
+suggesting to instead import the *direct imports* of `A`.
 
 ## deriving
 Defined in: `Lean.Parser.Command.deriving`
