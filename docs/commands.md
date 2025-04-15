@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `360bf0d2fd4b3f63857df76bdd9b2d0929e5ebe5`
+Mathlib version: `e7b8f4e11d911bd1ac37d7735441c1ae2ad41004`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1507,7 +1507,7 @@ make tests time-dependent.
 ## deprecated_module
 Defined in: `Mathlib.Linter.deprecated_modules`
 
-`deprecated_module "Optional string" (since "yyyy-mm-dd")` deprecates the current module `A`
+`deprecated_module "Optional string" (since := "yyyy-mm-dd")` deprecates the current module `A`
 in favour of its direct imports.
 This means that any file that directly imports `A` will get a notification on the `import A` line
 suggesting to instead import the *direct imports* of `A`.
