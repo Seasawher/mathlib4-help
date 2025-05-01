@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `0bdb916d137894381630770752b11ab053dec68f`
+Mathlib version: `95eff173b853f2ce190e3c085d7bdcf349be71f6`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -861,7 +861,7 @@ Use `pure_coherence` instead, which is a frontend to this one.
 ## bicategory_coherence
 Defined in: `Mathlib.Tactic.Bicategory.tacticBicategory_coherence`
 
-Close the goal of the form `η = θ`, where `η` and `θ` are 2-isomorphisms made up only of
+Close the goal of the form `η.hom = θ.hom`, where `η` and `θ` are 2-isomorphisms made up only of
 associators, unitors, and identities.
 ```lean
 example {B : Type} [Bicategory B] {a : B} :
@@ -5156,11 +5156,15 @@ This gives a speedup because `simp` (called by `aesop`) is too slow.
 There is a fix for this slowness in https://github.com/leanprover/lean4/pull/7428.
 So, when that is resolved, the performance impact of `rfl_cat` should be measured again.
 
-Note on `refine id ?_`:
-In some cases it is important that the type of the proof matches the expected type exactly.
-e.g. if the goal is `2 = 1 + 1`, the `rfl` tactic will give a proof of type `2 = 2`.
-Starting a proof with `refine id ?_` is a trick to make sure that the proof has exactly
-the expected type, in this case `2 = 1 + 1`.
+Implementation notes:
+* `refine id ?_`:
+  In some cases it is important that the type of the proof matches the expected type exactly.
+  e.g. if the goal is `2 = 1 + 1`, the `rfl` tactic will give a proof of type `2 = 2`.
+  Starting a proof with `refine id ?_` is a trick to make sure that the proof has exactly
+  the expected type, in this case `2 = 1 + 1`. See also https://leanprover.zulipchat.com/#narrow/channel/270676-lean4/topic/changing.20a.20proof.20can.20break.20a.20later.20proof
+* `apply_rfl`:
+  `rfl` is a macro that attempts both `eq_refl` and `apply_rfl`. Since `apply_rfl`
+  subsumes `eq_refl`, we can use `apply_rfl` instead. This fails twice as fast as `rfl`.
 
 ## rify
 Defined in: `Mathlib.Tactic.Rify.rify`
