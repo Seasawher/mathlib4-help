@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `3703f458daf273e17895878b7d0ab1b7401af878`
+Mathlib version: `f4e4c9140913e6e2812c8fc7d7c5748e44e98e53`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -600,7 +600,7 @@ Defined in: `Lean.Parser.Tactic.tacticAnd_intros`
 Defined in: `Lean.Parser.Tactic.anyGoals`
 
 `any_goals tac` applies the tactic `tac` to every goal,
-concating the resulting goals for successful tactic applications.
+concatenating the resulting goals for successful tactic applications.
 If the tactic fails on all of the goals, the entire `any_goals` tactic fails.
 
 This tactic is like `all_goals try tac` except that it fails if none of the applications of `tac` succeeds.
@@ -2381,22 +2381,18 @@ The tactic responds to pretty printing options.
 For example, `set_option pp.all true in extract_goal` gives the `pp.all` form.
 
 ## extract_lets
-Defined in: `Mathlib.extractLets`
+Defined in: `Lean.Parser.Tactic.extractLets`
 
-The `extract_lets at h` tactic takes a local hypothesis of the form `h : let x := v; b`
-and introduces a new local definition `x := v` while changing `h` to be `h : b`.  It can be thought
-of as being a `cases` tactic for `let` expressions. It can also be thought of as being like
-`intros at h` for `let` expressions.
+Extracts `let` and `let_fun` expressions from within the target or a local hypothesis,
+introducing new local definitions.
 
-For example, if `h : let x := 1; x = x`, then `extract_lets x at h` introduces `x : Nat := 1` and
-changes `h` to `h : x = x`.
+- `extract_lets` extracts all the lets from the target.
+- `extract_lets x y z` extracts all the lets from the target and uses `x`, `y`, and `z` for the first names.
+  Using `_` for a name leaves it unnamed.
+- `extract_lets x y z at h` operates on the local hypothesis `h` instead of the target.
 
-Just like `intros`, the `extract_lets` tactic either takes a list of names, in which case
-that specifies the number of `let` bindings that must be extracted, or it takes no names, in which
-case all the `let` bindings are extracted.
-
-The tactic `extract_lets` (without `at`) or `extract_lets at h ⊢` acts as a weaker
-form of `intros` on the goal that only introduces obvious `let`s.
+For example, given a local hypotheses if the form `h : let x := v; b x`, then `extract_lets z at h`
+introduces a new local definition `z := v` and changes `h` to be `h : b z`.
 
 ## fail
 Defined in: `Lean.Parser.Tactic.fail`
@@ -2593,7 +2589,7 @@ Solve equations for `RatFunc K` by working in `FractionRing K[X]`.
 ## fun_cases
 Defined in: `Lean.Parser.Tactic.funCases`
 
-The `fun_cass` tactic is a convenience wrapper of the `cases` tactic when using a functional
+The `fun_cases` tactic is a convenience wrapper of the `cases` tactic when using a functional
 cases principle.
 
 The tactic invocation
@@ -3405,21 +3401,22 @@ propositions concerning `z` will still be over `ℤ`. `zify` changes proposition
 subtype) to propositions about `ℤ` (the supertype), without changing the type of any variable.
 
 ## lift_lets
-Defined in: `Mathlib.Tactic.lift_lets`
+Defined in: `Lean.Parser.Tactic.liftLets`
 
-Lift all the `let` bindings in the type of an expression as far out as possible.
+Lifts `let` and `let_fun` expressions within a term as far out as possible.
+It is like `extract_lets +lift`, but the top-level lets at the end of the procedure
+are not extracted as local hypotheses.
 
-When applied to the main goal, this gives one the ability to `intro` embedded `let` expressions.
+- `lift_lets` lifts let expressions in the target.
+- `lift_lets at h` lifts let expressions at the given local hypothesis.
+
 For example,
 ```lean
 example : (let x := 1; x) = 1 := by
   lift_lets
   -- ⊢ let x := 1; x = 1
-  intro x
-  sorry
+  ...
 ```
-
-During the lifting process, let bindings are merged if they have the same type and value.
 
 ## liftable_prefixes
 Defined in: `Mathlib.Tactic.Coherence.liftable_prefixes`
@@ -5445,7 +5442,8 @@ performs the unification, and replaces the target with the unified version of `t
 Defined in: `Lean.Parser.Tactic.showTerm`
 
 `show_term tac` runs `tac`, then prints the generated term in the form
-"exact X Y Z" or "refine X ?_ Z" if there are remaining subgoals.
+"exact X Y Z" or "refine X ?_ Z" (prefixed by `expose_names` if necessary)
+if there are remaining subgoals.
 
 (For some tactics, the printed term will not be human readable.)
 
