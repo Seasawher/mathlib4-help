@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `3703f458daf273e17895878b7d0ab1b7401af878`
+Mathlib version: `f4e4c9140913e6e2812c8fc7d7c5748e44e98e53`
 
 ## Elab.async
 type: `Bool`
@@ -10,6 +10,15 @@ default: `false`
 perform elaboration using multiple threads where possible
 
 This option defaults to `false` but (when not explicitly set) is overridden to `true` in the Lean language server and cmdline. Metaprogramming users driving elaboration directly via e.g. `Lean.Elab.Command.elabCommandTopLevel` can opt into asynchronous elaboration by setting this option but then are responsible for processing messages and other data not only in the resulting command state but also from async tasks in `Lean.Command.Context.snap?` and `Lean.Command.State.snapshotTasks`.
+
+## Elab.inServer
+type: `Bool`
+
+default: `false`
+
+true if elaboration is being run inside the Lean language server
+
+This option is set by the file worker and should not be modified otherwise.
 
 ## Mathlib.Tactic.TFAE.useDeprecated
 type: `Bool`
@@ -285,6 +294,13 @@ default: `false`
 
 skip kernel type checker. WARNING: setting this option to true may compromise soundness because your proofs will not be checked by the Lean kernel
 
+## debug.terminalTacticsAsSorry
+type: `Bool`
+
+default: `false`
+
+when enabled, terminal tactics such as `grind` and `omega` are replaced with `sorry`. Useful for debugging and fixing bootstrapping issues
+
 ## debugAssertions
 type: `Bool`
 
@@ -342,6 +358,13 @@ type: `Bool`
 default: `false`
 
 ('#eval' command) enables pretty printing the type of the result
+
+## experimental.module
+type: `Bool`
+
+default: `false`
+
+Allow use of module system (experimental)
 
 ## exponentiation.threshold
 type: `Nat`
@@ -787,6 +810,13 @@ default: `true`
 
 enable the 'suspicious unexpander patterns' linter
 
+## linter.tactic.unusedName
+type: `Bool`
+
+default: `true`
+
+enable the 'unused name' tactic linter
+
 ## linter.toAdditiveExisting
 type: `Bool`
 
@@ -1132,6 +1162,13 @@ type: `Bool`
 default: `true`
 
 (pretty printer) when `pp.fieldNotation` is true, enable using generalized field notation when the argument for field notation is the first explicit argument
+
+## pp.foralls
+type: `Bool`
+
+default: `true`
+
+(pretty printer) display pi types that are propositions using `∀` notation rather than with dependent arrows
 
 ## pp.fullNames
 type: `Bool`
@@ -1595,7 +1632,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.19.0"`
+default: `"v4.20.0-rc2"`
 
 Revision of LeanStateSearch to use
 
@@ -1761,6 +1798,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Compiler.lambdaLifting
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Compiler.probe
 type: `Bool`
 
 default: `false`
@@ -3755,161 +3799,21 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.grind.cutsat.assert.dvd
+## trace.grind.cutsat.assert.store
 type: `Bool`
 
 default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.grind.cutsat.assert.le
+## trace.grind.cutsat.assert.trivial
 type: `Bool`
 
 default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.grind.cutsat.assign
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.conflict
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.diseq
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.diseq.trivial
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.dvd
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.dvd.solve
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.dvd.solve.combine
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.dvd.solve.elim
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.dvd.trivial
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.dvd.unsat
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.dvd.update
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.eq
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.eq.trivial
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.eq.unsat
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.internalize
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.internalize.term
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.le
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.le.lower
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.le.trivial
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.le.unsat
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.cutsat.le.upper
+## trace.grind.cutsat.assert.unsat
 type: `Bool`
 
 default: `false`
@@ -3923,14 +3827,14 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.grind.cutsat.subst
+## trace.grind.debug
 type: `Bool`
 
 default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.grind.debug
+## trace.grind.debug.appMap
 type: `Bool`
 
 default: `false`
@@ -3958,76 +3862,6 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.grind.debug.cutsat.assign
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.debug.cutsat.backtrack
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.debug.cutsat.conflict
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.debug.cutsat.cooper
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.debug.cutsat.cooper.diseq
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.debug.cutsat.diseq
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.debug.cutsat.diseq.split
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.debug.cutsat.dvd.le
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.debug.cutsat.eq
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.debug.cutsat.getBestLower
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
 ## trace.grind.debug.cutsat.internalize
 type: `Bool`
 
@@ -4035,21 +3869,35 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.grind.debug.cutsat.nat
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.debug.cutsat.proof
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
 ## trace.grind.debug.cutsat.search
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.cutsat.search.assign
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.cutsat.search.backtrack
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.cutsat.search.conflict
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.cutsat.search.split
 type: `Bool`
 
 default: `false`
@@ -4070,7 +3918,21 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.debug.ematch.activate
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.debug.ematch.pattern
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.ext
 type: `Bool`
 
 default: `false`
@@ -4175,6 +4037,41 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.debug.pushNewFact
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.ring.check
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.ring.impEq
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.ring.proof
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.ring.simp
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.debug.split
 type: `Bool`
 
@@ -4231,6 +4128,20 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.ext
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ext.candidate
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.internalize
 type: `Bool`
 
@@ -4239,6 +4150,34 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.issues
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.lookahead
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.lookahead.add
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.lookahead.assert
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.lookahead.try
 type: `Bool`
 
 default: `false`
@@ -4309,6 +4248,83 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.offset.propagate
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ring
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ring.assert
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ring.assert.basis
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ring.assert.discard
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ring.assert.queue
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ring.assert.trivial
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ring.assert.unsat
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ring.impEq
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ring.internalize
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ring.simp
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ring.superpose
 type: `Bool`
 
 default: `false`

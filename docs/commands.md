@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `3703f458daf273e17895878b7d0ab1b7401af878`
+Mathlib version: `f4e4c9140913e6e2812c8fc7d7c5748e44e98e53`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -2132,7 +2132,7 @@ attach the recommended spelling to both `And` and `«term_∧_»`.
 
 The `syntax`, `macro`, `elab` and `notation` commands accept a `(name := parserName)` option to
 assign a name to the created parser so that you do not have to guess the automatically generated
-name. The `synax`, `macro` and `elab` commands can be hovered to see the name of the parser.
+name. The `syntax`, `macro` and `elab` commands can be hovered to see the name of the parser.
 
 For complex notations which enclose identifiers, the convention is to use example identifiers rather
 than other placeholders. This is an example following the convention:

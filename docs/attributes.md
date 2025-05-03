@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `3703f458daf273e17895878b7d0ab1b7401af878`
+Mathlib version: `f4e4c9140913e6e2812c8fc7d7c5748e44e98e53`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -269,6 +269,9 @@ Macros without registered precheck hook are unfolded, and identifier-less syntax
 
 ## builtin_term_parser
  Builtin parser
+
+## builtin_try_tactic
+ (builtin) try_tactic elaborator
 
 ## builtin_unused_variables_ignore_fn
  (builtin) Marks a function of type `Lean.Linter.IgnoreFunction` for suppressing unused variable warnings
@@ -809,6 +812,9 @@ have to be assigned in the same file as the declaration.
 
 ## trans
  transitive relation
+
+## try_tactic
+ try_tactic elaborator
 
 ## typevec
  simp set for the manipulation of typevec and arrow expressions 
