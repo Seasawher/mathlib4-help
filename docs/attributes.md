@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `c7566386009c3d84ece0d34dbcaa816001b35e0d`
+Mathlib version: `72b04954b2d6acee40d25c797b910dcba7f0aff6`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
