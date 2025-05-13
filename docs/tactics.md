@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `c7566386009c3d84ece0d34dbcaa816001b35e0d`
+Mathlib version: `72b04954b2d6acee40d25c797b910dcba7f0aff6`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2917,8 +2917,8 @@ Defined in: `Mathlib.Tactic.tacticHave_`
 Defined in: `Mathlib.Tactic.Propose.«tacticHave!?:_Using__»`
 
 * `have? using a, b, c` tries to find a lemma
-which makes use of each of the local hypotheses `a, b, c`,
-and reports any results via trace messages.
+  which makes use of each of the local hypotheses `a, b, c`,
+  and reports any results via trace messages.
 * `have? : h using a, b, c` only returns lemmas whose type matches `h` (which may contain `_`).
 * `have?! using a, b, c` will also call `have` to add results to the local goal state.
 
@@ -2943,8 +2943,8 @@ Similar to `have`, but using `refine'`
 Defined in: `Mathlib.Tactic.Propose.propose'`
 
 * `have? using a, b, c` tries to find a lemma
-which makes use of each of the local hypotheses `a, b, c`,
-and reports any results via trace messages.
+  which makes use of each of the local hypotheses `a, b, c`,
+  and reports any results via trace messages.
 * `have? : h using a, b, c` only returns lemmas whose type matches `h` (which may contain `_`).
 * `have?! using a, b, c` will also call `have` to add results to the local goal state.
 
@@ -2959,8 +2959,8 @@ Suggestions are printed as `have := f a b c`.
 Defined in: `Mathlib.Tactic.Propose.«tacticHave?!:_Using__»`
 
 * `have? using a, b, c` tries to find a lemma
-which makes use of each of the local hypotheses `a, b, c`,
-and reports any results via trace messages.
+  which makes use of each of the local hypotheses `a, b, c`,
+  and reports any results via trace messages.
 * `have? : h using a, b, c` only returns lemmas whose type matches `h` (which may contain `_`).
 * `have?! using a, b, c` will also call `have` to add results to the local goal state.
 
