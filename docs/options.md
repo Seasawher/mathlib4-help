@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `1db5431bad21669671eb1961796dc1687f4a9799`
+Mathlib version: `adf09f9cf6c2c8a4660214ec474a0d669a792b80`
 
 ## Elab.async
 type: `Bool`
@@ -513,6 +513,13 @@ default: `"LeanSearchClient"`
 
 Username for leansearchclient
 
+## linter.adaptationNote
+type: `Bool`
+
+default: `true`
+
+
+
 ## linter.all
 type: `Bool`
 
@@ -649,6 +656,13 @@ default: `false`
 
 enable the 'missing documentation' linter
 
+## linter.modulesUpperCamelCase
+type: `Bool`
+
+default: `true`
+
+
+
 ## linter.oldObtain
 type: `Bool`
 
@@ -669,6 +683,13 @@ type: `Bool`
 default: `false`
 
 enable the ppRoundtrip linter
+
+## linter.pythonStyle
+type: `Bool`
+
+default: `true`
+
+
 
 ## linter.simpsNoConstructor
 type: `Bool`
@@ -839,6 +860,13 @@ default: `true`
 
 Linter to check that the reorder attribute is not given manually.
 
+## linter.trailingWhitespace
+type: `Bool`
+
+default: `true`
+
+
+
 ## linter.unnecessarySeqFocus
 type: `Bool`
 
@@ -931,6 +959,13 @@ type: `Bool`
 default: `false`
 
 upstreamableDecl warns on private declarations
+
+## linter.whitespaceBeforeSemicolon
+type: `Bool`
+
+default: `true`
+
+
 
 ## loogle.queries
 type: `Nat`

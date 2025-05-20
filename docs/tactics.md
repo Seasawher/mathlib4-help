@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `1db5431bad21669671eb1961796dc1687f4a9799`
+Mathlib version: `adf09f9cf6c2c8a4660214ec474a0d669a792b80`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -573,7 +573,7 @@ See the `algebraize` tag for instructions on what properties can be added.
 The tactic also comes with a configuration option `properties`. If set to `true` (default), the
 tactic searches through the local context for `RingHom` properties that can be converted to
 `Algebra` properties. The macro `algebraize_only` calls
-`algebraize (config := {properties := false})`,
+`algebraize -properties`,
 so in other words it only adds `Algebra` and `IsScalarTower` instances.
 
 ## algebraize_only
@@ -2745,7 +2745,7 @@ and furthermore if `h` duplicates a preceding local hypothesis then it is elimin
 
 The tactic is able to abstract proofs from under binders, creating universally quantified
 proofs in the local context.
-To disable this, use `generalize_proofs (config := { abstract := false })`.
+To disable this, use `generalize_proofs -abstract`.
 The tactic is also set to recursively abstract proofs from the types of the generalized proofs.
 This can be controlled with the `maxDepth` configuration option,
 with `generalize_proofs (config := { maxDepth := 0 })` turning this feature off.
