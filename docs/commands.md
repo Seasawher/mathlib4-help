@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `82012aca9087eccd1be07d4acf2e12207e88a92f`
+Mathlib version: `107ccd2b3a6d866c6e8df4f90ca8313e936e50e1`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -671,6 +671,8 @@ example : 3 ≤ 5 := by
   sorry
 ```
 
+You can modify the LeanSearch URL by setting the `LEANSEARCHCLIENT_LEANSEARCH_API_URL` environment variable.
+
 ## \#lint
 Defined in: `Batteries.Tactic.Lint.«command#lint+-*Only___»`
 
@@ -750,6 +752,8 @@ If you pass more than one such search filter, separated by commas Loogle will re
 🔍 Real.sin, \"two\", tsum, _ * _, _ ^ _, |- _ < _ → _
 woould find all lemmas which mention the constants Real.sin and tsum, have \"two\" as a substring of the lemma name, include a product and a power somewhere in the type, and have a hypothesis of the form _ < _ (if there were any such lemmas). Metavariables (?a) are assigned independently in each filter.
 
+You can modify the Loogle server URL by setting the `LEANSEARCHCLIENT_LOOGLE_API_URL` environment variable.
+
 ## \#loogle
 Defined in: `LeanSearchClient.just_loogle_cmd`
 
@@ -802,6 +806,8 @@ If you pass more than one such search filter, separated by commas Loogle will re
 🔍 Real.sin, \"two\", tsum, _ * _, _ ^ _, |- _ < _ → _
 woould find all lemmas which mention the constants Real.sin and tsum, have \"two\" as a substring of the lemma name, include a product and a power somewhere in the type, and have a hypothesis of the form _ < _ (if there were any such lemmas). Metavariables (?a) are assigned independently in each filter.
 
+You can modify the Loogle server URL by setting the `LEANSEARCHCLIENT_LOOGLE_API_URL` environment variable.
+
 ## \#min_imports
 Defined in: `Mathlib.Command.MinImports.minImpsStx`
 
@@ -844,6 +850,8 @@ example : 3 ≤ 5 := by
   #moogle "If a natural number n is less than m, then the successor of n is less than the successor of m."
   sorry
 ```
+
+You can modify the Moogle URL by setting the `LEANSEARCHCLIENT_MOOGLE_API_URL` environment variable.
 
 ## \#norm_num
 Defined in: `Mathlib.Tactic.normNumCmd`
