@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `107ccd2b3a6d866c6e8df4f90ca8313e936e50e1`
+Mathlib version: `f6b3bf487bff9b227d4435ac186541716ea54978`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1812,6 +1812,8 @@ Defined in: `tacticContinuity`
 
 The tactic `continuity` solves goals of the form `Continuous f` by applying lemmas tagged with the
 `continuity` user attribute.
+
+`fun_prop` is a (usually more powerful) alternative to `continuity`.
 
 ## continuity?
 Defined in: `tacticContinuity?`
@@ -3870,6 +3872,9 @@ Defined in: `tacticMeasurability`
 The tactic `measurability` solves goals of the form `Measurable f`, `AEMeasurable f`,
 `StronglyMeasurable f`, `AEStronglyMeasurable f μ`, or `MeasurableSet s` by applying lemmas tagged
 with the `measurability` user attribute.
+
+`fun_prop` is a (usually more powerful) alternative to `measurability`
+if your goal does not involve `MeasurableSet`.
 
 ## measurability!
 Defined in: `measurability!`
