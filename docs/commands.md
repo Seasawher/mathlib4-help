@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `4cb4f3ae16e6811a06c54f721a38a54abbd5dc95`
+Mathlib version: `d7fd1350f57c9b04f41d4820c4c0417fb9b6cc47`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -458,13 +458,20 @@ In general, `#guard_msgs` accepts a comma-separated list of configuration clause
 ```lean
 #guard_msgs (configElt,*) in cmd
 ```
-By default, the configuration list is `(all, whitespace := normalized, ordering := exact)`.
+By default, the configuration list is `(check all, whitespace := normalized, ordering := exact)`.
 
-Message filters (processed in left-to-right order):
-- `info`, `warning`, `error`: capture messages with the given severity level.
-- `all`: capture all messages (the default).
-- `drop info`, `drop warning`, `drop error`: drop messages with the given severity level.
-- `drop all`: drop every message.
+Message filters select messages by severity:
+- `info`, `warning`, `error`: (non-trace) messages with the given severity level.
+- `trace`: trace messages
+- `all`: all messages.
+
+The filters can be prefixed with the action to take:
+- `check` (the default): capture and check the message
+- `drop`: drop the message
+- `pass`: let the message pass through
+
+If no filter is specified, `check all` is assumed.  Otherwise, these filters are processed in
+left-to-right order, with an implicit `pass all` at the end.
 
 Whitespace handling (after trimming leading and trailing whitespace):
 - `whitespace := exact` requires an exact whitespace match.
@@ -1262,6 +1269,12 @@ The type of `<widget>` must implement `Widget.ToModule`,
 and the type of `<props>` must implement `Server.RpcEncodable`.
 In particular, `<props> : Json` works.
 
+## \#with_exporting
+Defined in: `Lean.Parser.Command.withExporting`
+
+Debugging command. Runs the following command in an exported context just like elaboration of
+declaration signatures.
+
 ## /-!
 Defined in: `Lean.Parser.Command.moduleDoc`
 
@@ -1906,10 +1919,6 @@ corresponding `end <id>` or the end of the file.
 
 `namespace` also acts like `section` in delimiting the scope of `variable`, `open`, and other scoped commands.
 
-## noncomputable
-Defined in: `Lean.Parser.Command.noncomputableSection`
-
-
 ## norm_cast_add_elim
 Defined in: `Lean.Parser.Tactic.normCastAddElim`
 
@@ -2165,6 +2174,11 @@ Defined in: `Lean.Parser.Command.registerLabelAttr`
 
 Initialize a new "label" attribute.
 Declarations tagged with the attribute can be retrieved using `Lean.labelled`.
+
+## register_linter_set
+Defined in: `Lean.Linter.«command_Register_linter_set_:=_»`
+
+Declare a new linter set by giving the set of options that will be enabled along with the set.
 
 ## register_option
 Defined in: `Lean.Option.registerOption`
