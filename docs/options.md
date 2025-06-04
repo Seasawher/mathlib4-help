@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `4cb4f3ae16e6811a06c54f721a38a54abbd5dc95`
+Mathlib version: `d7fd1350f57c9b04f41d4820c4c0417fb9b6cc47`
 
 ## Elab.async
 type: `Bool`
@@ -139,6 +139,13 @@ default: `true`
 
 Insert monadic lifts (i.e., `liftM` and coercions) when needed.
 
+## backward.dsimp.proofs
+type: `Bool`
+
+default: `false`
+
+Let `dsimp` simplify proof terms
+
 ## backward.eqns.deepRecursiveSplit
 type: `Bool`
 
@@ -173,6 +180,13 @@ type: `Bool`
 default: `true`
 
 use optimization that relies on 'morally canonical' instances during type class resolution
+
+## backwards.linearNoConfusionType
+type: `Bool`
+
+default: `true`
+
+use the linear-size construction for the `noConfusionType` declaration of an inductive type. Set to false to use the previous, simpler but quadratic-size construction. 
 
 ## bootstrap.genMatcherCode
 type: `Bool`
@@ -634,6 +648,13 @@ type: `Bool`
 default: `false`
 
 Validate that all `List`/`Array`/`Vector` variables use allowed names.
+
+## linter.mathlibStandardSet
+type: `Bool`
+
+default: `false`
+
+
 
 ## linter.minImports
 type: `Bool`
@@ -1474,9 +1495,23 @@ add suffix to shadowed/inaccessible variables when pretty printing
 ## pp.showLetValues
 type: `Bool`
 
-default: `true`
+default: `false`
 
-display let-declaration values in the info view
+always display let-declaration values in the info view
+
+## pp.showLetValues.tactic.threshold
+type: `Nat`
+
+default: `255`
+
+when `pp.showLetValues` is false, the maximum size of a term allowed before it is replaced by `⋯`, for tactic goals
+
+## pp.showLetValues.threshold
+type: `Nat`
+
+default: `0`
+
+when `pp.showLetValues` is false, the maximum size of a term allowed before it is replaced by `⋯`
 
 ## pp.sorrySource
 type: `Bool`
@@ -1667,7 +1702,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.20.0"`
+default: `"v4.21.0-rc2"`
 
 Revision of LeanStateSearch to use
 
@@ -1726,6 +1761,13 @@ type: `Bool`
 default: `false`
 
 `erw?` logs more information as it attempts to identify subexpressions which would block the use of `rw` instead.
+
+## tactic.fun_induction.unfolding
+type: `Bool`
+
+default: `true`
+
+if set to 'true', then 'fun_induction' and 'fun_cases' will use the “unfolding functional induction (resp. cases) principle” ('….induct_unfolding'/'….fun_cases_unfolding'), which will attempt to replace the function goal of interest in the goal with the appropriate right-hand-side in each case. If 'false', the regular “functional induction principle” ('….induct'/'….fun_cases') is used.
 
 ## tactic.hygienic
 type: `Bool`
@@ -1798,6 +1840,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Compiler.extendJoinPointContext
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Compiler.extractClosed
 type: `Bool`
 
 default: `false`
@@ -1966,6 +2015,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Compiler.stat
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Compiler.structProjCases
 type: `Bool`
 
 default: `false`
@@ -4107,6 +4163,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.debug.ring.simpBasis
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.debug.split
 type: `Bool`
 
@@ -4136,13 +4199,6 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.ematch.pattern
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.ematch.pattern.search
 type: `Bool`
 
 default: `false`
@@ -4318,6 +4374,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.ring.assert.queue
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ring.assert.store
 type: `Bool`
 
 default: `false`

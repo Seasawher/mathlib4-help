@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `4cb4f3ae16e6811a06c54f721a38a54abbd5dc95`
+Mathlib version: `d7fd1350f57c9b04f41d4820c4c0417fb9b6cc47`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -405,6 +405,9 @@ have to be assigned in the same file as the declaration.
 ## export
  name to be used by code generators
 
+## expose
+ (module system) Make bodies of definitions available to importing modules.
+
 ## expr_presenter
  Register an Expr presenter. It must have the type `ProofWidgets.ExprPresenter`.
 Register an Expr presenter. It must have the type `ProofWidgets.ExprPresenter`.
@@ -473,6 +476,18 @@ Lemmas involving `<` or `≤` can also be marked `@[bound]` for use in the relat
       using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[grind =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[grind ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
       (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[grind →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
       (that is, it will use the theorem for forwards reasoning).The attribute `[grind]` by itself will effectively try `[grind ←]` (if the conclusion is sufficient for instantiation) and then `[grind →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[grind =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+Auxiliary function for registering `grind` and `grind?` attributes.
+The `grind?` is an alias for `grind` which displays patterns using `logInfo`.
+It is just a convenience for users.
+
+## grind?
+ The `[grind?]` attribute is identical to the `[grind]` attribute, but displays inferred pattern information.When applied to an equational theorem, `[grind =]`, `[grind =_]`, or `[grind _=_]`will mark the theorem for use in heuristic instantiations by the `grind` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[grind =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[grind ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[grind →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[grind]` by itself will effectively try `[grind ←]` (if the conclusion is sufficient for instantiation) and then `[grind →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[grind =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+Auxiliary function for registering `grind` and `grind?` attributes.
+The `grind?` is an alias for `grind` which displays patterns using `logInfo`.
+It is just a convenience for users.
 
 ## grindPropagatorBuiltinAttr
  Builtin `grind` propagator procedure
@@ -585,6 +600,9 @@ be replaced by `(tac; tac')` because the latter would expose `tac` to a differen
 
 ## never_extract
  instruct the compiler that function applications using the tagged declaration should not be extracted when they are closed terms, nor common subexpression should be performed. This is useful for declarations that have implicit effects.
+
+## no_expose
+ (module system) Negate previous `[expose]` attribute.
 
 ## noinline
  mark definition to never be inlined
@@ -860,5 +878,8 @@ Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
 
 ## zify_simps
  The simpset `zify_simps` is used by the tactic `zify` to move expressions from `ℕ` to `ℤ`
-which gives a well-behaved subtraction.   ## zify_simps_proc
- simproc set for zify_simps_proc  
+which gives a well-behaved subtraction. 
+
+## zify_simps_proc
+ simproc set for zify_simps_proc
+
