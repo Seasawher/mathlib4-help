@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `d7fd1350f57c9b04f41d4820c4c0417fb9b6cc47`
+Mathlib version: `d2867d7b07c7f3edf4dd93cba6d7499615267a6f`
 
 ## Elab.async
 type: `Bool`
@@ -823,6 +823,13 @@ type: `Bool`
 default: `true`
 
 enable the `nameCheck` linter
+
+## linter.style.nativeDecide
+type: `Bool`
+
+default: `false`
+
+enable the nativeDecide linter
 
 ## linter.style.openClassical
 type: `Bool`
@@ -1702,7 +1709,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.21.0-rc2"`
+default: `"v4.21.0-rc3"`
 
 Revision of LeanStateSearch to use
 
