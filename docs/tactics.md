@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `7c2e3ba444cfc1c16f84eaec71e75b70e1e1839b`
+Mathlib version: `02c9f7384f5997119329584a4bc3137d60121ea9`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2688,7 +2688,7 @@ Patterns can be used like in the `intro` tactic. Example, given a goal
 `funext (a, b)` applies `funext` once and performs pattern matching on the newly introduced pair.
 
 ## gcongr
-Defined in: `Mathlib.Tactic.GCongr.tacticGcongr__With__`
+Defined in: `Mathlib.Tactic.GCongr.tacticGcongr__With___`
 
 The `gcongr` tactic applies "generalized congruence" rules, reducing a relational goal
 between a LHS and RHS matching the same pattern to relational subgoals between the differing
