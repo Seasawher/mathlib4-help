@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `02c9f7384f5997119329584a4bc3137d60121ea9`
+Mathlib version: `8b2141b23d7fce2b1c4f68b5747531234363ca4f`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -729,6 +729,11 @@ Defined in: `Lean.Parser.Tactic.tacticApply_mod_cast_`
 
 Normalize casts in the goal and the given expression, then `apply` the expression to the goal.
 
+## apply_rewrite
+Defined in: `Mathlib.Tactic.tacticApply_rewrite___`
+
+`apply_rewrite [rules]` is a shorthand for `grewrite +implicationHyp [rules]`.
+
 ## apply_rfl
 Defined in: `Lean.Parser.Tactic.applyRfl`
 
@@ -758,6 +763,11 @@ You can bound the iteration depth using the syntax `apply_rules (config := {maxD
 
 Unlike `solve_by_elim`, `apply_rules` does not perform backtracking, and greedily applies
 a lemma from the list until it gets stuck.
+
+## apply_rw
+Defined in: `Mathlib.Tactic.applyRwSeq`
+
+`apply_rw [rules]` is a shorthand for `grw +implicationHyp [rules]`.
 
 ## arith_mult
 Defined in: `ArithmeticFunction.arith_mult`
@@ -2842,6 +2852,27 @@ Defined in: `WittVector.Tactic.ghostSimp`
 
 A macro for a common simplification when rewriting with ghost component equations.
 
+## grewrite
+Defined in: `Mathlib.Tactic.grewriteSeq`
+
+`grewrite [e]` works just like `rewerite [e]`, but `e` can be a relation other than `=` or `↔`.
+
+For example,
+```lean
+example (h₁ : a < b) (h₂ : b ≤ c) : a + d ≤ c + d := by
+  grewrite [h₁, h₂]; rfl
+
+example (h : a ≡ b [ZMOD n]) : a ^ 2 ≡ b ^ 2 [ZMOD n] := by
+  grewrite [h]; rfl
+
+example : (h₁ : a ∣ b) (h₂ : c ∣ a * d) : a ∣ b * d := by
+  grewrite [h₁]
+  exact h₂
+
+```
+To be able to use `grewrite`, the relevant lemmas need to be tagged with `@[gcongr]`.
+To rewrite inside a transitive relation, you can also give it an `IsTrans` instance.
+
 ## grind
 Defined in: `Lean.Parser.Tactic.grind`
 
@@ -2866,6 +2897,27 @@ example {G : Type} [Group G] (a b c d : G) (h : c = (a*b^2)*((b*b)⁻¹*a⁻¹)*
   rw [h]     -- the goal is now `a*d*d⁻¹ = a`
   group      -- which then normalized and closed
 ```
+
+## grw
+Defined in: `Mathlib.Tactic.rwSeq`
+
+`grw [e]` works just like `rw [e]`, but `e` can be a relation other than `=` or `↔`.
+
+For example,
+```lean
+example (h₁ : a < b) (h₂ : b ≤ c) : a + d ≤ c + d := by
+  grw [h₁, h₂]
+
+example (h : a ≡ b [ZMOD n]) : a ^ 2 ≡ b ^ 2 [ZMOD n] := by
+  grw [h]
+
+example : (h₁ : a ∣ b) (h₂ : c ∣ a * d) : a ∣ b * d := by
+  grw [h₁]
+  exact h₂
+
+```
+To be able to use `grw`, the relevant lemmas need to be tagged with `@[gcongr]`.
+To rewrite inside a transitive relation, you can also give it an `IsTrans` instance.
 
 ## guard_expr
 Defined in: `Lean.Parser.Tactic.guardExpr`
@@ -4270,8 +4322,18 @@ Defined in: `Mathlib.Tactic.normNum1`
 
 Basic version of `norm_num` that does not call `simp`.
 
+## nth_grewrite
+Defined in: `Mathlib.Tactic.tacticNth_grewrite_____`
+
+`nth_grewrite` is just like `nth_rewrite`, but for `grewrite`.
+
+## nth_grw
+Defined in: `Mathlib.Tactic.tacticNth_grw_____`
+
+`nth_grw` is just like `nth_rw`, but for `grw`.
+
 ## nth_rewrite
-Defined in: `Mathlib.Tactic.nthRewriteSeq`
+Defined in: `Mathlib.Tactic.tacticNth_rewrite_____`
 
 `nth_rewrite` is a variant of `rewrite` that only changes the `n₁, ..., nₖ`ᵗʰ _occurrence_ of
 the expression to be rewritten. `nth_rewrite n₁ ... nₖ [eq₁, eq₂,..., eqₘ]` will rewrite the
@@ -4325,7 +4387,7 @@ This new instance of `a` also turns out to be the third _occurrence_ of `a`.  Th
 the next `nth_rewrite` with `h` rewrites this `a`.
 
 ## nth_rw
-Defined in: `Mathlib.Tactic.nthRwSeq`
+Defined in: `Mathlib.Tactic.tacticNth_rw_____`
 
 `nth_rw` is a variant of `rw` that only changes the `n₁, ..., nₖ`ᵗʰ _occurrence_ of the expression
 to be rewritten. Like `rw`, and unlike `nth_rewrite`, it will try to close the goal by trying `rfl`
