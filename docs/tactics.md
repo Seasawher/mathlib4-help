@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `0114eff24c4c8a5b4431dda340b46f39e1fdcb69`
+Mathlib version: `878010aacf052fc861e59b0ca443c25da087cfdf`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3514,7 +3514,7 @@ where `f₀` and `g₀` are maximal prefixes of `f` and `g` (possibly after reas
 which are "liftable" (i.e. expressible as compositions of unitors and associators).
 
 ## linarith
-Defined in: `linarith`
+Defined in: `Mathlib.Tactic.linarith`
 
 `linarith` attempts to find a contradiction between hypotheses that are linear (in)equalities.
 Equivalently, it can prove a linear inequality by assuming its negation and proving `False`.
@@ -3574,7 +3574,7 @@ The option `set_option trace.linarith true` will trace certain intermediate stag
 routine.
 
 ## linarith!
-Defined in: `tacticLinarith!_`
+Defined in: `Mathlib.Tactic.tacticLinarith!_`
 
 `linarith` attempts to find a contradiction between hypotheses that are linear (in)equalities.
 Equivalently, it can prove a linear inequality by assuming its negation and proving `False`.
@@ -4178,7 +4178,7 @@ Defined in: `Lean.Parser.Tactic.«tacticNext_=>_»`
 inaccessible names to the given names.
 
 ## nlinarith
-Defined in: `nlinarith`
+Defined in: `Mathlib.Tactic.nlinarith`
 
 An extension of `linarith` with some preprocessing to allow it to solve some nonlinear arithmetic
 problems. (Based on Coq's `nra` tactic.) See `linarith` for the available syntax of options,
@@ -4192,7 +4192,7 @@ in `linarith`. The preprocessing is as follows:
   where `R ∈ {<, ≤, =}` is the appropriate comparison derived from `R1, R2`.
 
 ## nlinarith!
-Defined in: `tacticNlinarith!_`
+Defined in: `Mathlib.Tactic.tacticNlinarith!_`
 
 An extension of `linarith` with some preprocessing to allow it to solve some nonlinear arithmetic
 problems. (Based on Coq's `nra` tactic.) See `linarith` for the available syntax of options,
