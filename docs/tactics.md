@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `878010aacf052fc861e59b0ca443c25da087cfdf`
+Mathlib version: `11c6fbd61e7ad45f5b09ec03688b1faebd8c6bc5`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1627,12 +1627,12 @@ Defined in: `Mathlib.Tactic.ComputeDegree.computeDegree`
 `compute_degree` is a tactic to solve goals of the form
 *  `natDegree f = d`,
 *  `degree f = d`,
-*  `natDegree f ≤ d`,
-*  `degree f ≤ d`,
+*  `natDegree f ≤ d` (or `<`),
+*  `degree f ≤ d` (or `<`),
 *  `coeff f d = r`, if `d` is the degree of `f`.
 
-The tactic may leave goals of the form `d' = d`, `d' ≤ d`, or `r ≠ 0`, where `d'` in `ℕ` or
-`WithBot ℕ` is the tactic's guess of the degree, and `r` is the coefficient's guess of the
+The tactic may leave goals of the form `d' = d`, `d' ≤ d`, `d' < d`, or `r ≠ 0`, where `d'` in `ℕ`
+or `WithBot ℕ` is the tactic's guess of the degree, and `r` is the coefficient's guess of the
 leading coefficient of `f`.
 
 `compute_degree` applies `norm_num` to the left-hand side of all side goals, trying to close them.
@@ -1646,12 +1646,12 @@ Defined in: `Mathlib.Tactic.ComputeDegree.tacticCompute_degree!`
 `compute_degree` is a tactic to solve goals of the form
 *  `natDegree f = d`,
 *  `degree f = d`,
-*  `natDegree f ≤ d`,
-*  `degree f ≤ d`,
+*  `natDegree f ≤ d` (or `<`),
+*  `degree f ≤ d` (or `<`),
 *  `coeff f d = r`, if `d` is the degree of `f`.
 
-The tactic may leave goals of the form `d' = d`, `d' ≤ d`, or `r ≠ 0`, where `d'` in `ℕ` or
-`WithBot ℕ` is the tactic's guess of the degree, and `r` is the coefficient's guess of the
+The tactic may leave goals of the form `d' = d`, `d' ≤ d`, `d' < d`, or `r ≠ 0`, where `d'` in `ℕ`
+or `WithBot ℕ` is the tactic's guess of the degree, and `r` is the coefficient's guess of the
 leading coefficient of `f`.
 
 `compute_degree` applies `norm_num` to the left-hand side of all side goals, trying to close them.
