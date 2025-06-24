@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `f5e444c292cc4d1ce4feb9a859dbba4718bd8474`
+Mathlib version: `e38c43e8578287afab637615abdb82f54376d49c`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -817,11 +817,6 @@ have to be assigned in the same file as the declaration.
 
 ## to_additive_relevant_arg
  Auxiliary attribute for `to_additive` stating which arguments are the types with a multiplicative structure.
-Similar to `registerParametricAttribute` except that attributes do not
-have to be assigned in the same file as the declaration.
-
-## to_additive_reorder
- Auxiliary attribute for `to_additive` that stores arguments that need to be reordered. This should not appear in any file. We keep it as an attribute for now so that mathport can still use it, and it can generate a warning.
 Similar to `registerParametricAttribute` except that attributes do not
 have to be assigned in the same file as the declaration.
 
