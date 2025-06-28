@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `860d21962a6ace996c34b44e9e9668eee7c61753`
+Mathlib version: `f3731eaabfa91f8610f09b48be38213d6c16d171`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1053,6 +1053,11 @@ because they are transitively implied by another import.
 Defined in: `Mathlib.Linter.«command#reset_min_imports»`
 
 `#reset_min_imports` sets to empty the current list of cumulative imports.
+
+## \#rw??
+Defined in: `Mathlib.Tactic.LibraryRewrite.rw??Command`
+
+`#rw?? e` gives all possible rewrites of `e`. It is a testing command for the `rw??` tactic
 
 ## \#sample
 Defined in: `Plausible.«command#sample_»`
