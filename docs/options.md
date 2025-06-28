@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `860d21962a6ace996c34b44e9e9668eee7c61753`
+Mathlib version: `f3731eaabfa91f8610f09b48be38213d6c16d171`
 
 ## Elab.async
 type: `Bool`
@@ -4619,6 +4619,13 @@ type: `Bool`
 default: `false`
 
 if true, measure and report heartbeats instead of seconds
+
+## trace.rw??
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
 
 ## trace.rw_search
 type: `Bool`

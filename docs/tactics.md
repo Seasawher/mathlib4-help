@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `860d21962a6ace996c34b44e9e9668eee7c61753`
+Mathlib version: `f3731eaabfa91f8610f09b48be38213d6c16d171`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -5465,6 +5465,18 @@ Defined in: `Lean.Parser.Tactic.rewrites?`
 Suggestions are printed as `rw [h]` or `rw [← h]`.
 
 You can use `rw? [-my_lemma, -my_theorem]` to prevent `rw?` using the named lemmas.
+
+## rw??
+Defined in: `Mathlib.Tactic.LibraryRewrite.tacticRw??`
+
+`rw??` is an interactive tactic that suggests rewrites for any expression selected by the user.
+To use it, shift-click an expression in the goal or a hypothesis that you want to rewrite.
+Clicking on one of the rewrite suggestions will paste the relevant rewrite tactic into the editor.
+
+The rewrite suggestions are grouped and sorted by the pattern that the rewrite lemmas match with.
+Rewrites that don't change the goal and rewrites that create the same goal as another rewrite
+are filtered out, as well as rewrites that have new metavariables in the replacement expression.
+To see all suggestions, click on the filter button (▼) in the top right.
 
 ## rw_mod_cast
 Defined in: `Lean.Parser.Tactic.tacticRw_mod_cast___`
