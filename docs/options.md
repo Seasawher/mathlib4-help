@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `308445d7985027f538e281e18df29ca16ede2ba3`
+Mathlib version: `81a4b04c3ae8a45c367ee1664e82b618694462c4`
 
 ## Elab.async
 type: `Bool`
@@ -146,6 +146,13 @@ default: `false`
 
 Let `dsimp` simplify proof terms
 
+## backward.dsimp.useDefEqAttr
+type: `Bool`
+
+default: `true`
+
+Use `defeq` attribute rather than checking theorem body to decide whether a theroem can be used in `dsimp` or with `implicitDefEqProofs`.
+
 ## backward.eqns.deepRecursiveSplit
 type: `Bool`
 
@@ -209,10 +216,17 @@ default: `true`
 
 check whether type is a class instance whenever the binder annotation `[...]` is used
 
-## compiler.check
+## cleanup.letToHave
 type: `Bool`
 
 default: `true`
+
+Enables transforming `let`s to `have`s after elaborating declarations.
+
+## compiler.check
+type: `Bool`
+
+default: `false`
 
 type check code after each compiler step (this is useful for debugging purses)
 
@@ -226,9 +240,9 @@ default: `false`
 ## compiler.enableNew
 type: `Bool`
 
-default: `false`
+default: `true`
 
-(compiler) enable the new code generator, this should have no significant effect on your code but it does help to test the new code generator; unset to only use the old code generator instead
+(compiler) enable the new code generator, unset to use the old code generator instead
 
 ## compiler.extract_closed
 type: `Bool`
@@ -301,12 +315,26 @@ default: `false`
 
 Shows the raw `decreasing_by` goal including internal implementation detail instead of cleaning it up with the `clean_wf` tactic. Can be enabled for debugging purposes. Please report an issue if you have to use this option for other reasons.
 
+## debug.simp.check.have
+type: `Bool`
+
+default: `false`
+
+(simp) enable consistency checks for `have` telescope simplification
+
 ## debug.skipKernelTC
 type: `Bool`
 
 default: `false`
 
 skip kernel type checker. WARNING: setting this option to true may compromise soundness because your proofs will not be checked by the Lean kernel
+
+## debug.tactic.simp.checkDefEqAttr
+type: `Bool`
+
+default: `false`
+
+If true, whenever `dsimp` fails to apply a rewrite rule because it is not marked as `defeq`, check whether it would have been considered as a rfl theorem before the introduction of the `defeq` attribute, and warn if it was. Note that this is a costly check.
 
 ## debug.terminalTacticsAsSorry
 type: `Bool`
@@ -453,14 +481,14 @@ check proofs between the elements of all equivalence classes
 ## grind.warning
 type: `Bool`
 
-default: `true`
+default: `false`
 
-disable `grind` usage warning
+generate a warning whenever `grind` is used
 
 ## guard_msgs.diff
 type: `Bool`
 
-default: `false`
+default: `true`
 
 When true, show a diff between expected and actual messages if they don't match. 
 
@@ -648,6 +676,17 @@ type: `Bool`
 default: `false`
 
 Validate that all `List`/`Array`/`Vector` variables use allowed names.
+
+## linter.loopingSimpArgs
+type: `Bool`
+
+default: `false`
+
+When enabled, `simp` will check if the theorems passed as simp arguments (`simp [thm1]`) are possibly looping in the current simp set.
+
+More precisely, it tries to simplify the right-hand side of the theorem and complains if that fails, which it typically does because of running out of recursion depth.
+
+This is a relatively expensive check, so it i disabled by default, and only run after a `simp` call actually failed with a recursion depth error.
 
 ## linter.mathlibStandardSet
 type: `Bool`
@@ -866,6 +905,13 @@ default: `false`
 
 enable the `setOption` linter
 
+## linter.style.show
+type: `Bool`
+
+default: `false`
+
+enable the show linter
+
 ## linter.suspiciousUnexpanderPatterns
 type: `Bool`
 
@@ -936,6 +982,17 @@ type: `Bool`
 default: `true`
 
 enable the 'unused section variables in theorem body' linter
+
+## linter.unusedSimpArgs
+type: `Bool`
+
+default: `true`
+
+enable the linter that warns when explicit `simp` arguments are unused.
+
+The linter suggests removing the unused arguments. This hint may not be correct in the case that `simp [← thm]` is given, when `thm` has the `@[simp]` attribute, and it is relevant that `thm` it disabled (which is a side-effect of specifying `← thm`). In that case, replace it with `simp [- thm]`.
+
+When one `simp` invocation is run multiple times (e.g. `all_goals simp [thm]`), it warns about simp arguments that are unused in all invocations. For this reason, the linter does not warn about uses of `simp` inside a macro, as there it is usually not possible to see all invocations.
 
 ## linter.unusedTactic
 type: `Bool`
@@ -1064,6 +1121,13 @@ type: `Nat`
 default: `6`
 
 Number of results requested from moogle (default 6)
+
+## mvcgen.warning
+type: `Bool`
+
+default: `true`
+
+disable `mvcgen` usage warning
 
 ## polyrith.sageUserAgent
 type: `String`
@@ -1716,7 +1780,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.21.0"`
+default: `"v4.22.0-rc2"`
 
 Revision of LeanStateSearch to use
 
@@ -2197,6 +2261,27 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Elab.ProxyType
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Elab.Tactic.Do.spec
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Elab.Tactic.Do.specAttr
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Elab.Tactic.Do.vcgen
 type: `Bool`
 
 default: `false`
@@ -2763,6 +2848,20 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Meta.Tactic.Do.cases
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.Tactic.Do.specialize
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Meta.Tactic.acyclic
 type: `Bool`
 
@@ -2876,6 +2975,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Meta.Tactic.simp.heads
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.Tactic.simp.loopProtection
 type: `Bool`
 
 default: `false`
@@ -3155,6 +3261,20 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Meta.letToHave
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.letToHave.debug
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Meta.realizeConst
 type: `Bool`
 
@@ -3324,6 +3444,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.PrettyPrinter.parenthesize.input
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.ReservedNameAction
 type: `Bool`
 
 default: `false`
@@ -3904,6 +4031,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.cutsat.assert.nonlinear
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.cutsat.assert.store
 type: `Bool`
 
@@ -3995,7 +4129,21 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.debug.cutsat.search.cnstrs
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.debug.cutsat.search.conflict
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.cutsat.search.reorder
 type: `Bool`
 
 default: `false`
@@ -4010,6 +4158,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.debug.cutsat.subst
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.cutsat.toInt
 type: `Bool`
 
 default: `false`
@@ -4059,6 +4214,48 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.debug.internalize
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.linarith.search
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.linarith.search.assign
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.linarith.search.backtrack
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.linarith.search.conflict
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.linarith.search.split
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.linarith.subst
 type: `Bool`
 
 default: `false`
@@ -4149,6 +4346,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.debug.ring.basis
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.debug.ring.check
 type: `Bool`
 
@@ -4164,6 +4368,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.debug.ring.proof
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.ring.rabinowitsch
 type: `Bool`
 
 default: `false`
@@ -4255,6 +4466,62 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.issues
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.linarith
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.linarith.assert
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.linarith.assert.ignored
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.linarith.assert.store
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.linarith.assert.trivial
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.linarith.assert.unsat
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.linarith.internalize
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.linarith.model
 type: `Bool`
 
 default: `false`
@@ -4374,13 +4641,6 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.ring.assert.basis
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.grind.ring.assert.discard
 type: `Bool`
 
 default: `false`
@@ -4773,6 +5033,13 @@ type: `Nat`
 default: `15`
 
 The maximum number of instance arguments `variable?` will try to insert before giving up
+
+## warn.sorry
+type: `Bool`
+
+default: `true`
+
+warn about uses of `sorry` in declarations added to the environment
 
 ## warningAsError
 type: `Bool`

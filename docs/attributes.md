@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `308445d7985027f538e281e18df29ca16ede2ba3`
+Mathlib version: `81a4b04c3ae8a45c367ee1664e82b618694462c4`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -120,13 +120,37 @@ declaration has name `RingHom.Property` and that the corresponding `Algebra` pro
 
 ## always_inline
  mark definition to be always inlined
+Changes the inlining behavior. This attribute comes in several variants:
+- `@[inline]`: marks the definition to be inlined when it is appropriate.
+- `@[inline_if_reduce]`: marks the definition to be inlined if an application of it after inlining
+  and applying reduction isn't a `match` expression. This attribute can be used for inlining
+  structurally recursive functions.
+- `@[noinline]`: marks the definition to never be inlined.
+- `@[always_inline]`: marks the definition to always be inlined.
+- `@[macro_inline]`: marks the definition to always be inlined at the beginning of compilation.
+  This makes it possible to define functions that evaluate some of their parameters lazily.
+  Example:
+  ```
+  @[macro_inline]
+  def test (x y : Nat) : Nat :=
+    if x = 42 then x else y
+
+  #eval test 42 (2^1000000000000) -- doesn't compute 2^1000000000000
+  ```
+  Only non-recursive functions may be marked `@[macro_inline]`.
 
 ## app_unexpander
  Register an unexpander for applications of a given constant.
+Registers an unexpander for applications of a given constant.
 
-[app_unexpander c] registers a `Lean.PrettyPrinter.Unexpander` for applications of the constant `c`. The unexpander is
-passed the result of pre-pretty printing the application *without* implicitly passed arguments. If `pp.explicit` is set
-to true or `pp.notation` is set to false, it will not be called at all.
+`@[app_unexpander c]` registers a `Lean.PrettyPrinter.Unexpander` for applications of the constant
+`c`. The unexpander is passed the result of pre-pretty printing the application *without*
+implicitly passed arguments. If `pp.explicit` is set to true or `pp.notation` is set to false,
+it will not be called at all.
+
+Unexpanders work as an alternative for delaborators (`@[app_delab]`) that can be used without
+special imports. This however also makes them much less capable since they can only transform
+syntax and don't have access to the expression tree.
 
 ## attr_parser
  parser
@@ -175,11 +199,13 @@ applied to hypotheses to extract inequalities (e.g. `HasPowerSeriesOnBall.r_pos`
 
 ## builtin_category_parenthesizer
  (builtin) Register a parenthesizer for a syntax category.
+Registers a parenthesizer for a syntax category.
 
-  [category_parenthesizer cat] registers a declaration of type `Lean.PrettyPrinter.CategoryParenthesizer` for the category `cat`,
-  which is used when parenthesizing calls of `categoryParser cat prec`. Implementations should call `maybeParenthesize`
-  with the precedence and `cat`. If no category parenthesizer is registered, the category will never be parenthesized,
-  but still be traversed for parenthesizing nested categories.
+`@[category_parenthesizer cat]` registers a declaration of type
+`Lean.PrettyPrinter.CategoryParenthesizer` for the syntax category `cat`, which is used when
+parenthesizing occurrences of `cat:prec` (`categoryParser cat prec`). Implementations should call
+`maybeParenthesize` with the precedence and `cat`. If no category parenthesizer is registered, the
+category will never be parenthesized, but still traversed for parenthesizing nested categories.
 
 ## builtin_code_action_provider
  (builtin) Use to decorate methods for suggesting code actions. This is a low-level interface for making code actions.
@@ -189,54 +215,93 @@ applied to hypotheses to extract inequalities (e.g. `HasPowerSeriesOnBall.r_pos`
 
 ## builtin_command_elab
  (builtin) command elaborator
+Registers a command elaborator for the given syntax node kind.
+
+A command elaborator should have type `Lean.Elab.Command.CommandElab` (which is
+`Lean.Syntax → Lean.Elab.Term.CommandElabM Unit`), i.e. should take syntax of the given syntax
+node kind as a parameter and perform an action.
+
+The `elab_rules` and `elab` commands should usually be preferred over using this attribute
+directly.
 
 ## builtin_command_parser
  Builtin parser
 
 ## builtin_delab
- (builtin) Register a delaborator.
+ (builtin) Register a delaborator
+Registers a delaborator.
 
-  [delab k] registers a declaration of type `Lean.PrettyPrinter.Delaborator.Delab` for the `Lean.Expr`
-  constructor `k`. Multiple delaborators for a single constructor are tried in turn until
-  the first success. If the term to be delaborated is an application of a constant `c`,
-  elaborators for `app.c` are tried first; this is also done for `Expr.const`s ("nullary applications")
-  to reduce special casing. If the term is an `Expr.mdata` with a single key `k`, `mdata.k`
-  is tried first.
+`@[delab k]` registers a declaration of type `Lean.PrettyPrinter.Delaborator.Delab` for the
+`Lean.Expr` constructor `k`. Multiple delaborators for a single constructor are tried in turn until
+the first success. If the term to be delaborated is an application of a constant `c`, elaborators
+for `app.c` are tried first; this is also done for `Expr.const`s ("nullary applications") to reduce
+special casing. If the term is an `Expr.mdata` with a single key `k`, `mdata.k` is tried first.
 
 ## builtin_doElem_parser
  Builtin parser
 
 ## builtin_doc
  make the docs and location of this declaration available as a builtin
+Makes the documentation and location of a declaration available as a builtin.
+
+This allows the documentation of core Lean features to be visible without importing the file they
+are defined in. This is only useful during bootstrapping and should not be used outside of
+the Lean source code.
 
 ## builtin_formatter
  (builtin) Register a formatter for a parser.
+Registers a formatter for a parser.
 
-  [formatter k] registers a declaration of type `Lean.PrettyPrinter.Formatter` for the `SyntaxNodeKind` `k`.
+`@[formatter k]` registers a declaration of type `Lean.PrettyPrinter.Formatter` to be used for
+formatting syntax of kind `k`.
 
 ## builtin_incremental
  (builtin) Marks an elaborator (tactic or command, currently) as supporting incremental elaboration. For unmarked elaborators, the corresponding snapshot bundle field in the elaboration context is unset so as to prevent accidental, incorrect reuse.
+Marks an elaborator (tactic or command, currently) as supporting incremental elaboration.
+
+For unmarked elaborators, the corresponding snapshot bundle field in the elaboration context is
+unset so as to prevent accidental, incorrect reuse.
 
 ## builtin_inductive_elab
  (builtin) Register an elaborator for inductive types
-Environment extension to register inductive type elaborator commands.
+Registers an inductive type elaborator for the given syntax node kind.
+
+Commands registered using this attribute are allowed to be used together in mutual blocks with
+other inductive type commands. This attribute is mostly used internally for `inductive` and
+`structure`.
+
+An inductive type elaborator should have type `Lean.Elab.Command.InductiveElabDescr`.
 
 ## builtin_init
  initialization procedure for global references
+Registers a builtin initialization procedure.
+
+This attribute is used internally to define builtin initialization procedures for bootstrapping and
+should not be used otherwise.
 
 ## builtin_level_parser
  Builtin parser
 
 ## builtin_macro
  (builtin) macro elaborator
+Registers a macro expander for a given syntax node kind.
+
+A macro expander should have type `Lean.Macro` (which is `Lean.Syntax → Lean.MacroM Lean.Syntax`),
+i.e. should take syntax of the given syntax node kind as a parameter and produce different syntax
+in the same syntax category.
+
+The `macro_rules` and `macro` commands should usually be preferred over using this attribute
+directly.
 
 ## builtin_missing_docs_handler
  (builtin) adds a syntax traversal for the missing docs linter
 
 ## builtin_parenthesizer
  (builtin) Register a parenthesizer for a parser.
+Registers a parenthesizer for a parser.
 
-  [parenthesizer k] registers a declaration of type `Lean.PrettyPrinter.Parenthesizer` for the `SyntaxNodeKind` `k`.
+`@[parenthesizer k]` registers a declaration of type `Lean.PrettyPrinter.Parenthesizer` to be used
+for parenthesizing syntax of kind `k`.
 
 ## builtin_prec_parser
  Builtin parser
@@ -246,11 +311,13 @@ Environment extension to register inductive type elaborator commands.
 
 ## builtin_quot_precheck
  (builtin) Register a double backtick syntax quotation pre-check.
+Registers a double backtick syntax quotation pre-check.
 
-[quot_precheck k] registers a declaration of type `Lean.Elab.Term.Quotation.Precheck` for the `SyntaxNodeKind` `k`.
-It should implement eager name analysis on the passed syntax by throwing an exception on unbound identifiers,
-and calling `precheck` recursively on nested terms, potentially with an extended local context (`withNewLocal`).
-Macros without registered precheck hook are unfolded, and identifier-less syntax is ultimately assumed to be well-formed.
+`@[quot_precheck k]` registers a declaration of type `Lean.Elab.Term.Quotation.Precheck` for the
+syntax node kind `k`. It should implement eager name analysis on the passed syntax by throwing an
+exception on unbound identifiers, and calling `precheck` recursively on nested terms, potentially
+with an extended local context (`withNewLocal`). Macros without registered precheck hook are
+unfolded, and identifier-less syntax is ultimately assumed to be well-formed.
 
 ## builtin_structInstFieldDecl_parser
  Builtin parser
@@ -260,12 +327,28 @@ Macros without registered precheck hook are unfolded, and identifier-less syntax
 
 ## builtin_tactic
  (builtin) tactic elaborator
+Registers a tactic elaborator for the given syntax node kind.
+
+A tactic elaborator should have type `Lean.Elab.Tactic.Tactic` (which is
+`Lean.Syntax → Lean.Elab.Tactic.TacticM Unit`), i.e. should take syntax of the given syntax
+node kind as a parameter and alter the tactic state.
+
+The `elab_rules` and `elab` commands should usually be preferred over using this attribute
+directly.
 
 ## builtin_tactic_parser
  Builtin parser
 
 ## builtin_term_elab
  (builtin) term elaborator
+Registers a term elaborator for the given syntax node kind.
+
+A term elaborator should have type `Lean.Elab.Term.TermElab` (which is
+`Lean.Syntax → Option Lean.Expr → Lean.Elab.Term.TermElabM Lean.Expr`), i.e. should take syntax of
+the given syntax node kind and an optional expected type as parameters and produce an expression.
+
+The `elab_rules` and `elab` commands should usually be preferred over using this attribute
+directly.
 
 ## builtin_term_parser
  Builtin parser
@@ -296,17 +379,50 @@ Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
 
 ## cases_eliminator
  custom `casesOn`-like eliminator for the `cases` tactic
+Registers a custom eliminator for the `cases` tactic.
+
+Whenever the types of the targets in an `cases` call matches a custom eliminator, it is used
+instead of the `casesOn` eliminator. This can be useful for redefining the default eliminator to a
+more useful one.
+
+Example:
+```lean example
+structure Three where
+  val : Fin 3
+
+example (x : Three) (p : Three → Prop) : p x := by
+  cases x
+  -- val : Fin 3 ⊢ p ⟨val⟩
+
+@[cases_eliminator, elab_as_elim]
+def Three.myRec {motive : Three → Sort u}
+    (zero : motive ⟨0⟩) (one : motive ⟨1⟩) (two : motive ⟨2⟩) :
+    ∀ x, motive x
+  | ⟨0⟩ => zero | ⟨1⟩ => one | ⟨2⟩ => two
+
+example (x : Three) (p : Three → Prop) : p x := by
+  cases x
+  -- ⊢ p ⟨0⟩
+  -- ⊢ p ⟨1⟩
+  -- ⊢ p ⟨2⟩
+```
+
+`@[induction_eliminator]` works similarly for the `induction` tactic.
 
 ## category_parenthesizer
  Register a parenthesizer for a syntax category.
+Registers a parenthesizer for a syntax category.
 
-  [category_parenthesizer cat] registers a declaration of type `Lean.PrettyPrinter.CategoryParenthesizer` for the category `cat`,
-  which is used when parenthesizing calls of `categoryParser cat prec`. Implementations should call `maybeParenthesize`
-  with the precedence and `cat`. If no category parenthesizer is registered, the category will never be parenthesized,
-  but still be traversed for parenthesizing nested categories.
+`@[category_parenthesizer cat]` registers a declaration of type
+`Lean.PrettyPrinter.CategoryParenthesizer` for the syntax category `cat`, which is used when
+parenthesizing occurrences of `cat:prec` (`categoryParser cat prec`). Implementations should call
+`maybeParenthesize` with the precedence and `cat`. If no category parenthesizer is registered, the
+category will never be parenthesized, but still traversed for parenthesizing nested categories.
 
 ## class
  type class
+Registers an inductive type or structure as a type class. Using `class` or `class inductive` is
+generally preferred over using `@[class] structure` or `@[class] inductive` directly.
 
 ## code_action_provider
  Use to decorate methods for suggesting code actions. This is a low-level interface for making code actions.
@@ -316,56 +432,130 @@ Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
 
 ## coe_decl
  auxiliary definition used to implement coercion (unfolded during elaboration)
+Tags declarations to be unfolded during coercion elaboration.
+
+This is mostly used to hide coercion implementation details and show the coerced result instead of
+an application of auxiliary definitions (e.g. `CoeT.coe`, `Coe.coe`). This attribute only works on
+reducible functions and instance projections.
 
 ## combinator_formatter
- Register a formatter for a parser combinator.
-
-  [combinator_formatter c] registers a declaration of type `Lean.PrettyPrinter.Formatter` for the `Parser` declaration `c`.
-  Note that, unlike with [formatter], this is not a node kind since combinators usually do not introduce their own node kinds.
-  The tagged declaration may optionally accept parameters corresponding to (a prefix of) those of `c`, where `Parser` is replaced
-  with `Formatter` in the parameter types.
+ Register a formatter for a parser combinator
 
 ## combinator_parenthesizer
  Register a parenthesizer for a parser combinator.
-
-  [combinator_parenthesizer c] registers a declaration of type `Lean.PrettyPrinter.Parenthesizer` for the `Parser` declaration `c`.
-  Note that, unlike with [parenthesizer], this is not a node kind since combinators usually do not introduce their own node kinds.
-  The tagged declaration may optionally accept parameters corresponding to (a prefix of) those of `c`, where `Parser` is replaced
-  with `Parenthesizer` in the parameter types.
 
 ## command_code_action
  Declare a new command code action, to appear in the code actions on commands
 
 ## command_elab
  command elaborator
+Registers a command elaborator for the given syntax node kind.
+
+A command elaborator should have type `Lean.Elab.Command.CommandElab` (which is
+`Lean.Syntax → Lean.Elab.Term.CommandElabM Unit`), i.e. should take syntax of the given syntax
+node kind as a parameter and perform an action.
+
+The `elab_rules` and `elab` commands should usually be preferred over using this attribute
+directly.
 
 ## command_parser
  parser
 
 ## computed_field
  Marks a function as a computed field of an inductive
+Marks a function as a computed field of an inductive.
+
+Computed fields are specified in the with-block of an inductive type declaration. They can be used
+to allow certain values to be computed only once at the time of construction and then later be
+accessed immediately.
+
+Example:
+```lean
+inductive NatList where
+  | nil
+  | cons : Nat → NatList → NatList
+with
+  @[computed_field] sum : NatList → Nat
+  | .nil => 0
+  | .cons x l => x + l.sum
+  @[computed_field] length : NatList → Nat
+  | .nil => 0
+  | .cons _ l => l.length + 1
+```
 
 ## congr
  congruence theorem
+Registers `simp` congruence lemmas.
+
+A `simp` congruence lemma should prove the equality of two applications of the same function from
+the equality of the individual arguments. They are used by `simp` to visit subexpressions of an
+application where the default congruence algorithm fails. This is particularly important for
+functions where some parameters depend on previous parameters.
+
+Congruence lemmas should have an equality for every parameter, possibly bounded by foralls, with
+the right hand side being an application of a parameter on the right-hand side. When applying
+congruence theorems, `simp` will first infer parameters from the right-hand side, then try to
+simplify each left-hand side of the parameter equalities and finally infer the right-hand side
+parameters from the result.
+
+Example:
+```lean
+def Option.pbind (o : Option α) (f : (a : α) → o = some a → Option β) : Option β := ...
+
+@[congr]
+theorem Option.pbind_congr
+    {o o' : Option α} (ho : o = o') -- equality for first parameter
+    {f : (a : α) → o = some a → Option β} {f' : (a : α) → o' = some a → Option β}
+    (hf : ∀ (a : α) (h : _), f a (ho.trans h) = f' a h) : -- equality for second parameter
+    o.pbind f = o'.pbind f' := -- conclusion: equality of the whole application
+  ...
+```
 
 ## cpass
  compiler passes for the code generator
 
 ## csimp
  simplification theorem for the compiler
+Tags compiler simplification theorems, which allow one value to be replaced by another equal value
+in compiled code. This is typically used to replace a slow function whose definition is convenient
+in proofs with a faster equivalent or to make noncomputable functions computable. In particular,
+many operations on lists and arrays are replaced by tail-recursive equivalents.
+
+A compiler simplification theorem cannot take any parameters and must prove a statement `@f = @g`
+where `f` and `g` may be arbitrary constants. In functions defined after the theorem tagged
+`@[csimp]`, any occurrence of `f` is replaced with `g` in compiled code, but not in the type
+theory. In this sense, `@[csimp]` is a safer alternative to `@[implemented_by]`.
+
+However it is still possible to register unsound `@[csimp]` lemmas by using `unsafe` or unsound
+axioms (like `sorryAx`).
 
 ## default_instance
  type class default instance
 
-## delab
- Register a delaborator.
+## defeq
+ mark theorem as a definitional equality, to be used by `dsimp`
+Marks the theorem as a definitional equality.
 
-  [delab k] registers a declaration of type `Lean.PrettyPrinter.Delaborator.Delab` for the `Lean.Expr`
-  constructor `k`. Multiple delaborators for a single constructor are tried in turn until
-  the first success. If the term to be delaborated is an application of a constant `c`,
-  elaborators for `app.c` are tried first; this is also done for `Expr.const`s ("nullary applications")
-  to reduce special casing. If the term is an `Expr.mdata` with a single key `k`, `mdata.k`
-  is tried first.
+The theorem must be an equality that holds by `rfl`. This allows `dsimp` to use this theorem
+when rewriting.
+
+A theorem with with a definition that is (syntactically) `:= rfl` is implicitly marked `@[defeq]`.
+To avoid this behavior, write `:= (rfl)` instead.
+
+The attribute should be given before a `@[simp]` attribute to have effect.
+
+When using the module system, an exported theorem can only be `@[defeq]` if all definitions that
+need to be unfolded to prove the theorem are exported and exposed.
+
+## delab
+ Register a delaborator
+Registers a delaborator.
+
+`@[delab k]` registers a declaration of type `Lean.PrettyPrinter.Delaborator.Delab` for the
+`Lean.Expr` constructor `k`. Multiple delaborators for a single constructor are tried in turn until
+the first success. If the term to be delaborated is an application of a constant `c`, elaborators
+for `app.c` are tried first; this is also done for `Expr.const`s ("nullary applications") to reduce
+special casing. If the term is an `Expr.mdata` with a single key `k`, `mdata.k` is tried first.
 
 ## deprecated
  mark declaration as deprecated
@@ -375,9 +565,63 @@ Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
 
 ## elab_as_elim
  instructs elaborator that the arguments of the function application should be elaborated as were an eliminator
+Instructs the elaborator that applications of this function should be elaborated like an eliminator.
+
+An eliminator is a function that returns an application of a "motive" which is a parameter of the
+form `_ → ... → Sort _`, i.e. a function that takes in a certain amount of arguments (referred to
+as major premises) and returns a type in some universe. The `rec` and `casesOn` functions of
+inductive types are automatically treated as eliminators, for other functions this attribute needs
+to be used.
+
+Eliminator elaboration can be compared to the `induction` tactic: The expected type is used as the
+return value of the motive, with occurrences of the major premises replaced with the arguments.
+When more arguments are specified than necessary, the remaining arguments are reverted into the
+expected type.
+
+Examples:
+```lean example
+@[elab_as_elim]
+def evenOddRecOn {motive : Nat → Sort u}
+    (even : ∀ n, motive (n * 2)) (odd : ∀ n, motive (n * 2 + 1))
+    (n : Nat) : motive n := ...
+
+-- simple usage
+example (a : Nat) : (a * a) % 2 = a % 2 :=
+  evenOddRec _ _ a
+  /-
+  1. basic motive is `fun n => (a + 2) % 2 = a % 2`
+  2. major premise `a` substituted: `fun n => (n + 2) % 2 = n % 2`
+  3. now elaborate the other parameters as usual:
+    "even" (first hole): expected type `∀ n, ((n * 2) * (n * 2)) % 2 = (n * 2) % 2`,
+    "odd" (second hole): expected type `∀ n, ((n * 2 + 1) * (n * 2 + 1)) % 2 = (n * 2 + 1) % 2`
+  -/
+
+-- complex substitution
+example (a : Nat) (f : Nat → Nat) : (f a + 1) % 2 ≠ f a :=
+  evenOddRec _ _ (f a)
+  /-
+  Similar to before, except `f a` is substituted: `motive := fun n => (n + 1) % 2 ≠ n`.
+  Now the first hole has expected type `∀ n, (n * 2 + 1) % 2 ≠ n * 2`.
+  Now the second hole has expected type `∀ n, (n * 2 + 1 + 1) % 2 ≠ n * 2 + 1`.
+  -/
+
+-- more parameters
+example (a : Nat) (h : a % 2 = 1) : (a + 1) % 2 = 0 :=
+  evenOddRec _ _ a h
+  /-
+  Before substitution, `a % 2 = 1` is reverted: `motive := fun n => a % 2 = 0 → (a + 1) % 2 = 0`.
+  Substitution: `motive := fun n => n % 2 = 1 → (n + 1) % 2 = 0`
+  Now the first hole has expected type `∀ n, n * 2 % 2 = 1 → (n * 2) % 2 = 0`.
+  Now the second hole has expected type `∀ n, (n * 2 + 1) % 2 = 1 → (n * 2 + 1) % 2 = 0`.
+  -/
+```
+
+See also `@[induction_eliminator]` and `@[cases_eliminator]` for registering default eliminators.
 
 ## elab_without_expected_type
  mark that applications of the given declaration should be elaborated without the expected type
+Instructs the elaborator to elaborate applications of the given declaration without an expected
+type. This may prevent the elaborator from incorrectly inferring implicit arguments.
 
 ## elementwise
  
@@ -404,9 +648,40 @@ have to be assigned in the same file as the declaration.
 
 ## export
  name to be used by code generators
+Exports a function under the provided unmangled symbol name. This can be used to refer to Lean
+functions from other programming languages like C.
+
+Example:
+```lean
+@[export lean_color_from_map]
+def colorValue (properties : @& Std.HashMap String String) : UInt32 :=
+  match properties["color"]? with
+  | some "red" => 0xff0000
+  | some "green" => 0x00ff00
+  | some "blue" => 0x0000ff
+  | _ => -1
+```
+C code:
+```c
+#include <lean/lean.h>
+
+uint32_t lean_color_from_map(b_lean_obj_arg properties);
+
+void fill_rectangle_from_map(b_lean_obj_arg properties) {
+    uint32_t color = lean_color_from_map(properties);
+    // ...
+}
+```
+
+The opposite of this is `@[extern]`, which allows Lean functions to refer to functions from other
+programming languages.
 
 ## expose
  (module system) Make bodies of definitions available to importing modules.
+Makes the bodies of definitions available to importing modules.
+
+This only has an effect if both the module the definition is defined in and the importing module
+have the module system enabled.
 
 ## expr_presenter
  Register an Expr presenter. It must have the type `ProofWidgets.ExprPresenter`.
@@ -434,8 +709,10 @@ division-free.
 
 ## formatter
  Register a formatter for a parser.
+Registers a formatter for a parser.
 
-  [formatter k] registers a declaration of type `Lean.PrettyPrinter.Formatter` for the `SyntaxNodeKind` `k`.
+`@[formatter k]` registers a declaration of type `Lean.PrettyPrinter.Formatter` to be used for
+formatting syntax of kind `k`.
 
 ## fun_prop
  `fun_prop` tactic to prove function properties like `Continuous`, `Differentiable`, `IsLinearMap`
@@ -509,31 +786,155 @@ generated theorem.
 
 ## implemented_by
  name of the Lean (probably unsafe) function that implements opaque constant
+Instructs the compiler to use a different function as the implementation of a function. With the
+exception of tactics that call native code such as `native_decide`, the kernel and type checking
+are unaffected. When this attribute is used on a function, the function is not compiled and all
+compiler-related attributes (e.g. `noncomputable`, `@[inline]`) are ignored. Calls to this
+function are replaced by calls to its implementation.
+
+The most common use cases of `@[implemented_by]` are to provide an efficient unsafe implementation
+and to make an unsafe function accessible in safe code through an opaque function:
+
+```
+unsafe def testEqImpl (as bs : Array Nat) : Bool :=
+  ptrEq as bs || as == bs
+
+@[implemented_by testEqImpl]
+def testEq (as bs : Array Nat) : Bool :=
+  as == bs
+
+unsafe def printAddrImpl {α : Type u} (x : α) : IO Unit :=
+  IO.println s!"Address: {ptrAddrUnsafe x}"
+
+@[implemented_by printAddrImpl]
+opaque printAddr {α : Type u} (x : α) : IO Unit
+```
+
+The provided implementation is not checked to be equivalent to the original definition. This makes
+it possible to prove `False` with `native_decide` using incorrect implementations. For a safer
+variant of this attribute that however doesn't work for unsafe implementations, see `@[csimp]`,
+which requires a proof that the two functions are equal.
 
 ## incremental
  Marks an elaborator (tactic or command, currently) as supporting incremental elaboration. For unmarked elaborators, the corresponding snapshot bundle field in the elaboration context is unset so as to prevent accidental, incorrect reuse.
+Marks an elaborator (tactic or command, currently) as supporting incremental elaboration.
+
+For unmarked elaborators, the corresponding snapshot bundle field in the elaboration context is
+unset so as to prevent accidental, incorrect reuse.
 
 ## induction_eliminator
  custom `rec`-like eliminator for the `induction` tactic
+Registers a custom eliminator for the `induction` tactic.
+
+Whenever the types of the targets in an `induction` call matches a custom eliminator, it is used
+instead of the recursor. This can be useful for redefining the default eliminator to a more useful
+one.
+
+Example:
+```lean example
+structure Three where
+  val : Fin 3
+
+example (x : Three) (p : Three → Prop) : p x := by
+  induction x
+  -- val : Fin 3 ⊢ p ⟨val⟩
+
+@[induction_eliminator, elab_as_elim]
+def Three.myRec {motive : Three → Sort u}
+    (zero : motive ⟨0⟩) (one : motive ⟨1⟩) (two : motive ⟨2⟩) :
+    ∀ x, motive x
+  | ⟨0⟩ => zero | ⟨1⟩ => one | ⟨2⟩ => two
+
+example (x : Three) (p : Three → Prop) : p x := by
+  induction x
+  -- ⊢ p ⟨0⟩
+  -- ⊢ p ⟨1⟩
+  -- ⊢ p ⟨2⟩
+```
+
+`@[cases_eliminator]` works similarly for the `cases` tactic.
 
 ## inductive_elab
  Register an elaborator for inductive types
-Environment extension to register inductive type elaborator commands.
+Registers an inductive type elaborator for the given syntax node kind.
+
+Commands registered using this attribute are allowed to be used together in mutual blocks with
+other inductive type commands. This attribute is mostly used internally for `inductive` and
+`structure`.
+
+An inductive type elaborator should have type `Lean.Elab.Command.InductiveElabDescr`.
 
 ## inherit_doc
  inherit documentation from a specified declaration
+Uses documentation from a specified declaration.
+
+`@[inherit_doc decl]` is used to inherit the documentation from the declaration `decl`.
 
 ## init
  initialization procedure for global references
+Registers an initialization procedure. Initialization procedures are run in files that import the
+file they are defined in.
+
+This attribute comes in two kinds: Without arguments, the tagged declaration should have type
+`IO Unit` and are simply run during initialization. With a declaration name as a argument, the
+tagged declaration should be an opaque constant and the provided declaration name an action in `IO`
+that returns a value of the type of the tagged declaration. Such initialization procedures store
+the resulting value and make it accessible through the tagged declaration.
+
+The `initialize` command should usually be preferred over using this attribute directly.
 
 ## inline
  mark definition to be inlined
+Changes the inlining behavior. This attribute comes in several variants:
+- `@[inline]`: marks the definition to be inlined when it is appropriate.
+- `@[inline_if_reduce]`: marks the definition to be inlined if an application of it after inlining
+  and applying reduction isn't a `match` expression. This attribute can be used for inlining
+  structurally recursive functions.
+- `@[noinline]`: marks the definition to never be inlined.
+- `@[always_inline]`: marks the definition to always be inlined.
+- `@[macro_inline]`: marks the definition to always be inlined at the beginning of compilation.
+  This makes it possible to define functions that evaluate some of their parameters lazily.
+  Example:
+  ```
+  @[macro_inline]
+  def test (x y : Nat) : Nat :=
+    if x = 42 then x else y
+
+  #eval test 42 (2^1000000000000) -- doesn't compute 2^1000000000000
+  ```
+  Only non-recursive functions may be marked `@[macro_inline]`.
 
 ## inline_if_reduce
  mark definition to be inlined when resultant term after reduction is not a `cases_on` application
+Changes the inlining behavior. This attribute comes in several variants:
+- `@[inline]`: marks the definition to be inlined when it is appropriate.
+- `@[inline_if_reduce]`: marks the definition to be inlined if an application of it after inlining
+  and applying reduction isn't a `match` expression. This attribute can be used for inlining
+  structurally recursive functions.
+- `@[noinline]`: marks the definition to never be inlined.
+- `@[always_inline]`: marks the definition to always be inlined.
+- `@[macro_inline]`: marks the definition to always be inlined at the beginning of compilation.
+  This makes it possible to define functions that evaluate some of their parameters lazily.
+  Example:
+  ```
+  @[macro_inline]
+  def test (x y : Nat) : Nat :=
+    if x = 42 then x else y
+
+  #eval test 42 (2^1000000000000) -- doesn't compute 2^1000000000000
+  ```
+  Only non-recursive functions may be marked `@[macro_inline]`.
 
 ## instance
  type class instance
+Registers type class instances.
+
+The `instance` command, which expands to `@[instance] def`, is usually preferred over using this
+attribute directly. However it might sometimes still be necessary to use this attribute directly,
+in particular for `opaque` instances.
+
+To assign priorities to instances, `@[instance prio]` can be used (where `prio` is a priority).
+This corresponds to the `instance (priority := prio)` notation.
 
 ## int_toBitVec
  simp theorems used to convert UIntX/IntX statements into BitVec ones
@@ -552,12 +953,54 @@ Environment extension to register inductive type elaborator commands.
 
 ## macro
  macro elaborator
+Registers a macro expander for a given syntax node kind.
+
+A macro expander should have type `Lean.Macro` (which is `Lean.Syntax → Lean.MacroM Lean.Syntax`),
+i.e. should take syntax of the given syntax node kind as a parameter and produce different syntax
+in the same syntax category.
+
+The `macro_rules` and `macro` commands should usually be preferred over using this attribute
+directly.
 
 ## macro_inline
  mark definition to always be inlined before ANF conversion
+Changes the inlining behavior. This attribute comes in several variants:
+- `@[inline]`: marks the definition to be inlined when it is appropriate.
+- `@[inline_if_reduce]`: marks the definition to be inlined if an application of it after inlining
+  and applying reduction isn't a `match` expression. This attribute can be used for inlining
+  structurally recursive functions.
+- `@[noinline]`: marks the definition to never be inlined.
+- `@[always_inline]`: marks the definition to always be inlined.
+- `@[macro_inline]`: marks the definition to always be inlined at the beginning of compilation.
+  This makes it possible to define functions that evaluate some of their parameters lazily.
+  Example:
+  ```
+  @[macro_inline]
+  def test (x y : Nat) : Nat :=
+    if x = 42 then x else y
+
+  #eval test 42 (2^1000000000000) -- doesn't compute 2^1000000000000
+  ```
+  Only non-recursive functions may be marked `@[macro_inline]`.
 
 ## match_pattern
  mark that a definition can be used in a pattern (remark: the dependent pattern matching compiler will unfold the definition)
+Instructs the pattern matcher to unfold occurrences of this definition.
+
+By default, only constructors and literals can be used for pattern matching. Using
+`@[match_pattern]` allows using other definitions, as long as they eventually reduce to
+constructors and literals.
+
+Example:
+```lean
+@[match_pattern]
+def yellowString : String := "yellow"
+
+def isYellow (color : String) : Bool :=
+  match color with
+  | yellowString => true
+  | _ => false
+```
 
 ## mfld_simps
  The simpset `mfld_simps` records several simp lemmas that are
@@ -598,14 +1041,51 @@ meaning that `tac` acts differently from `focus tac`. This is used by the
 'unnecessary `<;>`' linter to prevent false positives where `tac <;> tac'` cannot
 be replaced by `(tac; tac')` because the latter would expose `tac` to a different set of goals.
 
+## mvcgen_simp
+ simp theorems internally used by `mvcgen`
+This attribute should not be used directly.
+It is an implementation detail of the `mvcgen` tactic.
+
 ## never_extract
  instruct the compiler that function applications using the tagged declaration should not be extracted when they are closed terms, nor common subexpression should be performed. This is useful for declarations that have implicit effects.
+Instructs the compiler that function applications using the tagged declaration should not be
+extracted when they are closed terms, and that common subexpression elimination should not be
+performed.
+
+Ordinarily, the Lean compiler identifies closed terms (without free variables) and extracts them
+to top-level definitions. This optimization can prevent unnecessary recomputation of values.
+
+Preventing the extraction of closed terms is useful for declarations that have implicit effects
+that should be repeated.
 
 ## no_expose
  (module system) Negate previous `[expose]` attribute.
+Negates a previous `@[expose]` attribute. This is useful for declaring definitions that shouldn't.
+be exposed in a section tagged `@[expose]`
+
+This only has an effect if both the module the definition is defined in and the importing module
+have the module system enabled.
 
 ## noinline
  mark definition to never be inlined
+Changes the inlining behavior. This attribute comes in several variants:
+- `@[inline]`: marks the definition to be inlined when it is appropriate.
+- `@[inline_if_reduce]`: marks the definition to be inlined if an application of it after inlining
+  and applying reduction isn't a `match` expression. This attribute can be used for inlining
+  structurally recursive functions.
+- `@[noinline]`: marks the definition to never be inlined.
+- `@[always_inline]`: marks the definition to always be inlined.
+- `@[macro_inline]`: marks the definition to always be inlined at the beginning of compilation.
+  This makes it possible to define functions that evaluate some of their parameters lazily.
+  Example:
+  ```
+  @[macro_inline]
+  def test (x y : Nat) : Nat :=
+    if x = 42 then x else y
+
+  #eval test 42 (2^1000000000000) -- doesn't compute 2^1000000000000
+  ```
+  Only non-recursive functions may be marked `@[macro_inline]`.
 
 ## nolint
  Do not report this declaration in any of the tests of `#lint`
@@ -627,6 +1107,7 @@ in e.g. groups are trivially true).
 
 ## nospecialize
  mark definition to never be specialized
+Marks a definition to never be specialized during code generation.
 
 ## notation_class
  An attribute specifying that this is a notation class. Used by @[simps].
@@ -635,8 +1116,10 @@ argument of the attribute, not the declaration name.
 
 ## parenthesizer
  Register a parenthesizer for a parser.
+Registers a parenthesizer for a parser.
 
-  [parenthesizer k] registers a declaration of type `Lean.PrettyPrinter.Parenthesizer` for the `SyntaxNodeKind` `k`.
+`@[parenthesizer k]` registers a declaration of type `Lean.PrettyPrinter.Parenthesizer` to be used
+for parenthesizing syntax of kind `k`.
 
 ## parity_simps
  Simp attribute for lemmas about `Even` 
@@ -646,6 +1129,11 @@ argument of the attribute, not the declaration name.
 
 ## partial_fixpoint_monotone
  monotonicity theorem
+Registers a monotonicity theorem for `partial_fixpoint`.
+
+Monotonicity theorems should have `Lean.Order.monotone ...` as a conclusion. They are used in the
+`monotonicity` tactic (scoped in the `Lean.Order` namespace) to automatically prove monotonicity
+for functions defined using `partial_fixpoint`.
 
 ## pnat_to_nat_coe
  A simp set for the `pnat_to_nat` tactic. 
@@ -661,9 +1149,11 @@ argument of the attribute, not the declaration name.
 
 ## pp_nodot
  mark declaration to never be pretty printed using field notation
+Marks a declaration to never be pretty printed using field notation.
 
 ## pp_using_anonymous_constructor
  mark structure to be pretty printed using `⟨a,b,c⟩` notation
+Marks a structure to be pretty printed using the anonymous constructor notation (`⟨a, b, c⟩`).
 
 ## prec_parser
  parser
@@ -684,11 +1174,13 @@ which gives a well-behaved division.
 
 ## quot_precheck
  Register a double backtick syntax quotation pre-check.
+Registers a double backtick syntax quotation pre-check.
 
-[quot_precheck k] registers a declaration of type `Lean.Elab.Term.Quotation.Precheck` for the `SyntaxNodeKind` `k`.
-It should implement eager name analysis on the passed syntax by throwing an exception on unbound identifiers,
-and calling `precheck` recursively on nested terms, potentially with an extended local context (`withNewLocal`).
-Macros without registered precheck hook are unfolded, and identifier-less syntax is ultimately assumed to be well-formed.
+`@[quot_precheck k]` registers a declaration of type `Lean.Elab.Term.Quotation.Precheck` for the
+syntax node kind `k`. It should implement eager name analysis on the passed syntax by throwing an
+exception on unbound identifiers, and calling `precheck` recursively on nested terms, potentially
+with an extended local context (`withNewLocal`). Macros without registered precheck hook are
+unfolded, and identifier-less syntax is ultimately assumed to be well-formed.
 
 ## rclike_simps
  "Simp attribute for lemmas about `RCLike`" 
@@ -712,6 +1204,12 @@ Macros without registered precheck hook are unfolded, and identifier-less syntax
 
 ## refl
  reflexivity relation
+Tags reflexivity lemmas to be used by the `rfl` tactic.
+
+A reflexivity lemma should have the conclusion `r x x` where `r` is an arbitrary relation.
+
+It is not possible to tag reflexivity lemmas for `=` using this attribute. These are handled as a
+special case in the `rfl` tactic.
 
 ## rify_simps
  The simpset `rify_simps` is used by the tactic `rify` to move expressions from `ℕ`, `ℤ`, or
@@ -764,8 +1262,22 @@ see `callCancellable` in `cancellable.ts`.
  Automatically derive lemmas specifying the projections of this declaration.
 The `simps` attribute.
 
+## spec
+ Marks Hoare triple specifications and simp theorems to use with the `mspec` and `mvcgen` tactics
+
 ## specialize
  mark definition to always be specialized
+Marks a definition to always be specialized during code generation.
+
+Specialization is an optimization in the code generator for generating variants of a function that
+are specialized to specific parameter values. This is in particular useful for functions that take
+other functions as parameters: Usually when passing functions as parameters, a closure needs to be
+allocated that will then be called. Using `@[specialize]` prevents both of these operations by
+using the provided function directly in the specialization of the inner function.
+
+`@[specialize]` can take additional arguments for the parameter names or indices (starting at 1) of
+the parameters that should be specialized. By default, instance and function parameters are
+specialized.
 
 ## stacksTag
  Apply a Stacks or Kerodon project tag to a theorem.
@@ -775,9 +1287,20 @@ The `simps` attribute.
 
 ## symm
  symmetric relation
+Tags symmetry lemmas to be used by the `symm` tactic.
+
+A symmetry lemma should be of the form `r x y → r y x` where `r` is an arbitrary relation.
 
 ## tactic
  tactic elaborator
+Registers a tactic elaborator for the given syntax node kind.
+
+A tactic elaborator should have type `Lean.Elab.Tactic.Tactic` (which is
+`Lean.Syntax → Lean.Elab.Tactic.TacticM Unit`), i.e. should take syntax of the given syntax
+node kind as a parameter and alter the tactic state.
+
+The `elab_rules` and `elab` commands should usually be preferred over using this attribute
+directly.
 
 ## tactic_alt
  Register a tactic parser as an alternative form of an existing tactic, so they can be grouped together in documentation.
@@ -793,6 +1316,14 @@ The `simps` attribute.
 
 ## term_elab
  term elaborator
+Registers a term elaborator for the given syntax node kind.
+
+A term elaborator should have type `Lean.Elab.Term.TermElab` (which is
+`Lean.Syntax → Option Lean.Expr → Lean.Elab.Term.TermElabM Lean.Expr`), i.e. should take syntax of
+the given syntax node kind and an optional expected type as parameters and produce an expression.
+
+The `elab_rules` and `elab` commands should usually be preferred over using this attribute
+directly.
 
 ## term_parser
  parser
@@ -837,6 +1368,9 @@ have to be assigned in the same file as the declaration.
 
 ## unbox
  compiler tries to unbox result values if their types are tagged with `[unbox]`
+Tags types that the compiler should unbox if they occur in result values.
+
+This attribute currently has no effect.
 
 ## unification_hint
  unification hint

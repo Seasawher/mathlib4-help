@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `308445d7985027f538e281e18df29ca16ede2ba3`
+Mathlib version: `81a4b04c3ae8a45c367ee1664e82b618694462c4`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1662,7 +1662,7 @@ Then it uses `norm_num` on all the remaining goals and tries `assumption`.
 ## congr
 Defined in: `Lean.Parser.Tactic.congr`
 
-Apply congruence (recursively) to goals of the form `⊢ f as = f bs` and `⊢ HEq (f as) (f bs)`.
+Apply congruence (recursively) to goals of the form `⊢ f as = f bs` and `⊢ f as ≍ f bs`.
 The optional parameter is the depth of the recursive applications.
 This is useful when `congr` is too aggressive in breaking down the goal.
 For example, given `⊢ f (g (x + y)) = f (g (y + x))`,
@@ -1686,7 +1686,7 @@ Apply congruence (recursively) to goals of the form `⊢ f as = f bs` and `⊢ H
 ## congr
 Defined in: `Batteries.Tactic.congrConfig`
 
-Apply congruence (recursively) to goals of the form `⊢ f as = f bs` and `⊢ HEq (f as) (f bs)`.
+Apply congruence (recursively) to goals of the form `⊢ f as = f bs` and `⊢ f as ≍ f bs`.
 The optional parameter is the depth of the recursive applications.
 This is useful when `congr` is too aggressive in breaking down the goal.
 For example, given `⊢ f (g (x + y)) = f (g (y + x))`,
@@ -1746,7 +1746,7 @@ while `congr! 2` produces the intended `⊢ x + y = y + x`.
 
 The `congr!` tactic also takes a configuration option, for example
 ```lean
-congr! (config := {transparency := .default}) 2
+congr! (transparency := .default) 2
 ```
 This overrides the default, which is to apply congruence lemmas at reducible transparency.
 
@@ -2411,7 +2411,7 @@ For example, `set_option pp.all true in extract_goal` gives the `pp.all` form.
 ## extract_lets
 Defined in: `Lean.Parser.Tactic.extractLets`
 
-Extracts `let` and `let_fun` expressions from within the target or a local hypothesis,
+Extracts `let` and `have` expressions from within the target or a local hypothesis,
 introducing new local definitions.
 
 - `extract_lets` extracts all the lets from the target.
@@ -2810,18 +2810,25 @@ Defined in: `tacticGet_elem_tactic`
 `get_elem_tactic` is the tactic automatically called by the notation `arr[i]`
 to prove any side conditions that arise when constructing the term
 (e.g. the index is in bounds of the array). It just delegates to
-`get_elem_tactic_trivial` and gives a diagnostic error message otherwise;
-users are encouraged to extend `get_elem_tactic_trivial` instead of this tactic.
+`get_elem_tactic_extensible` and gives a diagnostic error message otherwise;
+users are encouraged to extend `get_elem_tactic_extensible` instead of this tactic.
+
+## get_elem_tactic_extensible
+Defined in: `tacticGet_elem_tactic_extensible`
+
+`get_elem_tactic_extensible` is an extensible tactic automatically called
+by the notation `arr[i]` to prove any side conditions that arise when
+constructing the term (e.g. the index is in bounds of the array).
+The default behavior is to try `simp +arith` and `omega`
+(for doing linear arithmetic in the index).
+
+(Note that the core tactic `get_elem_tactic` has already tried
+`done` and `assumption` before the extensible tactic is called.)
 
 ## get_elem_tactic_trivial
 Defined in: `tacticGet_elem_tactic_trivial`
 
-`get_elem_tactic_trivial` is an extensible tactic automatically called
-by the notation `arr[i]` to prove any side conditions that arise when
-constructing the term (e.g. the index is in bounds of the array).
-The default behavior is to just try `trivial` (which handles the case
-where `i < arr.size` is in the context) and `simp +arith` and `omega`
-(for doing linear arithmetic in the index).
+`get_elem_tactic_trivial` has been deprecated in favour of `get_elem_tactic_extensible`.
 
 ## ghost_calc
 Defined in: `WittVector.Tactic.ghostCalc`
@@ -2884,10 +2891,151 @@ To rewrite inside a transitive relation, you can also give it an `IsTrans` insta
 ## grind
 Defined in: `Lean.Parser.Tactic.grind`
 
+`grind` is a tactic inspired by modern SMT solvers.
+**Picture a virtual white‑board:** every time `grind` discovers a new equality, inequality,
+or Boolean literal it writes that fact on the board, merges equivalent terms into buckets,
+and invites each engine to read from, and add back to, the same workspace.
+The cooperating engines are: congruence closure, constraint propagation, E‑matching,
+guided case analysis, and a suite of satellite theory solvers (linear integer arithmetic,
+commutative rings, ...).
+
+`grind` is *not* designed for goals whose search space explodes combinatorially,
+think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
+or a 200‑variable Sudoku encoded as Boolean constraints.  Such encodings require
+ thousands (or millions) of case‑splits that overwhelm `grind`’s branching search.
+
+For **bit‑level or combinatorial problems**, consider using **`bv_decide`**.
+`bv_decide` calls a state‑of‑the‑art SAT solver (CaDiCaL) and then returns a
+*compact, machine‑checkable certificate*.
+
+E-matching is a mechanism used by `grind` to instantiate theorems efficiently.
+It is especially effective when combined with congruence closure, enabling
+`grind` to discover non-obvious consequences of equalities and annotated theorems
+automatically. The theorem instantiation process is interrupted using the `generation` threshold.
+Terms occurring in the input goal have `generation` zero. When `grind` instantiates
+a theorem using terms with generation `≤ n`, the new generated terms have generation `n+1`.
+
+Consider the following functions and theorems:
+```lean
+def f (a : Nat) : Nat :=
+  a + 1
+
+def g (a : Nat) : Nat :=
+  a - 1
+
+@[grind =]
+theorem gf (x : Nat) : g (f x) = x := by
+  simp [f, g]
+```
+The theorem `gf` asserts that `g (f x) = x` for all natural numbers `x`.
+The attribute `[grind =]` instructs `grind` to use the left-hand side of the equation,
+`g (f x)`, as a pattern for heuristic instantiation via E-matching.
+Suppose we now have a goal involving:
+```lean
+example {a b} (h : f b = a) : g a = b := by
+  grind
+```
+Although `g a` is not an instance of the pattern `g (f x)`,
+it becomes one modulo the equation `f b = a`. By substituting `a`
+with `f b` in `g a`, we obtain the term `g (f b)`,
+which matches the pattern `g (f x)` with the assignment `x := b`.
+Thus, the theorem `gf` is instantiated with `x := b`,
+and the new equality `g (f b) = b` is asserted.
+`grind` then uses congruence closure to derive the implied equality
+`g a = g (f b)` and completes the proof.
+
+The pattern used to instantiate theorems affects the effectiveness of `grind`.
+For example, the pattern `g (f x)` is too restrictive in the following case:
+the theorem `gf` will not be instantiated because the goal does not even
+contain the function symbol `g`.
+
+```lean (error := true)
+example (h₁ : f b = a) (h₂ : f c = a) : b = c := by
+  grind
+```
+
+You can use the command `grind_pattern` to manually select a pattern for a given theorem.
+In the following example, we instruct `grind` to use `f x` as the pattern,
+allowing it to solve the goal automatically:
+```lean
+grind_pattern gf => f x
+
+example {a b c} (h₁ : f b = a) (h₂ : f c = a) : b = c := by
+  grind
+```
+You can enable the option `trace.grind.ematch.instance` to make `grind` print a
+trace message for each theorem instance it generates.
+
+Instead of using `grind_pattern` to explicitly specify a pattern,
+you can use the `@[grind]` attribute or one of its variants, which will use a heuristic to
+generate a (multi-)pattern. The complete list is available in the reference manual. The main ones are:
+
+- `@[grind →]` will select a multi-pattern from the hypotheses of the theorem (i.e. it will use the theorem for forwards reasoning).
+  In more detail, it will traverse the hypotheses of the theorem from left-to-right, and each time it encounters a minimal indexable
+  (i.e. has a constant as its head) subexpression which "covers" (i.e. fixes the value of) an argument which was not
+  previously covered, it will add that subexpression as a pattern, until all arguments have been covered.
+- `@[grind ←]` will select a multi-pattern from the conclusion of theorem (i.e. it will use the theorem for backwards reasoning).
+  This may fail if not all the arguments to the theorem appear in the conclusion.
+- `@[grind]` will traverse the conclusion and then the hypotheses left-to-right, adding patterns as they increase the coverage,
+  stopping when all arguments are covered.
+- `@[grind =]` checks that the conclusion of the theorem is an equality, and then uses the left-hand-side of the equality as a pattern.
+  This may fail if not all of the arguments appear in the left-hand-side.
+
+Main configuration options:
+
+- `grind (splits := <num>)` caps the *depth* of the search tree.  Once a branch performs `num` splits
+  `grind` stops splitting further in that branch.
+- `grind -splitIte` disables case splitting on if-then-else expressions.
+- `grind -splitMatch` disables case splitting on `match` expressions.
+- `grind +splitImp` instructs `grind` to split on any hypothesis `A → B` whose antecedent `A` is **propositional**.
+- `grind (ematch := <num>)` controls the number of E-matching rounds.
+- `grind [<name>, ...]` instructs `grind` to use the declaration `name` during E-matching.
+- `grind only [<name>, ...]` is like `grind [<name>, ...]` but does not use theorems tagged with `@[grind]`.
+- `grind (gen := <num>)` sets the maximum generation.
+- `grind -ring` disables the ring solver based on Gröbner basis.
+- `grind (ringSteps := <num>)` limits the number of steps performed by ring solver.
+- `grind -cutsat` disables the linear integer arithmetic solver based on the cutsat procedure.
+- `grind -linarith` disables the linear arithmetic solver for (ordered) modules and rings.
+
+Examples:
+```lean
+example {a b} {as bs : List α} : (as ++ bs ++ [b]).getLastD a = b := by
+  grind
+
+example (x : BitVec (w+1)) : (BitVec.cons x.msb (x.setWidth w)) = x := by
+  grind
+
+example (a b c : UInt64) : a ≤ 2 → b ≤ 3 → c - a - b = 0 → c ≤ 5 := by
+  grind
+
+example [Field α] (a : α) : (2 : α) ≠ 0 → 1 / a + 1 / (2 * a) = 3 / (2 * a) := by
+  grind
+
+example (as : Array α) (lo hi i j : Nat) :
+    lo ≤ i → i < j → j ≤ hi → j < as.size → min lo (as.size - 1) ≤ i := by
+  grind
+
+example [CommRing α] [NoNatZeroDivisors α] (a b c : α)
+    : a + b + c = 3 →
+      a^2 + b^2 + c^2 = 5 →
+      a^3 + b^3 + c^3 = 7 →
+      a^4 + b^4 = 9 - c^4 := by
+  grind
+
+example (x y : Int) :
+    27 ≤ 11*x + 13*y →
+    11*x + 13*y ≤ 45 →
+    -10 ≤ 7*x - 9*y →
+    7*x - 9*y ≤ 4 → False := by
+  grind
+```
 
 ## grind?
 Defined in: `Lean.Parser.Tactic.grindTrace`
 
+`grind?` takes the same arguments as `grind`, but reports an equivalent call to `grind only`
+that would be sufficient to close the goal. This is useful for reducing the size of the `grind`
+theorems in a local invocation.
 
 ## group
 Defined in: `Mathlib.Tactic.Group.group`
@@ -2983,7 +3131,11 @@ The term `e` is elaborated with the type of the goal as the expected type, which
 useful within `conv` mode.
 
 ## have
-Defined in: `Lean.Parser.Tactic.tacticHave_`
+Defined in: `Mathlib.Tactic.tacticHave_`
+
+
+## have
+Defined in: `Lean.Parser.Tactic.tacticHave__`
 
 The `have` tactic is for adding hypotheses to the local context of the main goal.
 * `have h : t := e` adds the hypothesis `h : t` if `e` is a term of type `t`.
@@ -2994,10 +3146,6 @@ The `have` tactic is for adding hypotheses to the local context of the main goal
   It is convenient for types that have only one applicable constructor.
   For example, given `h : p ∧ q ∧ r`, `have ⟨h₁, h₂, h₃⟩ := h` produces the
   hypotheses `h₁ : p`, `h₂ : q`, and `h₃ : r`.
-
-## have
-Defined in: `Mathlib.Tactic.tacticHave_`
-
 
 ## have!?
 Defined in: `Mathlib.Tactic.Propose.«tacticHave!?:_Using__»`
@@ -3016,7 +3164,7 @@ only the types of the lemmas in the `using` clause.
 Suggestions are printed as `have := f a b c`.
 
 ## have'
-Defined in: `Lean.Parser.Tactic.tacticHave'_`
+Defined in: `Lean.Parser.Tactic.tacticHave'`
 
 Similar to `have`, but using `refine'`
 
@@ -3058,9 +3206,9 @@ only the types of the lemmas in the `using` clause.
 Suggestions are printed as `have := f a b c`.
 
 ## haveI
-Defined in: `Lean.Parser.Tactic.tacticHaveI_`
+Defined in: `Lean.Parser.Tactic.tacticHaveI__`
 
-`haveI` behaves like `have`, but inlines the value instead of producing a `let_fun` term.
+`haveI` behaves like `have`, but inlines the value instead of producing a `have` term.
 
 ## hint
 Defined in: `Mathlib.Tactic.Hint.hintStx`
@@ -3413,17 +3561,7 @@ example : True ∨ False := by
 ```
 
 ## let
-Defined in: `Lean.Parser.Tactic.letrec`
-
-`let rec f : t := e` adds a recursive definition `f` to the current goal.
-The syntax is the same as term-mode `let rec`.
-
-## let
-Defined in: `Mathlib.Tactic.tacticLet_`
-
-
-## let
-Defined in: `Lean.Parser.Tactic.tacticLet_`
+Defined in: `Lean.Parser.Tactic.tacticLet__`
 
 The `let` tactic is for adding definitions to the local context of the main goal.
 * `let x : t := e` adds the definition `x : t := e` if `e` is a term of type `t`.
@@ -3435,15 +3573,32 @@ The `let` tactic is for adding definitions to the local context of the main goal
   For example, given `p : α × β × γ`, `let ⟨x, y, z⟩ := p` produces the
   local variables `x : α`, `y : β`, and `z : γ`.
 
+## let
+Defined in: `Lean.Parser.Tactic.letrec`
+
+`let rec f : t := e` adds a recursive definition `f` to the current goal.
+The syntax is the same as term-mode `let rec`.
+
+## let
+Defined in: `Mathlib.Tactic.tacticLet_`
+
+
 ## let'
-Defined in: `Lean.Parser.Tactic.tacticLet'_`
+Defined in: `Lean.Parser.Tactic.tacticLet'__`
 
 Similar to `let`, but using `refine'`
 
 ## letI
-Defined in: `Lean.Parser.Tactic.tacticLetI_`
+Defined in: `Lean.Parser.Tactic.tacticLetI__`
 
-`letI` behaves like `let`, but inlines the value instead of producing a `let_fun` term.
+`letI` behaves like `let`, but inlines the value instead of producing a `let` term.
+
+## let_to_have
+Defined in: `Lean.Parser.Tactic.letToHave`
+
+Transforms `let` expressions into `have` expressions when possible.
+- `let_to_have` transforms `let`s in the target.
+- `let_to_have at h` transforms `let`s in the given local hypothesis.
 
 ## lift
 Defined in: `Mathlib.Tactic.lift`
@@ -3489,7 +3644,7 @@ subtype) to propositions about `ℤ` (the supertype), without changing the type 
 ## lift_lets
 Defined in: `Lean.Parser.Tactic.liftLets`
 
-Lifts `let` and `let_fun` expressions within a term as far out as possible.
+Lifts `let` and `have` expressions within a term as far out as possible.
 It is like `extract_lets +lift`, but the top-level lets at the end of the procedure
 are not extracted as local hypotheses.
 
@@ -3880,6 +4035,26 @@ Defined in: `Batteries.Tactic.«tacticMap_tacs[_;]»`
 Assuming there are `n` goals, `map_tacs [t1; t2; ...; tn]` applies each `ti` to the respective
 goal and leaves the resulting subgoals.
 
+## massumption
+Defined in: `Lean.Parser.Tactic.massumption`
+
+`massumption` is like `assumption`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q : SPred σs) : Q ⊢ₛ P → Q := by
+  mintro _ _
+  massumption
+```
+
+## massumption
+Defined in: `Lean.Parser.Tactic.massumptionMacro`
+
+`massumption` is like `assumption`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q : SPred σs) : Q ⊢ₛ P → Q := by
+  mintro _ _
+  massumption
+```
+
 ## match
 Defined in: `Lean.Parser.Tactic.match`
 
@@ -3942,6 +4117,97 @@ tactic fails.
 Defined in: `Mathlib.Tactic.tacticMatch_target_`
 
 
+## mcases
+Defined in: `Lean.Parser.Tactic.mcases`
+
+Like `rcases`, but operating on stateful `Std.Do.SPred` goals.
+Example: Given a goal `h : (P ∧ (Q ∨ R) ∧ (Q → R)) ⊢ₛ R`,
+`mcases h with ⟨-, ⟨hq | hr⟩, hqr⟩` will yield two goals:
+`(hq : Q, hqr : Q → R) ⊢ₛ R` and `(hr : R) ⊢ₛ R`.
+
+That is, `mcases h with pat` has the following semantics, based on `pat`:
+* `pat=□h'` renames `h` to `h'` in the stateful context, regardless of whether `h` is pure
+* `pat=⌜h'⌝` introduces `h' : φ`  to the pure local context if `h : ⌜φ⌝`
+  (c.f. `Lean.Elab.Tactic.Do.ProofMode.IsPure`)
+* `pat=h'` is like `pat=⌜h'⌝` if `h` is pure
+  (c.f. `Lean.Elab.Tactic.Do.ProofMode.IsPure`), otherwise it is like `pat=□h'`.
+* `pat=_` renames `h` to an inaccessible name
+* `pat=-` discards `h`
+* `⟨pat₁, pat₂⟩` matches on conjunctions and existential quantifiers and recurses via
+  `pat₁` and `pat₂`.
+* `⟨pat₁ | pat₂⟩` matches on disjunctions, matching the left alternative via `pat₁` and the right
+  alternative via `pat₂`.
+
+## mcases
+Defined in: `Lean.Parser.Tactic.mcasesMacro`
+
+Like `rcases`, but operating on stateful `Std.Do.SPred` goals.
+Example: Given a goal `h : (P ∧ (Q ∨ R) ∧ (Q → R)) ⊢ₛ R`,
+`mcases h with ⟨-, ⟨hq | hr⟩, hqr⟩` will yield two goals:
+`(hq : Q, hqr : Q → R) ⊢ₛ R` and `(hr : R) ⊢ₛ R`.
+
+That is, `mcases h with pat` has the following semantics, based on `pat`:
+* `pat=□h'` renames `h` to `h'` in the stateful context, regardless of whether `h` is pure
+* `pat=⌜h'⌝` introduces `h' : φ`  to the pure local context if `h : ⌜φ⌝`
+  (c.f. `Lean.Elab.Tactic.Do.ProofMode.IsPure`)
+* `pat=h'` is like `pat=⌜h'⌝` if `h` is pure
+  (c.f. `Lean.Elab.Tactic.Do.ProofMode.IsPure`), otherwise it is like `pat=□h'`.
+* `pat=_` renames `h` to an inaccessible name
+* `pat=-` discards `h`
+* `⟨pat₁, pat₂⟩` matches on conjunctions and existential quantifiers and recurses via
+  `pat₁` and `pat₂`.
+* `⟨pat₁ | pat₂⟩` matches on disjunctions, matching the left alternative via `pat₁` and the right
+  alternative via `pat₂`.
+
+## mclear
+Defined in: `Lean.Parser.Tactic.mclear`
+
+`mclear` is like `clear`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ Q → Q := by
+  mintro HP
+  mintro HQ
+  mclear HP
+  mexact HQ
+```
+
+## mclear
+Defined in: `Lean.Parser.Tactic.mclearMacro`
+
+`mclear` is like `clear`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ Q → Q := by
+  mintro HP
+  mintro HQ
+  mclear HP
+  mexact HQ
+```
+
+## mconstructor
+Defined in: `Lean.Parser.Tactic.mconstructor`
+
+`mconstructor` is like `constructor`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (Q : SPred σs) : Q ⊢ₛ Q ∧ Q := by
+  mintro HQ
+  mconstructor <;> mexact HQ
+```
+
+## mconstructor
+Defined in: `Lean.Parser.Tactic.mconstructorMacro`
+
+`mconstructor` is like `constructor`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (Q : SPred σs) : Q ⊢ₛ Q ∧ Q := by
+  mintro HQ
+  mconstructor <;> mexact HQ
+```
+
+## mdup
+Defined in: `Lean.Parser.Tactic.mdup`
+
+Duplicate a stateful `Std.Do.SPred` hypothesis.
+
 ## measurability
 Defined in: `tacticMeasurability`
 
@@ -3976,11 +4242,189 @@ Defined in: `AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.tacticMem_tac`
 Defined in: `AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.tacticMem_tac_aux`
 
 
+## mexact
+Defined in: `Lean.Parser.Tactic.mexactMacro`
+
+`mexact` is like `exact`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (Q : SPred σs) : Q ⊢ₛ Q := by
+  mstart
+  mintro HQ
+  mexact HQ
+```
+
+## mexact
+Defined in: `Lean.Parser.Tactic.mexact`
+
+`mexact` is like `exact`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (Q : SPred σs) : Q ⊢ₛ Q := by
+  mstart
+  mintro HQ
+  mexact HQ
+```
+
+## mexfalso
+Defined in: `Lean.Parser.Tactic.mexfalsoMacro`
+
+`mexfalso` is like `exfalso`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P : SPred σs) : ⌜False⌝ ⊢ₛ P := by
+  mintro HP
+  mexfalso
+  mexact HP
+```
+
+## mexfalso
+Defined in: `Lean.Parser.Tactic.mexfalso`
+
+`mexfalso` is like `exfalso`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P : SPred σs) : ⌜False⌝ ⊢ₛ P := by
+  mintro HP
+  mexfalso
+  mexact HP
+```
+
+## mexists
+Defined in: `Lean.Parser.Tactic.mexistsMacro`
+
+`mexists` is like `exists`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (ψ : Nat → SPred σs) : ψ 42 ⊢ₛ ∃ x, ψ x := by
+  mintro H
+  mexists 42
+```
+
+## mexists
+Defined in: `Lean.Parser.Tactic.mexists`
+
+`mexists` is like `exists`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (ψ : Nat → SPred σs) : ψ 42 ⊢ₛ ∃ x, ψ x := by
+  mintro H
+  mexists 42
+```
+
 ## mfld_set_tac
 Defined in: `Tactic.MfldSetTac.mfldSetTac`
 
 A very basic tactic to show that sets showing up in manifolds coincide or are included
 in one another.
+
+## mframe
+Defined in: `Lean.Parser.Tactic.mframeMacro`
+
+`mframe` infers which hypotheses from the stateful context can be moved into the pure context.
+This is useful because pure hypotheses "survive" the next application of modus ponens
+(`Std.Do.SPred.mp`) and transitivity (`Std.Do.SPred.entails.trans`).
+
+It is used as part of the `mspec` tactic.
+
+```lean
+example (P Q : SPred σs) : ⊢ₛ ⌜p⌝ ∧ Q ∧ ⌜q⌝ ∧ ⌜r⌝ ∧ P ∧ ⌜s⌝ ∧ ⌜t⌝ → Q := by
+  mintro _
+  mframe
+  /- `h : p ∧ q ∧ r ∧ s ∧ t` in the pure context -/
+  mcases h with hP
+  mexact h
+```
+
+## mframe
+Defined in: `Lean.Parser.Tactic.mframe`
+
+`mframe` infers which hypotheses from the stateful context can be moved into the pure context.
+This is useful because pure hypotheses "survive" the next application of modus ponens
+(`Std.Do.SPred.mp`) and transitivity (`Std.Do.SPred.entails.trans`).
+
+It is used as part of the `mspec` tactic.
+
+```lean
+example (P Q : SPred σs) : ⊢ₛ ⌜p⌝ ∧ Q ∧ ⌜q⌝ ∧ ⌜r⌝ ∧ P ∧ ⌜s⌝ ∧ ⌜t⌝ → Q := by
+  mintro _
+  mframe
+  /- `h : p ∧ q ∧ r ∧ s ∧ t` in the pure context -/
+  mcases h with hP
+  mexact h
+```
+
+## mhave
+Defined in: `Lean.Parser.Tactic.mhaveMacro`
+
+`mhave` is like `have`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ (P → Q) → Q := by
+  mintro HP HPQ
+  mhave HQ : Q := by mspecialize HPQ HP; mexact HPQ
+  mexact HQ
+```
+
+## mhave
+Defined in: `Lean.Parser.Tactic.mhave`
+
+`mhave` is like `have`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ (P → Q) → Q := by
+  mintro HP HPQ
+  mhave HQ : Q := by mspecialize HPQ HP; mexact HPQ
+  mexact HQ
+```
+
+## mintro
+Defined in: `Lean.Parser.Tactic.mintro`
+
+Like `intro`, but introducing stateful hypotheses into the stateful context of the `Std.Do.SPred`
+proof mode.
+That is, given a stateful goal `(hᵢ : Hᵢ)* ⊢ₛ P → T`, `mintro h` transforms
+into `(hᵢ : Hᵢ)*, (h : P) ⊢ₛ T`.
+
+Furthermore, `mintro ∀s` is like `intro s`, but preserves the stateful goal.
+That is, `mintro ∀s` brings the topmost state variable `s:σ` in scope and transforms
+`(hᵢ : Hᵢ)* ⊢ₛ T` (where the entailment is in `Std.Do.SPred (σ::σs)`) into
+`(hᵢ : Hᵢ s)* ⊢ₛ T s` (where the entailment is in `Std.Do.SPred σs`).
+
+Beyond that, `mintro` supports the full syntax of `mcases` patterns
+(`mintro pat = (mintro h; mcases h with pat`), and can perform multiple
+introductions in sequence.
+
+## mintro
+Defined in: `Lean.Parser.Tactic.mintroMacro`
+
+Like `intro`, but introducing stateful hypotheses into the stateful context of the `Std.Do.SPred`
+proof mode.
+That is, given a stateful goal `(hᵢ : Hᵢ)* ⊢ₛ P → T`, `mintro h` transforms
+into `(hᵢ : Hᵢ)*, (h : P) ⊢ₛ T`.
+
+Furthermore, `mintro ∀s` is like `intro s`, but preserves the stateful goal.
+That is, `mintro ∀s` brings the topmost state variable `s:σ` in scope and transforms
+`(hᵢ : Hᵢ)* ⊢ₛ T` (where the entailment is in `Std.Do.SPred (σ::σs)`) into
+`(hᵢ : Hᵢ s)* ⊢ₛ T s` (where the entailment is in `Std.Do.SPred σs`).
+
+Beyond that, `mintro` supports the full syntax of `mcases` patterns
+(`mintro pat = (mintro h; mcases h with pat`), and can perform multiple
+introductions in sequence.
+
+## mleft
+Defined in: `Lean.Parser.Tactic.mleftMacro`
+
+`mleft` is like `left`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ P ∨ Q := by
+  mintro HP
+  mleft
+  mexact HP
+```
+
+## mleft
+Defined in: `Lean.Parser.Tactic.mleft`
+
+`mleft` is like `left`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ P ∨ Q := by
+  mintro HP
+  mleft
+  mexact HP
+```
 
 ## mod_cases
 Defined in: `Mathlib.Tactic.ModCases.«tacticMod_cases_:_%_»`
@@ -4148,10 +4592,416 @@ In this case the syntax requires providing first a term whose head symbol is the
 E.g. `move_oper HAdd.hAdd [...]` is the same as `move_add`, while `move_oper Max.max [...]`
 rearranges `max`s.
 
+## mpure
+Defined in: `Lean.Parser.Tactic.mpure`
+
+`mpure` moves a pure hypothesis from the stateful context into the pure context.
+```lean
+example (Q : SPred σs) (ψ : φ → ⊢ₛ Q): ⌜φ⌝ ⊢ₛ Q := by
+  mintro Hφ
+  mpure Hφ
+  mexact (ψ Hφ)
+```
+
+## mpure
+Defined in: `Lean.Parser.Tactic.mpureMacro`
+
+`mpure` moves a pure hypothesis from the stateful context into the pure context.
+```lean
+example (Q : SPred σs) (ψ : φ → ⊢ₛ Q): ⌜φ⌝ ⊢ₛ Q := by
+  mintro Hφ
+  mpure Hφ
+  mexact (ψ Hφ)
+```
+
+## mpure_intro
+Defined in: `Lean.Elab.Tactic.Do.ProofMode.tacticMpure_intro`
+
+
+## mpure_intro
+Defined in: `Lean.Parser.Tactic.mpureIntro`
+
+`mpure_intro` operates on a stateful `Std.Do.SPred` goal of the form `P ⊢ₛ ⌜φ⌝`.
+It leaves the stateful proof mode (thereby discarding `P`), leaving the regular goal `φ`.
+```lean
+theorem simple : ⊢ₛ (⌜True⌝ : SPred σs) := by
+  mpure_intro
+  exact True.intro
+```
+
+## mpure_intro
+Defined in: `Lean.Parser.Tactic.mpureIntroMacro`
+
+`mpure_intro` operates on a stateful `Std.Do.SPred` goal of the form `P ⊢ₛ ⌜φ⌝`.
+It leaves the stateful proof mode (thereby discarding `P`), leaving the regular goal `φ`.
+```lean
+theorem simple : ⊢ₛ (⌜True⌝ : SPred σs) := by
+  mpure_intro
+  exact True.intro
+```
+
+## mrefine
+Defined in: `Lean.Parser.Tactic.mrefine`
+
+Like `refine`, but operating on stateful `Std.Do.SPred` goals.
+```lean
+example (P Q R : SPred σs) : (P ∧ Q ∧ R) ⊢ₛ P ∧ R := by
+  mintro ⟨HP, HQ, HR⟩
+  mrefine ⟨HP, HR⟩
+
+example (ψ : Nat → SPred σs) : ψ 42 ⊢ₛ ∃ x, ψ x := by
+  mintro H
+  mrefine ⟨⌜42⌝, H⟩
+```
+
+## mrefine
+Defined in: `Lean.Parser.Tactic.mrefineMacro`
+
+Like `refine`, but operating on stateful `Std.Do.SPred` goals.
+```lean
+example (P Q R : SPred σs) : (P ∧ Q ∧ R) ⊢ₛ P ∧ R := by
+  mintro ⟨HP, HQ, HR⟩
+  mrefine ⟨HP, HR⟩
+
+example (ψ : Nat → SPred σs) : ψ 42 ⊢ₛ ∃ x, ψ x := by
+  mintro H
+  mrefine ⟨⌜42⌝, H⟩
+```
+
+## mreplace
+Defined in: `Lean.Parser.Tactic.mreplaceMacro`
+
+`mreplace` is like `replace`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ (P → Q) → Q := by
+  mintro HP HPQ
+  mreplace HPQ : Q := by mspecialize HPQ HP; mexact HPQ
+  mexact HPQ
+```
+
+## mreplace
+Defined in: `Lean.Parser.Tactic.mreplace`
+
+`mreplace` is like `replace`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ (P → Q) → Q := by
+  mintro HP HPQ
+  mreplace HPQ : Q := by mspecialize HPQ HP; mexact HPQ
+  mexact HPQ
+```
+
+## mrevert
+Defined in: `Lean.Parser.Tactic.mrevert`
+
+`mrevert` is like `revert`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q R : SPred σs) : P ∧ Q ∧ R ⊢ₛ P → R := by
+  mintro ⟨HP, HQ, HR⟩
+  mrevert HR
+  mrevert HP
+  mintro HP'
+  mintro HR'
+  mexact HR'
+```
+
+## mrevert
+Defined in: `Lean.Parser.Tactic.mrevertMacro`
+
+`mrevert` is like `revert`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q R : SPred σs) : P ∧ Q ∧ R ⊢ₛ P → R := by
+  mintro ⟨HP, HQ, HR⟩
+  mrevert HR
+  mrevert HP
+  mintro HP'
+  mintro HR'
+  mexact HR'
+```
+
+## mright
+Defined in: `Lean.Parser.Tactic.mright`
+
+`mright` is like `right`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ Q ∨ P := by
+  mintro HP
+  mright
+  mexact HP
+```
+
+## mright
+Defined in: `Lean.Parser.Tactic.mrightMacro`
+
+`mright` is like `right`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ Q ∨ P := by
+  mintro HP
+  mright
+  mexact HP
+```
+
+## mspec
+Defined in: `Lean.Parser.Tactic.mspec`
+
+`mspec` is an `apply`-like tactic that applies a Hoare triple specification to the target of the
+stateful goal.
+
+Given a stateful goal `H ⊢ₛ wp⟦prog⟧.apply Q'`, `mspec foo_spec` will instantiate
+`foo_spec : ... → ⦃P⦄ foo ⦃Q⦄`, match `foo` against `prog` and produce subgoals for
+the verification conditions `?pre : H ⊢ₛ P` and `?post : Q ⊢ₚ Q'`.
+
+* If `prog = x >>= f`, then `mspec Specs.bind` is tried first so that `foo` is matched against `x`
+  instead. Tactic `mspec_no_bind` does not attempt to do this decomposition.
+* If `?pre` or `?post` follow by `.rfl`, then they are discharged automatically.
+* `?post` is automatically simplified into constituent `⊢ₛ` entailments on
+  success and failure continuations.
+* `?pre` and `?post.*` goals introduce their stateful hypothesis as `h`.
+* Any uninstantiated MVar arising from instantiation of `foo_spec` becomes a new subgoal.
+* If the goal looks like `fun s => _ ⊢ₛ _` then `mspec` will first `mintro ∀s`.
+* If `P` has schematic variables that can be instantiated by doing `mintro ∀s`, for example
+  `foo_spec : ∀(n:Nat), ⦃⌜n = ‹Nat›ₛ⌝⦄ foo ⦃Q⦄`, then `mspec` will do `mintro ∀s` first to
+  instantiate `n = s`.
+* Right before applying the spec, the `mframe` tactic is used, which has the following effect:
+  Any hypothesis `Hᵢ` in the goal `h₁:H₁, h₂:H₂, ..., hₙ:Hₙ ⊢ₛ T` that is
+  pure (i.e., equivalent to some `⌜φᵢ⌝`) will be moved into the pure context as `hᵢ:φᵢ`.
+
+Additionally, `mspec` can be used without arguments or with a term argument:
+
+* `mspec` without argument will try and look up a spec for `x` registered with `@[spec]`.
+* `mspec (foo_spec blah ?bleh)` will elaborate its argument as a term with expected type
+  `⦃?P⦄ x ⦃?Q⦄` and introduce `?bleh` as a subgoal.
+  This is useful to pass an invariant to e.g., `Specs.forIn_list` and leave the inductive step
+  as a hole.
+
+## mspec
+Defined in: `Lean.Parser.Tactic.mspecMacro`
+
+`mspec` is an `apply`-like tactic that applies a Hoare triple specification to the target of the
+stateful goal.
+
+Given a stateful goal `H ⊢ₛ wp⟦prog⟧.apply Q'`, `mspec foo_spec` will instantiate
+`foo_spec : ... → ⦃P⦄ foo ⦃Q⦄`, match `foo` against `prog` and produce subgoals for
+the verification conditions `?pre : H ⊢ₛ P` and `?post : Q ⊢ₚ Q'`.
+
+* If `prog = x >>= f`, then `mspec Specs.bind` is tried first so that `foo` is matched against `x`
+  instead. Tactic `mspec_no_bind` does not attempt to do this decomposition.
+* If `?pre` or `?post` follow by `.rfl`, then they are discharged automatically.
+* `?post` is automatically simplified into constituent `⊢ₛ` entailments on
+  success and failure continuations.
+* `?pre` and `?post.*` goals introduce their stateful hypothesis as `h`.
+* Any uninstantiated MVar arising from instantiation of `foo_spec` becomes a new subgoal.
+* If the goal looks like `fun s => _ ⊢ₛ _` then `mspec` will first `mintro ∀s`.
+* If `P` has schematic variables that can be instantiated by doing `mintro ∀s`, for example
+  `foo_spec : ∀(n:Nat), ⦃⌜n = ‹Nat›ₛ⌝⦄ foo ⦃Q⦄`, then `mspec` will do `mintro ∀s` first to
+  instantiate `n = s`.
+* Right before applying the spec, the `mframe` tactic is used, which has the following effect:
+  Any hypothesis `Hᵢ` in the goal `h₁:H₁, h₂:H₂, ..., hₙ:Hₙ ⊢ₛ T` that is
+  pure (i.e., equivalent to some `⌜φᵢ⌝`) will be moved into the pure context as `hᵢ:φᵢ`.
+
+Additionally, `mspec` can be used without arguments or with a term argument:
+
+* `mspec` without argument will try and look up a spec for `x` registered with `@[spec]`.
+* `mspec (foo_spec blah ?bleh)` will elaborate its argument as a term with expected type
+  `⦃?P⦄ x ⦃?Q⦄` and introduce `?bleh` as a subgoal.
+  This is useful to pass an invariant to e.g., `Specs.forIn_list` and leave the inductive step
+  as a hole.
+
+## mspec_no_bind
+Defined in: `Lean.Parser.Tactic.mspecNoBind`
+
+`mspec_no_simp $spec` first tries to decompose `Bind.bind`s before applying `$spec`.
+This variant of `mspec_no_simp` does not; `mspec_no_bind $spec` is defined as
+```
+try with_reducible mspec_no_bind Std.Do.Spec.bind
+mspec_no_bind $spec
+```
+
+## mspec_no_simp
+Defined in: `Lean.Parser.Tactic.mspecNoSimp`
+
+Like `mspec`, but does not attempt slight simplification and closing of trivial sub-goals.
+`mspec $spec` is roughly (the set of simp lemmas below might not be up to date)
+```
+mspec_no_simp $spec
+all_goals
+  ((try simp only [SPred.true_intro_simp, SPred.true_intro_simp_nil, SVal.curry_cons,
+                   SVal.uncurry_cons, SVal.getThe_here, SVal.getThe_there]);
+   (try mpure_intro; trivial))
+```
+
+## mspecialize
+Defined in: `Lean.Parser.Tactic.mspecializeMacro`
+
+`mspecialize` is like `specialize`, but operating on a stateful `Std.Do.SPred` goal.
+It specializes a hypothesis from the stateful context with hypotheses from either the pure
+or stateful context or pure terms.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ (P → Q) → Q := by
+  mintro HP HPQ
+  mspecialize HPQ HP
+  mexact HPQ
+
+example (y : Nat) (P Q : SPred σs) (Ψ : Nat → SPred σs) (hP : ⊢ₛ P) : ⊢ₛ Q → (∀ x, P → Q → Ψ x) → Ψ (y + 1) := by
+  mintro HQ HΨ
+  mspecialize HΨ (y + 1) hP HQ
+  mexact HΨ
+```
+
+## mspecialize
+Defined in: `Lean.Parser.Tactic.mspecialize`
+
+`mspecialize` is like `specialize`, but operating on a stateful `Std.Do.SPred` goal.
+It specializes a hypothesis from the stateful context with hypotheses from either the pure
+or stateful context or pure terms.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ (P → Q) → Q := by
+  mintro HP HPQ
+  mspecialize HPQ HP
+  mexact HPQ
+
+example (y : Nat) (P Q : SPred σs) (Ψ : Nat → SPred σs) (hP : ⊢ₛ P) : ⊢ₛ Q → (∀ x, P → Q → Ψ x) → Ψ (y + 1) := by
+  mintro HQ HΨ
+  mspecialize HΨ (y + 1) hP HQ
+  mexact HΨ
+```
+
+## mspecialize_pure
+Defined in: `Lean.Parser.Tactic.mspecializePure`
+
+`mspecialize_pure` is like `mspecialize`, but it specializes a hypothesis from the
+*pure* context with hypotheses from either the pure or stateful context or pure terms.
+```lean
+example (y : Nat) (P Q : SPred σs) (Ψ : Nat → SPred σs) (hP : ⊢ₛ P) (hΨ : ∀ x, ⊢ₛ P → Q → Ψ x) : ⊢ₛ Q → Ψ (y + 1) := by
+  mintro HQ
+  mspecialize_pure (hΨ (y + 1)) hP HQ => HΨ
+  mexact HΨ
+```
+
+## mspecialize_pure
+Defined in: `Lean.Parser.Tactic.mspecializePureMacro`
+
+`mspecialize_pure` is like `mspecialize`, but it specializes a hypothesis from the
+*pure* context with hypotheses from either the pure or stateful context or pure terms.
+```lean
+example (y : Nat) (P Q : SPred σs) (Ψ : Nat → SPred σs) (hP : ⊢ₛ P) (hΨ : ∀ x, ⊢ₛ P → Q → Ψ x) : ⊢ₛ Q → Ψ (y + 1) := by
+  mintro HQ
+  mspecialize_pure (hΨ (y + 1)) hP HQ => HΨ
+  mexact HΨ
+```
+
+## mstart
+Defined in: `Lean.Parser.Tactic.mstartMacro`
+
+Start the stateful proof mode of `Std.Do.SPred`.
+This will transform a stateful goal of the form `H ⊢ₛ T` into `⊢ₛ H → T`
+upon which `mintro` can be used to re-introduce `H` and give it a name.
+It is often more convenient to use `mintro` directly, which will
+try `mstart` automatically if necessary.
+
+## mstart
+Defined in: `Lean.Parser.Tactic.mstart`
+
+Start the stateful proof mode of `Std.Do.SPred`.
+This will transform a stateful goal of the form `H ⊢ₛ T` into `⊢ₛ H → T`
+upon which `mintro` can be used to re-introduce `H` and give it a name.
+It is often more convenient to use `mintro` directly, which will
+try `mstart` automatically if necessary.
+
+## mstop
+Defined in: `Lean.Parser.Tactic.mstopMacro`
+
+Stops the stateful proof mode of `Std.Do.SPred`.
+This will simply forget all the names given to stateful hypotheses and pretty-print
+a bit differently.
+
+## mstop
+Defined in: `Lean.Parser.Tactic.mstop`
+
+Stops the stateful proof mode of `Std.Do.SPred`.
+This will simply forget all the names given to stateful hypotheses and pretty-print
+a bit differently.
+
 ## mv_bisim
 Defined in: `Mathlib.Tactic.MvBisim.tacticMv_bisim___With___`
 
 tactic for proof by bisimulation
+
+## mvcgen
+Defined in: `Lean.Parser.Tactic.mvcgenMacro`
+
+`mvcgen` will break down a Hoare triple proof goal like `⦃P⦄ prog ⦃Q⦄` into verification conditions,
+provided that all functions used in `prog` have specifications registered with `@[spec]`.
+
+A verification condition is an entailment in the stateful logic of `Std.Do.SPred`
+in which the original program `prog` no longer occurs.
+Verification conditions are introduced by the `mspec` tactic; see the `mspec` tactic for what they
+look like.
+When there's no applicable `mspec` spec, `mvcgen` will try and rewrite an application
+`prog = f a b c` with the simp set registered via `@[spec]`.
+
+When used like `mvcgen +noLetElim [foo_spec, bar_def, instBEqFloat]`, `mvcgen` will additionally
+
+* add a Hoare triple specification `foo_spec : ... → ⦃P⦄ foo ... ⦃Q⦄` to `spec` set for a
+  function `foo` occurring in `prog`,
+* unfold a definition `def bar_def ... := ...` in `prog`,
+* unfold any method of the `instBEqFloat : BEq Float` instance in `prog`.
+* it will no longer substitute away `let`-expressions that occur at most once in `P`, `Q` or `prog`.
+
+Furthermore, `mvcgen` tries to close trivial verification conditions by `SPred.entails.rfl` or
+the tactic sequence `try (mpure_intro; trivial)`. The variant `mvcgen_no_trivial` does not do this.
+
+For debugging purposes there is also `mvcgen_step 42` which will do at most 42 VC generation
+steps. This is useful for bisecting issues with the generated VCs.
+
+## mvcgen
+Defined in: `Lean.Parser.Tactic.mvcgen`
+
+`mvcgen` will break down a Hoare triple proof goal like `⦃P⦄ prog ⦃Q⦄` into verification conditions,
+provided that all functions used in `prog` have specifications registered with `@[spec]`.
+
+A verification condition is an entailment in the stateful logic of `Std.Do.SPred`
+in which the original program `prog` no longer occurs.
+Verification conditions are introduced by the `mspec` tactic; see the `mspec` tactic for what they
+look like.
+When there's no applicable `mspec` spec, `mvcgen` will try and rewrite an application
+`prog = f a b c` with the simp set registered via `@[spec]`.
+
+When used like `mvcgen +noLetElim [foo_spec, bar_def, instBEqFloat]`, `mvcgen` will additionally
+
+* add a Hoare triple specification `foo_spec : ... → ⦃P⦄ foo ... ⦃Q⦄` to `spec` set for a
+  function `foo` occurring in `prog`,
+* unfold a definition `def bar_def ... := ...` in `prog`,
+* unfold any method of the `instBEqFloat : BEq Float` instance in `prog`.
+* it will no longer substitute away `let`-expressions that occur at most once in `P`, `Q` or `prog`.
+
+Furthermore, `mvcgen` tries to close trivial verification conditions by `SPred.entails.rfl` or
+the tactic sequence `try (mpure_intro; trivial)`. The variant `mvcgen_no_trivial` does not do this.
+
+For debugging purposes there is also `mvcgen_step 42` which will do at most 42 VC generation
+steps. This is useful for bisecting issues with the generated VCs.
+
+## mvcgen
+Defined in: `Lean.Elab.Tactic.Do.mvcgen`
+
+
+## mvcgen_no_trivial
+Defined in: `Lean.Parser.Tactic.mvcgenNoTrivial`
+
+Like `mvcgen`, but does not attempt to prove trivial VCs via `mpure_intro; trivial`.
+
+## mvcgen_no_trivial
+Defined in: `Lean.Elab.Tactic.Do.mvcgen_no_trivial`
+
+
+## mvcgen_step
+Defined in: `Lean.Parser.Tactic.mvcgenStep`
+
+Like `mvcgen_no_trivial`, but `mvcgen_step 42` will only do 42 steps of the VC generation procedure.
+This is helpful for bisecting bugs in `mvcgen` and tracing its execution.
+
+## mvcgen_step
+Defined in: `Lean.Elab.Tactic.Do.mvcgen_step`
+
 
 ## native_decide
 Defined in: `Lean.Parser.Tactic.nativeDecide`
@@ -5544,7 +6394,7 @@ Defined in: `Lean.Parser.Tactic.set_option`
 but it sets the option only within the tactics `tacs`.
 
 ## show
-Defined in: `Lean.Parser.Tactic.tacticShow_`
+Defined in: `Lean.Parser.Tactic.show`
 
 `show t` finds the first goal whose target unifies with `t`. It makes that the main goal,
 performs the unification, and replaces the target with the unified version of `t`.
