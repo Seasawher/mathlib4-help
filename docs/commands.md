@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `308445d7985027f538e281e18df29ca16ede2ba3`
+Mathlib version: `81a4b04c3ae8a45c367ee1664e82b618694462c4`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -186,6 +186,11 @@ For example,
 `#discr_tree_simp_key` is similar to `#discr_tree_key`, but treats the underlying type
 as one of a simp lemma, i.e. transforms it into an equality and produces the key of the
 left-hand side.
+
+## \#dump_async_env_state
+Defined in: `Lean.Parser.Command.dumpAsyncEnvState`
+
+Debugging command: Prints the result of `Environment.dumpAsyncEnvState`.
 
 ## \#eval
 Defined in: `Lean.Parser.Command.eval`
@@ -924,6 +929,10 @@ by setting `showTypes` to `false`:
 
 The complete set of flags can be seen in the documentation
 for `Lean.Elab.Command.PrintPrefixConfig`.
+
+## \#print
+Defined in: `Lean.Parser.Command.printSig`
+
 
 ## \#print
 Defined in: `Lean.Parser.Command.printAxioms`
@@ -2168,6 +2177,13 @@ identifier names chosen in the docstring for consistency.
 ## register_builtin_option
 Defined in: `Lean.Option.registerBuiltinOption`
 
+
+## register_error_explanation
+Defined in: `Lean.Parser.Command.registerErrorExplanationStx`
+
+Registers an error explanation.
+
+Note that the error name is not relativized to the current namespace.
 
 ## register_hint
 Defined in: `Mathlib.Tactic.Hint.registerHintStx`
