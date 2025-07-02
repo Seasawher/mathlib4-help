@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `81a4b04c3ae8a45c367ee1664e82b618694462c4`
+Mathlib version: `84a77eea345d5b6f36803f8780c09d52c876d51f`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1672,7 +1672,7 @@ while `congr 2` produces the intended `⊢ x + y = y + x`.
 ## congr
 Defined in: `Batteries.Tactic.congrConfigWith`
 
-Apply congruence (recursively) to goals of the form `⊢ f as = f bs` and `⊢ HEq (f as) (f bs)`.
+Apply congruence (recursively) to goals of the form `⊢ f as = f bs` and `⊢ f as ≍ f bs`.
 * `congr n` controls the depth of the recursive applications.
   This is useful when `congr` is too aggressive in breaking down the goal.
   For example, given `⊢ f (g (x + y)) = f (g (y + x))`,
