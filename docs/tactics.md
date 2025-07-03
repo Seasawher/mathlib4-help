@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `84a77eea345d5b6f36803f8780c09d52c876d51f`
+Mathlib version: `dfa4fe7078b2fe0480c9b9724e586808a40a9e58`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2870,7 +2870,7 @@ A macro for a common simplification when rewriting with ghost component equation
 ## grewrite
 Defined in: `Mathlib.Tactic.grewriteSeq`
 
-`grewrite [e]` works just like `rewerite [e]`, but `e` can be a relation other than `=` or `↔`.
+`grewrite [e]` works just like `rewrite [e]`, but `e` can be a relation other than `=` or `↔`.
 
 For example,
 ```lean
