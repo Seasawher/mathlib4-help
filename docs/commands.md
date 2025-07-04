@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `dfa4fe7078b2fe0480c9b9724e586808a40a9e58`
+Mathlib version: `389ef58cfb2168d7e50eecbc58e2ea28796969b1`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1914,6 +1914,23 @@ See also the `mk_iff` user attribute.
 ## mutual
 Defined in: `Lean.Parser.Command.mutual`
 
+
+## name_poly_vars
+Defined in: `Mathlib.Tactic.namePolyVarsOver`
+
+The command `name_poly_vars` names variables in
+`MvPolynomial (Fin n) R` for the appropriate value of `n`.
+The notation introduced by this command is local.
+
+Usage:
+
+```lean
+variable (R : Type) [CommRing R]
+
+name_poly_vars X, Y, Z over R
+
+#check Y -- Y : MvPolynomial (Fin 3) R
+```
 
 ## namespace
 Defined in: `Lean.Parser.Command.namespace`
