@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `850f9cbdcd1e365c8eca868785fb7874b6059d85`
+Mathlib version: `3cc54608df73f06e3c38906d6c19458e92f2680e`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1765,7 +1765,7 @@ See `Congr!.Config` for all options.
 ## congrm
 Defined in: `Mathlib.Tactic.congrM`
 
-`congrm e` is a tactic for proving goals of the form `lhs = rhs`, `lhs ↔ rhs`, `HEq lhs rhs`,
+`congrm e` is a tactic for proving goals of the form `lhs = rhs`, `lhs ↔ rhs`, `lhs ≍ rhs`,
 or `R lhs rhs` when `R` is a reflexive relation.
 The expression `e` is a pattern containing placeholders `?_`,
 and this pattern is matched against `lhs` and `rhs` simultaneously.
@@ -6949,7 +6949,7 @@ and less messy than commenting the remainder of the proof.
 ## subsingleton
 Defined in: `Mathlib.Tactic.subsingletonStx`
 
-The `subsingleton` tactic tries to prove a goal of the form `x = y` or `HEq x y`
+The `subsingleton` tactic tries to prove a goal of the form `x = y` or `x ≍ y`
 using the fact that the types involved are *subsingletons*
 (a type with exactly zero or one terms).
 To a first approximation, it does `apply Subsingleton.elim`.
