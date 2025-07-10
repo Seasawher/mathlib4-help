@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `59726ffacf54edc7f615743843f3110b4de33e71`
+Mathlib version: `02c6431ffe61ac7571e0281242e025e54638ad42`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1894,10 +1894,13 @@ Defined in: `Lean.Parser.Command.macro_rules`
 Defined in: `Mathlib.Tactic.MkIff.mkIffOfInductiveProp`
 
 `mk_iff_of_inductive_prop i r` makes an `iff` rule for the inductively-defined proposition `i`.
-The new rule `r` has the shape `∀ps is, i as ↔ ⋁_j, ∃cs, is = cs`, where `ps` are the type
-parameters, `is` are the indices, `j` ranges over all possible constructors, the `cs` are the
-parameters for each of the constructors, and the equalities `is = cs` are the instantiations for
-each constructor for each of the indices to the inductive type `i`.
+The new rule `r` has the shape `∀ ps is, i as ↔ ⋁_j, ∃ cs, is = cs`, where
+* `ps` are the type parameters,
+* `is` are the indices,
+* `j` ranges over all possible constructors,
+* the `cs` are the parameters for each of the constructors, and
+* the equalities `is = cs` are the instantiations for
+  each constructor for each of the indices to the inductive type `i`.
 
 In each case, we remove constructor parameters (i.e. `cs`) when the corresponding equality would
 be just `c = i` for some index `i`.
@@ -1906,7 +1909,7 @@ For example, `mk_iff_of_inductive_prop` on `List.Chain` produces:
 
 ```lean
 ∀ { α : Type*} (R : α → α → Prop) (a : α) (l : List α),
-  Chain R a l ↔ l = [] ∨ ∃(b : α) (l' : List α), R a b ∧ Chain R b l ∧ l = b :: l'
+  Chain R a l ↔ l = [] ∨ ∃ (b : α) (l' : List α), R a b ∧ Chain R b l ∧ l = b :: l'
 ```
 
 See also the `mk_iff` user attribute.
