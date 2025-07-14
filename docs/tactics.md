@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `f2bf11f4287d61b6fe50ea974ac1a849060e955e`
+Mathlib version: `5c2f1ddb745c78417b9d7d69f03a88f1f419550d`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2717,11 +2717,12 @@ x ^ 2 * ?_ + ?_
 (with inputs `a`, `c` on the left and `b`, `d` on the right); after the use of
 `gcongr`, we have the simpler goals `a ≤ b` and `c ≤ d`.
 
-A pattern can be provided explicitly; this is useful if a non-maximal match is desired:
+A depth limit, or a pattern can be provided explicitly;
+this is useful if a non-maximal match is desired:
 ```lean
 example {a b c d x : ℝ} (h : a + c + 1 ≤ b + d + 1) :
     x ^ 2 * (a + c) + 5 ≤ x ^ 2 * (b + d) + 5 := by
-  gcongr x ^ 2 * ?_ + 5
+  gcongr x ^ 2 * ?_ + 5 -- or `gcongr 2`
   linarith
 ```
 
