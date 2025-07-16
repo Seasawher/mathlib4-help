@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `507dd92b9ed9cfd43bd29d1438a458da6705d8a0`
+Mathlib version: `488d3b8ee3f7258a7294b6753c1a0a3dea445187`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -58,6 +58,12 @@ Mathlib version: `507dd92b9ed9cfd43bd29d1438a458da6705d8a0`
 
 ## aesop_SetLike
  simp theorems in the Aesop rule set 'SetLike'
+
+## aesop_SetLike!
+ simp theorems in the Aesop rule set 'SetLike!'
+
+## aesop_SetLike!_proc
+ simprocs in the Aesop rule set 'SetLike!'
 
 ## aesop_SetLike_proc
  simprocs in the Aesop rule set 'SetLike'
