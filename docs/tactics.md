@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `c728e645fccf7166c3ac71ce0c1ca1a32c10a268`
+Mathlib version: `ec6d1764a629a42d960640bfe6bff135fbcc798e`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1333,7 +1333,7 @@ the current goal, not to make some inconclusive progress.
 A mostly trivial example would be:
 
 ```lean
-example (a b c : ℕ) (f : ℕ → ℕ) (h: a = b) (h' : b = c) : f a = f c := by
+example (a b c : ℕ) (f : ℕ → ℕ) (h : a = b) (h' : b = c) : f a = f c := by
   cc
 ```
 
