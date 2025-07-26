@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `f3c56c29d5c787d62f66c207e097a159ff66318a`
+Mathlib version: `dda0c9818e2c70fe984973fc2781706edc164db5`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
