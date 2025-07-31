@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `44b0bba0fb52aed6a7b9f82ab2dd5072b44d77ed`
+Mathlib version: `e5b94b53849453946b83a0cdd4d71878915a9a0d`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -189,7 +189,7 @@ Each `@[bound]` lemma is assigned a score based on the number and complexity of 
 and the `aesop` implementation chooses lemmas with lower scores first:
 1. Inequality hypotheses involving `0` add 1 to the score.
 2. General inequalities add `10`.
-3. Disjuctions `a ∨ b` add `100` plus the sum of the scores of `a` and `b`.
+3. Disjunctions `a ∨ b` add `100` plus the sum of the scores of `a` and `b`.
 
 The functionality of `bound` overlaps with `positivity` and `gcongr`, but can jump back and forth
 between `0 ≤ x` and `x ≤ y`-type inequalities.  For example, `bound` proves
