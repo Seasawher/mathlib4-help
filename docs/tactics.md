@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `e5b94b53849453946b83a0cdd4d71878915a9a0d`
+Mathlib version: `fc728c1698b3932de45c758837e3b9bb3525470d`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2698,11 +2698,10 @@ Patterns can be used like in the `intro` tactic. Example, given a goal
 `funext (a, b)` applies `funext` once and performs pattern matching on the newly introduced pair.
 
 ## gcongr
-Defined in: `Mathlib.Tactic.GCongr.tacticGcongr__With___`
+Defined in: `Mathlib.Tactic.GCongr.tacticGcongr___With___`
 
 The `gcongr` tactic applies "generalized congruence" rules, reducing a relational goal
-between a LHS and RHS matching the same pattern to relational subgoals between the differing
-inputs to the pattern.  For example,
+between a LHS and RHS.  For example,
 ```
 example {a b x c d : ℝ} (h1 : a + 1 ≤ b + 1) (h2 : c + 2 ≤ d + 2) :
     x ^ 2 * a + c ≤ x ^ 2 * b + d := by
@@ -2717,7 +2716,7 @@ x ^ 2 * ?_ + ?_
 (with inputs `a`, `c` on the left and `b`, `d` on the right); after the use of
 `gcongr`, we have the simpler goals `a ≤ b` and `c ≤ d`.
 
-A depth limit, or a pattern can be provided explicitly;
+A depth limit or a pattern can be provided explicitly;
 this is useful if a non-maximal match is desired:
 ```lean
 example {a b c d x : ℝ} (h : a + c + 1 ≤ b + d + 1) :
@@ -2726,10 +2725,10 @@ example {a b c d x : ℝ} (h : a + c + 1 ≤ b + d + 1) :
   linarith
 ```
 
-The "generalized congruence" rules used are the library lemmas which have been tagged with the
+The "generalized congruence" rules are the library lemmas which have been tagged with the
 attribute `@[gcongr]`.  For example, the first example constructs the proof term
 ```
-add_le_add (mul_le_mul_of_nonneg_left _ (pow_bit0_nonneg x 1)) _
+add_le_add (mul_le_mul_of_nonneg_left ?_ (Even.pow_nonneg (even_two_mul 1) x)) ?_
 ```
 using the generalized congruence lemmas `add_le_add` and `mul_le_mul_of_nonneg_left`.
 
