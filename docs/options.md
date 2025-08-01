@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `e5b94b53849453946b83a0cdd4d71878915a9a0d`
+Mathlib version: `fc728c1698b3932de45c758837e3b9bb3525470d`
 
 ## Elab.async
 type: `Bool`
@@ -1079,6 +1079,13 @@ type: `Bool`
 default: `false`
 
 if true, do not generate error if an alternative is not used
+
+## mathlib.tactic.cc.warning
+type: `Bool`
+
+default: `true`
+
+Show a deprecation warning when using the `cc` tactic
 
 ## maxBackwardChainingDepth
 type: `Nat`
