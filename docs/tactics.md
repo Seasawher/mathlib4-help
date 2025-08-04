@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `c68fed11a694fffca7346d79974bd057d9684112`
+Mathlib version: `1f48e1a8edc6718ef449bf0e4f6ea193bc8b19ee`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -6206,6 +6206,21 @@ restricting which later rewrites can be found.
 (Disallowed occurrences do not result in instantiation.)
 `(occs := .neg L)` allows skipping specified occurrences.
 
+## rewrite!
+Defined in: `Mathlib.Tactic.DepRewrite.depRewriteSeq`
+
+`rewrite!` is like `rewrite`,
+but can also insert casts to adjust types that depend on the LHS of a rewrite.
+It is available as an ordinary tactic and a `conv` tactic.
+
+The sort of casts that are inserted is controlled by the `castMode` configuration option.
+By default, only proof terms are casted;
+by proof irrelevance, this adds no observable complexity.
+
+With `rewrite! +letAbs (castMode := .all)`, casts are inserted whenever necessary.
+This means that the 'motive is not type correct' error never occurs,
+at the expense of creating potentially complicated terms.
+
 ## rfl
 Defined in: `Lean.Parser.Tactic.tacticRfl`
 
@@ -6431,6 +6446,12 @@ The `run_tac doSeq` tactic executes code in `TacticM Unit`.
 Defined in: `Lean.Parser.Tactic.rwSeq`
 
 `rw` is like `rewrite`, but also tries to close the goal by "cheap" (reducible) `rfl` afterwards.
+
+## rw!
+Defined in: `Mathlib.Tactic.DepRewrite.depRwSeq`
+
+`rw!` is like `rewrite!`, but also calls `dsimp` to simplify the result after every substitution.
+It is available as an ordinary tactic and a `conv` tactic.
 
 ## rw?
 Defined in: `Lean.Parser.Tactic.rewrites?`
