@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `1f48e1a8edc6718ef449bf0e4f6ea193bc8b19ee`
+Mathlib version: `00335dd967b5e65901b802d67118172f536d2f48`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2257,7 +2257,7 @@ which only unfolds `@[reducible]` definitions).
 ## erw?
 Defined in: `Mathlib.Tactic.Erw?.erw?`
 
-`erw? [r]` calls `erw [r]` (note that only a single step is allowed),
+`erw? [r, ...]` calls `erw [r, ...]` (at hypothesis `h` if written `erw [r, ...] at h`),
 and then attempts to identify any subexpression which would block the use of `rw` instead.
 It does so by identifying subexpressions which are defeq, but not at reducible transparency.
 
@@ -3804,7 +3804,7 @@ Equivalently, it can prove a linear inequality by assuming its negation and prov
 In theory, `linarith` should prove any goal that is true in the theory of linear arithmetic over
 the rationals. While there is some special handling for non-dense orders like `Nat` and `Int`,
 this tactic is not complete for these theories and will not prove every true goal. It will solve
-goals over arbitrary types that instantiate `LinearOrderedCommRing`.
+goals over arbitrary types that instantiate `CommRing`, `LinearOrder` and `IsStrictOrderedRing`.
 
 An example:
 ```lean
@@ -3864,7 +3864,7 @@ Equivalently, it can prove a linear inequality by assuming its negation and prov
 In theory, `linarith` should prove any goal that is true in the theory of linear arithmetic over
 the rationals. While there is some special handling for non-dense orders like `Nat` and `Int`,
 this tactic is not complete for these theories and will not prove every true goal. It will solve
-goals over arbitrary types that instantiate `LinearOrderedCommRing`.
+goals over arbitrary types that instantiate `CommRing`, `LinearOrder` and `IsStrictOrderedRing`.
 
 An example:
 ```lean
