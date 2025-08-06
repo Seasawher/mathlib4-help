@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `00335dd967b5e65901b802d67118172f536d2f48`
+Mathlib version: `e20d25fa4a1019ddaa7066067f47ed10f269aca2`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1322,6 +1322,13 @@ Example: The following tactic destructs all conjunctions and disjunctions in the
 ```lean
 casesm* _ ∨ _, _ ∧ _
 ```
+
+## cat_disch
+Defined in: `CategoryTheory.cat_disch`
+
+A tactic for discharging easy category theory goals, widely used as an autoparameter.
+Currently this defaults to the `aesop_cat` wrapper around `aesop`, but by setting
+the option `mathlib.tactic.category.grind` to `true`, it will use the `grind` tactic instead.
 
 ## cc
 Defined in: `Mathlib.Tactic.cc`
@@ -7352,18 +7359,6 @@ Replace the selected expression with a definitional unfolding.
 To use `unfold?`, shift-click an expression in the tactic state.
 This gives a list of rewrite suggestions for the selected expression.
 Click on a suggestion to replace `unfold?` by a tactic that performs this rewrite.
-
-## unfold_let
-Defined in: `Mathlib.Tactic.unfoldLetStx`
-
-This tactic is subsumed by the `unfold` tactic.
-
-`unfold_let x y z at loc` unfolds the local definitions `x`, `y`, and `z` at the given
-location, which is known as "zeta reduction."
-This also exists as a `conv`-mode tactic.
-
-If no local definitions are given, then all local definitions are unfolded.
-This variant also exists as the `conv`-mode tactic `zeta`.
 
 ## unfold_projs
 Defined in: `Mathlib.Tactic.unfoldProjsStx`
