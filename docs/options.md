@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `00335dd967b5e65901b802d67118172f536d2f48`
+Mathlib version: `e20d25fa4a1019ddaa7066067f47ed10f269aca2`
 
 ## Elab.async
 type: `Bool`
@@ -1079,6 +1079,27 @@ type: `Bool`
 default: `false`
 
 if true, do not generate error if an alternative is not used
+
+## mathlib.tactic.category.grind
+type: `Bool`
+
+default: `false`
+
+The category theory library should use `grind` instead of `aesop`.
+
+## mathlib.tactic.category.log_aesop
+type: `Bool`
+
+default: `false`
+
+Log a message whenever the category theory discharger uses `aesop`.
+
+## mathlib.tactic.category.log_grind
+type: `Bool`
+
+default: `false`
+
+Log a message whenever the category theory discharger uses `grind`.
 
 ## mathlib.tactic.cc.warning
 type: `Bool`
