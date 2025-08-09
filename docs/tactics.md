@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `d996ed5b15a3229b158d447cbed1775ff69b275f`
+Mathlib version: `24bd36c5b68f2b77d55f90f14197c973da12294c`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1553,7 +1553,7 @@ This tactic is used internally by lean before presenting the proof obligations f
 definition to the user via `decreasing_by`. It is not necessary to use this tactic manually.
 
 ## clear
-Defined in: `Lean.Elab.Tactic.clearExcept`
+Defined in: `Lean.Elab.Tactic.clearExceptTactic`
 
 Clears all hypotheses it can, except those provided after a minus sign. Example:
 ```lean
