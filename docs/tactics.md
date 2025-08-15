@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `79e94a093aff4a60fb1b1f92d9681e407124c2ca`
+Mathlib version: `77ee539f65bc808ccd55f88bf61870dc200326f5`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3280,6 +3280,10 @@ The `have` tactic is for adding hypotheses to the local context of the main goal
   It is convenient for types that have only one applicable constructor.
   For example, given `h : p ∧ q ∧ r`, `have ⟨h₁, h₂, h₃⟩ := h` produces the
   hypotheses `h₁ : p`, `h₂ : q`, and `h₃ : r`.
+* The syntax `have (eq := h) pat := e` is equivalent to `match h : e with | pat => _`,
+  which adds the equation `h : e = pat` to the local context.
+
+The tactic supports all the same syntax variants and options as the `have` term.
 
 ## have!?
 Defined in: `Mathlib.Tactic.Propose.«tacticHave!?:_Using__»`
@@ -3299,11 +3303,6 @@ Suggestions are printed as `have := f a b c`.
 
 ## have'
 Defined in: `Lean.Parser.Tactic.tacticHave'`
-
-Similar to `have`, but using `refine'`
-
-## have'
-Defined in: `Lean.Parser.Tactic.«tacticHave'_:=_»`
 
 Similar to `have`, but using `refine'`
 
@@ -3706,6 +3705,10 @@ The `let` tactic is for adding definitions to the local context of the main goal
   It is convenient for types that let only one applicable constructor.
   For example, given `p : α × β × γ`, `let ⟨x, y, z⟩ := p` produces the
   local variables `x : α`, `y : β`, and `z : γ`.
+* The syntax `let (eq := h) pat := e` is equivalent to `match h : e with | pat => _`,
+  which adds the equation `h : e = pat` to the local context.
+
+The tactic supports all the same syntax variants and options as the `let` term.
 
 ## let
 Defined in: `Lean.Parser.Tactic.letrec`
@@ -4538,6 +4541,22 @@ Beyond that, `mintro` supports the full syntax of `mcases` patterns
 (`mintro pat = (mintro h; mcases h with pat`), and can perform multiple
 introductions in sequence.
 
+## mleave
+Defined in: `Lean.Parser.Tactic.mleave`
+
+Leaves the stateful proof mode of `Std.Do.SPred`, tries to eta-expand through all definitions
+related to the logic of the `Std.Do.SPred` and gently simplifies the resulting pure Lean
+proposition. This is often the right thing to do after `mvcgen` in order for automation to prove
+the goal.
+
+## mleave
+Defined in: `Lean.Parser.Tactic.mleaveMacro`
+
+Leaves the stateful proof mode of `Std.Do.SPred`, tries to eta-expand through all definitions
+related to the logic of the `Std.Do.SPred` and gently simplifies the resulting pure Lean
+proposition. This is often the right thing to do after `mvcgen` in order for automation to prove
+the goal.
+
 ## mleft
 Defined in: `Lean.Parser.Tactic.mleftMacro`
 
@@ -4802,6 +4821,16 @@ example (ψ : Nat → SPred σs) : ψ 42 ⊢ₛ ∃ x, ψ x := by
   mrefine ⟨⌜42⌝, H⟩
 ```
 
+## mrename_i
+Defined in: `Lean.Parser.Tactic.mrenameI`
+
+`mrename_i` is like `rename_i`, but names inaccessible stateful hypotheses in a `Std.Do.SPred` goal.
+
+## mrename_i
+Defined in: `Lean.Parser.Tactic.mrenameIMacro`
+
+`mrename_i` is like `rename_i`, but names inaccessible stateful hypotheses in a `Std.Do.SPred` goal.
+
 ## mreplace
 Defined in: `Lean.Parser.Tactic.mreplaceMacro`
 
@@ -4880,7 +4909,7 @@ Defined in: `Lean.Parser.Tactic.mspec`
 `mspec` is an `apply`-like tactic that applies a Hoare triple specification to the target of the
 stateful goal.
 
-Given a stateful goal `H ⊢ₛ wp⟦prog⟧.apply Q'`, `mspec foo_spec` will instantiate
+Given a stateful goal `H ⊢ₛ wp⟦prog⟧ Q'`, `mspec foo_spec` will instantiate
 `foo_spec : ... → ⦃P⦄ foo ⦃Q⦄`, match `foo` against `prog` and produce subgoals for
 the verification conditions `?pre : H ⊢ₛ P` and `?post : Q ⊢ₚ Q'`.
 
@@ -4889,11 +4918,12 @@ the verification conditions `?pre : H ⊢ₛ P` and `?post : Q ⊢ₚ Q'`.
 * If `?pre` or `?post` follow by `.rfl`, then they are discharged automatically.
 * `?post` is automatically simplified into constituent `⊢ₛ` entailments on
   success and failure continuations.
-* `?pre` and `?post.*` goals introduce their stateful hypothesis as `h`.
+* `?pre` and `?post.*` goals introduce their stateful hypothesis under an inaccessible name.
+  You can give it a name with the `mrename_i` tactic.
 * Any uninstantiated MVar arising from instantiation of `foo_spec` becomes a new subgoal.
-* If the goal looks like `fun s => _ ⊢ₛ _` then `mspec` will first `mintro ∀s`.
+* If the target of the stateful goal looks like `fun s => _` then `mspec` will first `mintro ∀s`.
 * If `P` has schematic variables that can be instantiated by doing `mintro ∀s`, for example
-  `foo_spec : ∀(n:Nat), ⦃⌜n = ‹Nat›ₛ⌝⦄ foo ⦃Q⦄`, then `mspec` will do `mintro ∀s` first to
+  `foo_spec : ∀(n:Nat), ⦃fun s => ⌜n = s⌝⦄ foo ⦃Q⦄`, then `mspec` will do `mintro ∀s` first to
   instantiate `n = s`.
 * Right before applying the spec, the `mframe` tactic is used, which has the following effect:
   Any hypothesis `Hᵢ` in the goal `h₁:H₁, h₂:H₂, ..., hₙ:Hₙ ⊢ₛ T` that is
@@ -4913,7 +4943,7 @@ Defined in: `Lean.Parser.Tactic.mspecMacro`
 `mspec` is an `apply`-like tactic that applies a Hoare triple specification to the target of the
 stateful goal.
 
-Given a stateful goal `H ⊢ₛ wp⟦prog⟧.apply Q'`, `mspec foo_spec` will instantiate
+Given a stateful goal `H ⊢ₛ wp⟦prog⟧ Q'`, `mspec foo_spec` will instantiate
 `foo_spec : ... → ⦃P⦄ foo ⦃Q⦄`, match `foo` against `prog` and produce subgoals for
 the verification conditions `?pre : H ⊢ₛ P` and `?post : Q ⊢ₚ Q'`.
 
@@ -4922,11 +4952,12 @@ the verification conditions `?pre : H ⊢ₛ P` and `?post : Q ⊢ₚ Q'`.
 * If `?pre` or `?post` follow by `.rfl`, then they are discharged automatically.
 * `?post` is automatically simplified into constituent `⊢ₛ` entailments on
   success and failure continuations.
-* `?pre` and `?post.*` goals introduce their stateful hypothesis as `h`.
+* `?pre` and `?post.*` goals introduce their stateful hypothesis under an inaccessible name.
+  You can give it a name with the `mrename_i` tactic.
 * Any uninstantiated MVar arising from instantiation of `foo_spec` becomes a new subgoal.
-* If the goal looks like `fun s => _ ⊢ₛ _` then `mspec` will first `mintro ∀s`.
+* If the target of the stateful goal looks like `fun s => _` then `mspec` will first `mintro ∀s`.
 * If `P` has schematic variables that can be instantiated by doing `mintro ∀s`, for example
-  `foo_spec : ∀(n:Nat), ⦃⌜n = ‹Nat›ₛ⌝⦄ foo ⦃Q⦄`, then `mspec` will do `mintro ∀s` first to
+  `foo_spec : ∀(n:Nat), ⦃fun s => ⌜n = s⌝⦄ foo ⦃Q⦄`, then `mspec` will do `mintro ∀s` first to
   instantiate `n = s`.
 * Right before applying the spec, the `mframe` tactic is used, which has the following effect:
   Any hypothesis `Hᵢ` in the goal `h₁:H₁, h₂:H₂, ..., hₙ:Hₙ ⊢ₛ T` that is
@@ -4958,8 +4989,7 @@ Like `mspec`, but does not attempt slight simplification and closing of trivial 
 ```
 mspec_no_simp $spec
 all_goals
-  ((try simp only [SPred.true_intro_simp, SPred.true_intro_simp_nil, SVal.curry_cons,
-                   SVal.uncurry_cons, SVal.getThe_here, SVal.getThe_there]);
+  ((try simp only [SPred.true_intro_simp, SPred.apply_pure]);
    (try mpure_intro; trivial))
 ```
 
@@ -5114,18 +5144,10 @@ the tactic sequence `try (mpure_intro; trivial)`. The variant `mvcgen_no_trivial
 For debugging purposes there is also `mvcgen_step 42` which will do at most 42 VC generation
 steps. This is useful for bisecting issues with the generated VCs.
 
-## mvcgen
-Defined in: `Lean.Elab.Tactic.Do.mvcgen`
-
-
 ## mvcgen_no_trivial
 Defined in: `Lean.Parser.Tactic.mvcgenNoTrivial`
 
 Like `mvcgen`, but does not attempt to prove trivial VCs via `mpure_intro; trivial`.
-
-## mvcgen_no_trivial
-Defined in: `Lean.Elab.Tactic.Do.mvcgen_no_trivial`
-
 
 ## mvcgen_step
 Defined in: `Lean.Parser.Tactic.mvcgenStep`
@@ -5133,8 +5155,17 @@ Defined in: `Lean.Parser.Tactic.mvcgenStep`
 Like `mvcgen_no_trivial`, but `mvcgen_step 42` will only do 42 steps of the VC generation procedure.
 This is helpful for bisecting bugs in `mvcgen` and tracing its execution.
 
-## mvcgen_step
-Defined in: `Lean.Elab.Tactic.Do.mvcgen_step`
+## mvcgen_trivial
+Defined in: `Lean.Parser.Tactic.tacticMvcgen_trivial`
+
+`mvcgen_trivial` is the tactic automatically called by `mvcgen` to discharge VCs.
+It tries to discharge the VC by applying `(try mpure_intro); trivial` and otherwise delegates to
+`mvcgen_trivial_extensible`.
+Users are encouraged to extend `mvcgen_trivial_extensible` instead of this tactic in order not to
+override the default `(try mpure_intro); trivial` behavior.
+
+## mvcgen_trivial_extensible
+Defined in: `Lean.Parser.Tactic.tacticMvcgen_trivial_extensible`
 
 
 ## native_decide
@@ -6723,6 +6754,11 @@ example {a : ℕ}
   simp_rw [h1, h2]
 ```
 
+## simp_to_model
+Defined in: `Std.DTreeMap.Internal.Impl.«tacticSimp_to_model[_]Using_»`
+
+Internal implementation detail of the tree map
+
 ## simp_wf
 Defined in: `tacticSimp_wf`
 
@@ -6920,7 +6956,7 @@ For a `match` expression with `n` cases, the `split` tactic generates at most `n
 For example, given `n : Nat`, and a target `if n = 0 then Q else R`, `split` will generate
 one goal with hypothesis `n = 0` and target `Q`, and a second goal with hypothesis
 `¬n = 0` and target `R`.  Note that the introduced hypothesis is unnamed, and is commonly
-renamed used the `case` or `next` tactics.
+renamed using the `case` or `next` tactics.
 
 - `split` will split the goal (target).
 - `split at h` will split the hypothesis `h`.

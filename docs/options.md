@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `79e94a093aff4a60fb1b1f92d9681e407124c2ca`
+Mathlib version: `77ee539f65bc808ccd55f88bf61870dc200326f5`
 
 ## Elab.async
 type: `Bool`
@@ -181,6 +181,13 @@ default: `true`
 
 specifies transparency mode when normalizing constraints of the form `(f a).i =?= s`, if `true` only reducible definitions and instances are unfolded when reducing `f a`. Otherwise, the default setting is used
 
+## backward.split
+type: `Bool`
+
+default: `true`
+
+use the old semantics for the `split` tactic where nested `if-then-else` terms could be simplified too
+
 ## backward.synthInstance.canonInstances
 type: `Bool`
 
@@ -236,13 +243,6 @@ type: `Bool`
 default: `false`
 
 (compiler) perform type compatibility checking after each compiler pass. Note this is not a complete check, and it is used only for debugging purposes. It fails in code that makes heavy use of dependent types.
-
-## compiler.enableNew
-type: `Bool`
-
-default: `true`
-
-(compiler) enable the new code generator, unset to use the old code generator instead
 
 ## compiler.extract_closed
 type: `Bool`
@@ -814,6 +814,13 @@ default: `false`
 
 enable the style.docString linter
 
+## linter.style.docString.empty
+type: `Bool`
+
+default: `true`
+
+enable the style.docString.empty linter
+
 ## linter.style.dollarSyntax
 type: `Bool`
 
@@ -932,6 +939,55 @@ type: `Bool`
 default: `true`
 
 enable the 'unused name' tactic linter
+
+## linter.tacticAnalysis
+type: `Bool`
+
+default: `true`
+
+enable the tactic analysis framework
+
+## linter.tacticAnalysis.linarithToGrind
+type: `Bool`
+
+default: `false`
+
+
+
+## linter.tacticAnalysis.mergeWithGrind
+type: `Bool`
+
+default: `false`
+
+
+
+## linter.tacticAnalysis.omegaToGrind
+type: `Bool`
+
+default: `false`
+
+
+
+## linter.tacticAnalysis.ringToGrind
+type: `Bool`
+
+default: `false`
+
+
+
+## linter.tacticAnalysis.rwMerge
+type: `Bool`
+
+default: `false`
+
+
+
+## linter.tacticAnalysis.terminalToGrind
+type: `Bool`
+
+default: `false`
+
+
 
 ## linter.toAdditiveExisting
 type: `Bool`
@@ -1815,7 +1871,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.22.0"`
+default: `"v4.23.0-rc2"`
 
 Revision of LeanStateSearch to use
 
@@ -1974,6 +2030,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Compiler.floatLetIn
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Compiler.inferVisibility
 type: `Bool`
 
 default: `false`
@@ -3737,292 +3800,96 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.compiler
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.cce
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.code_gen
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.cse
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.eager_lambda_lifting
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.elim_dead_let
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.erase_irrelevant
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.eta_expand
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.extract_closed
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.inline
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.input
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
 ## trace.compiler.ir
 type: `Bool`
 
 default: `false`
 
-(trace) enable/disable tracing for the given module and submodules
+enable/disable tracing for the given module and submodules
 
 ## trace.compiler.ir.borrow
 type: `Bool`
 
 default: `false`
 
-(trace) enable/disable tracing for the given module and submodules
+enable/disable tracing for the given module and submodules
 
 ## trace.compiler.ir.boxing
 type: `Bool`
 
 default: `false`
 
-(trace) enable/disable tracing for the given module and submodules
+enable/disable tracing for the given module and submodules
 
 ## trace.compiler.ir.elim_dead
 type: `Bool`
 
 default: `false`
 
-(trace) enable/disable tracing for the given module and submodules
+enable/disable tracing for the given module and submodules
 
 ## trace.compiler.ir.elim_dead_branches
 type: `Bool`
 
 default: `false`
 
-(trace) enable/disable tracing for the given module and submodules
+enable/disable tracing for the given module and submodules
 
 ## trace.compiler.ir.expand_reset_reuse
 type: `Bool`
 
 default: `false`
 
-(trace) enable/disable tracing for the given module and submodules
+enable/disable tracing for the given module and submodules
+
+## trace.compiler.ir.inferMeta
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
 
 ## trace.compiler.ir.init
 type: `Bool`
 
 default: `false`
 
-(trace) enable/disable tracing for the given module and submodules
+enable/disable tracing for the given module and submodules
 
 ## trace.compiler.ir.push_proj
 type: `Bool`
 
 default: `false`
 
-(trace) enable/disable tracing for the given module and submodules
+enable/disable tracing for the given module and submodules
 
 ## trace.compiler.ir.rc
 type: `Bool`
 
 default: `false`
 
-(trace) enable/disable tracing for the given module and submodules
+enable/disable tracing for the given module and submodules
 
 ## trace.compiler.ir.reset_reuse
 type: `Bool`
 
 default: `false`
 
-(trace) enable/disable tracing for the given module and submodules
+enable/disable tracing for the given module and submodules
 
 ## trace.compiler.ir.result
 type: `Bool`
 
 default: `false`
 
-(trace) enable/disable tracing for the given module and submodules
+enable/disable tracing for the given module and submodules
 
 ## trace.compiler.ir.simp_case
 type: `Bool`
 
 default: `false`
 
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.lambda_lifting
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.lambda_pure
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.lcnf
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.ll_infer_type
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.llnf
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.optimize_bytecode
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.reduce_arity
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.result
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.simp
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.simp_app_args
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.simp_detail
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.simp_float_cases
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.spec_candidate
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.spec_info
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.specialize
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.stage1
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.stage2
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
-
-## trace.compiler.struct_cases_on
-type: `Bool`
-
-default: `false`
-
-(trace) enable/disable tracing for the given module and submodules
+enable/disable tracing for the given module and submodules
 
 ## trace.congr!
 type: `Bool`
@@ -4032,6 +3899,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.congr!.synthesize
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.congr.thm
 type: `Bool`
 
 default: `false`
