@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `baf53aeb86db24592e57d8c9d7f977e4e4ccb76d`
+Mathlib version: `fd4b22557ca9b912f17bfb31a4d766b4d25b2623`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2881,16 +2881,17 @@ Defined in: `Mathlib.Tactic.grewriteSeq`
 
 For example,
 ```lean
+variable {a b c d n : ℤ}
+
 example (h₁ : a < b) (h₂ : b ≤ c) : a + d ≤ c + d := by
   grewrite [h₁, h₂]; rfl
 
 example (h : a ≡ b [ZMOD n]) : a ^ 2 ≡ b ^ 2 [ZMOD n] := by
   grewrite [h]; rfl
 
-example : (h₁ : a ∣ b) (h₂ : c ∣ a * d) : a ∣ b * d := by
-  grewrite [h₁]
+example (h₁ : a ∣ b) (h₂ : b ∣ a ^ 2 * c) : a ∣ b ^ 2 * c := by
+  grewrite [h₁] at *
   exact h₂
-
 ```
 To be able to use `grewrite`, the relevant lemmas need to be tagged with `@[gcongr]`.
 To rewrite inside a transitive relation, you can also give it an `IsTrans` instance.
@@ -3189,22 +3190,23 @@ example {G : Type} [Group G] (a b c d : G) (h : c = (a*b^2)*((b*b)⁻¹*a⁻¹)*
 ```
 
 ## grw
-Defined in: `Mathlib.Tactic.rwSeq`
+Defined in: `Mathlib.Tactic.grwSeq`
 
 `grw [e]` works just like `rw [e]`, but `e` can be a relation other than `=` or `↔`.
 
 For example,
 ```lean
+variable {a b c d n : ℤ}
+
 example (h₁ : a < b) (h₂ : b ≤ c) : a + d ≤ c + d := by
   grw [h₁, h₂]
 
 example (h : a ≡ b [ZMOD n]) : a ^ 2 ≡ b ^ 2 [ZMOD n] := by
   grw [h]
 
-example : (h₁ : a ∣ b) (h₂ : c ∣ a * d) : a ∣ b * d := by
-  grw [h₁]
+example (h₁ : a ∣ b) (h₂ : b ∣ a ^ 2 * c) : a ∣ b ^ 2 * c := by
+  grw [h₁] at *
   exact h₂
-
 ```
 To be able to use `grw`, the relevant lemmas need to be tagged with `@[gcongr]`.
 To rewrite inside a transitive relation, you can also give it an `IsTrans` instance.
