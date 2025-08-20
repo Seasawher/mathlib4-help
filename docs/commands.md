@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `26144eba0dcb7621dbe5a6adfcebe26f719d696b`
+Mathlib version: `e9b3275dded8000d6229d87b4009fd7e3f422d2d`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1016,7 +1016,7 @@ Continuous
   continuous_add_left, args: [5], priority: 1000
   continuous_add_right, args [4], priority: 1000
   ...
-Diferentiable
+Differentiable
   Differentiable.add, args: [4,5], priority: 1000
   Differentiable.add_const, args: [4], priority: 1000
   Differentiable.const_add, args: [5], priority: 1000
