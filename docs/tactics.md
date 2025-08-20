@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `26144eba0dcb7621dbe5a6adfcebe26f719d696b`
+Mathlib version: `e9b3275dded8000d6229d87b4009fd7e3f422d2d`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -4691,7 +4691,7 @@ Normalize the both sides of an equality.
 ## monoidal_simps
 Defined in: `Mathlib.Tactic.Coherence.monoidal_simps`
 
-Simp lemmas for rewriting a hom in monoical categories into a normal form.
+Simp lemmas for rewriting a hom in monoidal categories into a normal form.
 
 ## move_add
 Defined in: `Mathlib.MoveAdd.tacticMove_add_`
