@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `9cbdc720085118358ecd4f75c679204b99a5ad99`
+Mathlib version: `1964d7e7fcbe22dcac8e1c83ee9d912e7ac73c89`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -6860,13 +6860,13 @@ do nothing for at least n heartbeats
 ## slice_lhs
 Defined in: `sliceLHS`
 
-`slice_lhs a b => tac` zooms to the left hand side, uses associativity for categorical
+`slice_lhs a b => tac` zooms to the left-hand side, uses associativity for categorical
 composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invokes `tac`.
 
 ## slice_rhs
 Defined in: `sliceRHS`
 
-`slice_rhs a b => tac` zooms to the right hand side, uses associativity for categorical
+`slice_rhs a b => tac` zooms to the right-hand side, uses associativity for categorical
 composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invokes `tac`.
 
 ## smul_tac
