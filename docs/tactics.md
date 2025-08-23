@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `1964d7e7fcbe22dcac8e1c83ee9d912e7ac73c89`
+Mathlib version: `34519ccdae647f8174804cc9a88c9906d4a9e020`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -706,7 +706,7 @@ open Function
 
 example (X Y Z : Type) (f : X → Y) (g : Y → Z) (H : Injective <| g ∘ f) :
     Injective f := by
-  intros x x' h
+  intro x x' h
   apply_fun g at h
   exact H h
 ```
@@ -2546,7 +2546,7 @@ Defined in: `Mathlib.Tactic.filterUpwards`
 The list is an optional parameter, `[]` being its default value.
 
 `filter_upwards [h₁, ⋯, hₙ] with a₁ a₂ ⋯ aₖ` is a short form for
-`{ filter_upwards [h₁, ⋯, hₙ], intros a₁ a₂ ⋯ aₖ }`.
+`{ filter_upwards [h₁, ⋯, hₙ], intro a₁ a₂ ⋯ aₖ }`.
 
 `filter_upwards [h₁, ⋯, hₙ] using e` is a short form for
 `{ filter_upwards [h1, ⋯, hn], exact e }`.
