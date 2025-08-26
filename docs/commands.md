@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `3d7363987272ddf9f8d6bfe981c1d73112a74d14`
+Mathlib version: `541f69c2d682a778d75b9f0a49a75689e65f555c`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -54,7 +54,7 @@ This means that the expectation is that all checks *succeed* by the time `#check
 is used, typically once all of `Mathlib` has been built.
 
 If all declarations and imports are available when `#check_assertions` is used,
-then the command logs an info. Otherwise, it emits a warning.
+then the command logs an info message. Otherwise, it emits a warning.
 
 The variant `#check_assertions!` only prints declarations/imports that are not present in the
 environment.  In particular, it is silent if everything is imported, making it useful for testing.
@@ -106,17 +106,17 @@ Defined in: `Mathlib.CountHeartbeats.«command#count_heartbeatsApproximatelyIn__
 Use `#count_heartbeats` to count the heartbeats in *all* the following declarations.
 
 This is most useful for setting sufficient but reasonable limits via `set_option maxHeartbeats`
-for long running declarations.
+for long-running declarations.
 
 If you do so, please resist the temptation to set the limit as low as possible.
 As the `simp` set and other features of the library evolve,
 other contributors will find that their (likely unrelated) changes
 have pushed the declaration over the limit.
-`count_heartbearts in` will automatically suggest a `set_option maxHeartbeats` via "Try this:"
+`count_heartbeats in` will automatically suggest a `set_option maxHeartbeats` via "Try this:"
 using the least number of the form `2^k * 200000` that suffices.
 
-Note that that internal heartbeat counter accessible via `IO.getNumHeartbeats`
-has granularity 1000 times finer that the limits set by `set_option maxHeartbeats`.
+Note that the internal heartbeat counter accessible via `IO.getNumHeartbeats`
+has granularity 1000 times finer than the limits set by `set_option maxHeartbeats`.
 As this is intended as a user command, we divide by 1000.
 
 The optional `approximately` keyword rounds down the heartbeats to the nearest thousand.
