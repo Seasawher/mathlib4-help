@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `650e8b8fb39542a2b351508e61fb8b10eced911e`
+Mathlib version: `d60062a692cde80dcd18199e06609943a1633a02`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2475,63 +2475,25 @@ except that it does not reorder goals.
 Defined in: `Mathlib.Tactic.FieldSimp.fieldSimp`
 
 The goal of `field_simp` is to reduce an expression in a field to an expression of the form `n / d`
-where neither `n` nor `d` contains any division symbol, just using the simplifier (with a carefully
-crafted simpset named `field_simps`) to reduce the number of division symbols whenever possible by
-iterating the following steps:
+where neither `n` nor `d` contains any division symbol.
 
-- write an inverse as a division
-- in any product, move the division to the right
-- if there are several divisions in a product, group them together at the end and write them as a
-  single division
-- reduce a sum to a common denominator
-
-If the goal is an equality, this simpset will also clear the denominators, so that the proof
+If the goal is an equality, this tactic will also clear the denominators, so that the proof
 can normally be concluded by an application of `ring`.
-
-`field_simp [hx, hy]` is a short form for
-`simp (disch := field_simp_discharge) [-one_div, -one_divp, -mul_eq_zero, hx, hy, field_simps]`
-
-Note that this naive algorithm will not try to detect common factors in denominators to reduce the
-complexity of the resulting expression. Instead, it relies on the ability of `ring` to handle
-complicated expressions in the next step.
-
-As always with the simplifier, reduction steps will only be applied if the preconditions of the
-lemmas can be checked. This means that proofs that denominators are nonzero should be included. The
-fact that a product is nonzero when all factors are, and that a power of a nonzero number is
-nonzero, are included in the simpset, but more complicated assertions (especially dealing with sums)
-should be given explicitly. If your expression is not completely reduced by the simplifier
-invocation, check the denominators of the resulting expression and provide proofs that they are
-nonzero to enable further progress.
-
-To check that denominators are nonzero, `field_simp` will look for facts in the context, and
-will try to apply `norm_num` to close numerical goals.
-
-The invocation of `field_simp` removes the lemma `one_div` from the simpset, as this lemma
-works against the algorithm explained above. It also removes
-`mul_eq_zero : x * y = 0 ↔ x = 0 ∨ y = 0`, as `norm_num` can not work on disjunctions to
-close goals of the form `24 ≠ 0`, and replaces it with `mul_ne_zero : x ≠ 0 → y ≠ 0 → x * y ≠ 0`
-creating two goals instead of a disjunction.
 
 For example,
 ```lean
 example (a b c d x y : ℂ) (hx : x ≠ 0) (hy : y ≠ 0) :
-    a + b / x + c / x^2 + d / x^3 = a + x⁻¹ * (y * b / y + (d / x + c) / x) := by
+    a + b / x + c / x ^ 2 + d / x ^ 3 = a + x⁻¹ * (y * b / y + (d / x + c) / x) := by
   field_simp
   ring
 ```
 
-Moreover, the `field_simp` tactic can also take care of inverses of units in
-a general (commutative) monoid/ring and partial division `/ₚ`, see `Algebra.Group.Units`
-for the definition. Analogue to the case above, the lemma `one_divp` is removed from the simpset
-as this works against the algorithm. If you have objects with an `IsUnit x` instance like
-`(x : R) (hx : IsUnit x)`, you should lift them with
-`lift x to Rˣ using id hx; rw [IsUnit.unit_of_val_units] clear hx`
-before using `field_simp`.
-
-See also the `cancel_denoms` tactic, which tries to do a similar simplification for expressions
-that have numerals in denominators.
-The tactics are not related: `cancel_denoms` will only handle numeric denominators, and will try to
-entirely remove (numeric) division from the expression by multiplying by a factor.
+Cancelling and combining denominators often requires "nonzeroness" side conditions. The `field_simp`
+tactic attempts to discharge these, and will omit such steps if it cannot discharge the
+corresponding side conditions. The discharger will try, among other things, `positivity` and
+`norm_num`, and will also use any nonzeroness proofs included explicitly (e.g. `field_simp [hx]`).
+If your expression is not completely reduced by `field_simp`, check the denominators of the
+resulting expression and provide proofs that they are nonzero to enable further progress.
 
 ## field_simp_discharge
 Defined in: `Mathlib.Tactic.FieldSimp.tacticField_simp_discharge`
