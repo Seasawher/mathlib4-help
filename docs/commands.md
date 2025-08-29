@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `d60062a692cde80dcd18199e06609943a1633a02`
+Mathlib version: `e1a06ff64a663f6e55b80a82cd543c66fdb48f4c`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -967,6 +967,15 @@ since it is a proposition, hence not computationally relevant. (The command `#pr
 reveal that `Classical.axiomOfChoice` depends on the `Classical.choice` axiom.)
 
 ## \#print
+Defined in: `Mathlib.PrintSorries.«command#printSorriesIn_»`
+
+- `#print sorries` prints all sorries that the current module depends on.
+- `#print sorries id1 id2 ... idn` prints all sorries that the provided declarations depend on.
+- `#print sorries in CMD` prints all the sorries in declarations added by the command.
+
+Displayed sorries are hoverable and support "go to definition".
+
+## \#print
 Defined in: `Lean.Parser.Command.printEqns`
 
 
@@ -995,6 +1004,15 @@ theorem bar' : 1 = 1 ∨ 1 ≠ 1 := foo
 -- foo: Classical.em
 -- bar': foo
 ```
+
+## \#print
+Defined in: `Mathlib.PrintSorries.printSorriesStx`
+
+- `#print sorries` prints all sorries that the current module depends on.
+- `#print sorries id1 id2 ... idn` prints all sorries that the provided declarations depend on.
+- `#print sorries in CMD` prints all the sorries in declarations added by the command.
+
+Displayed sorries are hoverable and support "go to definition".
 
 ## \#print
 Defined in: `Lean.Parser.Command.print`
