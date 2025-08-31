@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `e1a06ff64a663f6e55b80a82cd543c66fdb48f4c`
+Mathlib version: `50468bbd015f05cef04945e03d6b2a8b07bd56c6`
 
 ## Elab.async
 type: `Bool`
@@ -1003,6 +1003,13 @@ type: `Bool`
 default: `true`
 
 Linter used by `@[to_additive]` that checks if `@[to_additive]` automatically generates the user-given name
+
+## linter.toAdditiveRelevantArg
+type: `Bool`
+
+default: `true`
+
+Linter to check that the `relevant_arg` attribute is not given manually.
 
 ## linter.trailingWhitespace
 type: `Bool`
