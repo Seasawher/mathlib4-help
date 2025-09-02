@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `aac79004bad67a82c18ab7d39c609529f4159d6f`
+Mathlib version: `d4b26c771cf631cbb0645076c888f86f8789b2b2`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2004,11 +2004,6 @@ the syntax for `convert_to` is the same as for `convert`, and it has variations 
 
 Note that `convert_to ty at h` may leave a copy of `h` if a later local hypotheses or the target
 depends on it, just like in `rw` or `simp`.
-
-## count_heartbeats
-Defined in: `Mathlib.CountHeartbeats.tacticCount_heartbeats`
-
-`count_heartbeats` is deprecated in favour of `#count_heartbeats` since "2025-01-12"
 
 ## dbg_trace
 Defined in: `Lean.Parser.Tactic.dbgTrace`
@@ -6486,19 +6481,7 @@ Rewrites with the given rules, normalizing casts prior to each step.
 ## rw_search
 Defined in: `Mathlib.Tactic.RewriteSearch.tacticRw_search_`
 
-`rw_search` attempts to solve an equality goal
-by repeatedly rewriting using lemmas from the library.
-
-If no solution is found,
-the best sequence of rewrites found before `maxHeartbeats` elapses is returned.
-
-The search is a best-first search, minimising the Levenshtein edit distance between
-the pretty-printed expressions on either side of the equality.
-(The strings are tokenized at spaces,
-separating delimiters `(`, `)`, `[`, `]`, and `,` into their own tokens.)
-
-You can use `rw_search [-my_lemma, -my_theorem]`
-to prevent `rw_search` from using the names theorems.
+`rw_search` has been removed from Mathlib.
 
 ## rwa
 Defined in: `Lean.Parser.Tactic.tacticRwa__`
