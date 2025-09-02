@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `aac79004bad67a82c18ab7d39c609529f4159d6f`
+Mathlib version: `d4b26c771cf631cbb0645076c888f86f8789b2b2`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1472,11 +1472,6 @@ Defined in: `Mathlib.Util.«commandCompile_inductive%_»`
 `compile_inductive% Foo` creates compiled code for the recursor `Foo.rec`,
 so that `Foo.rec` can be used in a definition
 without having to mark the definition as `noncomputable`.
-
-## count_heartbeats
-Defined in: `Mathlib.CountHeartbeats.commandCount_heartbeats`
-
-`count_heartbeats` is deprecated in favour of `#count_heartbeats` since "2025-01-12"
 
 ## declare_aesop_rule_sets
 Defined in: `Aesop.Frontend.Parser.declareRuleSets`
