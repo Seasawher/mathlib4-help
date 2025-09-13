@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `f29d34c6e7098de3f46e6323f12ad993c339d2b3`
+Mathlib version: `3b5ca69666326212946f476ff8fd2cbc4796fb91`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -622,6 +622,17 @@ files.
 Another important difference is that the `minImports` *linter* starts counting imports from
 where the option is set to `true` *downwards*, whereas the `#min_imports` *command* looks at the
 imports needed from the command *upwards*.
+
+## \#import_diff
+Defined in: `«command#import_diff_»`
+
+`#import_diff foo bar ...` computes the new transitive imports that are added to a given file when
+modules `foo, bar, ...` are added to the set of imports of the file. More precisely, it computes the
+import diff between when `foo, bar, ...` are added to the imports and when `foo, bar, ...` are removed
+from the imports.
+
+Note: the command also works when some of the modules passed as arguments are already present in the file's
+imports.
 
 ## \#info_trees
 Defined in: `Lean.infoTreesCmd`
