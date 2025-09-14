@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `3b5ca69666326212946f476ff8fd2cbc4796fb91`
+Mathlib version: `10061bf49d6d842b2099878901410ef3b6a393c2`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3816,7 +3816,7 @@ optional arguments:
   (`true` by default.)
 * `restrict_type` (not yet implemented in mathlib4)
   will only use hypotheses that are inequalities over `tp`. This is useful
-  if you have e.g. both integer and rational valued inequalities in the local context, which can
+  if you have e.g. both integer- and rational-valued inequalities in the local context, which can
   sometimes confuse the tactic.
 
 A variant, `nlinarith`, does some basic preprocessing to handle some nonlinear goals.
@@ -3876,7 +3876,7 @@ optional arguments:
   (`true` by default.)
 * `restrict_type` (not yet implemented in mathlib4)
   will only use hypotheses that are inequalities over `tp`. This is useful
-  if you have e.g. both integer and rational valued inequalities in the local context, which can
+  if you have e.g. both integer- and rational-valued inequalities in the local context, which can
   sometimes confuse the tactic.
 
 A variant, `nlinarith`, does some basic preprocessing to handle some nonlinear goals.

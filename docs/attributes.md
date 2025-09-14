@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `3b5ca69666326212946f476ff8fd2cbc4796fb91`
+Mathlib version: `10061bf49d6d842b2099878901410ef3b6a393c2`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -1052,7 +1052,7 @@ default simp lemmas:
 ```lean
 -MonoidalCategory.whiskerLeft_id, -MonoidalCategory.id_whiskerRight,
 -MonoidalCategory.tensor_comp, -MonoidalCategory.tensor_comp_assoc,
--Mon_Class.mul_assoc, -Mon_Class.mul_assoc_assoc
+-MonObj.mul_assoc, -MonObj.mul_assoc_assoc
 ```
 
 The general algorithm it follows is to push the associators `α_` and commutators `β_` inwards until

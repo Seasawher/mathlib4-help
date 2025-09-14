@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `3b5ca69666326212946f476ff8fd2cbc4796fb91`
+Mathlib version: `10061bf49d6d842b2099878901410ef3b6a393c2`
 
 ## Elab.async
 type: `Bool`
@@ -946,6 +946,13 @@ type: `Bool`
 default: `true`
 
 enable the tactic analysis framework
+
+## linter.tacticAnalysis.introMerge
+type: `Bool`
+
+default: `true`
+
+
 
 ## linter.tacticAnalysis.linarithToGrind
 type: `Bool`
