@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `10061bf49d6d842b2099878901410ef3b6a393c2`
+Mathlib version: `a8071348b19ed841a1f46dbd5a25d109bc804711`
 
 ## Elab.async
 type: `Bool`
@@ -1220,6 +1220,13 @@ default: `32`
 
 maximum universe level offset
 
+## max_memory
+type: `Nat`
+
+default: `0`
+
+
+
 ## moogle.queries
 type: `Nat`
 
@@ -1885,7 +1892,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.23.0-rc2"`
+default: `"v4.23.0"`
 
 Revision of LeanStateSearch to use
 
@@ -1972,6 +1979,13 @@ type: `Bool`
 default: `true`
 
 in the `rw` and `simp` tactics, if an instance implicit argument is assigned, do not try to synthesize instance.
+
+## timeout
+type: `Nat`
+
+default: `0`
+
+
 
 ## trace.Aesop.Util.EqualUpToIds
 type: `Bool`
