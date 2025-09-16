@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `a8071348b19ed841a1f46dbd5a25d109bc804711`
+Mathlib version: `b30c0393ac6454d5d43ee1d1a6760c1939a2302b`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -463,7 +463,8 @@ In general, `#guard_msgs` accepts a comma-separated list of configuration clause
 ```lean
 #guard_msgs (configElt,*) in cmd
 ```
-By default, the configuration list is `(check all, whitespace := normalized, ordering := exact)`.
+By default, the configuration list is
+`(check all, whitespace := normalized, ordering := exact, positions := false)`.
 
 Message filters select messages by severity:
 - `info`, `warning`, `error`: (non-trace) messages with the given severity level.
@@ -488,6 +489,11 @@ Message ordering:
 - `ordering := exact` uses the exact ordering of the messages (the default).
 - `ordering := sorted` sorts the messages in lexicographic order.
   This helps with testing commands that are non-deterministic in their ordering.
+
+Position reporting:
+- `positions := true` reports the ranges of all messages relative to the line on which
+  `#guard_msgs` appears.
+- `positions := false` does not report position info.
 
 For example, `#guard_msgs (error, drop all) in cmd` means to check warnings and drop
 everything else.
@@ -622,17 +628,6 @@ files.
 Another important difference is that the `minImports` *linter* starts counting imports from
 where the option is set to `true` *downwards*, whereas the `#min_imports` *command* looks at the
 imports needed from the command *upwards*.
-
-## \#import_diff
-Defined in: `«command#import_diff_»`
-
-`#import_diff foo bar ...` computes the new transitive imports that are added to a given file when
-modules `foo, bar, ...` are added to the set of imports of the file. More precisely, it computes the
-import diff between when `foo, bar, ...` are added to the imports and when `foo, bar, ...` are removed
-from the imports.
-
-Note: the command also works when some of the modules passed as arguments are already present in the file's
-imports.
 
 ## \#info_trees
 Defined in: `Lean.infoTreesCmd`
@@ -1657,8 +1652,9 @@ docs of `<declName>` by adding `<prefix_string>` before and `<suffix_string>` af
 ## gen_injective_theorems%
 Defined in: `Lean.Parser.Command.genInjectiveTheorems`
 
-This is an auxiliary command for generation constructor injectivity theorems for
+This is an auxiliary command to generate constructor injectivity theorems for
 inductive types defined at `Prelude.lean`.
+Temporarily also controls the generation of the `ctorIdx` definition.
 It is meant for bootstrapping purposes only.
 
 ## grind_pattern
@@ -2318,7 +2314,7 @@ which helps in maintaining the desired abstraction level without affecting globa
 ## section
 Defined in: `Lean.Parser.Command.section`
 
-A `section`/`end` pair delimits the scope of `variable`, `include, `open`, `set_option`, and `local`
+A `section`/`end` pair delimits the scope of `variable`, `include`, `open`, `set_option`, and `local`
 commands. Sections can be nested. `section <id>` provides a label to the section that has to appear
 with the matching `end`. In either case, the `end` can be omitted, in which case the section is
 closed at the end of the file.

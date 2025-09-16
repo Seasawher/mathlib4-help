@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `a8071348b19ed841a1f46dbd5a25d109bc804711`
+Mathlib version: `b30c0393ac6454d5d43ee1d1a6760c1939a2302b`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2005,6 +2005,14 @@ the syntax for `convert_to` is the same as for `convert`, and it has variations 
 Note that `convert_to ty at h` may leave a copy of `h` if a later local hypotheses or the target
 depends on it, just like in `rw` or `simp`.
 
+## cutsat
+Defined in: `Lean.Parser.Tactic.cutsat`
+
+`cutsat` solves linear integer arithmetic goals.
+
+It is a implemented as a thin wrapper around the `grind` tactic, enabling only the `cutsat` solver.
+Please use `grind` instead if you need additional capabilities.
+
 ## dbg_trace
 Defined in: `Lean.Parser.Tactic.dbgTrace`
 
@@ -2150,8 +2158,8 @@ definitionally equal to the input.
 Defined in: `Lean.Parser.Tactic.dsimpAutoUnfold`
 
 `dsimp!` is shorthand for `dsimp` with `autoUnfold := true`.
-This will rewrite with all equation lemmas, which can be used to
-partially evaluate many definitions.
+This will unfold applications of functions defined by pattern matching, when one of the patterns applies.
+This can be used to partially evaluate many definitions.
 
 ## dsimp?
 Defined in: `Lean.Parser.Tactic.dsimpTrace`
@@ -3129,6 +3137,15 @@ Defined in: `Lean.Parser.Tactic.grindTrace`
 that would be sufficient to close the goal. This is useful for reducing the size of the `grind`
 theorems in a local invocation.
 
+## grobner
+Defined in: `Lean.Parser.Tactic.grobner`
+
+`grobner` solves goals that can be phrased as polynomial equations (with further polynomial equations as hypotheses)
+over commutative (semi)rings, using the Grobner basis algorithm.
+
+It is a implemented as a thin wrapper around the `grind` tactic, enabling only the `grobner` solver.
+Please use `grind` instead if you need additional capabilities.
+
 ## group
 Defined in: `Mathlib.Tactic.Group.group`
 
@@ -3230,7 +3247,9 @@ Defined in: `Mathlib.Tactic.tacticHave_`
 ## have
 Defined in: `Lean.Parser.Tactic.tacticHave__`
 
-The `have` tactic is for adding hypotheses to the local context of the main goal.
+The `have` tactic is for adding opaque definitions and hypotheses to the local context of the main goal.
+The definitions forget their associated value and cannot be unfolded, unlike definitions added by the `let` tactic.
+
 * `have h : t := e` adds the hypothesis `h : t` if `e` is a term of type `t`.
 * `have h := e` uses the type of `e` for `t`.
 * `have : t := e` and `have := e` use `this` for the name of the hypothesis.
@@ -3243,6 +3262,16 @@ The `have` tactic is for adding hypotheses to the local context of the main goal
   which adds the equation `h : e = pat` to the local context.
 
 The tactic supports all the same syntax variants and options as the `have` term.
+
+## Properties and relations
+
+* It is not possible to unfold a variable introduced using `have`, since the definition's value is forgotten.
+  The `let` tactic introduces definitions that can be unfolded.
+* The `have h : t := e` is like doing `let h : t := e; clear_value h`.
+* The `have` tactic is preferred for propositions, and `let` is preferred for non-propositions.
+* Sometimes `have` is used for non-propositions to ensure that the variable is never unfolded,
+  which may be important for performance reasons.
+    Consider using the equivalent `let +nondep` to indicate the intent.
 
 ## have!?
 Defined in: `Mathlib.Tactic.Propose.«tacticHave!?:_Using__»`
@@ -3443,14 +3472,16 @@ For each hypothesis to be introduced, the remaining main goal's target type must
 be a `let` or function type.
 
 * `intro` by itself introduces one anonymous hypothesis, which can be accessed
-  by e.g. `assumption`.
+  by e.g. `assumption`. It is equivalent to `intro _`.
 * `intro x y` introduces two hypotheses and names them. Individual hypotheses
-  can be anonymized via `_`, or matched against a pattern:
+  can be anonymized via `_`, given a type ascription, or matched against a pattern:
   ```lean
   -- ... ⊢ α × β → ...
   intro (a, b)
   -- ..., a : α, b : β ⊢ ...
   ```
+* `intro rfl` is short for `intro h; subst h`, if `h` is an equality where the left-hand or right-hand side
+  is a variable.
 * Alternatively, `intro` can be combined with pattern matching much like `fun`:
   ```lean
   intro
@@ -3480,54 +3511,27 @@ doing a pattern match. This is equivalent to `fun` with match arms in term mode.
 ## intros
 Defined in: `Lean.Parser.Tactic.intros`
 
-Introduces zero or more hypotheses, optionally naming them.
+`intros` repeatedly applies `intro` to introduce zero or more hypotheses
+until the goal is no longer a *binding expression*
+(i.e., a universal quantifier, function type, implication, or `have`/`let`),
+without performing any definitional reductions (no unfolding, beta, eta, etc.).
+The introduced hypotheses receive inaccessible (hygienic) names.
 
-- `intros` is equivalent to repeatedly applying `intro`
-  until the goal is not an obvious candidate for `intro`, which is to say
-  that so long as the goal is a `let` or a pi type (e.g. an implication, function, or universal quantifier),
-  the `intros` tactic will introduce an anonymous hypothesis.
-  This tactic does not unfold definitions.
+`intros x y z` is equivalent to `intro x y z` and exists only for historical reasons.
+The `intro` tactic should be preferred in this case.
 
-- `intros x y ...` is equivalent to `intro x y ...`,
-  introducing hypotheses for each supplied argument and unfolding definitions as necessary.
-  Each argument can be either an identifier or a `_`.
-  An identifier indicates a name to use for the corresponding introduced hypothesis,
-  and a `_` indicates that the hypotheses should be introduced anonymously.
+## Properties and relations
+
+- `intros` succeeds even when it introduces no hypotheses.
+
+- `repeat intro` is like `intros`, but it performs definitional reductions
+  to expose binders, and as such it may introduce more hypotheses than `intros`.
+
+- `intros` is equivalent to `intro _ _ … _`,
+  with the fewest trailing `_` placeholders needed so that the goal is no longer a binding expression.
+  The trailing introductions do not perform any definitional reductions.
 
 ## Examples
-
-Basic properties:
-```lean
-def AllEven (f : Nat → Nat) := ∀ n, f n % 2 = 0
-
--- Introduces the two obvious hypotheses automatically
-example : ∀ (f : Nat → Nat), AllEven f → AllEven (fun k => f (k + 1)) := by
-  intros
-  /- Tactic state
-     f✝ : Nat → Nat
-     a✝ : AllEven f✝
-     ⊢ AllEven fun k => f✝ (k + 1) -/
-  sorry
-
--- Introduces exactly two hypotheses, naming only the first
-example : ∀ (f : Nat → Nat), AllEven f → AllEven (fun k => f (k + 1)) := by
-  intros g _
-  /- Tactic state
-     g : Nat → Nat
-     a✝ : AllEven g
-     ⊢ AllEven fun k => g (k + 1) -/
-  sorry
-
--- Introduces exactly three hypotheses, which requires unfolding `AllEven`
-example : ∀ (f : Nat → Nat), AllEven f → AllEven (fun k => f (k + 1)) := by
-  intros f h n
-  /- Tactic state
-     f : Nat → Nat
-     h : AllEven f
-     n : Nat
-     ⊢ (fun k => f (k + 1)) n % 2 = 0 -/
-  apply h
-```
 
 Implications:
 ```lean
@@ -3540,7 +3544,7 @@ example (p q : Prop) : p → q → p := by
   assumption
 ```
 
-Let bindings:
+Let-bindings:
 ```lean
 example : let n := 1; let k := 2; n + k = 3 := by
   intros
@@ -3548,6 +3552,19 @@ example : let n := 1; let k := 2; n + k = 3 := by
      k✝ : Nat := 2
      ⊢ n✝ + k✝ = 3 -/
   rfl
+```
+
+Does not unfold definitions:
+```lean
+def AllEven (f : Nat → Nat) := ∀ n, f n % 2 = 0
+
+example : ∀ (f : Nat → Nat), AllEven f → AllEven (fun k => f (k + 1)) := by
+  intros
+  /- Tactic state
+     f✝ : Nat → Nat
+     a✝ : AllEven f✝
+     ⊢ AllEven fun k => f✝ (k + 1) -/
+  sorry
 ```
 
 ## introv
@@ -3656,6 +3673,8 @@ example : True ∨ False := by
 Defined in: `Lean.Parser.Tactic.tacticLet__`
 
 The `let` tactic is for adding definitions to the local context of the main goal.
+The definition can be unfolded, unlike definitions introduced by `have`.
+
 * `let x : t := e` adds the definition `x : t := e` if `e` is a term of type `t`.
 * `let x := e` uses the type of `e` for `t`.
 * `let : t := e` and `let := e` use `this` for the name of the hypothesis.
@@ -3668,6 +3687,16 @@ The `let` tactic is for adding definitions to the local context of the main goal
   which adds the equation `h : e = pat` to the local context.
 
 The tactic supports all the same syntax variants and options as the `let` term.
+
+## Properties and relations
+
+* Unlike `have`, it is possible to unfold definitions introduced using `let`, using tactics
+  such as `simp`, `dsimp`, `unfold`, and `subst`.
+* The `clear_value` tactic turns a `let` definition into a `have` definition after the fact.
+  The tactic might fail if the local context depends on the value of the variable.
+* The `let` tactic is preferred for data (non-propositions).
+* Sometimes `have` is used for non-propositions to ensure that the variable is never unfolded,
+  which may be important for performance reasons.
 
 ## let
 Defined in: `Lean.Parser.Tactic.letrec`
@@ -4725,10 +4754,6 @@ example (Q : SPred σs) (ψ : φ → ⊢ₛ Q): ⌜φ⌝ ⊢ₛ Q := by
   mpure Hφ
   mexact (ψ Hφ)
 ```
-
-## mpure_intro
-Defined in: `Lean.Elab.Tactic.Do.ProofMode.tacticMpure_intro`
-
 
 ## mpure_intro
 Defined in: `Lean.Parser.Tactic.mpureIntro`
@@ -6567,8 +6592,8 @@ non-dependent hypotheses. It has many variants:
 Defined in: `Lean.Parser.Tactic.simpAutoUnfold`
 
 `simp!` is shorthand for `simp` with `autoUnfold := true`.
-This will rewrite with all equation lemmas, which can be used to
-partially evaluate many definitions.
+This will unfold applications of functions defined by pattern matching, when one of the patterns applies.
+This can be used to partially evaluate many definitions.
 
 ## simp?
 Defined in: `Lean.Parser.Tactic.simpTrace`
@@ -6607,8 +6632,8 @@ Only non-dependent propositional hypotheses are considered.
 Defined in: `Lean.Parser.Tactic.simpAllAutoUnfold`
 
 `simp_all!` is shorthand for `simp_all` with `autoUnfold := true`.
-This will rewrite with all equation lemmas, which can be used to
-partially evaluate many definitions.
+This will unfold applications of functions defined by pattern matching, when one of the patterns applies.
+This can be used to partially evaluate many definitions.
 
 ## simp_all?
 Defined in: `Lean.Parser.Tactic.simpAllTrace`
@@ -6700,11 +6725,6 @@ example {a : ℕ}
     (∀ b, a - 1 ≤ b) = ∀ b c : ℕ, c < a → c < b + 1 := by
   simp_rw [h1, h2]
 ```
-
-## simp_to_model
-Defined in: `Std.DTreeMap.Internal.Impl.«tacticSimp_to_model[_]Using_»`
-
-Internal implementation detail of the tree map
 
 ## simp_wf
 Defined in: `tacticSimp_wf`
@@ -7182,10 +7202,6 @@ example : TFAE [P, Q] := by
 
 ## tfae_have
 Defined in: `Mathlib.Tactic.TFAE.tfaeHave'`
-
-"Goal-style" `tfae_have` syntax is deprecated. Now, `tfae_have ...` should be followedby  `:= ...`; see below for the new behavior. This warning can be turned off with `set_option Mathlib.Tactic.TFAE.useDeprecated true`.
-
-***
 
 `tfae_have` introduces hypotheses for proving goals of the form `TFAE [P₁, P₂, ...]`. Specifically,
 `tfae_have i <arrow> j := ...` introduces a hypothesis of type `Pᵢ <arrow> Pⱼ` to the local
