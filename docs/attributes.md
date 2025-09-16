@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `a8071348b19ed841a1f46dbd5a25d109bc804711`
+Mathlib version: `b30c0393ac6454d5d43ee1d1a6760c1939a2302b`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -253,6 +253,21 @@ Makes the documentation and location of a declaration available as a builtin.
 This allows the documentation of core Lean features to be visible without importing the file they
 are defined in. This is only useful during bootstrapping and should not be used outside of
 the Lean source code.
+
+## builtin_doc_code_block
+ docstring code block expander
+
+## builtin_doc_code_suggestions
+ docstring code element suggestion provider
+
+## builtin_doc_command
+ builtin docstring command expander
+
+## builtin_doc_directive
+ docstring directive expander
+
+## builtin_doc_role
+ docstring role expander
 
 ## builtin_formatter
  (builtin) Register a formatter for a parser.
@@ -569,6 +584,21 @@ special casing. If the term is an `Expr.mdata` with a single key `k`, `mdata.k` 
 ## doElem_parser
  parser
 
+## doc_code_block
+ docstring code block expander
+
+## doc_code_suggestions
+ docstring code element suggestion provider
+
+## doc_command
+ docstring command expander
+
+## doc_directive
+ docstring directive expander
+
+## doc_role
+ docstring role expander
+
 ## elab_as_elim
  instructs elaborator that the arguments of the function application should be elaborated as were an eliminator
 Instructs the elaborator that applications of this function should be elaborated like an eliminator.
@@ -759,6 +789,13 @@ Lemmas involving `<` or `≤` can also be marked `@[bound]` for use in the relat
 
 ## gcongr_forward
  adds a gcongr_forward extension
+
+## gen_constructor_elims
+ generate the `.toCtorIdx` and `.ctor.elim` definitions for the given inductive
+Generate the `.toCtorIdx` and `.ctor.elim` definitions for the given inductive.
+
+This attribute is only meant to be used in `Init.Prelude` to build these constructions for
+types where we did not generate them imediatelly (due to `set_option genCtorIdx false`).
 
 ## ghost_simps
  Simplification rules for ghost equations. 

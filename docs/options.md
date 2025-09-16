@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `a8071348b19ed841a1f46dbd5a25d109bc804711`
+Mathlib version: `b30c0393ac6454d5d43ee1d1a6760c1939a2302b`
 
 ## Elab.async
 type: `Bool`
@@ -166,6 +166,20 @@ type: `Bool`
 default: `true`
 
 Create fine-grained equational lemmas even for non-recursive definitions.
+
+## backward.grind.checkInferPatternDiscrepancy
+type: `Bool`
+
+default: `false`
+
+check whether old and new pattern inference procedures infer the same pattern
+
+## backward.grind.inferPattern
+type: `Bool`
+
+default: `true`
+
+use old E-matching pattern inference
 
 ## backward.isDefEq.lazyProjDelta
 type: `Bool`
@@ -359,6 +373,15 @@ default: `false`
 
 re-enable deprecated behavior of including exactly the section variables used in a declaration
 
+## deriving.decEq.linear_construction_threshold
+type: `Nat`
+
+default: `10`
+
+If the inductive data type has this many or more constructors, use a different implementation for deciding equality that avoids the quadratic code size produced by the default implementation.
+
+The alternative construction compiles to less efficient code in some cases, so by default it is only used for inductive types with 10 or more constructors.
+
 ## diagnostics
 type: `Bool`
 
@@ -379,6 +402,20 @@ type: `Nat`
 default: `16384`
 
 only display proof statistics when proof has at least this number of terms
+
+## doc.verso
+type: `Bool`
+
+default: `false`
+
+whether to use Verso syntax in docstrings
+
+## doc.verso.suggestions
+type: `Bool`
+
+default: `true`
+
+whether to provide suggestions for code elements
 
 ## eval.derive.repr
 type: `Bool`
@@ -443,12 +480,20 @@ default: `120`
 
 indentation
 
+## genCtorIdx
+type: `Bool`
+
+default: `true`
+
+generate the `CtorIdx` functions for inductive datatypes
+
 ## genInjectivity
 type: `Bool`
 
 default: `true`
 
-generate injectivity theorems for inductive datatype constructors
+generate injectivity theorems for inductive datatype constructors. Temporarily (for bootstrapping reasons) also controls the generation of the
+    `ctorIdx` definition.
 
 ## genSizeOf
 type: `Bool`
@@ -730,6 +775,13 @@ default: `true`
 
 
 
+## linter.nightlyRegressionSet
+type: `Bool`
+
+default: `false`
+
+
+
 ## linter.oldObtain
 type: `Bool`
 
@@ -835,6 +887,13 @@ default: `false`
 
 enable the header style linter
 
+## linter.style.induction
+type: `Bool`
+
+default: `false`
+
+enable the induction linter
+
 ## linter.style.lambdaSyntax
 type: `Bool`
 
@@ -932,6 +991,13 @@ type: `Bool`
 default: `true`
 
 enable the 'suspicious unexpander patterns' linter
+
+## linter.tactic.docsOnAlt
+type: `Bool`
+
+default: `true`
+
+enable the 'documentation on tactic alternatives' linter
 
 ## linter.tactic.unusedName
 type: `Bool`
@@ -1178,12 +1244,12 @@ default: `true`
 
 Show a deprecation warning when using the `cc` tactic
 
-## maxBackwardChainingDepth
+## maxErrors
 type: `Nat`
 
-default: `10`
+default: `100`
 
-The maximum search depth used in the backwards chaining part of the proof of `brecOn` for inductive predicates.
+maximum number of errors to report (0 for no limit)
 
 ## maxHeartbeats
 type: `Nat`
@@ -1598,6 +1664,20 @@ default: `false`
 
 (pretty printer) if set to true, notation is wrapped in parentheses regardless of precedence
 
+## pp.piBinderNames
+type: `Bool`
+
+default: `false`
+
+(pretty printer) display names for pi parameters, even if they are unused; when `pp.piBinderNames.hygienic` is false then unused hygienic parameters are not displayed.
+
+## pp.piBinderNames.hygienic
+type: `Bool`
+
+default: `false`
+
+(pretty printer) if false, disables displaying names for unused pi parameters with hygienic names.
+
 ## pp.piBinderTypes
 type: `Bool`
 
@@ -1745,12 +1825,19 @@ default: `false`
 
 (pretty printer) tag all constants that are the function in a function application
 
+## pp.unicode
+type: `Bool`
+
+default: `true`
+
+(pretty printer) if set to false, avoid using non-unicode symbols when formatting
+
 ## pp.unicode.fun
 type: `Bool`
 
 default: `false`
 
-(pretty printer) disable/enable unicode ↦ notation for functions
+(pretty printer) if set to true, use unicode `↦` notation for functions
 
 ## pp.universes
 type: `Bool`
@@ -1892,7 +1979,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.23.0"`
+default: `"v4.24.0-rc1"`
 
 Revision of LeanStateSearch to use
 
@@ -2925,13 +3012,6 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.Meta.IndPredBelow.search
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
 ## trace.Meta.Match
 type: `Bool`
 
@@ -3395,6 +3475,27 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Meta.letToHave.debug
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.mkBRecOn
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.mkCasesOn
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.mkNoConfusion
 type: `Bool`
 
 default: `false`
@@ -3961,6 +4062,34 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.ac
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ac.assert
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ac.basis
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ac.internalize
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.assert
 type: `Bool`
 
@@ -4024,7 +4153,56 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.cutsat.nonlinear
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.debug
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.ac.check
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.ac.eq
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.ac.op
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.ac.queue
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.ac.simp
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.ac.superpose
 type: `Bool`
 
 default: `false`
@@ -4053,6 +4231,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.debug.congr
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.cutsat.elimEq
 type: `Bool`
 
 default: `false`
@@ -4984,6 +5169,13 @@ type: `Nat`
 default: `15`
 
 The maximum number of instance arguments `variable?` will try to insert before giving up
+
+## warn.exposeOnPrivate
+type: `Bool`
+
+default: `true`
+
+warn about uses of `@[expose]` on private declarations
 
 ## warn.sorry
 type: `Bool`
