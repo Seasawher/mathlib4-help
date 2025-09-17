@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `b30c0393ac6454d5d43ee1d1a6760c1939a2302b`
+Mathlib version: `9045a8d3ed0be26977ab8cb89e12d06e93000c5f`
 
 ## Elab.async
 type: `Bool`
@@ -1020,13 +1020,6 @@ default: `true`
 
 
 
-## linter.tacticAnalysis.linarithToGrind
-type: `Bool`
-
-default: `false`
-
-
-
 ## linter.tacticAnalysis.mergeWithGrind
 type: `Bool`
 
@@ -1034,14 +1027,28 @@ default: `false`
 
 
 
-## linter.tacticAnalysis.omegaToGrind
+## linter.tacticAnalysis.omegaToCutsat
 type: `Bool`
 
 default: `false`
 
 
 
-## linter.tacticAnalysis.ringToGrind
+## linter.tacticAnalysis.regressions.linarithToGrind
+type: `Bool`
+
+default: `false`
+
+
+
+## linter.tacticAnalysis.regressions.omegaToCutsat
+type: `Bool`
+
+default: `false`
+
+
+
+## linter.tacticAnalysis.regressions.ringToGrind
 type: `Bool`
 
 default: `false`
