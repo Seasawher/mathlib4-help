@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `85c6303552add8dfd66879105baf43ba557f4be7`
+Mathlib version: `a492302f08689dc5487dc81f7f9726572b35315c`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -740,14 +740,6 @@ Register an Expr presenter. It must have the type `ProofWidgets.ExprPresenter`.
 
 ## extern
  builtin and foreign functions
-
-## field_simps
- The simpset `field_simps` is used by the tactic `field_simp` to
-reduce an expression in a field to an expression of the form `n / d` where `n` and `d` are
-division-free. 
-
-## field_simps_proc
- simproc set for field_simps_proc
 
 ## fin_omega
  A simp set for the `fin_omega` wrapper around `omega`. 
