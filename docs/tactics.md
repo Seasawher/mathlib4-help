@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `efcc0aa5d8cb0da159f343000d325b6f33f8942b`
+Mathlib version: `a9a54f808381b4bfb115c6206d75ffac1b0f1a79`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -5766,6 +5766,24 @@ example {a : ℤ} (ha : 1 < a) : 0 < |(3:ℤ) + a| := by positivity
 example {b : ℤ} : 0 ≤ max (-3) (b ^ 2) := by positivity
 ```
 
+## pull
+Defined in: `Mathlib.Tactic.Push.pull`
+
+`pull` is the inverse tactic to `push`.
+It pulls the given constant towards the head of the expression. For example
+- `pull _ ∈ _` rewrites `x ∈ y ∨ ¬ x ∈ z` into `x ∈ y ∪ zᶜ`.
+- `pull (disch := positivity) Real.log` rewrites `log a + 2 * log b` into `log (a * b ^ 2)`.
+- `pull fun _ ↦ _` rewrites `f ^ 2 + 5` into `fun x => f x ^ 2 + 5` where `f` is a function.
+
+A lemma is considered a `pull` lemma if its reverse direction is a `push` lemma
+that actually moves the given constant away from the head. For example
+- `not_or : ¬ (p ∨ q) ↔ ¬ p ∧ ¬ q` is a `pull` lemma, but `not_not : ¬ ¬ p ↔ p` is not.
+- `log_mul : log (x * y) = log x + log y` is a `pull` lemma, but `log_abs : log |x| = log x` is not.
+- `Pi.mul_def : f * g = fun (i : ι) => f i * g i` and `Pi.one_def : 1 = fun (x : ι) => 1` are both
+  `pull` lemmas for `fun`, because every `push fun _ ↦ _` lemma is also considered a `pull` lemma.
+
+TODO: define a `@[pull]` attribute for tagging `pull` lemmas that are not `push` lemmas.
+
 ## pure_coherence
 Defined in: `Mathlib.Tactic.Coherence.pure_coherence`
 
@@ -5781,6 +5799,25 @@ Users will typically just use the `coherence` tactic,
 which can also cope with identities of the form
 `a ≫ f ≫ b ≫ g ≫ c = a' ≫ f ≫ b' ≫ g ≫ c'`
 where `a = a'`, `b = b'`, and `c = c'` can be proved using `pure_coherence`
+
+## push
+Defined in: `Mathlib.Tactic.Push.push`
+
+`push` pushes the given constant away from the head of the expression. For example
+- `push _ ∈ _` rewrites `x ∈ {y} ∪ zᶜ` into `x = y ∨ ¬ x ∈ z`.
+- `push (disch := positivity) Real.log` rewrites `log (a * b ^ 2)` into `log a + 2 * log b`.
+- `push ¬ _` is the same as `push_neg` or `push Not`, and it rewrites
+  `¬ ∀ ε > 0, ∃ δ > 0, δ < ε` into `∃ ε > 0, ∀ δ > 0, ε ≤ δ`.
+
+In addition to constants, `push` can be used to push `fun` and `∀` binders:
+- `push fun _ ↦ _` rewrites `fun x => f x ^ 2 + 5` into `f ^ 2 + 5`
+- `push ∀ _, _` rewrites `∀ a, p a ∧ q a` into `(∀ a, p a) ∧ (∀ a, q a)`.
+
+The `push` tactic can be extended using the `@[push]` attribute.
+
+To instead move a constant closer to the head of the expression, use the `pull` tactic.
+
+To push a constant at a hypothesis, use the `push ... at h` or `push ... at *` syntax.
 
 ## push_cast
 Defined in: `Lean.Parser.Tactic.pushCast`
@@ -5818,29 +5855,30 @@ example (a b : Nat)
 See also `norm_cast`.
 
 ## push_neg
-Defined in: `Mathlib.Tactic.PushNeg.tacticPush_neg_`
+Defined in: `Mathlib.Tactic.Push.push_neg`
 
-Push negations into the conclusion of a hypothesis.
+Push negations into the conclusion or a hypothesis.
 For instance, a hypothesis `h : ¬ ∀ x, ∃ y, x ≤ y` will be transformed by `push_neg at h` into
-`h : ∃ x, ∀ y, y < x`. Variable names are conserved.
-This tactic pushes negations inside expressions. For instance, given a hypothesis
+`h : ∃ x, ∀ y, y < x`. Binder names are preserved.
+
+`push_neg` is a special case of the more general `push` tactic, namely `push Not`.
+The `push` tactic can be extended using the `@[push]` attribute. `push` has special-casing
+built in for `push Not`, so that it can preserve binder names, and so that `¬ (p ∧ q)` can be
+transformed to either `p → ¬ q` (the default) or `¬ p ∨ ¬ q`. To get `¬ p ∨ ¬ q`, use
+`set_option push_neg.use_distrib true`.
+
+Another example: given a hypothesis
 ```lean
-h : ¬ ∀ ε > 0, ∃ δ > 0, ∀ x, |x - x₀| ≤ δ → |f x - y₀| ≤ ε)
+h : ¬ ∀ ε > 0, ∃ δ > 0, ∀ x, |x - x₀| ≤ δ → |f x - y₀| ≤ ε
 ```
 writing `push_neg at h` will turn `h` into
 ```lean
-h : ∃ ε, ε > 0 ∧ ∀ δ, δ > 0 → (∃ x, |x - x₀| ≤ δ ∧ ε < |f x - y₀|),
+h : ∃ ε > 0, ∀ δ > 0, ∃ x, |x - x₀| ≤ δ ∧ ε < |f x - y₀|
 ```
-(The pretty printer does *not* use the abbreviations `∀ δ > 0` and `∃ ε > 0` but this issue
-has nothing to do with `push_neg`).
-
-Note that names are conserved by this tactic, contrary to what would happen with `simp`
-using the relevant lemmas. One can also use this tactic at the goal using `push_neg`,
+Note that binder names are preserved by this tactic, contrary to what would happen with `simp`
+using the relevant lemmas. One can use this tactic at the goal using `push_neg`,
 at every hypothesis and the goal using `push_neg at *` or at selected hypotheses and the goal
-using say `push_neg at h h' ⊢` as usual.
-
-This tactic has two modes: in standard mode, it transforms `¬(p ∧ q)` into `p → ¬q`, whereas in
-distrib mode it produces `¬p ∨ ¬q`. To use distrib mode, use `set_option push_neg.use_distrib true`.
+using say `push_neg at h h' ⊢`, as usual.
 
 ## qify
 Defined in: `Mathlib.Tactic.Qify.qify`
