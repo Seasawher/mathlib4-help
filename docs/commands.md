@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `efcc0aa5d8cb0da159f343000d325b6f33f8942b`
+Mathlib version: `a9a54f808381b4bfb115c6206d75ffac1b0f1a79`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1063,8 +1063,30 @@ You can also see only theorems about a concrete function property
 #print_fun_prop_theorems HAdd.hAdd Continuous
 ```
 
+## \#pull
+Defined in: `Mathlib.Tactic.Push.pullCommand`
+
+The syntax is `#pull head e`, where `head` is a constant and `e` is an expression,
+which will print the `pull head` form of `e`.
+
+`#pull` understands local variables, so you can use them to introduce parameters.
+
+## \#push
+Defined in: `Mathlib.Tactic.Push.pushCommand`
+
+The syntax is `#push head e`, where `head` is a constant and `e` is an expression,
+which will print the `push head` form of `e`.
+
+`#push` understands local variables, so you can use them to introduce parameters.
+
+## \#push_discr_tree
+Defined in: `Mathlib.Tactic.Push.pushTree`
+
+`#push_discr_tree X` shows the discrimination tree of all lemmas used by `push X`.
+This can be helpful when you are constructing a set of `push` lemmas for the constant `X`.
+
 ## \#push_neg
-Defined in: `Mathlib.Tactic.PushNeg.pushNeg`
+Defined in: `Mathlib.Tactic.Push.pushNegCommand`
 
 The syntax is `#push_neg e`, where `e` is an expression,
 which will print the `push_neg` form of `e`.

@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `efcc0aa5d8cb0da159f343000d325b6f33f8942b`
+Mathlib version: `a9a54f808381b4bfb115c6206d75ffac1b0f1a79`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -1247,6 +1247,28 @@ Marks a structure to be pretty printed using the anonymous constructor notation 
 
 ## prio_parser
  parser
+
+## pushAttr
+ attribute for push
+The `push` attribute is used to tag lemmas that "push" a constant into an expression.
+
+For example:
+```lean
+@[push] theorem log_mul (hx : x ≠ 0) (hy : y ≠ 0) : log (x * y) = log x + log y
+@[push] theorem log_abs : log |x| = log x
+
+@[push] theorem not_imp (p q : Prop) : ¬(p → q) ↔ p ∧ ¬q
+@[push] theorem not_iff (p q : Prop) : ¬(p ↔ q) ↔ (p ∧ ¬q) ∨ (¬p ∧ q)
+@[push] theorem not_not (p : Prop) : ¬ ¬p ↔ p
+@[push] theorem not_le : ¬a ≤ b ↔ b < a
+```
+
+Note that some `push` lemmas don't push the constant away from the head (`log_abs`) and
+some `push` lemmas cancel the constant out (`not_not` and `not_le`).
+For the other lemmas that are "genuine" `push` lemmas, a `pull` attribute is automatically added
+in the reverse direction. To not add a `pull` tag, use `@[push only]`.
+
+To tag the reverse direction of the lemma, use `@[push ←]`.
 
 ## push_cast
  The `push_cast` simp attribute uses `norm_cast` lemmas to move casts toward the leaf nodes of the expression.
