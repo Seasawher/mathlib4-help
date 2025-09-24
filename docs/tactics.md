@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `a9a54f808381b4bfb115c6206d75ffac1b0f1a79`
+Mathlib version: `f4506f7151c9057fd9f8714b2a1f13a647fe2352`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2480,7 +2480,7 @@ Defined in: `Mathlib.Tactic.FieldSimp.fieldSimp`
 The goal of `field_simp` is to reduce an expression in a field to an expression of the form `n / d`
 where neither `n` nor `d` contains any division symbol.
 
-If the goal is an equality, this tactic will also clear the denominators, so that the proof
+If the goal is an (in)equality, this tactic will also clear the denominators, so that the proof
 can normally be concluded by an application of `ring`.
 
 For example,
