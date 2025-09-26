@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `71604a9fabf4f8a9dde789eb3e0166759b405b31`
+Mathlib version: `f636b7af791e448017f4a49157b0319a2f44c21d`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -5713,6 +5713,11 @@ A typical use case is `pnat_to_nat; omega`.
 ## polyrith
 Defined in: `Mathlib.Tactic.Polyrith.«tacticPolyrithOnly[_]»`
 
+The `polyrith` tactic is no longer supported in Mathlib,
+because it relied on a defunct external service.
+
+---
+
 Attempts to prove polynomial equality goals through polynomial arithmetic
 on the hypotheses (and additional proof terms if the user specifies them).
 It proves the goal by generating an appropriate call to the tactic
@@ -5729,25 +5734,6 @@ Notes:
   using the SageCell web API at <https://sagecell.sagemath.org/>.
   Many thanks to the Sage team and organization for allowing this use.
 * This tactic assumes that the user has `curl` available on path.
-
-Examples:
-
-```lean
-example (x y : ℚ) (h1 : x*y + 2*x = 1) (h2 : x = y) :
-    x*y = -2*y + 1 := by
-  polyrith
--- Try this: linear_combination h1 - 2 * h2
-
-example (x y z w : ℚ) (hzw : z = w) : x*z + 2*y*z = x*w + 2*y*w := by
-  polyrith
--- Try this: linear_combination (2 * y + x) * hzw
-
-axiom scary : ∀ a b : ℚ, a + b = 0
-
-example (a b c d : ℚ) (h : a + b = 0) (h2: b + c = 0) : a + b + c + d = 0 := by
-  polyrith only [scary c d, h]
--- Try this: linear_combination scary c d + h
-```
 
 ## positivity
 Defined in: `Mathlib.Tactic.Positivity.positivity`
