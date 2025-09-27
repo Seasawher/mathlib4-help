@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `f636b7af791e448017f4a49157b0319a2f44c21d`
+Mathlib version: `d255a6088e6471794aea6ea27be076a1ad452794`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2477,26 +2477,33 @@ except that it does not reorder goals.
 ## field_simp
 Defined in: `Mathlib.Tactic.FieldSimp.fieldSimp`
 
-The goal of `field_simp` is to reduce an expression in a field to an expression of the form `n / d`
-where neither `n` nor `d` contains any division symbol.
-
-If the goal is an (in)equality, this tactic will also clear the denominators, so that the proof
-can normally be concluded by an application of `ring`.
-
-For example,
+The goal of `field_simp` is to bring expressions in (semi-)fields over a common denominator, i.e. to
+reduce them to expressions of the form `n / d` where neither `n` nor `d` contains any division
+symbol. For example, `x / (1 - y) / (1 + y / (1 - y))` is reduced to `x / (1 - y + y)`:
 ```lean
-example (a b c d x y : ℂ) (hx : x ≠ 0) (hy : y ≠ 0) :
-    a + b / x + c / x ^ 2 + d / x ^ 3 = a + x⁻¹ * (y * b / y + (d / x + c) / x) := by
+example (x y z : ℚ) (hy : 1 - y ≠ 0) :
+    ⌊x / (1 - y) / (1 + y / (1 - y))⌋ < 3 := by
   field_simp
-  ring
+  -- new goal: `⊢ ⌊x / (1 - y + y)⌋ < 3`
 ```
 
-Cancelling and combining denominators often requires "nonzeroness" side conditions. The `field_simp`
-tactic attempts to discharge these, and will omit such steps if it cannot discharge the
-corresponding side conditions. The discharger will try, among other things, `positivity` and
-`norm_num`, and will also use any nonzeroness proofs included explicitly (e.g. `field_simp [hx]`).
-If your expression is not completely reduced by `field_simp`, check the denominators of the
-resulting expression and provide proofs that they are nonzero to enable further progress.
+The `field_simp` tactic will also clear denominators in field *(in)equalities*, by
+cross-multiplying. For example, `field_simp` will clear the `x` denominators in the following
+equation:
+```lean
+example {K : Type*} [Field K] {x : K} (hx0 : x ≠ 0) :
+    (x + 1 / x) ^ 2 + (x + 1 / x) = 1 := by
+  field_simp
+  -- new goal: `⊢ (x ^ 2 + 1) * (x ^ 2 + 1 + x) = x ^ 2`
+```
+
+Cancelling and combining denominators will generally require checking "nonzeroness"/"positivity"
+side conditions. The `field_simp` tactic attempts to discharge these, and will omit such steps if it
+cannot discharge the corresponding side conditions. The discharger will try, among other things,
+`positivity` and `norm_num`, and will also use any nonzeroness/positivity proofs included explicitly
+(e.g. `field_simp [hx]`). If your expression is not completely reduced by `field_simp`, check the
+denominators of the resulting expression and provide proofs that they are nonzero/positive to enable
+further progress.
 
 ## field_simp_discharge
 Defined in: `Mathlib.Tactic.FieldSimp.tacticField_simp_discharge`
