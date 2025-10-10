@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `5592362428bc73f430e2715b8fc3762686b86363`
+Mathlib version: `029f3b68ce839a16b4537a38f19749a251e96cdf`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1910,6 +1910,18 @@ creates a new "library note", which can then be cross-referenced using
 in doc-comments.
 Use `#help note "some tag"` to display all notes with the tag `"some tag"` in the infoview.
 This command can be imported from Batteries.Tactic.HelpCmd .
+
+## library_note2
+Defined in: `commandLibrary_note2____1`
+
+Support the old `library_note "foo"` syntax, with a deprecation warning.
+
+## library_note2
+Defined in: `commandLibrary_note2___`
+
+`library_note2 «my note» /-- documentation -/` creates a library note named `my note`
+in the `Mathlib.LibraryNote` namespace, whose content is `/-- documentation -/`.
+You can access this note using, for example, `#print Mathlib.LibraryNote.«my note»`.
 
 ## lrat_proof
 Defined in: `Mathlib.Tactic.Sat.commandLrat_proof_Example____`
