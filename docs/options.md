@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `c4b0fc93a38b24f4d0ea4bede71ff3b68978a355`
+Mathlib version: `cfcfdade2f5b754993893c91cf46ec9e09e52140`
 
 ## Elab.async
 type: `Bool`
@@ -1201,6 +1201,13 @@ type: `Bool`
 default: `false`
 
 upstreamableDecl warns on private declarations
+
+## linter.weeklyLintSet
+type: `Bool`
+
+default: `false`
+
+
 
 ## linter.whitespaceBeforeSemicolon
 type: `Bool`
