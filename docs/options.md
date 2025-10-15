@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `3aa3aca5742a8520388e668df501f753cb7ca679`
+Mathlib version: `24899e1184118f6ac3a1584767be5e6ad9c8d18e`
 
 ## Elab.async
 type: `Bool`
@@ -806,7 +806,7 @@ enable the ppRoundtrip linter
 ## linter.pythonStyle
 type: `Bool`
 
-default: `true`
+default: `false`
 
 
 
@@ -1986,7 +1986,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.24.0-rc1"`
+default: `"v4.24.0"`
 
 Revision of LeanStateSearch to use
 

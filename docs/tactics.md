@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `3aa3aca5742a8520388e668df501f753cb7ca679`
+Mathlib version: `24899e1184118f6ac3a1584767be5e6ad9c8d18e`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2474,6 +2474,38 @@ Defined in: `tacticFconstructor`
 (it calls `apply` using the first matching constructor of an inductive datatype)
 except that it does not reorder goals.
 
+## field
+Defined in: `Mathlib.Tactic.FieldSimp.field`
+
+The `field` tactic proves equality goals in (semi-)fields. For example:
+```lean
+example {x y : ℚ} (hx : x + y ≠ 0) : x / (x + y) + y / (x + y) = 1 := by
+  field
+example {a b : ℝ} (ha : a ≠ 0) : a / (a * b) - 1 / b = 0 := by field
+```
+The scope of the tactic is equality goals which are *universal*, in the sense that they are true in
+any field in which the appropriate denominators don't vanish. (That is, they are consequences purely
+of the field axioms.)
+
+Checking the nonvanishing of the necessary denominators is done using a variety of tricks -- in
+particular this part of the reasoning is non-universal, i.e. can be specific to the field at hand
+(order properties, explicit `≠ 0` hypotheses, `CharZero` if that is known, etc).  The user can also
+provide additional terms to help with the nonzeroness proofs. For example:
+```lean
+example {K : Type*} [Field K] (hK : ∀ x : K, x ^ 2 + 1 ≠ 0) (x : K) :
+    1 / (x ^ 2 + 1) + x ^ 2 / (x ^ 2 + 1) = 1 := by
+  field [hK]
+```
+
+The `field` tactic is built from the tactics `field_simp` (which clears the denominators) and `ring`
+(which proves equality goals universally true in commutative (semi-)rings). If `field` fails to
+prove your goal, you may still be able to prove your goal by running the `field_simp` and `ring_nf`
+normalizations in some order.  For example, this statement:
+```lean
+example {a b : ℚ} (H : b + a ≠ 0) : a / (a + b) + b / (b + a) = 1
+```
+is not proved by `field` but is proved by `ring_nf at *; field`.
+
 ## field_simp
 Defined in: `Mathlib.Tactic.FieldSimp.fieldSimp`
 
@@ -2496,6 +2528,10 @@ example {K : Type*} [Field K] {x : K} (hx0 : x ≠ 0) :
   field_simp
   -- new goal: `⊢ (x ^ 2 + 1) * (x ^ 2 + 1 + x) = x ^ 2`
 ```
+
+A very common pattern is `field_simp; ring` (clear denominators, then the resulting goal is
+solvable by the axioms of a commutative ring). The finishing tactic `field` is a shorthand for this
+pattern.
 
 Cancelling and combining denominators will generally require checking "nonzeroness"/"positivity"
 side conditions. The `field_simp` tactic attempts to discharge these, and will omit such steps if it
@@ -5561,10 +5597,15 @@ Defined in: `Lean.Parser.Tactic.open`
 but it opens a namespace only within the tactics `tacs`.
 
 ## order
-Defined in: `Mathlib.Tactic.Order.tacticOrder`
+Defined in: `Mathlib.Tactic.Order.tacticOrder_`
 
 A finishing tactic for solving goals in arbitrary `Preorder`, `PartialOrder`,
 or `LinearOrder`. Supports `⊤`, `⊥`, and lattice operations.
+
+## order_core
+Defined in: `Mathlib.Tactic.Order.order_core`
+
+`order_core` is the part of the `order` tactic that tries to find a contradiction.
 
 ## peel
 Defined in: `Mathlib.Tactic.Peel.peel`
