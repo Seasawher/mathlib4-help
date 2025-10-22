@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `9e574589c15b3b233d3223f1b35871a798cc2748`
+Mathlib version: `f8b9dcc5a5bc008436dc0a61b9a17be4d520d7ea`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -36,142 +36,6 @@ and standard deviation. The tactic `#count_heartbeats! n in tac` runs it `n` tim
 Defined in: `Mathlib.Tactic.Find.«tactic#find_»`
 
 
-## \#leansearch
-Defined in: `LeanSearchClient.leansearch_search_tactic`
-
-Search [LeanSearch](https://leansearch.net/) from within Lean.
-Queries should be a string that ends with a `.` or `?`. This works as a command, as a term
-and as a tactic as in the following examples. In tactic mode, only valid tactics are displayed.
-
-```lean
-#leansearch "If a natural number n is less than m, then the successor of n is less than the successor of m."
-
-example := #leansearch "If a natural number n is less than m, then the successor of n is less than the successor of m."
-
-example : 3 ≤ 5 := by
-  #leansearch "If a natural number n is less than m, then the successor of n is less than the successor of m."
-  sorry
-```
-
-You can modify the LeanSearch URL by setting the `LEANSEARCHCLIENT_LEANSEARCH_API_URL` environment variable.
-
-## \#loogle
-Defined in: `LeanSearchClient.loogle_tactic`
-
-Search [Loogle](https://loogle.lean-lang.org/json) from within Lean. This can be used as a command, term or tactic as in the following examples. In the case of a tactic, only valid tactics are displayed.
-
-
-```lean
-#loogle List ?a → ?a
-
-example := #loogle List ?a → ?a
-
-example : 3 ≤ 5 := by
-  #loogle Nat.succ_le_succ
-  sorry
-
-```
-
-## Loogle Usage
-
-Loogle finds definitions and lemmas in various ways:
-
-By constant:
-🔍 Real.sin
-finds all lemmas whose statement somehow mentions the sine function.
-
-By lemma name substring:
-🔍 \"differ\"
-finds all lemmas that have \"differ\" somewhere in their lemma name.
-
-By subexpression:
-🔍 _ * (_ ^ _)
-finds all lemmas whose statements somewhere include a product where the second argument is raised to some power.
-
-The pattern can also be non-linear, as in
-🔍 Real.sqrt ?a * Real.sqrt ?a
-
-If the pattern has parameters, they are matched in any order. Both of these will find List.map:
-🔍 (?a -> ?b) -> List ?a -> List ?b
-🔍 List ?a -> (?a -> ?b) -> List ?b
-
-By main conclusion:
-🔍 |- tsum _ = _ * tsum _
-finds all lemmas where the conclusion (the subexpression to the right of all → and ∀) has the given shape.
-
-As before, if the pattern has parameters, they are matched against the hypotheses of the lemma in any order; for example,
-🔍 |- _ < _ → tsum _ < tsum _
-will find tsum_lt_tsum even though the hypothesis f i < g i is not the last.
-
-If you pass more than one such search filter, separated by commas Loogle will return lemmas which match all of them. The search
-🔍 Real.sin, \"two\", tsum, _ * _, _ ^ _, |- _ < _ → _
-woould find all lemmas which mention the constants Real.sin and tsum, have \"two\" as a substring of the lemma name, include a product and a power somewhere in the type, and have a hypothesis of the form _ < _ (if there were any such lemmas). Metavariables (?a) are assigned independently in each filter.
-
-You can modify the Loogle server URL by setting the `LEANSEARCHCLIENT_LOOGLE_API_URL` environment variable.
-
-## \#loogle
-Defined in: `LeanSearchClient.just_loogle_tactic`
-
-
-## \#moogle
-Defined in: `LeanSearchClient.moogle_search_tactic`
-
-Search [Moogle](https://www.moogle.ai/api/search) from within Lean.
-Queries should be a string that ends with a `.` or `?`. This works as a command, as a term
-and as a tactic as in the following examples. In tactic mode, only valid tactics are displayed.
-
-```lean
-#moogle "If a natural number n is less than m, then the successor of n is less than the successor of m."
-
-example := #moogle "If a natural number n is less than m, then the successor of n is less than the successor of m."
-
-example : 3 ≤ 5 := by
-  #moogle "If a natural number n is less than m, then the successor of n is less than the successor of m."
-  sorry
-```
-
-You can modify the Moogle URL by setting the `LEANSEARCHCLIENT_MOOGLE_API_URL` environment variable.
-
-## \#search
-Defined in: `LeanSearchClient.search_tactic`
-
-Search either [Moogle](https://www.moogle.ai/api/search) or [LeanSearch]((https://leansearch.net/)) from within Lean, depending on the option `leansearchclient.backend`.
-Queries should be a string that ends with a `.` or `?`. This works as a command, as a term
-and as a tactic as in the following examples. In tactic mode, only valid tactics are displayed.
-
-```lean
-#search "If a natural number n is less than m, then the successor of n is less than the successor of m."
-
-example := #search "If a natural number n is less than m, then the successor of n is less than the successor of m."
-
-example : 3 ≤ 5 := by
-  #search "If a natural number n is less than m, then the successor of n is less than the successor of m."
-  sorry
-
-In tactic mode, if the query string is not supplied, then [LeanStateSearch](https://premise-search.com) is queried based on the goal state.
-```lean
-
-## \#statesearch
-Defined in: `LeanSearchClient.statesearch_search_tactic`
-
-Search [LeanStateSearch](https://premise-search.com) from within Lean.
-Your current main goal is sent as query. The revision to search can be set
-using the `statesearch.revision` option. The number of results can be set
-using the `statesearch.queries` option.
-
-Hint: If you want to modify the query, you need to use the web interface.
-
-```lean
-set_option statesearch.queries 1
-set_option statesearch.revision "v4.16.0"
-
-example : 0 ≤ 1 := by
-  #statesearch
-  sorry
-```
-
-You can modify the LeanStateSearch URL by setting the `LEANSEARCHCLIENT_LEANSTATESEARCH_API_URL` environment variable.
-
 ## (
 Defined in: `Lean.Parser.Tactic.paren`
 
@@ -180,24 +44,10 @@ the goal be closed at the end like `· tacs`. Like `by` itself, the tactics
 can be either separated by newlines or `;`.
 
 ## <;>
-Defined in: `Batteries.Tactic.seq_focus`
-
-`t <;> [t1; t2; ...; tn]` focuses on the first goal and applies `t`, which should result in `n`
-subgoals. It then applies each `ti` to the corresponding goal and collects the resulting
-subgoals.
-
-## <;>
 Defined in: `Lean.Parser.Tactic.«tactic_<;>_»`
 
 `tac <;> tac'` runs `tac` on the main goal and `tac'` on each produced goal,
 concatenating all goals produced by `tac'`.
-
-## _
-Defined in: `Batteries.Tactic.tactic_`
-
-`_` in tactic position acts like the `done` tactic: it fails and gives the list
-of goals if there are any. It is useful as a placeholder after starting a tactic block
-such as `by _` to make it syntactically correct and show the current goal.
 
 ## abel
 Defined in: `Mathlib.Tactic.Abel.abel`
@@ -397,12 +247,6 @@ example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by
   ```
   It is undecided whether these features should be restored eventually.
 
-## absurd
-Defined in: `Batteries.Tactic.tacticAbsurd_`
-
-Given a proof `h` of `p`, `absurd h` changes the goal to `⊢ ¬ p`.
-If `p` is a negation `¬q` then the goal is changed to `⊢ q` instead.
-
 ## ac_change
 Defined in: `Mathlib.Tactic.acChange`
 
@@ -423,8 +267,8 @@ Defined in: `Lean.Parser.Tactic.tacticAc_nf_`
   list of hypotheses in the local context. In the latter case, a turnstile `⊢` or `|-`
   can also be used, to signify the target of the goal.
 ```lean
-instance : Associative (α := Nat) (.+.) := ⟨Nat.add_assoc⟩
-instance : Commutative (α := Nat) (.+.) := ⟨Nat.add_comm⟩
+instance : Std.Associative (α := Nat) (.+.) := ⟨Nat.add_assoc⟩
+instance : Std.Commutative (α := Nat) (.+.) := ⟨Nat.add_comm⟩
 
 example (a b c d : Nat) : a + b + c + d = d + (b + c) + a := by
  ac_nf
@@ -441,8 +285,8 @@ Defined in: `Lean.Parser.Tactic.acRfl`
 
 `ac_rfl` proves equalities up to application of an associative and commutative operator.
 ```lean
-instance : Associative (α := Nat) (.+.) := ⟨Nat.add_assoc⟩
-instance : Commutative (α := Nat) (.+.) := ⟨Nat.add_comm⟩
+instance : Std.Associative (α := Nat) (.+.) := ⟨Nat.add_assoc⟩
+instance : Std.Commutative (α := Nat) (.+.) := ⟨Nat.add_comm⟩
 
 example (a b c d : Nat) : a + b + c + d = d + (b + c) + a := by ac_rfl
 ```
@@ -451,64 +295,6 @@ example (a b c d : Nat) : a + b + c + d = d + (b + c) + a := by ac_rfl
 Defined in: `Lean.Parser.Tactic.tacticAdmit`
 
 `admit` is a synonym for `sorry`.
-
-## aesop
-Defined in: `Aesop.Frontend.Parser.aesopTactic`
-
-`aesop <clause>*` tries to solve the current goal by applying a set of rules
-registered with the `@[aesop]` attribute. See [its
-README](https://github.com/JLimperg/aesop#readme) for a tutorial and a
-reference.
-
-The variant `aesop?` prints the proof it found as a `Try this` suggestion.
-
-Clauses can be used to customise the behaviour of an Aesop call. Available
-clauses are:
-
-- `(add <phase> <priority> <builder> <rule>)` adds a rule. `<phase>` is
-  `unsafe`, `safe` or `norm`. `<priority>` is a percentage for unsafe rules and
-  an integer for safe and norm rules. `<rule>` is the name of a declaration or
-  local hypothesis. `<builder>` is the rule builder used to turn `<rule>` into
-  an Aesop rule. Example: `(add unsafe 50% apply Or.inl)`.
-- `(erase <rule>)` disables a globally registered Aesop rule. Example: `(erase
-  Aesop.BuiltinRules.assumption)`.
-- `(rule_sets := [<ruleset>,*])` enables or disables named sets of rules for
-  this Aesop call. Example: `(rule_sets := [-builtin, MyRuleSet])`.
-- `(config { <opt> := <value> })` adjusts Aesop's search options. See
-  `Aesop.Options`.
-- `(simp_config { <opt> := <value> })` adjusts options for Aesop's built-in
-  `simp` rule. The given options are directly passed to `simp`. For example,
-  `(simp_config := { zeta := false })` makes Aesop use
-  `simp (config := { zeta := false })`.
-
-## aesop?
-Defined in: `Aesop.Frontend.Parser.aesopTactic?`
-
-`aesop <clause>*` tries to solve the current goal by applying a set of rules
-registered with the `@[aesop]` attribute. See [its
-README](https://github.com/JLimperg/aesop#readme) for a tutorial and a
-reference.
-
-The variant `aesop?` prints the proof it found as a `Try this` suggestion.
-
-Clauses can be used to customise the behaviour of an Aesop call. Available
-clauses are:
-
-- `(add <phase> <priority> <builder> <rule>)` adds a rule. `<phase>` is
-  `unsafe`, `safe` or `norm`. `<priority>` is a percentage for unsafe rules and
-  an integer for safe and norm rules. `<rule>` is the name of a declaration or
-  local hypothesis. `<builder>` is the rule builder used to turn `<rule>` into
-  an Aesop rule. Example: `(add unsafe 50% apply Or.inl)`.
-- `(erase <rule>)` disables a globally registered Aesop rule. Example: `(erase
-  Aesop.BuiltinRules.assumption)`.
-- `(rule_sets := [<ruleset>,*])` enables or disables named sets of rules for
-  this Aesop call. Example: `(rule_sets := [-builtin, MyRuleSet])`.
-- `(config { <opt> := <value> })` adjusts Aesop's search options. See
-  `Aesop.Options`.
-- `(simp_config { <opt> := <value> })` adjusts options for Aesop's built-in
-  `simp` rule. The given options are directly passed to `simp`. For example,
-  `(simp_config := { zeta := false })` makes Aesop use
-  `simp (config := { zeta := false })`.
 
 ## aesop_cat
 Defined in: `CategoryTheory.aesop_cat`
@@ -557,14 +343,6 @@ Defined in: `Matroid.aesop_mat`
 
 The `aesop_mat` tactic attempts to prove a set is contained in the ground set of a matroid.
 It uses a `[Matroid]` ruleset, and is allowed to fail.
-
-## aesop_unfold
-Defined in: `Aesop.tacticAesop_unfold_`
-
-
-## aesop_unfold
-Defined in: `Aesop.tacticAesop_unfold_At_`
-
 
 ## algebraize
 Defined in: `Mathlib.Tactic.tacticAlgebraize__`
@@ -1055,15 +833,6 @@ Defined in: `«tacticBy_cases_:_»`
 
 `by_cases (h :)? p` splits the main goal into two cases, assuming `h : p` in the first branch, and `h : ¬ p` in the second branch.
 
-## by_contra
-Defined in: `Batteries.Tactic.byContra`
-
-`by_contra h` proves `⊢ p` by contradiction,
-introducing a hypothesis `h : ¬p` and proving `False`.
-* If `p` is a negation `¬q`, `h : q` will be introduced instead of `¬¬q`.
-* If `p` is decidable, it uses `Decidable.byContradiction` instead of `Classical.byContradiction`.
-* If `h` is omitted, the introduced variable `_: ¬p` will be anonymous.
-
 ## by_contra!
 Defined in: `byContra!`
 
@@ -1155,33 +924,6 @@ example (h : a > 0) : a / 5 > 0 := by
 ```
 
 ## case
-Defined in: `Batteries.Tactic.casePatt`
-
-* `case _ : t => tac` finds the first goal that unifies with `t` and then solves it
-using `tac` or else fails. Like `show`, it changes the type of the goal to `t`.
-The `_` can optionally be a case tag, in which case it only looks at goals
-whose tag would be considered by `case` (goals with an exact tag match,
-followed by goals with the tag as a suffix, followed by goals with the tag as a prefix).
-
-* `case _ n₁ ... nₘ : t => tac` additionally names the `m` most recent hypotheses with
-inaccessible names to the given names. The names are renamed before matching against `t`.
-The `_` can optionally be a case tag.
-
-* `case _ : t := e` is short for `case _ : t => exact e`.
-
-* `case _ : t₁ | _ : t₂ | ... => tac`
-is equivalent to `(case _ : t₁ => tac); (case _ : t₂ => tac); ...`
-but with all matching done on the original list of goals --
-each goal is consumed as they are matched, so patterns may repeat or overlap.
-
-* `case _ : t` will make the matched goal be the first goal.
-`case _ : t₁ | _ : t₂ | ...` makes the matched goals be the first goals in the given order.
-
-* `case _ : t := _` and `case _ : t := ?m` are the same as `case _ : t` but in the `?m` case the
-goal tag is changed to `m`.
-In particular, the goal becomes metavariable `?m`.
-
-## case
 Defined in: `Lean.Parser.Tactic.case`
 
 * `case tag => tac` focuses on the goal with case name `tag` and solves it using `tac`,
@@ -1197,15 +939,6 @@ Defined in: `Lean.Parser.Tactic.case'`
 has been solved after applying `tac`, nor admits the goal if `tac` failed.
 Recall that `case` closes the goal using `sorry` when `tac` fails, and
 the tactic execution is not interrupted.
-
-## case'
-Defined in: `Batteries.Tactic.casePatt'`
-
-`case' _ : t => tac` is similar to the `case _ : t => tac` tactic,
-but it does not ensure the goal has been solved after applying `tac`,
-nor does it admit the goal if `tac` failed.
-Recall that `case` closes the goal using `sorry` when `tac` fails,
-and the tactic execution is not interrupted.
 
 ## cases
 Defined in: `Lean.Parser.Tactic.cases`
@@ -1676,30 +1409,6 @@ For example, given `⊢ f (g (x + y)) = f (g (y + x))`,
 `congr` produces the goals `⊢ x = y` and `⊢ y = x`,
 while `congr 2` produces the intended `⊢ x + y = y + x`.
 
-## congr
-Defined in: `Batteries.Tactic.congrConfigWith`
-
-Apply congruence (recursively) to goals of the form `⊢ f as = f bs` and `⊢ f as ≍ f bs`.
-* `congr n` controls the depth of the recursive applications.
-  This is useful when `congr` is too aggressive in breaking down the goal.
-  For example, given `⊢ f (g (x + y)) = f (g (y + x))`,
-  `congr` produces the goals `⊢ x = y` and `⊢ y = x`,
-  while `congr 2` produces the intended `⊢ x + y = y + x`.
-* If, at any point, a subgoal matches a hypothesis then the subgoal will be closed.
-* You can use `congr with p (: n)?` to call `ext p (: n)?` to all subgoals generated by `congr`.
-  For example, if the goal is `⊢ f '' s = g '' s` then `congr with x` generates the goal
-  `x : α ⊢ f x = g x`.
-
-## congr
-Defined in: `Batteries.Tactic.congrConfig`
-
-Apply congruence (recursively) to goals of the form `⊢ f as = f bs` and `⊢ f as ≍ f bs`.
-The optional parameter is the depth of the recursive applications.
-This is useful when `congr` is too aggressive in breaking down the goal.
-For example, given `⊢ f (g (x + y)) = f (g (y + x))`,
-`congr` produces the goals `⊢ x = y` and `⊢ y = x`,
-while `congr 2` produces the intended `⊢ x + y = y + x`.
-
 ## congr!
 Defined in: `Congr!.congr!`
 
@@ -2137,6 +1846,18 @@ Defined in: `Lean.Parser.Tactic.delta`
 This is a low-level tactic, it will expose how recursive definitions have been
 compiled by Lean.
 
+## deriving_LawfulEq_tactic
+Defined in: `tacticDeriving_LawfulEq_tactic`
+
+
+## deriving_LawfulEq_tactic_step
+Defined in: `tacticDeriving_LawfulEq_tactic_step`
+
+
+## deriving_ReflEq_tactic
+Defined in: `DerivingHelpers.tacticDeriving_ReflEq_tactic`
+
+
 ## discrete_cases
 Defined in: `CategoryTheory.Discrete.tacticDiscrete_cases`
 
@@ -2186,20 +1907,6 @@ example (x : Nat) : (if True then x + 2 else 3) = x + 2 := by
 ```
 
 This command can also be used in `simp_all` and `dsimp`.
-
-## eapply
-Defined in: `Batteries.Tactic.tacticEapply_`
-
-`eapply e` is like `apply e` but it does not add subgoals for variables that appear
-in the types of other goals. Note that this can lead to a failure where there are
-no goals remaining but there are still metavariables in the term:
-```lean
-example (h : ∀ x : Nat, x = x → True) : True := by
-  eapply h
-  rfl
-  -- no goals
--- (kernel) declaration has metavariables '_example'
-```
 
 ## econstructor
 Defined in: `tacticEconstructor`
@@ -2323,11 +2030,6 @@ ways to resolve the goal, and one wants to guide which lemma is used.
 Defined in: `Lean.Parser.Tactic.tacticExact_mod_cast_`
 
 Normalize casts in the goal and the given expression, then close the goal with `exact`.
-
-## exacts
-Defined in: `Batteries.Tactic.exacts`
-
-Like `exact`, but takes a list of terms and checks that all goals are discharged after the tactic.
 
 ## exfalso
 Defined in: `Lean.Parser.Tactic.tacticExfalso`
@@ -2460,12 +2162,6 @@ Changes the goal to `False`, retaining as much information as possible:
   (attempting to find a `Decidable` instance, but otherwise falling back to working classically)
   and introduce `¬ P`.
 * For a non-propositional goal use `False.elim`.
-
-## fapply
-Defined in: `Batteries.Tactic.tacticFapply_`
-
-`fapply e` is like `apply e` but it adds goals in the order they appear,
-rather than putting the dependent goals first.
 
 ## fconstructor
 Defined in: `tacticFconstructor`
@@ -2616,14 +2312,6 @@ Defined in: `Lean.Parser.Tactic.focus`
 `focus tac` focuses on the main goal, suppressing all other goals, and runs `tac` on it.
 Usually `· tac`, which enforces that the goal is closed by `tac`, should be preferred.
 
-## forward
-Defined in: `Aesop.Frontend.tacticForward___`
-
-
-## forward?
-Defined in: `Aesop.Frontend.tacticForward?___`
-
-
 ## frac_tac
 Defined in: `RatFunc.tacticFrac_tac`
 
@@ -2650,7 +2338,7 @@ The form
 ```
 fun_cases f
 ```
-(with no arguments to `f`) searches the goal for an unique eligible application of `f`, and uses
+(with no arguments to `f`) searches the goal for a unique eligible application of `f`, and uses
 these arguments. An application of `f` is eligible if it is saturated and the arguments that will
 become targets are free variables.
 
@@ -2681,7 +2369,7 @@ The form
 ```
 fun_induction f
 ```
-(with no arguments to `f`) searches the goal for an unique eligible application of `f`, and uses
+(with no arguments to `f`) searches the goal for a unique eligible application of `f`, and uses
 these arguments. An application of `f` is eligible if it is saturated and the arguments that will
 become targets are free variables.
 
@@ -3503,11 +3191,6 @@ You can specify a name `h` for the new hypothesis,
 as `interval_cases h : n` or `interval_cases h : n using hl, hu`.
 
 ## intro
-Defined in: `Batteries.Tactic.introDot`
-
-The syntax `intro.` is deprecated in favor of `nofun`.
-
-## intro
 Defined in: `Lean.Parser.Tactic.intro`
 
 Introduces one or more hypotheses, optionally naming and/or pattern-matching them.
@@ -4197,12 +3880,6 @@ Defined in: `WittVector.mapFun.tacticMap_fun_tac`
 
 Auxiliary tactic for showing that `mapFun` respects the ring operations.
 
-## map_tacs
-Defined in: `Batteries.Tactic.«tacticMap_tacs[_;]»`
-
-Assuming there are `n` goals, `map_tacs [t1; t2; ...; tn]` applies each `ti` to the respective
-goal and leaves the resulting subgoals.
-
 ## massumption
 Defined in: `Lean.Parser.Tactic.massumption`
 
@@ -4238,13 +3915,6 @@ example (n : Nat) : n = n := by
 ```
 
 [tpil4]: https://lean-lang.org/theorem_proving_in_lean4/induction_and_recursion.html
-
-## match
-Defined in: `Batteries.Tactic.«tacticMatch_,,With.»`
-
-The syntax `match ⋯ with.` has been deprecated in favor of `nomatch ⋯`.
-
-Both now support multiple discriminants.
 
 ## match_scalars
 Defined in: `Mathlib.Tactic.Module.tacticMatch_scalars`
@@ -5123,12 +4793,16 @@ Defined in: `Lean.Parser.Tactic.mvcgenMacro`
 `mvcgen` will break down a Hoare triple proof goal like `⦃P⦄ prog ⦃Q⦄` into verification conditions,
 provided that all functions used in `prog` have specifications registered with `@[spec]`.
 
+### Verification Conditions and specifications
+
 A verification condition is an entailment in the stateful logic of `Std.Do.SPred`
 in which the original program `prog` no longer occurs.
 Verification conditions are introduced by the `mspec` tactic; see the `mspec` tactic for what they
 look like.
 When there's no applicable `mspec` spec, `mvcgen` will try and rewrite an application
 `prog = f a b c` with the simp set registered via `@[spec]`.
+
+### Features
 
 When used like `mvcgen +noLetElim [foo_spec, bar_def, instBEqFloat]`, `mvcgen` will additionally
 
@@ -5138,11 +4812,68 @@ When used like `mvcgen +noLetElim [foo_spec, bar_def, instBEqFloat]`, `mvcgen` w
 * unfold any method of the `instBEqFloat : BEq Float` instance in `prog`.
 * it will no longer substitute away `let`-expressions that occur at most once in `P`, `Q` or `prog`.
 
-Furthermore, `mvcgen` tries to close trivial verification conditions by `SPred.entails.rfl` or
-the tactic sequence `try (mpure_intro; trivial)`. The variant `mvcgen_no_trivial` does not do this.
+### Config options
 
-For debugging purposes there is also `mvcgen_step 42` which will do at most 42 VC generation
-steps. This is useful for bisecting issues with the generated VCs.
+`+noLetElim` is just one config option of many. Check out `Lean.Elab.Tactic.Do.VCGen.Config` for all
+options. Of particular note is `stepLimit = some 42`, which is useful for bisecting bugs in
+`mvcgen` and tracing its execution.
+
+### Extended syntax
+
+Often, `mvcgen` will be used like this:
+```lean
+mvcgen [...]
+case inv1 => by exact I1
+case inv2 => by exact I2
+all_goals (mleave; try grind)
+```
+There is special syntax for this:
+```lean
+mvcgen [...] invariants
+· I1
+· I2
+with grind
+```
+When `I1` and `I2` need to refer to inaccessibles (`mvcgen` will introduce a lot of them for program
+variables), you can use case label syntax:
+```lean
+mvcgen [...] invariants
+| inv1 _ acc _ => I1 acc
+| _ => I2
+with grind
+```
+This is more convenient than the equivalent `· by rename_i _ acc _; exact I1 acc`.
+
+### Invariant suggestions
+
+`mvcgen` will suggest invariants for you if you use the `invariants?` keyword.
+```lean
+mvcgen [...] invariants?
+```
+This is useful if you do not recall the exact syntax to construct invariants.
+Furthermore, it will suggest a concrete invariant encoding "this holds at the start of the loop and
+this must hold at the end of the loop" by looking at the corresponding VCs.
+Although the suggested invariant is a good starting point, it is too strong and requires users to
+interpolate it such that the inductive step can be proved. Example:
+```lean
+def mySum (l : List Nat) : Nat := Id.run do
+  let mut acc := 0
+  for x in l do
+    acc := acc + x
+  return acc
+
+/--
+info: Try this:
+  invariants
+    · ⇓⟨xs, letMuts⟩ => ⌜xs.prefix = [] ∧ letMuts = 0 ∨ xs.suffix = [] ∧ letMuts = l.sum⌝
+-/
+#guard_msgs (info) in
+theorem mySum_suggest_invariant (l : List Nat) : mySum l = l.sum := by
+  generalize h : mySum l = r
+  apply Id.of_wp_run_eq h
+  mvcgen invariants?
+  all_goals admit
+```
 
 ## mvcgen
 Defined in: `Lean.Parser.Tactic.mvcgen`
@@ -5150,12 +4881,16 @@ Defined in: `Lean.Parser.Tactic.mvcgen`
 `mvcgen` will break down a Hoare triple proof goal like `⦃P⦄ prog ⦃Q⦄` into verification conditions,
 provided that all functions used in `prog` have specifications registered with `@[spec]`.
 
+### Verification Conditions and specifications
+
 A verification condition is an entailment in the stateful logic of `Std.Do.SPred`
 in which the original program `prog` no longer occurs.
 Verification conditions are introduced by the `mspec` tactic; see the `mspec` tactic for what they
 look like.
 When there's no applicable `mspec` spec, `mvcgen` will try and rewrite an application
 `prog = f a b c` with the simp set registered via `@[spec]`.
+
+### Features
 
 When used like `mvcgen +noLetElim [foo_spec, bar_def, instBEqFloat]`, `mvcgen` will additionally
 
@@ -5165,22 +4900,73 @@ When used like `mvcgen +noLetElim [foo_spec, bar_def, instBEqFloat]`, `mvcgen` w
 * unfold any method of the `instBEqFloat : BEq Float` instance in `prog`.
 * it will no longer substitute away `let`-expressions that occur at most once in `P`, `Q` or `prog`.
 
-Furthermore, `mvcgen` tries to close trivial verification conditions by `SPred.entails.rfl` or
-the tactic sequence `try (mpure_intro; trivial)`. The variant `mvcgen_no_trivial` does not do this.
+### Config options
 
-For debugging purposes there is also `mvcgen_step 42` which will do at most 42 VC generation
-steps. This is useful for bisecting issues with the generated VCs.
+`+noLetElim` is just one config option of many. Check out `Lean.Elab.Tactic.Do.VCGen.Config` for all
+options. Of particular note is `stepLimit = some 42`, which is useful for bisecting bugs in
+`mvcgen` and tracing its execution.
 
-## mvcgen_no_trivial
-Defined in: `Lean.Parser.Tactic.mvcgenNoTrivial`
+### Extended syntax
 
-Like `mvcgen`, but does not attempt to prove trivial VCs via `mpure_intro; trivial`.
+Often, `mvcgen` will be used like this:
+```lean
+mvcgen [...]
+case inv1 => by exact I1
+case inv2 => by exact I2
+all_goals (mleave; try grind)
+```
+There is special syntax for this:
+```lean
+mvcgen [...] invariants
+· I1
+· I2
+with grind
+```
+When `I1` and `I2` need to refer to inaccessibles (`mvcgen` will introduce a lot of them for program
+variables), you can use case label syntax:
+```lean
+mvcgen [...] invariants
+| inv1 _ acc _ => I1 acc
+| _ => I2
+with grind
+```
+This is more convenient than the equivalent `· by rename_i _ acc _; exact I1 acc`.
 
-## mvcgen_step
-Defined in: `Lean.Parser.Tactic.mvcgenStep`
+### Invariant suggestions
 
-Like `mvcgen_no_trivial`, but `mvcgen_step 42` will only do 42 steps of the VC generation procedure.
-This is helpful for bisecting bugs in `mvcgen` and tracing its execution.
+`mvcgen` will suggest invariants for you if you use the `invariants?` keyword.
+```lean
+mvcgen [...] invariants?
+```
+This is useful if you do not recall the exact syntax to construct invariants.
+Furthermore, it will suggest a concrete invariant encoding "this holds at the start of the loop and
+this must hold at the end of the loop" by looking at the corresponding VCs.
+Although the suggested invariant is a good starting point, it is too strong and requires users to
+interpolate it such that the inductive step can be proved. Example:
+```lean
+def mySum (l : List Nat) : Nat := Id.run do
+  let mut acc := 0
+  for x in l do
+    acc := acc + x
+  return acc
+
+/--
+info: Try this:
+  invariants
+    · ⇓⟨xs, letMuts⟩ => ⌜xs.prefix = [] ∧ letMuts = 0 ∨ xs.suffix = [] ∧ letMuts = l.sum⌝
+-/
+#guard_msgs (info) in
+theorem mySum_suggest_invariant (l : List Nat) : mySum l = l.sum := by
+  generalize h : mySum l = r
+  apply Id.of_wp_run_eq h
+  mvcgen invariants?
+  all_goals admit
+```
+
+## mvcgen?
+Defined in: `Lean.Parser.Tactic.mvcgenHint`
+
+A hint tactic that expands to `mvcgen invariants?`.
 
 ## mvcgen_trivial
 Defined in: `Lean.Parser.Tactic.tacticMvcgen_trivial`
@@ -5578,18 +5364,6 @@ can be used to:
 * `splitMinMax`: for each occurrence of `min a b`, split on `min a b = a ∨ min a b = b`
 Currently, all of these are on by default.
 
-## on_goal
-Defined in: `Batteries.Tactic.«tacticOn_goal-_=>_»`
-
-`on_goal n => tacSeq` creates a block scope for the `n`-th goal and tries the sequence
-of tactics `tacSeq` on it.
-
-`on_goal -n => tacSeq` does the same, but the `n`-th goal is chosen by counting from the
-bottom.
-
-The goal is not required to be solved and any resulting subgoals are inserted back into the
-list of goals, replacing the chosen goal.
-
 ## open
 Defined in: `Lean.Parser.Tactic.open`
 
@@ -5684,68 +5458,6 @@ Defined in: `Real.«tacticPi_upper_bound[_,,]»`
 Create a proof of `π < a` for a fixed rational number `a`, given a witness, which is a
 sequence of rational numbers `√2 < r 1 < r 2 < ... < r n < 2` satisfying the property that
 `√(2 + r i) ≥ r(i+1)`, where `r 0 = 0` and `√(2 - r n) ≤ (a - 1/4^n) / 2^(n+1)`.
-
-## pick_goal
-Defined in: `Batteries.Tactic.«tacticPick_goal-_»`
-
-`pick_goal n` will move the `n`-th goal to the front.
-
-`pick_goal -n` will move the `n`-th goal (counting from the bottom) to the front.
-
-See also `Tactic.rotate_goals`, which moves goals from the front to the back and vice-versa.
-
-## plausible
-Defined in: `plausibleSyntax`
-
-`plausible` considers a proof goal and tries to generate examples
-that would contradict the statement.
-
-Let's consider the following proof goal.
-
-```lean
-xs : List Nat,
-h : ∃ (x : Nat) (H : x ∈ xs), x < 3
-⊢ ∀ (y : Nat), y ∈ xs → y < 5
-```
-
-The local constants will be reverted and an instance will be found for
-`Testable (∀ (xs : List Nat), (∃ x ∈ xs, x < 3) → (∀ y ∈ xs, y < 5))`.
-The `Testable` instance is supported by an instance of `Sampleable (List Nat)`,
-`Decidable (x < 3)` and `Decidable (y < 5)`.
-
-Examples will be created in ascending order of size (more or less)
-
-The first counter-examples found will be printed and will result in an error:
-
-```
-===================
-Found problems!
-xs := [1, 28]
-x := 1
-y := 28
--------------------
-```
-
-If `plausible` successfully tests 100 examples, it acts like
-admit. If it gives up or finds a counter-example, it reports an error.
-
-For more information on writing your own `Sampleable` and `Testable`
-instances, see `Testing.Plausible.Testable`.
-
-Optional arguments given with `plausible (config : { ... })`
-* `numInst` (default 100): number of examples to test properties with
-* `maxSize` (default 100): final size argument
-
-Options:
-* `set_option trace.plausible.decoration true`: print the proposition with quantifier annotations
-* `set_option trace.plausible.discarded true`: print the examples discarded because they do not
-  satisfy assumptions
-* `set_option trace.plausible.shrink.steps true`: trace the shrinking of counter-example
-* `set_option trace.plausible.shrink.candidates true`: print the lists of candidates considered
-  when shrinking each variable
-* `set_option trace.plausible.instance true`: print the instances of `testable` being used to test
-  the proposition
-* `set_option trace.plausible.success true`: print the tested samples that satisfy a property
 
 ## pnat_positivity
 Defined in: `Mathlib.Tactic.PNatToNat.tacticPnat_positivity`
@@ -5991,35 +5703,6 @@ matching on the constructor `quot.mk`.
 
 `rcases h : e with PAT` will do the same as `rcases e with PAT` with the exception that an
 assumption `h : e = PAT` will be added to the context.
-
-## rcongr
-Defined in: `Batteries.Tactic.rcongr`
-
-Repeatedly apply `congr` and `ext`, using the given patterns as arguments for `ext`.
-
-There are two ways this tactic stops:
-* `congr` fails (makes no progress), after having already applied `ext`.
-* `congr` canceled out the last usage of `ext`. In this case, the state is reverted to before
-  the `congr` was applied.
-
-For example, when the goal is
-```
-⊢ (fun x => f x + 3) '' s = (fun x => g x + 3) '' s
-```
-then `rcongr x` produces the goal
-```
-x : α ⊢ f x = g x
-```
-This gives the same result as `congr; ext x; congr`.
-
-In contrast, `congr` would produce
-```
-⊢ (fun x => f x + 3) = (fun x => g x + 3)
-```
-and `congr with x` (or `congr; ext x`) would produce
-```
-x : α ⊢ f x + 3 = g x + 3
-```
 
 ## recover
 Defined in: `Mathlib.Tactic.tacticRecover_`
@@ -6593,14 +6276,6 @@ Defined in: `Lean.Parser.Tactic.tacticRwa__`
 
 `rwa` is short-hand for `rw; assumption`.
 
-## saturate
-Defined in: `Aesop.Frontend.tacticSaturate_____`
-
-
-## saturate?
-Defined in: `Aesop.Frontend.tacticSaturate?_____`
-
-
 ## says
 Defined in: `Mathlib.Tactic.Says.says`
 
@@ -7008,11 +6683,6 @@ renamed using the `case` or `next` tactics.
 - `split` will split the goal (target).
 - `split at h` will split the hypothesis `h`.
 
-## split_ands
-Defined in: `Batteries.Tactic.tacticSplit_ands`
-
-`split_ands` applies `And.intro` until it does not make progress.
-
 ## split_ifs
 Defined in: `Mathlib.Tactic.splitIfs`
 
@@ -7024,30 +6694,6 @@ starting with a top-most one whose condition does not contain another
 ite-expression.
 `split_ifs at *` splits all ite-expressions in all hypotheses as well as the goal.
 `split_ifs with h₁ h₂ h₃` overrides the default names for the hypotheses.
-
-## squeeze_scope
-Defined in: `Batteries.Tactic.squeezeScope`
-
-The `squeeze_scope` tactic allows aggregating multiple calls to `simp` coming from the same syntax
-but in different branches of execution, such as in `cases x <;> simp`.
-The reported `simp` call covers all simp lemmas used by this syntax.
-```lean
-@[simp] def bar (z : Nat) := 1 + z
-@[simp] def baz (z : Nat) := 1 + z
-
-@[simp] def foo : Nat → Nat → Nat
-  | 0, z => bar z
-  | _+1, z => baz z
-
-example : foo x y = 1 + y := by
-  cases x <;> simp? -- two printouts:
-  -- "Try this: simp only [foo, bar]"
-  -- "Try this: simp only [foo, baz]"
-
-example : foo x y = 1 + y := by
-  squeeze_scope
-    cases x <;> simp -- only one printout: "Try this: simp only [foo, baz, bar]"
-```
 
 ## stop
 Defined in: `Lean.Parser.Tactic.tacticStop_`
@@ -7151,11 +6797,6 @@ Defined in: `Lean.Parser.Tactic.suggestPremises`
 `#suggest_premises` will suggest premises for the current goal, using the currently registered premise selector.
 
 The suggestions are printed in the order of their confidence, from highest to lowest.
-
-## swap
-Defined in: `Batteries.Tactic.tacticSwap`
-
-`swap` is a shortcut for `pick_goal 2`, which interchanges the 1st and 2nd goals.
 
 ## swap_var
 Defined in: `Mathlib.Tactic.«tacticSwap_var__,,»`
@@ -7355,28 +6996,6 @@ Defined in: `Lean.Parser.Tactic.traceState`
 
 `trace_state` displays the current state in the info view.
 
-## trans
-Defined in: `Batteries.Tactic.tacticTrans___`
-
-`trans` applies to a goal whose target has the form `t ~ u` where `~` is a transitive relation,
-that is, a relation which has a transitivity lemma tagged with the attribute [trans].
-
-* `trans s` replaces the goal with the two subgoals `t ~ s` and `s ~ u`.
-* If `s` is omitted, then a metavariable is used instead.
-
-Additionally, `trans` also applies to a goal whose target has the form `t → u`,
-in which case it replaces the goal with `t → s` and `s → u`.
-
-## transitivity
-Defined in: `Batteries.Tactic.tacticTransitivity___`
-
-Synonym for `trans` tactic.
-
-## triv
-Defined in: `Batteries.Tactic.triv`
-
-Deprecated variant of `trivial`.
-
 ## trivial
 Defined in: `Lean.Parser.Tactic.tacticTrivial`
 
@@ -7469,20 +7088,6 @@ An auxiliary tactic closing goals `UniqueDiffWithinAt ℝ s a` where
 Defined in: `Tactic.Interactive.tacticUnit_interval`
 
 A tactic that solves `0 ≤ ↑x`, `0 ≤ 1 - ↑x`, `↑x ≤ 1`, and `1 - ↑x ≤ 1` for `x : I`.
-
-## unreachable!
-Defined in: `Batteries.Tactic.unreachable`
-
-This tactic causes a panic when run (at compile time).
-(This is distinct from `exact unreachable!`, which inserts code which will panic at run time.)
-
-It is intended for tests to assert that a tactic will never be executed, which is otherwise an
-unusual thing to do (and the `unreachableTactic` linter will give a warning if you do).
-
-The `unreachableTactic` linter has a special exception for uses of `unreachable!`.
-```
-example : True := by trivial <;> unreachable!
-```
 
 ## use
 Defined in: `Mathlib.Tactic.useSyntax`
@@ -7605,18 +7210,6 @@ This also exists as a `conv`-mode tactic.
 Weak-head normal form is when the outer-most expression has been fully reduced, the expression
 may contain subexpressions which have not been reduced.
 
-## with_panel_widgets
-Defined in: `ProofWidgets.withPanelWidgetsTacticStx`
-
-Display the selected panel widgets in the nested tactic script. For example,
-assuming we have written a `GeometryDisplay` component,
-```lean
-by with_panel_widgets [GeometryDisplay]
-  simp
-  rfl
-```
-will show the geometry display alongside the usual tactic state throughout the proof.
-
 ## with_reducible
 Defined in: `Lean.Parser.Tactic.withReducible`
 
@@ -7690,10 +7283,88 @@ propositions concerning `z` will still be over `Int`.
 `zify` changes propositions about `Nat` (the subtype) to propositions about `Int` (the supertype),
 without changing the type of any variable.
 
+syntax ... [Aesop.Frontend.Parser.aesopTactic]
+
+syntax ... [Aesop.Frontend.Parser.aesopTactic?]
+
+syntax ... [Aesop.Frontend.tacticForward?___]
+
+syntax ... [Aesop.Frontend.tacticForward___]
+
+syntax ... [Aesop.Frontend.tacticSaturate?_____]
+
+syntax ... [Aesop.Frontend.tacticSaturate_____]
+
+syntax ... [Aesop.tacticAesop_unfold_]
+
+syntax ... [Aesop.tacticAesop_unfold_At_]
+
+syntax ... [Batteries.Tactic.byContra]
+
+syntax ... [Batteries.Tactic.casePatt]
+
+syntax ... [Batteries.Tactic.casePatt']
+
+syntax ... [Batteries.Tactic.congrConfig]
+
+syntax ... [Batteries.Tactic.congrConfigWith]
+
+syntax ... [Batteries.Tactic.exacts]
+
+syntax ... [Batteries.Tactic.introDot]
+
+syntax ... [Batteries.Tactic.rcongr]
+
+syntax ... [Batteries.Tactic.seq_focus]
+
+syntax ... [Batteries.Tactic.squeezeScope]
+
+syntax ... [Batteries.Tactic.tacticAbsurd_]
+
+syntax ... [Batteries.Tactic.tacticEapply_]
+
+syntax ... [Batteries.Tactic.tacticFapply_]
+
+syntax ... [Batteries.Tactic.«tacticMap_tacs[_;]»]
+
+syntax ... [Batteries.Tactic.«tacticMatch_,,With.»]
+
+syntax ... [Batteries.Tactic.«tacticOn_goal-_=>_»]
+
+syntax ... [Batteries.Tactic.«tacticPick_goal-_»]
+
+syntax ... [Batteries.Tactic.tacticSplit_ands]
+
+syntax ... [Batteries.Tactic.tacticSwap]
+
+syntax ... [Batteries.Tactic.tacticTrans___]
+
+syntax ... [Batteries.Tactic.tacticTransitivity___]
+
+syntax ... [Batteries.Tactic.tactic_]
+
+syntax ... [Batteries.Tactic.triv]
+
+syntax ... [Batteries.Tactic.unreachable]
+
 syntax ... [Lean.Parser.Tactic.nestedTactic]
 
 syntax ... [Lean.Parser.Tactic.unknown]
 
 syntax ... [Lean.cdot]
 `· tac` focuses on the main goal and tries to solve it using `tac`, or else fails.
+
+syntax ... [LeanSearchClient.just_loogle_tactic]
+
+syntax ... [LeanSearchClient.leansearch_search_tactic]
+
+syntax ... [LeanSearchClient.loogle_tactic]
+
+syntax ... [LeanSearchClient.search_tactic]
+
+syntax ... [LeanSearchClient.statesearch_search_tactic]
+
+syntax ... [ProofWidgets.withPanelWidgetsTacticStx]
+
+syntax ... [plausibleSyntax]
 

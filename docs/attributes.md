@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `9e574589c15b3b233d3223f1b35871a798cc2748`
+Mathlib version: `f8b9dcc5a5bc008436dc0a61b9a17be4d520d7ea`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -164,9 +164,6 @@ syntax and don't have access to the expression tree.
 ## bitvec_to_nat
  simp lemmas converting `BitVec` goals to `Nat` goals
 
-## boolToPropSimps
- simp lemmas converting boolean expressions in terms of `decide` into propositional statements
-
 ## bool_to_prop
  simp lemmas converting boolean expressions in terms of `decide` into propositional statements
 
@@ -257,6 +254,9 @@ the Lean source code.
 ## builtin_doc_code_block
  docstring code block expander
 
+## builtin_doc_code_block_suggestions
+ builtin docstring code block suggestion provider
+
 ## builtin_doc_code_suggestions
  docstring code element suggestion provider
 
@@ -275,6 +275,9 @@ Registers a formatter for a parser.
 
 `@[formatter k]` registers a declaration of type `Lean.PrettyPrinter.Formatter` to be used for
 formatting syntax of kind `k`.
+
+## builtin_grind_tactic
+ (builtin) grind elaborator
 
 ## builtin_incremental
  (builtin) Marks an elaborator (tactic or command, currently) as supporting incremental elaboration. For unmarked elaborators, the corresponding snapshot bundle field in the elaboration context is unset so as to prevent accidental, incorrect reuse.
@@ -394,9 +397,6 @@ Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
 
 ## bv_normalize_proc
  simprocs used by bv_normalize
-
-## bv_toNat
- simp lemmas converting `BitVec` goals to `Nat` goals, for the `bv_omega` preprocessor
 
 ## cases_eliminator
  custom `casesOn`-like eliminator for the `cases` tactic
@@ -587,6 +587,9 @@ special casing. If the term is an `Expr.mdata` with a single key `k`, `mdata.k` 
 ## doc_code_block
  docstring code block expander
 
+## doc_code_block_suggestions
+ docstring code block suggestion provider
+
 ## doc_code_suggestions
  docstring code element suggestion provider
 
@@ -691,8 +694,6 @@ type. This may prevent the elaborator from incorrectly inferring implicit argume
 
 ## eqns
  Overrides the equation lemmas for a declaration to the provided list
-Similar to `registerParametricAttribute` except that attributes do not
-have to be assigned in the same file as the declaration.
 
 ## export
  name to be used by code generators
@@ -733,7 +734,6 @@ have the module system enabled.
 
 ## expr_presenter
  Register an Expr presenter. It must have the type `ProofWidgets.ExprPresenter`.
-Register an Expr presenter. It must have the type `ProofWidgets.ExprPresenter`.
 
 ## ext
  Marks a theorem as an extensionality theorem
@@ -804,8 +804,29 @@ types where we did not generate them imediatelly (due to `set_option genCtorIdx 
       using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[grind =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[grind ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
       (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[grind →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
       (that is, it will use the theorem for forwards reasoning).The attribute `[grind]` by itself will effectively try `[grind ←]` (if the conclusion is sufficient for instantiation) and then `[grind →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[grind =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
-Auxiliary function for registering `grind` and `grind?` attributes.
-The `grind?` is an alias for `grind` which displays patterns using `logInfo`.
+Auxiliary function for registering `grind`, `grind!`, `grind?`, and `grind!?` attributes.
+`grind!` is like `grind` but selects minimal indexable subterms.
+The `grind?` and `grind!?` are aliases for `grind` and `grind!` which displays patterns using `logInfo`.
+It is just a convenience for users.
+
+## grind!
+ The `[grind!]` attribute is used to annotate declarations, but selecting minimal indexable subterms.When applied to an equational theorem, `[grind =]`, `[grind =_]`, or `[grind _=_]`will mark the theorem for use in heuristic instantiations by the `grind` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[grind =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[grind ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[grind →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[grind]` by itself will effectively try `[grind ←]` (if the conclusion is sufficient for instantiation) and then `[grind →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[grind =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+Auxiliary function for registering `grind`, `grind!`, `grind?`, and `grind!?` attributes.
+`grind!` is like `grind` but selects minimal indexable subterms.
+The `grind?` and `grind!?` are aliases for `grind` and `grind!` which displays patterns using `logInfo`.
+It is just a convenience for users.
+
+## grind!?
+ The `[grind!?]` attribute is identical to the `[grind!]` attribute, but displays inferred pattern information.When applied to an equational theorem, `[grind =]`, `[grind =_]`, or `[grind _=_]`will mark the theorem for use in heuristic instantiations by the `grind` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[grind =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[grind ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[grind →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[grind]` by itself will effectively try `[grind ←]` (if the conclusion is sufficient for instantiation) and then `[grind →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[grind =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+Auxiliary function for registering `grind`, `grind!`, `grind?`, and `grind!?` attributes.
+`grind!` is like `grind` but selects minimal indexable subterms.
+The `grind?` and `grind!?` are aliases for `grind` and `grind!` which displays patterns using `logInfo`.
 It is just a convenience for users.
 
 ## grind?
@@ -813,12 +834,16 @@ It is just a convenience for users.
       using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[grind =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[grind ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
       (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[grind →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
       (that is, it will use the theorem for forwards reasoning).The attribute `[grind]` by itself will effectively try `[grind ←]` (if the conclusion is sufficient for instantiation) and then `[grind →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[grind =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
-Auxiliary function for registering `grind` and `grind?` attributes.
-The `grind?` is an alias for `grind` which displays patterns using `logInfo`.
+Auxiliary function for registering `grind`, `grind!`, `grind?`, and `grind!?` attributes.
+`grind!` is like `grind` but selects minimal indexable subterms.
+The `grind?` and `grind!?` are aliases for `grind` and `grind!` which displays patterns using `logInfo`.
 It is just a convenience for users.
 
 ## grindPropagatorBuiltinAttr
  Builtin `grind` propagator procedure
+
+## grind_tactic
+ grind elaborator
 
 ## higherOrder
  From a lemma of the shape `∀ x, f (g x) = h x` derive an auxiliary lemma of the
@@ -1053,6 +1078,12 @@ def isYellow (color : String) : Bool :=
   | _ => false
 ```
 
+## method_specs
+ generate method specification theorems
+
+## method_specs_simp
+ simp lemma used to post-process the theorem created by `@[method_specs]`.
+
 ## mfld_simps
  The simpset `mfld_simps` records several simp lemmas that are
 especially useful in manifolds. It is a subset of the whole set of simp lemmas, but it makes it
@@ -1127,10 +1158,6 @@ relations on its domain and range, and possibly with side conditions.
 
 ## multigoal
  this tactic acts on multiple goals
-The `multigoal` attribute keeps track of tactics that operate on multiple goals,
-meaning that `tac` acts differently from `focus tac`. This is used by the
-'unnecessary `<;>`' linter to prevent false positives where `tac <;> tac'` cannot
-be replaced by `(tac; tac')` because the latter would expose `tac` to a different set of goals.
 
 ## mvcgen_simp
  simp theorems internally used by `mvcgen`
@@ -1180,7 +1207,6 @@ Changes the inlining behavior. This attribute comes in several variants:
 
 ## nolint
  Do not report this declaration in any of the tests of `#lint`
-Defines the user attribute `nolint` for skipping `#lint`
 
 ## nontriviality
  The `@[nontriviality]` simp set is used by the `nontriviality` tactic to automatically
@@ -1348,10 +1374,6 @@ special case in the `rfl` tactic.
 
 ## server_rpc_method_cancellable
  Like `server_rpc_method`, but requests for this method can be cancelled. The method should check for that using `IO.checkCanceled`. Cancellable methods are invoked differently from JavaScript: see `callCancellable` in `cancellable.ts`.
-Like `server_rpc_method`, but requests for this method can be cancelled.
-The method should check for that using `IO.checkCanceled`.
-Cancellable methods are invoked differently from JavaScript:
-see `callCancellable` in `cancellable.ts`.
 
 ## seval
  symbolic evaluator theorem
@@ -1450,23 +1472,15 @@ directly.
 
 ## to_additive_change_numeral
  Auxiliary attribute for `to_additive` that stores functions that have numerals as argument.
-Similar to `registerParametricAttribute` except that attributes do not
-have to be assigned in the same file as the declaration.
 
 ## to_additive_dont_translate
  Auxiliary attribute for `to_additive` stating that the operations on this type should not be translated.
-Similar to `registerParametricAttribute` except that attributes do not
-have to be assigned in the same file as the declaration.
 
 ## to_additive_ignore_args
  Auxiliary attribute for `to_additive` stating that certain arguments are not additivized.
-Similar to `registerParametricAttribute` except that attributes do not
-have to be assigned in the same file as the declaration.
 
 ## to_additive_relevant_arg
  Auxiliary attribute for `to_additive` stating which arguments are the types with a multiplicative structure.
-Similar to `registerParametricAttribute` except that attributes do not
-have to be assigned in the same file as the declaration.
 
 ## to_app
  

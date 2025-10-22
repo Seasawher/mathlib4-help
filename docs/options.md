@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `9e574589c15b3b233d3223f1b35871a798cc2748`
+Mathlib version: `f8b9dcc5a5bc008436dc0a61b9a17be4d520d7ea`
 
 ## Elab.async
 type: `Bool`
@@ -177,7 +177,7 @@ check whether old and new pattern inference procedures infer the same pattern
 ## backward.grind.inferPattern
 type: `Bool`
 
-default: `true`
+default: `false`
 
 use old E-matching pattern inference
 
@@ -194,6 +194,28 @@ type: `Bool`
 default: `true`
 
 specifies transparency mode when normalizing constraints of the form `(f a).i =?= s`, if `true` only reducible definitions and instances are unfolded when reducing `f a`. Otherwise, the default setting is used
+
+## backward.privateInPublic
+type: `Bool`
+
+default: `false`
+
+(module system) Export `private` declarations, allowing for arbitrary access to them while code is being ported to the module system. Such accesses will generate warnings
+    unless `backward.privateInPublic.warn` is disabled.
+
+## backward.privateInPublic.warn
+type: `Bool`
+
+default: `true`
+
+(module system) Warn on accesses to `private` declarations that are allowed only by `backward.privateInPublic` being enabled.
+
+## backward.proofsInPublic
+type: `Bool`
+
+default: `false`
+
+(module system) Do not abstract proofs used in the public scope into auxiliary theorems. Enabling this option may lead to failures or, when `backward.privateInPublic` and its `warn` sub-option are enabled, additional warnings from private accesses.
 
 ## backward.split
 type: `Bool`
@@ -250,6 +272,14 @@ type: `Bool`
 default: `false`
 
 type check code after each compiler step (this is useful for debugging purses)
+
+## compiler.checkMeta
+type: `Bool`
+
+default: `true`
+
+Check that `meta` declarations only refer to other `meta` declarations and ditto for non-`meta` declarations. Disabling this option may lead to delayed compiler errors and is
+    intended only for debugging purposes.
 
 ## compiler.checkTypes
 type: `Bool`
@@ -373,12 +403,30 @@ default: `false`
 
 re-enable deprecated behavior of including exactly the section variables used in a declaration
 
+## deriving.beq.linear_construction_threshold
+type: `Nat`
+
+default: `10`
+
+If the inductive data type has this many or more constructors, use a different implementation for implementing `BEq` that avoids the quadratic code size produced by the default implementation.
+
+The alternative construction compiles to less efficient code in some cases, so by default it is only used for inductive types with 10 or more constructors.
+
 ## deriving.decEq.linear_construction_threshold
 type: `Nat`
 
 default: `10`
 
 If the inductive data type has this many or more constructors, use a different implementation for deciding equality that avoids the quadratic code size produced by the default implementation.
+
+The alternative construction compiles to less efficient code in some cases, so by default it is only used for inductive types with 10 or more constructors.
+
+## deriving.ord.linear_construction_threshold
+type: `Nat`
+
+default: `10`
+
+If the inductive data type has this many or more constructors, use a different implementation for implementing `Ord` that avoids the quadratic code size produced by the default implementation.
 
 The alternative construction compiles to less efficient code in some cases, so by default it is only used for inductive types with 10 or more constructors.
 
@@ -523,6 +571,13 @@ default: `false`
 
 check proofs between the elements of all equivalence classes
 
+## grind.param.codeAction
+type: `Bool`
+
+default: `false`
+
+code-action for `grind` parameters
+
 ## grind.warning
 type: `Bool`
 
@@ -591,7 +646,7 @@ type: `String`
 
 default: `"leansearch"`
 
-The backend to use by default, one of leansearch and moogle
+The backend to use by default, currently only leansearch
 
 ## leansearchclient.useragent
 type: `String`
@@ -613,6 +668,13 @@ type: `Bool`
 default: `false`
 
 enable all linters
+
+## linter.commandRanges
+type: `Bool`
+
+default: `false`
+
+enable the commandRanges linter
 
 ## linter.constructorNameAsVariable
 type: `Bool`
@@ -1055,7 +1117,21 @@ default: `false`
 
 
 
+## linter.tacticAnalysis.regressions.tautoToGrind
+type: `Bool`
+
+default: `false`
+
+
+
 ## linter.tacticAnalysis.rwMerge
+type: `Bool`
+
+default: `false`
+
+
+
+## linter.tacticAnalysis.tautoToGrind
 type: `Bool`
 
 default: `false`
@@ -1306,13 +1382,6 @@ type: `Nat`
 default: `0`
 
 
-
-## moogle.queries
-type: `Nat`
-
-default: `6`
-
-Number of results requested from moogle (default 6)
 
 ## mvcgen.warning
 type: `Bool`
@@ -1986,7 +2055,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.24.0"`
+default: `"v4.25.0-rc2"`
 
 Revision of LeanStateSearch to use
 
@@ -2452,7 +2521,21 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Elab.Deriving.lawfulBEq
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Elab.Deriving.ord
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Elab.Deriving.reflBEq
 type: `Bool`
 
 default: `false`
@@ -2627,6 +2710,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Elab.coinductive
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Elab.command
 type: `Bool`
 
@@ -2726,13 +2816,6 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Elab.definition.structural.eqns
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.Elab.definition.unfoldEqn
 type: `Bool`
 
 default: `false`
@@ -3069,6 +3152,20 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Meta.Match.unify
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.MethodSpecs
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.MkIffOfInductiveProp
 type: `Bool`
 
 default: `false`
@@ -3852,6 +3949,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.addDecl
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.aesop
 type: `Bool`
 
@@ -4070,6 +4174,13 @@ default: `false`
 (trace) enable/disable tracing for the given module and submodules
 
 ## trace.explode
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.extraModUses
 type: `Bool`
 
 default: `false`
@@ -4342,13 +4453,6 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.grind.debug.ematch.activate
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
 ## trace.grind.debug.ematch.pattern
 type: `Bool`
 
@@ -4371,6 +4475,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.debug.forallPropagator
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.inj
 type: `Bool`
 
 default: `false`
@@ -4462,6 +4573,41 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.debug.offset.proof
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.order
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.order.add_edge
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.order.check_eq_false
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.order.check_eq_true
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.order.propagate
 type: `Bool`
 
 default: `false`
@@ -4566,6 +4712,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.debug.theorem.activate
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.ematch
 type: `Bool`
 
@@ -4616,6 +4769,20 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.ext.candidate
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.inj
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.inj.assert
 type: `Bool`
 
 default: `false`
@@ -4784,6 +4951,34 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.offset.propagate
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.order
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.order.assert
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.order.internalize
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.order.internalize.term
 type: `Bool`
 
 default: `false`
