@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `f8b9dcc5a5bc008436dc0a61b9a17be4d520d7ea`
+Mathlib version: `be9d1e42709f0c71f23bf54fdcea77c4058cd659`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -694,6 +694,8 @@ type. This may prevent the elaborator from incorrectly inferring implicit argume
 
 ## eqns
  Overrides the equation lemmas for a declaration to the provided list
+Similar to `registerParametricAttribute` except that attributes do not
+have to be assigned in the same file as the declaration.
 
 ## export
  name to be used by code generators
@@ -734,6 +736,7 @@ have the module system enabled.
 
 ## expr_presenter
  Register an Expr presenter. It must have the type `ProofWidgets.ExprPresenter`.
+Register an Expr presenter. It must have the type `ProofWidgets.ExprPresenter`.
 
 ## ext
  Marks a theorem as an extensionality theorem
@@ -1158,6 +1161,10 @@ relations on its domain and range, and possibly with side conditions.
 
 ## multigoal
  this tactic acts on multiple goals
+The `multigoal` attribute keeps track of tactics that operate on multiple goals,
+meaning that `tac` acts differently from `focus tac`. This is used by the
+'unnecessary `<;>`' linter to prevent false positives where `tac <;> tac'` cannot
+be replaced by `(tac; tac')` because the latter would expose `tac` to a different set of goals.
 
 ## mvcgen_simp
  simp theorems internally used by `mvcgen`
@@ -1207,6 +1214,7 @@ Changes the inlining behavior. This attribute comes in several variants:
 
 ## nolint
  Do not report this declaration in any of the tests of `#lint`
+Defines the user attribute `nolint` for skipping `#lint`
 
 ## nontriviality
  The `@[nontriviality]` simp set is used by the `nontriviality` tactic to automatically
@@ -1374,6 +1382,10 @@ special case in the `rfl` tactic.
 
 ## server_rpc_method_cancellable
  Like `server_rpc_method`, but requests for this method can be cancelled. The method should check for that using `IO.checkCanceled`. Cancellable methods are invoked differently from JavaScript: see `callCancellable` in `cancellable.ts`.
+Like `server_rpc_method`, but requests for this method can be cancelled.
+The method should check for that using `IO.checkCanceled`.
+Cancellable methods are invoked differently from JavaScript:
+see `callCancellable` in `cancellable.ts`.
 
 ## seval
  symbolic evaluator theorem
@@ -1472,15 +1484,23 @@ directly.
 
 ## to_additive_change_numeral
  Auxiliary attribute for `to_additive` that stores functions that have numerals as argument.
+Similar to `registerParametricAttribute` except that attributes do not
+have to be assigned in the same file as the declaration.
 
 ## to_additive_dont_translate
  Auxiliary attribute for `to_additive` stating that the operations on this type should not be translated.
+Similar to `registerParametricAttribute` except that attributes do not
+have to be assigned in the same file as the declaration.
 
 ## to_additive_ignore_args
  Auxiliary attribute for `to_additive` stating that certain arguments are not additivized.
+Similar to `registerParametricAttribute` except that attributes do not
+have to be assigned in the same file as the declaration.
 
 ## to_additive_relevant_arg
  Auxiliary attribute for `to_additive` stating which arguments are the types with a multiplicative structure.
+Similar to `registerParametricAttribute` except that attributes do not
+have to be assigned in the same file as the declaration.
 
 ## to_app
  
