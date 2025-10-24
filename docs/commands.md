@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `f8b9dcc5a5bc008436dc0a61b9a17be4d520d7ea`
+Mathlib version: `be9d1e42709f0c71f23bf54fdcea77c4058cd659`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -8,6 +8,14 @@ Defined in: `adaptationNoteCmd`
 Adaptation notes are comments that are used to indicate that a piece of code
 has been changed to accommodate a change in Lean core.
 They typically require further action/maintenance to be taken in the future.
+
+## \#aesop_rules
+Defined in: `Aesop.Frontend.Parser.showRules`
+
+
+## \#aesop_stats
+Defined in: `Aesop.Frontend.Parser.showStats`
+
 
 ## \#allow_unused_tactic
 Defined in: `Mathlib.Linter.UnusedTactic.«command#allow_unused_tactic!___»`
@@ -369,6 +377,22 @@ have global scope anyway so detailed tracking is not necessary.)
 Defined in: `Mathlib.Tactic.Find.«command#find_»`
 
 
+## \#find_home
+Defined in: `«command#find_home!_»`
+
+Find locations as high as possible in the import hierarchy
+where the named declaration could live.
+Using `#find_home!` will forcefully remove the current file.
+Note that this works best if used in a file with `import Mathlib`.
+
+The current file could still be the only suggestion, even using `#find_home! lemma`.
+The reason is that `#find_home!` scans the import graph below the current file,
+selects all the files containing declarations appearing in `lemma`, excluding
+the current file itself and looks for all least upper bounds of such files.
+
+For a simple example, if `lemma` is in a file importing only `A.lean` and `B.lean` and
+uses one lemma from each, then `#find_home! lemma` returns the current file.
+
 ## \#find_syntax
 Defined in: `Mathlib.FindSyntax.«command#find_syntax_Approx»`
 
@@ -495,6 +519,114 @@ However, the command elaborator runs linters for *all* top-level commands,
 which would include `#guard_msgs` itself, and would cause duplicate and/or uncaptured linter warnings.
 The top-level command elaborator only runs the linters if `#guard_msgs` is not present.
 
+## \#help
+Defined in: `Batteries.Tactic.«command#help_Term+____»`
+
+The command `#help term` shows all term syntaxes that have been defined in the current environment.
+See `#help cat` for more information.
+
+## \#help
+Defined in: `Batteries.Tactic.«command#help_Cat+______»`
+
+The command `#help cat C` shows all syntaxes that have been defined in syntax category `C` in the
+current environment.
+Each syntax has a format like:
+```lean
+## first
+Defined in: `Parser.tactic.first`
+
+  `first | tac | ...` runs each `tac` until one succeeds, or else fails.
+```lean
+The quoted string is the leading token of the syntax, if applicable. It is followed by the full
+name of the syntax (which you can also click to go to the definition), and the documentation.
+
+* The form `#help cat C id` will show only attributes that begin with `id`.
+* The form `#help cat+ C` will also show information about any `macro`s and `elab`s
+  associated to the listed syntaxes.
+
+## \#help
+Defined in: `Batteries.Tactic.«command#help_Command+____»`
+
+The command `#help command` shows all commands that have been defined in the current environment.
+See `#help cat` for more information.
+
+## \#help
+Defined in: `Batteries.Tactic.«command#help_AttrAttribute___»`
+
+The command `#help attribute` (or the short form `#help attr`) shows all attributes that have been
+defined in the current environment.
+Each attribute has a format like:
+```lean
+[inline]: mark definition to always be inlined
+```
+This says that `inline` is an attribute that can be placed on definitions like
+`@[inline] def foo := 1`. (Individual attributes may have restrictions on where they can be
+applied; see the attribute's documentation for details.) Both the attribute's `descr` field as well
+as the docstring will be displayed here.
+
+The form `#help attr id` will show only attributes that begin with `id`.
+
+## \#help
+Defined in: `Batteries.Tactic.«command#help_Note___»`
+
+`#help note "foo"` searches for all library notes whose
+label starts with "foo", then displays those library notes sorted alphabetically by label,
+grouped by label.
+The command only displays the library notes that are declared in
+imported files or in the same file above the line containing the command.
+
+## \#help
+Defined in: `Batteries.Tactic.«command#help_Cats___»`
+
+The command `#help cats` shows all syntax categories that have been defined in the
+current environment.
+Each syntax has a format like:
+```lean
+category command [Lean.Parser.initFn✝]
+```
+The name of the syntax category in this case is `command`, and `Lean.Parser.initFn✝` is the
+name of the declaration that introduced it. (It is often an anonymous declaration like this,
+but you can click to go to the definition.) It also shows the doc string if available.
+
+The form `#help cats id` will show only syntax categories that begin with `id`.
+
+## \#help
+Defined in: `Batteries.Tactic.«command#help_Tactic+____»`
+
+The command `#help tactic` shows all tactics that have been defined in the current environment.
+See `#help cat` for more information.
+
+## \#help
+Defined in: `Batteries.Tactic.«command#help_Conv+____»`
+
+The command `#help conv` shows all tactics that have been defined in the current environment.
+See `#help cat` for more information.
+
+## \#help
+Defined in: `Batteries.Tactic.«command#help_Option___»`
+
+The command `#help option` shows all options that have been defined in the current environment.
+Each option has a format like:
+```lean
+option pp.all : Bool := false
+  (pretty printer) display coercions, implicit parameters, proof terms, fully qualified names,
+  universe, and disable beta reduction and notations during pretty printing
+```
+This says that `pp.all` is an option which can be set to a `Bool` value, and the default value is
+`false`. If an option has been modified from the default using e.g. `set_option pp.all true`,
+it will appear as a `(currently: true)` note next to the option.
+
+The form `#help option id` will show only options that begin with `id`.
+
+## \#html
+Defined in: `ProofWidgets.HtmlCommand.htmlCmd`
+
+Display a value of type `Html` in the infoview.
+
+The input can be a pure value
+or a computation in any Lean metaprogramming monad
+(e.g. `CommandElabM Html`).
+
 ## \#import_bumps
 Defined in: `Mathlib.Linter.MinImports.«command#import_bumps»`
 
@@ -511,11 +643,48 @@ Another important difference is that the `minImports` *linter* starts counting i
 where the option is set to `true` *downwards*, whereas the `#min_imports` *command* looks at the
 imports needed from the command *upwards*.
 
+## \#import_diff
+Defined in: `«command#import_diff_»`
+
+`#import_diff foo bar ...` computes the new transitive imports that are added to a given file when
+modules `foo, bar, ...` are added to the set of imports of the file. More precisely, it computes the
+import diff between when `foo, bar, ...` are added to the imports and when `foo, bar, ...` are removed
+from the imports.
+
+Note: the command also works when some of the modules passed as arguments are already present in the file's
+imports.
+
 ## \#info_trees
 Defined in: `Lean.infoTreesCmd`
 
 Format and print the info trees for a given command.
 This is mostly useful for debugging info trees.
+
+## \#instances
+Defined in: `Batteries.Tactic.Instances.instancesCmd`
+
+`#instances term` prints all the instances for the given class.
+For example, `#instances Add _` gives all `Add` instances, and `#instances Add Nat` gives the
+`Nat` instance. The `term` can be any type that can appear in `[...]` binders.
+
+Trailing underscores can be omitted, and `#instances Add` and `#instances Add _` are equivalent;
+the command adds metavariables until the argument is no longer a function.
+
+The `#instances` command is closely related to `#synth`, but `#synth` does the full
+instance synthesis algorithm and `#instances` does the first step of finding potential instances.
+
+## \#instances
+Defined in: `Batteries.Tactic.Instances.«command#instances__:_»`
+
+`#instances term` prints all the instances for the given class.
+For example, `#instances Add _` gives all `Add` instances, and `#instances Add Nat` gives the
+`Nat` instance. The `term` can be any type that can appear in `[...]` binders.
+
+Trailing underscores can be omitted, and `#instances Add` and `#instances Add _` are equivalent;
+the command adds metavariables until the argument is no longer a function.
+
+The `#instances` command is closely related to `#synth`, but `#synth` does the full
+instance synthesis algorithm and `#instances` does the first step of finding potential instances.
 
 ## \#kerodon_tags
 Defined in: `Mathlib.StacksTag.kerodonTags`
@@ -527,6 +696,37 @@ For each found declaration, it prints a line
 'declaration_name' corresponds to tag 'declaration_tag'.
 ```
 The variant `#kerodon_tags!` also adds the theorem statement after each summary line.
+
+## \#leansearch
+Defined in: `LeanSearchClient.leansearch_search_cmd`
+
+Search [LeanSearch](https://leansearch.net/) from within Lean.
+Queries should be a string that ends with a `.` or `?`. This works as a command, as a term
+and as a tactic as in the following examples. In tactic mode, only valid tactics are displayed.
+
+```lean
+#leansearch "If a natural number n is less than m, then the successor of n is less than the successor of m."
+
+example := #leansearch "If a natural number n is less than m, then the successor of n is less than the successor of m."
+
+example : 3 ≤ 5 := by
+  #leansearch "If a natural number n is less than m, then the successor of n is less than the successor of m."
+  sorry
+```
+
+You can modify the LeanSearch URL by setting the `LEANSEARCHCLIENT_LEANSEARCH_API_URL` environment variable.
+
+## \#lint
+Defined in: `Batteries.Tactic.Lint.«command#lint+-*Only___»`
+
+The command `#lint` runs the linters on the current file (by default).
+
+`#lint only someLinter` can be used to run only a single linter.
+
+## \#list_linters
+Defined in: `Batteries.Tactic.Lint.«command#list_linters»`
+
+The command `#list_linters` prints a list of all available linters.
 
 ## \#long_instances
 Defined in: `«command#long_instances_»`
@@ -543,6 +743,114 @@ Defined in: `«command#long_names_»`
 Lists all declarations with a long name, gathered according to the module they are defined in.
 Use as `#long_names` or `#long_names 100` to specify the length.
 
+## \#loogle
+Defined in: `LeanSearchClient.loogle_cmd`
+
+Search [Loogle](https://loogle.lean-lang.org/json) from within Lean. This can be used as a command, term or tactic as in the following examples. In the case of a tactic, only valid tactics are displayed.
+
+
+```lean
+#loogle List ?a → ?a
+
+example := #loogle List ?a → ?a
+
+example : 3 ≤ 5 := by
+  #loogle Nat.succ_le_succ
+  sorry
+
+```
+
+## Loogle Usage
+
+Loogle finds definitions and lemmas in various ways:
+
+By constant:
+🔍 Real.sin
+finds all lemmas whose statement somehow mentions the sine function.
+
+By lemma name substring:
+🔍 \"differ\"
+finds all lemmas that have \"differ\" somewhere in their lemma name.
+
+By subexpression:
+🔍 _ * (_ ^ _)
+finds all lemmas whose statements somewhere include a product where the second argument is raised to some power.
+
+The pattern can also be non-linear, as in
+🔍 Real.sqrt ?a * Real.sqrt ?a
+
+If the pattern has parameters, they are matched in any order. Both of these will find List.map:
+🔍 (?a -> ?b) -> List ?a -> List ?b
+🔍 List ?a -> (?a -> ?b) -> List ?b
+
+By main conclusion:
+🔍 |- tsum _ = _ * tsum _
+finds all lemmas where the conclusion (the subexpression to the right of all → and ∀) has the given shape.
+
+As before, if the pattern has parameters, they are matched against the hypotheses of the lemma in any order; for example,
+🔍 |- _ < _ → tsum _ < tsum _
+will find tsum_lt_tsum even though the hypothesis f i < g i is not the last.
+
+If you pass more than one such search filter, separated by commas Loogle will return lemmas which match all of them. The search
+🔍 Real.sin, \"two\", tsum, _ * _, _ ^ _, |- _ < _ → _
+woould find all lemmas which mention the constants Real.sin and tsum, have \"two\" as a substring of the lemma name, include a product and a power somewhere in the type, and have a hypothesis of the form _ < _ (if there were any such lemmas). Metavariables (?a) are assigned independently in each filter.
+
+You can modify the Loogle server URL by setting the `LEANSEARCHCLIENT_LOOGLE_API_URL` environment variable.
+
+## \#loogle
+Defined in: `LeanSearchClient.just_loogle_cmd`
+
+Search [Loogle](https://loogle.lean-lang.org/json) from within Lean. This can be used as a command, term or tactic as in the following examples. In the case of a tactic, only valid tactics are displayed.
+
+
+```lean
+#loogle List ?a → ?a
+
+example := #loogle List ?a → ?a
+
+example : 3 ≤ 5 := by
+  #loogle Nat.succ_le_succ
+  sorry
+
+```
+
+## Loogle Usage
+
+Loogle finds definitions and lemmas in various ways:
+
+By constant:
+🔍 Real.sin
+finds all lemmas whose statement somehow mentions the sine function.
+
+By lemma name substring:
+🔍 \"differ\"
+finds all lemmas that have \"differ\" somewhere in their lemma name.
+
+By subexpression:
+🔍 _ * (_ ^ _)
+finds all lemmas whose statements somewhere include a product where the second argument is raised to some power.
+
+The pattern can also be non-linear, as in
+🔍 Real.sqrt ?a * Real.sqrt ?a
+
+If the pattern has parameters, they are matched in any order. Both of these will find List.map:
+🔍 (?a -> ?b) -> List ?a -> List ?b
+🔍 List ?a -> (?a -> ?b) -> List ?b
+
+By main conclusion:
+🔍 |- tsum _ = _ * tsum _
+finds all lemmas where the conclusion (the subexpression to the right of all → and ∀) has the given shape.
+
+As before, if the pattern has parameters, they are matched against the hypotheses of the lemma in any order; for example,
+🔍 |- _ < _ → tsum _ < tsum _
+will find tsum_lt_tsum even though the hypothesis f i < g i is not the last.
+
+If you pass more than one such search filter, separated by commas Loogle will return lemmas which match all of them. The search
+🔍 Real.sin, \"two\", tsum, _ * _, _ ^ _, |- _ < _ → _
+woould find all lemmas which mention the constants Real.sin and tsum, have \"two\" as a substring of the lemma name, include a product and a power somewhere in the type, and have a hypothesis of the form _ < _ (if there were any such lemmas). Metavariables (?a) are assigned independently in each filter.
+
+You can modify the Loogle server URL by setting the `LEANSEARCHCLIENT_LOOGLE_API_URL` environment variable.
+
 ## \#min_imports
 Defined in: `Mathlib.Command.MinImports.minImpsStx`
 
@@ -554,6 +862,20 @@ Defined in: `Mathlib.Command.MinImports.«command#min_importsIn_»`
 
 `#min_imports in cmd` scans the syntax `cmd` and the declaration obtained by elaborating `cmd`
 to find a collection of minimal imports that should be sufficient for `cmd` to work.
+
+## \#min_imports
+Defined in: `«command#min_imports»`
+
+Try to compute a minimal set of imports for this file,
+by analyzing the declarations.
+
+This must be run at the end of the file,
+and is not aware of syntax and tactics,
+so the results will likely need to be adjusted by hand.
+
+## \#minimize_imports
+Defined in: `«command#minimize_imports»`
+
 
 ## \#norm_num
 Defined in: `Mathlib.Tactic.normNumCmd`
@@ -592,6 +914,35 @@ For instance, `#parse` can be used as follows
 ```
 
 ## \#print
+Defined in: `Batteries.Tactic.printPrefix`
+
+The command `#print prefix foo` will print all definitions that start with
+the namespace `foo`.
+
+For example, the command below will print out definitions in the `List` namespace:
+
+```lean
+#print prefix List
+```
+
+`#print prefix` can be controlled by flags in `PrintPrefixConfig`.  These provide
+options for filtering names and formatting.   For example,
+`#print prefix` by default excludes internal names, but this can be controlled
+via config:
+```lean
+#print prefix (config := {internals := true}) List
+```
+
+By default, `#print prefix` prints the type after each name.  This can be controlled
+by setting `showTypes` to `false`:
+```lean
+#print prefix (config := {showTypes := false}) List
+```
+
+The complete set of flags can be seen in the documentation
+for `Lean.Elab.Command.PrintPrefixConfig`.
+
+## \#print
 Defined in: `Lean.Parser.Command.printSig`
 
 
@@ -605,6 +956,29 @@ Defined in: `Lean.Parser.Command.printTacTags`
 Displays all available tactic tags, with documentation.
 
 ## \#print
+Defined in: `Batteries.Tactic.«command#printOpaques_»`
+
+The command `#print opaques X` prints all opaque definitions that `X` depends on.
+
+Opaque definitions include partial definitions and axioms. Only dependencies that occur in a
+computationally relevant context are listed, occurrences within proof terms are omitted. This is
+useful to determine whether and how a definition is possibly platform dependent, possibly partial,
+or possibly noncomputable.
+
+The command `#print opaques Std.HashMap.insert` shows that `Std.HashMap.insert` depends on the
+opaque definitions: `System.Platform.getNumBits` and `UInt64.toUSize`. Thus `Std.HashMap.insert`
+may have different behavior when compiled on a 32 bit or 64 bit platform.
+
+The command `#print opaques Stream.forIn` shows that `Stream.forIn` is possibly partial since it
+depends on the partial definition `Stream.forIn.visit`. Indeed, `Stream.forIn` may not terminate
+when the input stream is unbounded.
+
+The command `#print opaques Classical.choice` shows that `Classical.choice` is itself an opaque
+definition: it is an axiom. However, `#print opaques Classical.axiomOfChoice` returns nothing
+since it is a proposition, hence not computationally relevant. (The command `#print axioms` does
+reveal that `Classical.axiomOfChoice` depends on the `Classical.choice` axiom.)
+
+## \#print
 Defined in: `Mathlib.PrintSorries.«command#printSorriesIn_»`
 
 - `#print sorries` prints all sorries that the current module depends on.
@@ -616,6 +990,32 @@ Displayed sorries are hoverable and support "go to definition".
 ## \#print
 Defined in: `Lean.Parser.Command.printEqns`
 
+
+## \#print
+Defined in: `Batteries.Tactic.«command#printDependents___»`
+
+The command `#print dependents X Y` prints a list of all the declarations in the file that
+transitively depend on `X` or `Y`. After each declaration, it shows the list of all declarations
+referred to directly in the body which also depend on `X` or `Y`.
+
+For example, `#print axioms bar'` below shows that `bar'` depends on `Classical.choice`, but not
+why. `#print dependents Classical.choice` says that `bar'` depends on `Classical.choice` because
+it uses `foo` and `foo` uses `Classical.em`. `bar` is not listed because it is proved without using
+`Classical.choice`.
+```
+import Batteries.Tactic.PrintDependents
+
+theorem foo : x = y ∨ x ≠ y := Classical.em _
+theorem bar : 1 = 1 ∨ 1 ≠ 1 := by simp
+theorem bar' : 1 = 1 ∨ 1 ≠ 1 := foo
+
+#print axioms bar'
+-- 'bar'' depends on axioms: [Classical.choice, Quot.sound, propext]
+
+#print dependents Classical.choice
+-- foo: Classical.em
+-- bar': foo
+```
 
 ## \#print
 Defined in: `Mathlib.PrintSorries.printSorriesStx`
@@ -704,6 +1104,12 @@ especially for complex expressions.
 Consider using `#eval <expression>` for simple evaluation/execution
 of expressions.
 
+## \#redundant_imports
+Defined in: `«command#redundant_imports»`
+
+List the imports in this file which can be removed
+because they are transitively implied by another import.
+
 ## \#reset_min_imports
 Defined in: `Mathlib.Linter.«command#reset_min_imports»`
 
@@ -713,6 +1119,61 @@ Defined in: `Mathlib.Linter.«command#reset_min_imports»`
 Defined in: `Mathlib.Tactic.LibraryRewrite.rw??Command`
 
 `#rw?? e` gives all possible rewrites of `e`. It is a testing command for the `rw??` tactic
+
+## \#sample
+Defined in: `Plausible.«command#sample_»`
+
+`#sample type`, where `type` has an instance of `SampleableExt`, prints ten random
+values of type `type` using an increasing size parameter.
+
+```lean
+#sample Nat
+-- prints
+-- 0
+-- 0
+-- 2
+-- 24
+-- 64
+-- 76
+-- 5
+-- 132
+-- 8
+-- 449
+-- or some other sequence of numbers
+
+#sample List Int
+-- prints
+-- []
+-- [1, 1]
+-- [-7, 9, -6]
+-- [36]
+-- [-500, 105, 260]
+-- [-290]
+-- [17, 156]
+-- [-2364, -7599, 661, -2411, -3576, 5517, -3823, -968]
+-- [-643]
+-- [11892, 16329, -15095, -15461]
+-- or whatever
+```
+
+## \#search
+Defined in: `LeanSearchClient.search_cmd`
+
+Search from within Lean, depending on the option `leansearchclient.backend` (currently only leansearch).
+Queries should be a string that ends with a `.` or `?`. This works as a command, as a term
+and as a tactic as in the following examples. In tactic mode, only valid tactics are displayed.
+
+```lean
+#search "If a natural number n is less than m, then the successor of n is less than the successor of m."
+
+example := #search "If a natural number n is less than m, then the successor of n is less than the successor of m."
+
+example : 3 ≤ 5 := by
+  #search "If a natural number n is less than m, then the successor of n is less than the successor of m."
+  sorry
+
+In tactic mode, if the query string is not supplied, then [LeanStateSearch](https://premise-search.com) is queried based on the goal state.
+```lean
 
 ## \#show_deprecated_modules
 Defined in: `Mathlib.Linter.«command#show_deprecated_modules»`
@@ -740,6 +1201,19 @@ For instance, to see the `SyntaxNodeKind` of the `refine` tactic, you could use
 #show_kind refine _
 ```
 The trailing underscore `_` makes the syntax valid, since `refine` expects something else.
+
+## \#show_unused
+Defined in: `Batteries.Tactic.ShowUnused.«command#show_unused___»`
+
+`#show_unused decl1 decl2 ..` will highlight every theorem or definition in the current file
+not involved in the definition of declarations `decl1`, `decl2`, etc. The result is shown
+both in the message on `#show_unused`, as well as on the declarations themselves.
+```lean
+def foo := 1
+def baz := 2
+def bar := foo
+#show_unused bar -- highlights `baz`
+```
 
 ## \#simp
 Defined in: `Mathlib.Tactic.Conv.«command#simpOnly_=>__»`
@@ -778,6 +1252,10 @@ variable {C : Type u} [Category.{v} C] [MonoidalCategory C] {X Y : C} (f : 𝟙_
 
 ## \#synth
 Defined in: `Lean.Parser.Command.synth`
+
+
+## \#test
+Defined in: `Plausible.«command#test_»`
 
 
 ## \#time
@@ -870,6 +1348,10 @@ Defined in: `Lean.Parser.Command.moduleDoc`
 tools. The string is associated with the corresponding position in the file. It can be used
 multiple times in the same file.
 
+## add_aesop_rules
+Defined in: `Aesop.Frontend.Parser.addRules`
+
+
 ## add_decl_doc
 Defined in: `Lean.Parser.Command.addDocString`
 
@@ -893,6 +1375,26 @@ add_decl_doc Triple.toProd
 ```
 
 Documentation can only be added to declarations in the same module.
+
+## alias
+Defined in: `Batteries.Tactic.Alias.alias`
+
+The command `alias name := target` creates a synonym of `target` with the given name.
+
+The command `alias ⟨fwd, rev⟩ := target` creates synonyms for the forward and reverse directions
+of an iff theorem. Use `_` if only one direction is required.
+
+These commands accept all modifiers and attributes that `def` and `theorem` do.
+
+## alias
+Defined in: `Batteries.Tactic.Alias.aliasLR`
+
+The command `alias name := target` creates a synonym of `target` with the given name.
+
+The command `alias ⟨fwd, rev⟩ := target` creates synonyms for the forward and reverse directions
+of an iff theorem. Use `_` if only one direction is required.
+
+These commands accept all modifiers and attributes that `def` and `theorem` do.
 
 ## assert_exists
 Defined in: `commandAssert_exists_`
@@ -1004,6 +1506,10 @@ Defined in: `Mathlib.Util.«commandCompile_inductive%_»`
 `compile_inductive% Foo` creates compiled code for the recursor `Foo.rec`,
 so that `Foo.rec` can be used in a definition
 without having to mark the definition as `noncomputable`.
+
+## declare_aesop_rule_sets
+Defined in: `Aesop.Frontend.Parser.declareRuleSets`
+
 
 ## declare_bitwise_int_theorems
 Defined in: `commandDeclare_bitwise_int_theorems__`
@@ -1126,6 +1632,10 @@ Defined in: `Lean.Parser.Command.end`
 `end` closes a `section` or `namespace` scope. If the scope is named `<id>`, it has to be closed
 with `end <id>`. The `end` command is optional at the end of a file.
 
+## erase_aesop_rules
+Defined in: `Aesop.Frontend.Parser.eraseRules`
+
+
 ## export
 Defined in: `Lean.Parser.Command.export`
 
@@ -1152,6 +1662,19 @@ end Evening.Sky
 -- `star` is visible in `Evening.Sky`
 #check Evening.Sky.star
 ```
+
+## export
+Defined in: `Lean.Elab.Command.exportPrivate`
+
+The command `export private a b c in foo bar` is similar to `open private`, but instead of opening
+them in the current scope it will create public aliases to the private definition. The definition
+will exist at exactly the original location and name, as if the `private` keyword was not used
+originally.
+
+It will also open the newly created alias definition under the provided short name, like
+`open private`.
+It is also possible to specify the module instead with
+`export private a b c from Other.Module`.
 
 ## extend_docs
 Defined in: `Mathlib.Tactic.ExtendDocs.commandExtend_docs__Before__After_`
@@ -1372,6 +1895,22 @@ Introduces an irreducible definition.
 a constant `foo : Nat` as well as
 a theorem `foo_def : foo = 42`.
 
+## library_note
+Defined in: `Batteries.Util.LibraryNote.commandLibrary_note___`
+
+```
+library_note "some tag" /--
+... some explanation ...
+-/
+```
+creates a new "library note", which can then be cross-referenced using
+```
+-- See note [some tag]
+```
+in doc-comments.
+Use `#help note "some tag"` to display all notes with the tag `"some tag"` in the infoview.
+This command can be imported from Batteries.Tactic.HelpCmd .
+
 ## library_note2
 Defined in: `commandLibrary_note2____1`
 
@@ -1516,6 +2055,19 @@ which case all instance variables that unify with the given type are omitted. `o
 only be used in conjunction with `in` in order to keep the section structure simple.
 
 ## open
+Defined in: `Lean.Elab.Command.openPrivate`
+
+The command `open private a b c in foo bar` will look for private definitions named `a`, `b`, `c`
+in declarations `foo` and `bar` and open them in the current scope. This does not make the
+definitions public, but rather makes them accessible in the current section by the short name `a`
+instead of the (unnameable) internal name for the private declaration, something like
+`_private.Other.Module.0.Other.Namespace.foo.a`, which cannot be typed directly because of the `0`
+name component.
+
+It is also possible to specify the module instead with
+`open private a b c from Other.Module`.
+
+## open
 Defined in: `Lean.Parser.Command.open`
 
 Makes names from other namespaces visible without writing the namespace prefix.
@@ -1628,6 +2180,22 @@ section
   #check Demo.MyType.val ≋ Demo.MyType.val
   -- #check Alias -- unknown identifier 'Alias'
 end
+```
+
+## proof_wanted
+Defined in: `«proof_wanted»`
+
+This proof would be a welcome contribution to the library!
+
+The syntax of `proof_wanted` declarations is just like that of `theorem`, but without `:=` or the
+proof. Lean checks that `proof_wanted` declarations are well-formed (e.g. it ensures that all the
+mentioned names are in scope, and that the theorem statement is a valid proposition), but they are
+discarded afterwards. This means that they cannot be used as axioms.
+
+Typical usage:
+```lean
+@[simp] proof_wanted empty_find? [BEq α] [Hashable α] {a : α} :
+    (∅ : HashMap α β).find? a = none
 ```
 
 ## recall
@@ -2188,61 +2756,8 @@ Defined in: `Lean.Elab.Command.commandWith_weak_namespace__`
 
 Changes the current namespace without causing scoped things to go out of scope
 
-syntax ... [Aesop.Frontend.Parser.addRules]
-
-syntax ... [Aesop.Frontend.Parser.declareRuleSets]
-
-syntax ... [Aesop.Frontend.Parser.eraseRules]
-
-syntax ... [Aesop.Frontend.Parser.showRules]
-
-syntax ... [Aesop.Frontend.Parser.showStats]
-
-syntax ... [Batteries.Tactic.Alias.alias]
-
-syntax ... [Batteries.Tactic.Alias.aliasLR]
-
-syntax ... [Batteries.Tactic.Instances.«command#instances__:_»]
-
-syntax ... [Batteries.Tactic.Instances.instancesCmd]
-
 syntax ... [Batteries.Tactic.Lemma.lemmaCmd]
-
-syntax ... [Batteries.Tactic.Lint.«command#lint+-*Only___»]
-
-syntax ... [Batteries.Tactic.Lint.«command#list_linters»]
-
-syntax ... [Batteries.Tactic.ShowUnused.«command#show_unused___»]
-
-syntax ... [Batteries.Tactic.«command#help_AttrAttribute___»]
-
-syntax ... [Batteries.Tactic.«command#help_Cat+______»]
-
-syntax ... [Batteries.Tactic.«command#help_Cats___»]
-
-syntax ... [Batteries.Tactic.«command#help_Command+____»]
-
-syntax ... [Batteries.Tactic.«command#help_Conv+____»]
-
-syntax ... [Batteries.Tactic.«command#help_Note___»]
-
-syntax ... [Batteries.Tactic.«command#help_Option___»]
-
-syntax ... [Batteries.Tactic.«command#help_Tactic+____»]
-
-syntax ... [Batteries.Tactic.«command#help_Term+____»]
-
-syntax ... [Batteries.Tactic.«command#printDependents___»]
-
-syntax ... [Batteries.Tactic.«command#printOpaques_»]
-
-syntax ... [Batteries.Tactic.printPrefix]
-
-syntax ... [Batteries.Util.LibraryNote.commandLibrary_note___]
-
-syntax ... [Lean.Elab.Command.exportPrivate]
-
-syntax ... [Lean.Elab.Command.openPrivate]
+`lemma` is not supported, please use `theorem` instead
 
 syntax ... [Lean.Parser.Command.declaration]
 
@@ -2250,32 +2765,6 @@ syntax ... [Lean.Parser.Command.initialize]
 
 syntax ... [Lean.Parser.Command.mixfix]
 
-syntax ... [LeanSearchClient.just_loogle_cmd]
-
-syntax ... [LeanSearchClient.leansearch_search_cmd]
-
-syntax ... [LeanSearchClient.loogle_cmd]
-
-syntax ... [LeanSearchClient.search_cmd]
-
-syntax ... [Plausible.«command#sample_»]
-
-syntax ... [Plausible.«command#test_»]
-
-syntax ... [ProofWidgets.HtmlCommand.htmlCmd]
-
-syntax ... [«command#find_home!_»]
-
-syntax ... [«command#import_diff_»]
-
-syntax ... [«command#min_imports»]
-
-syntax ... [«command#minimize_imports»]
-
-syntax ... [«command#redundant_imports»]
-
 syntax ... [«lemma»]
 `lemma` means the same as `theorem`. It is used to denote "less important" theorems
-
-syntax ... [«proof_wanted»]
 
