@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `337f3a7ec82d927c2939d3e695573f43e5aa0874`
+Mathlib version: `aa78411076513560baa4507bc5edb5bccbf51741`
 
 ## Elab.async
 type: `Bool`
@@ -1139,6 +1139,34 @@ default: `false`
 
 
 ## linter.tacticAnalysis.terminalToGrind
+type: `Bool`
+
+default: `false`
+
+
+
+## linter.tacticAnalysis.tryAtEachStepAesop
+type: `Bool`
+
+default: `false`
+
+
+
+## linter.tacticAnalysis.tryAtEachStepGrind
+type: `Bool`
+
+default: `false`
+
+
+
+## linter.tacticAnalysis.tryAtEachStepGrindPremises
+type: `Bool`
+
+default: `false`
+
+
+
+## linter.tacticAnalysis.tryAtEachStepSimpAll
 type: `Bool`
 
 default: `false`
