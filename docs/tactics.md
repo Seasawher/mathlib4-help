@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `33b1098d29f8e518cf75f3787f93809926385252`
+Mathlib version: `912a3b5ba3932336601feaa9f4a2a80fbe5a0d67`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1035,6 +1035,16 @@ Currently the preprocessor is implemented as `try simp only [bitvec_to_nat] at *
 Defined in: `«tacticBy_cases_:_»`
 
 `by_cases (h :)? p` splits the main goal into two cases, assuming `h : p` in the first branch, and `h : ¬ p` in the second branch.
+
+## by_cases!
+Defined in: `byCases!`
+
+`by_cases! h : p` runs the `by_cases h : p` tactic, followed by
+`try push_neg at h` in the second subgoal. For example,
+- `by_cases! h : a < b` creates one goal with hypothesis `h : a < b` and
+  another with `h : b ≤ a`.
+- `by_cases! h : a ≠ b` creates one goal with hypothesis `h : a ≠ b` and
+  another with `h : a = b`.
 
 ## by_contra
 Defined in: `Batteries.Tactic.byContra`
