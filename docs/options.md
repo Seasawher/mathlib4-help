@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `70c19ec92a37292d7bb87b516d694695b7eb6efb`
+Mathlib version: `c6541c05ebd2fc0f106db01858adaf8e7a783a79`
 
 ## Elab.async
 type: `Bool`
@@ -116,7 +116,14 @@ type: `Bool`
 
 default: `true`
 
-(aesop) Warn when apply builder is applied to a rule with conclusion of the form A ↔ B
+(aesop) Warn when apply builder is applied to a rule with conclusion of the form A ↔ B.
+
+## aesop.warn.nonterminal
+type: `Bool`
+
+default: `true`
+
+(aesop) Warn when `aesop` does not close the goal, i.e. is used as a non-terminal tactic.
 
 ## allowUnsafeReducibility
 type: `Bool`
