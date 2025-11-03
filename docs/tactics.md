@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `c6541c05ebd2fc0f106db01858adaf8e7a783a79`
+Mathlib version: `0a052585de2cfc95e94c373033fe24df36ca7c0e`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3890,6 +3890,8 @@ optional arguments:
   disequality hypotheses. (`false` by default.)
 * If `exfalso` is `false`, `linarith` will fail when the goal is neither an inequality nor `False`.
   (`true` by default.)
+* If `minimize` is `false`, `linarith?` will report all hypotheses appearing in its initial
+  proof without attempting to drop redundancies. (`true` by default.)
 * `restrict_type` (not yet implemented in mathlib4)
   will only use hypotheses that are inequalities over `tp`. This is useful
   if you have e.g. both integer- and rational-valued inequalities in the local context, which can
@@ -3950,6 +3952,8 @@ optional arguments:
   disequality hypotheses. (`false` by default.)
 * If `exfalso` is `false`, `linarith` will fail when the goal is neither an inequality nor `False`.
   (`true` by default.)
+* If `minimize` is `false`, `linarith?` will report all hypotheses appearing in its initial
+  proof without attempting to drop redundancies. (`true` by default.)
 * `restrict_type` (not yet implemented in mathlib4)
   will only use hypotheses that are inequalities over `tp`. This is useful
   if you have e.g. both integer- and rational-valued inequalities in the local context, which can
@@ -3959,6 +3963,24 @@ A variant, `nlinarith`, does some basic preprocessing to handle some nonlinear g
 
 The option `set_option trace.linarith true` will trace certain intermediate stages of the `linarith`
 routine.
+
+## linarith?
+Defined in: `Mathlib.Tactic.linarith?`
+
+`linarith?` behaves like `linarith` but, on success, it prints a suggestion of
+the form `linarith only [...]` listing a minimized set of hypotheses used in the
+final proof.  Use `linarith?!` for the higher-reducibility variant and set the
+`minimize` flag in the configuration to control whether greedy minimization is
+performed.
+
+## linarith?!
+Defined in: `Mathlib.Tactic.tacticLinarith?!_`
+
+`linarith?` behaves like `linarith` but, on success, it prints a suggestion of
+the form `linarith only [...]` listing a minimized set of hypotheses used in the
+final proof.  Use `linarith?!` for the higher-reducibility variant and set the
+`minimize` flag in the configuration to control whether greedy minimization is
+performed.
 
 ## linear_combination
 Defined in: `Mathlib.Tactic.LinearCombination.linearCombination`
