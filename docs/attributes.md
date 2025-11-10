@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `bc7f43e3827a034fa6f19803c7cedb9a9e86a15c`
+Mathlib version: `de7ac7cb70710498104300af3c811b05efbb48c6`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -1080,6 +1080,9 @@ def isYellow (color : String) : Bool :=
   | yellowString => true
   | _ => false
 ```
+
+## measurability
+ The `measurability` attribute used to tag measurability statements for the `measurability` tactic.
 
 ## method_specs
  generate method specification theorems
