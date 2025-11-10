@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `bc7f43e3827a034fa6f19803c7cedb9a9e86a15c`
+Mathlib version: `de7ac7cb70710498104300af3c811b05efbb48c6`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2788,7 +2788,7 @@ Defined in: `«tacticGeneralize'_:_=_»`
 Backwards compatibility shim for `generalize`.
 
 ## generalize_proofs
-Defined in: `Mathlib.Tactic.generalizeProofsElab`
+Defined in: `Batteries.Tactic.generalizeProofsElab`
 
 `generalize_proofs ids* [at locs]?` generalizes proofs in the current goal,
 turning them into new local hypotheses.
@@ -4409,8 +4409,10 @@ The tactic `measurability` solves goals of the form `Measurable f`, `AEMeasurabl
 `StronglyMeasurable f`, `AEStronglyMeasurable f μ`, or `MeasurableSet s` by applying lemmas tagged
 with the `measurability` user attribute.
 
-`fun_prop` is a (usually more powerful) alternative to `measurability`
-if your goal does not involve `MeasurableSet`.
+Note that `measurability` uses `fun_prop` for solving measurability of functions, so statements
+about `Measurable`, `AEMeasurable`, `StronglyMeasurable` and `AEStronglyMeasurable` should be tagged
+with `fun_prop` rather that `measurability`. The `measurability` attribute is equivalent to
+`fun_prop` in these cases for backward compatibility with the earlier implementation.
 
 ## measurability!
 Defined in: `measurability!`
