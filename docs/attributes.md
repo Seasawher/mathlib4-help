@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `de7ac7cb70710498104300af3c811b05efbb48c6`
+Mathlib version: `ac48e6adc8b30cd28a5e3d428a25300457ae7243`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -783,6 +783,11 @@ The antecedents of such a lemma are classified as generating "main goals" if the
 or more generally of the form `∀ i h h' j h'', f₁ i j ≈ f₂ i j` (say) for some "varying argument"
 pair `f₁`/`f₂`. (Other antecedents are considered to generate "side goals".) The index of the
 "varying argument" pair corresponding to each "main" antecedent is recorded.
+
+If a lemma such as `add_le_add : a ≤ b → c ≤ d → a + c ≤ b + d` has been tagged with `gcongr`,
+then a direct consequence like `a ≤ b → a + c ≤ b + c` does *not* need to be tagged.
+However, if a more specific lemma has fewer side conditions, it should also be tagged with `gcongr`.
+For example, `mul_le_mul_of_nonneg_right` and `mul_le_mul_of_nonneg_left` are both tagged.
 
 Lemmas involving `<` or `≤` can also be marked `@[bound]` for use in the related `bound` tactic.
 

@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `de7ac7cb70710498104300af3c811b05efbb48c6`
+Mathlib version: `ac48e6adc8b30cd28a5e3d428a25300457ae7243`
 
 ## Elab.async
 type: `Bool`
@@ -1081,6 +1081,13 @@ type: `Bool`
 default: `true`
 
 enable the tactic analysis framework
+
+## linter.tacticAnalysis.dummy
+type: `Bool`
+
+default: `false`
+
+
 
 ## linter.tacticAnalysis.introMerge
 type: `Bool`
