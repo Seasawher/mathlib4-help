@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `de7ac7cb70710498104300af3c811b05efbb48c6`
+Mathlib version: `ac48e6adc8b30cd28a5e3d428a25300457ae7243`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2888,24 +2888,8 @@ A macro for a common simplification when rewriting with ghost component equation
 ## grewrite
 Defined in: `Mathlib.Tactic.grewriteSeq`
 
-`grewrite [e]` works just like `rewrite [e]`, but `e` can be a relation other than `=` or `↔`.
-
-For example,
-```lean
-variable {a b c d n : ℤ}
-
-example (h₁ : a < b) (h₂ : b ≤ c) : a + d ≤ c + d := by
-  grewrite [h₁, h₂]; rfl
-
-example (h : a ≡ b [ZMOD n]) : a ^ 2 ≡ b ^ 2 [ZMOD n] := by
-  grewrite [h]; rfl
-
-example (h₁ : a ∣ b) (h₂ : b ∣ a ^ 2 * c) : a ∣ b ^ 2 * c := by
-  grewrite [h₁] at *
-  exact h₂
-```
-To be able to use `grewrite`, the relevant lemmas need to be tagged with `@[gcongr]`.
-To rewrite inside a transitive relation, you can also give it an `IsTrans` instance.
+`grewrite [e]` is like `grw [e]`, but it doesn't try to close the goal with `rfl`.
+This is analogous to `rw` and `rewrite`, where `rewrite` doesn't try to close the goal with `rfl`.
 
 ## grind
 Defined in: `Lean.Parser.Tactic.grind`
@@ -3228,6 +3212,9 @@ example (h₁ : a ∣ b) (h₂ : b ∣ a ^ 2 * c) : a ∣ b ^ 2 * c := by
   grw [h₁] at *
   exact h₂
 ```
+To rewrite only in the `n`-th position, use `nth_grw n`.
+This is useful when `grw` tries to rewrite in a position that is not valid for the given relation.
+
 To be able to use `grw`, the relevant lemmas need to be tagged with `@[gcongr]`.
 To rewrite inside a transitive relation, you can also give it an `IsTrans` instance.
 
@@ -6052,6 +6039,9 @@ The `push` tactic can be extended using the `@[push]` attribute. `push` has spec
 built in for `push Not`, so that it can preserve binder names, and so that `¬ (p ∧ q)` can be
 transformed to either `p → ¬ q` (the default) or `¬ p ∨ ¬ q`. To get `¬ p ∨ ¬ q`, use
 `set_option push_neg.use_distrib true`.
+
+Tactics that introduce a negation usually have a version that automatically calls `push_neg` on
+that negation. These include `by_cases!`, `contrapose!` and `by_contra!`.
 
 Another example: given a hypothesis
 ```lean
