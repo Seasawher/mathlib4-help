@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `75f8adf6a6e95711bf49b848b590f2d123371a14`
+Mathlib version: `ef549b7b128a834178a5f25fbcdf75c3aa32deb7`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1886,6 +1886,13 @@ Some common uses:
     def Equiv.Simps.symm_apply (e : α ≃ β) : β → α := e.symm
     initialize_simps_projections Equiv (toFun → apply, invFun → symm_apply)
   ```
+
+## insert_to_additive_translation
+Defined in: `Mathlib.Tactic.ToAdditive.commandInsert_to_additive_translation__`
+
+`insert_to_additive_translation mulName addName` inserts the translation `mulName ↦ addName`
+into the `to_additive` dictionary. This is useful for translating namespaces that don't (yet)
+have a corresponding translated declaration.
 
 ## irreducible_def
 Defined in: `Lean.Elab.Command.command_Irreducible_def____`

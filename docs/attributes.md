@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `75f8adf6a6e95711bf49b848b590f2d123371a14`
+Mathlib version: `ef549b7b128a834178a5f25fbcdf75c3aa32deb7`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -1490,11 +1490,6 @@ directly.
 ## to_additive
  Transport multiplicative to additive
 
-## to_additive_change_numeral
- Auxiliary attribute for `to_additive` that stores functions that have numerals as argument.
-Similar to `registerParametricAttribute` except that attributes do not
-have to be assigned in the same file as the declaration.
-
 ## to_additive_dont_translate
  Auxiliary attribute for `to_additive` stating that the operations on this type should not be translated.
 Similar to `registerParametricAttribute` except that attributes do not
@@ -1513,8 +1508,31 @@ have to be assigned in the same file as the declaration.
 ## to_app
  
 
+## to_dual
+ Transport to dual
+
+## to_dual_dont_translate
+ Auxiliary attribute for `to_dual` stating that the operations on this type should not be translated.
+Similar to `registerParametricAttribute` except that attributes do not
+have to be assigned in the same file as the declaration.
+
+## to_dual_ignore_args
+ Auxiliary attribute for `to_dual` stating that certain arguments are not dualized.
+Similar to `registerParametricAttribute` except that attributes do not
+have to be assigned in the same file as the declaration.
+
+## to_dual_relevant_arg
+ Auxiliary attribute for `to_dual` stating which arguments are the types with a dual structure.
+Similar to `registerParametricAttribute` except that attributes do not
+have to be assigned in the same file as the declaration.
+
 ## trans
  transitive relation
+
+## translate_change_numeral
+ Auxiliary attribute for `to_additive` that stores functions that have numerals as argument.
+Similar to `registerParametricAttribute` except that attributes do not
+have to be assigned in the same file as the declaration.
 
 ## try_tactic
  try_tactic elaborator
