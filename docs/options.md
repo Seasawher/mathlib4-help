@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `75f8adf6a6e95711bf49b848b590f2d123371a14`
+Mathlib version: `ef549b7b128a834178a5f25fbcdf75c3aa32deb7`
 
 ## Elab.async
 type: `Bool`
@@ -744,7 +744,7 @@ type: `Bool`
 
 default: `true`
 
-Linter, mostly used by `@[to_additive]`, that checks that the source declaration doesn't have certain attributes
+Linter, mostly used by translate attributes, that checks that the source declaration doesn't have certain attributes
 
 ## linter.flexible
 type: `Bool`
@@ -1194,21 +1194,6 @@ default: `false`
 
 
 
-## linter.toAdditiveExisting
-type: `Bool`
-
-default: `true`
-
-Linter used by `@[to_additive]` that checks whether the user correctly specified that
-    the additive declaration already exists
-
-## linter.toAdditiveGenerateName
-type: `Bool`
-
-default: `true`
-
-Linter used by `@[to_additive]` that checks if `@[to_additive]` automatically generates the user-given name
-
 ## linter.toAdditiveRelevantArg
 type: `Bool`
 
@@ -1222,6 +1207,21 @@ type: `Bool`
 default: `true`
 
 
+
+## linter.translateExisting
+type: `Bool`
+
+default: `true`
+
+Linter used by translate attributes that checks whether the user correctly specified
+    that the translated declaration already exists
+
+## linter.translateGenerateName
+type: `Bool`
+
+default: `true`
+
+Linter used by translate attributes that checks if the given declaration name is equal to the automatically generated name
 
 ## linter.unnecessarySeqFocus
 type: `Bool`
@@ -5365,14 +5365,14 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.to_additive
+## trace.translate
 type: `Bool`
 
 default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.to_additive_detail
+## trace.translate_detail
 type: `Bool`
 
 default: `false`
