@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `ef549b7b128a834178a5f25fbcdf75c3aa32deb7`
+Mathlib version: `4666766a0d9ab26b3bc2db21ac196e03cb5279b2`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -2280,10 +2280,9 @@ Note that the error name is not relativized to the current namespace.
 ## register_hint
 Defined in: `Mathlib.Tactic.Hint.registerHintStx`
 
-Register a tactic for use with the `hint` tactic, e.g. `register_hint simp_all`.
-An optional priority can be provided with `register_hint (priority := n) tac`.
-Tactics with larger priorities run before those with smaller priorities. The default
-priority is `1000`.
+Register a tactic for use with the `hint` tactic, e.g. `register_hint 1000 simp_all`.
+The numeric argument specifies the priority: tactics with larger priorities run before
+those with smaller priorities. The priority must be provided explicitly.
 
 ## register_label_attr
 Defined in: `Lean.Parser.Command.registerLabelAttr`

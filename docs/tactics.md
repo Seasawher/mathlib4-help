@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `ef549b7b128a834178a5f25fbcdf75c3aa32deb7`
+Mathlib version: `4666766a0d9ab26b3bc2db21ac196e03cb5279b2`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3367,7 +3367,7 @@ Defined in: `Lean.Parser.Tactic.tacticHaveI__`
 ## hint
 Defined in: `Mathlib.Tactic.Hint.hintStx`
 
-The `hint` tactic tries every tactic registered using `register_hint tac`,
+The `hint` tactic tries every tactic registered using `register_hint <prio> tac`,
 and reports any that succeed.
 
 ## induction
