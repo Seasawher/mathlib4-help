@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `ef549b7b128a834178a5f25fbcdf75c3aa32deb7`
+Mathlib version: `4666766a0d9ab26b3bc2db21ac196e03cb5279b2`
 
 ## Elab.async
 type: `Bool`
@@ -2104,7 +2104,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.25.0-rc2"`
+default: `"v4.25.0"`
 
 Revision of LeanStateSearch to use
 
@@ -3138,6 +3138,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Meta.AC
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.Closure
 type: `Bool`
 
 default: `false`
