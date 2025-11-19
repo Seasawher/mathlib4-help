@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `5b4465844e3feb231af0edb5ef1ab8e2523b08a7`
+Mathlib version: `6a54a80825b060ab20dc31751ebdce78b3a3b518`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -239,6 +239,20 @@ Registers a delaborator.
 the first success. If the term to be delaborated is an application of a constant `c`, elaborators
 for `app.c` are tried first; this is also done for `Expr.const`s ("nullary applications") to reduce
 special casing. If the term is an `Expr.mdata` with a single key `k`, `mdata.k` is tried first.
+
+## builtin_doElem_elab
+ (builtin) do element elaborator
+Registers a `do` element elaborator for the given syntax node kind.
+
+A `do` element elaborator should have type `DoElab` (which is
+`Lean.Syntax → DoElemCont → DoElabM Expr`), i.e. should take syntax of the given syntax node kind
+and a `DoElemCont` as parameters and produce an expression.
+
+When elaborating a `do` block `do e; rest`, the elaborator for `e` is invoked with the syntax of `e`
+and the `DoElemCont` representing `rest`.
+
+The `elab_rules` and `elab` commands should usually be preferred over using this attribute
+directly.
 
 ## builtin_doElem_parser
  Builtin parser
@@ -580,6 +594,20 @@ special casing. If the term is an `Expr.mdata` with a single key `k`, `mdata.k` 
 
 ## deprecated
  mark declaration as deprecated
+
+## doElem_elab
+ do element elaborator
+Registers a `do` element elaborator for the given syntax node kind.
+
+A `do` element elaborator should have type `DoElab` (which is
+`Lean.Syntax → DoElemCont → DoElabM Expr`), i.e. should take syntax of the given syntax node kind
+and a `DoElemCont` as parameters and produce an expression.
+
+When elaborating a `do` block `do e; rest`, the elaborator for `e` is invoked with the syntax of `e`
+and the `DoElemCont` representing `rest`.
+
+The `elab_rules` and `elab` commands should usually be preferred over using this attribute
+directly.
 
 ## doElem_parser
  parser
@@ -1500,11 +1528,6 @@ have to be assigned in the same file as the declaration.
 Similar to `registerParametricAttribute` except that attributes do not
 have to be assigned in the same file as the declaration.
 
-## to_additive_relevant_arg
- Auxiliary attribute for `to_additive` stating which arguments are the types with a multiplicative structure.
-Similar to `registerParametricAttribute` except that attributes do not
-have to be assigned in the same file as the declaration.
-
 ## to_app
  
 
@@ -1521,11 +1544,6 @@ have to be assigned in the same file as the declaration.
 Similar to `registerParametricAttribute` except that attributes do not
 have to be assigned in the same file as the declaration.
 
-## to_dual_relevant_arg
- Auxiliary attribute for `to_dual` stating which arguments are the types with a dual structure.
-Similar to `registerParametricAttribute` except that attributes do not
-have to be assigned in the same file as the declaration.
-
 ## trans
  transitive relation
 
@@ -1533,6 +1551,10 @@ have to be assigned in the same file as the declaration.
  Auxiliary attribute for `to_additive` that stores functions that have numerals as argument.
 Similar to `registerParametricAttribute` except that attributes do not
 have to be assigned in the same file as the declaration.
+
+## try_suggestion
+ Register a tactic suggestion generator for try? (runs after built-in tactics)
+Register the @[try_suggestion prio] attribute
 
 ## try_tactic
  try_tactic elaborator
