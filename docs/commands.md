@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `5b4465844e3feb231af0edb5ef1ab8e2523b08a7`
+Mathlib version: `6a54a80825b060ab20dc31751ebdce78b3a3b518`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -406,6 +406,79 @@ guarantee or expectation of correctness.
 The optional trailing `approx`, as in `#find_syntax "∘" approx`, is only intended to make tests
 more stable: rather than outputting the exact count of the overall number of existing syntax
 declarations, it returns its round-down to the previous multiple of 100.
+
+## \#grind_lint
+Defined in: `Lean.Grind.grindLintSkip`
+
+`#grind_lint skip thm₁ …` marks the given theorem(s) to be skipped entirely by `#grind_lint check`.
+Skipped theorems are neither analyzed nor reported, but may still be used for
+instantiation when analyzing other theorems.
+Example:
+```lean
+#grind_lint skip Array.range_succ
+```
+
+## \#grind_lint
+Defined in: `Lean.Grind.grindLintMute`
+
+`#grind_lint mute thm₁ …` marks the given theorem(s) as *muted* during linting.
+
+Muted theorems remain in the environment but are not instantiated when running
+`#grind_lint check` or `#grind_lint inspect`.
+This is useful for suppressing noisy or recursive lemmas that cause excessive
+E-matching without removing their annotations.
+
+Example:
+```lean
+#grind_lint mute Array.zip_map Int.zero_shiftRight
+```
+
+## \#grind_lint
+Defined in: `Lean.Grind.grindLintInspect`
+
+`#grind_lint inspect thm₁ …` analyzes the specified theorem(s) individually.
+
+It always prints detailed statistics regardless of thresholds and is useful
+for investigating specific `grind` lemmas that may generate excessive
+instantiations.
+Examples:
+```lean
+#grind_lint inspect Array.zip_map
+```
+You can use `set_option trace.grind.ematch.instance true` to instruct `grind` to display the
+actual instances it produces.
+
+## \#grind_lint
+Defined in: `Lean.Grind.grindLintCheck`
+
+`#grind_lint check` analyzes all theorems annotated for theorem instantiation using E-matching.
+
+It creates artificial goals and reports the number of instances each theorem produces.
+The command helps detect long or unbounded theorem instantiation chains.
+
+Usage examples:
+```lean
+#grind_lint check
+#grind_lint check (min:=10) (detailed:=50)
+#grind_lint check in Foo Bar -- restrict analysis to these namespaces
+#grind_lint check in module Foo -- restrict analysis to theorems defined in module `Foo` or any of its submodules
+```
+
+Options can include any valid `grind` configuration option, and `min` and `detailed`.
+- `min`:      minimum number of instantiations to print a summary (default: 10)
+- `detailed`: minimum number of instantiations to print detailed breakdown (default: 50)
+If the option `trace.grind.*` is enabled, additional details are printed.
+
+By default, `#grind_lint` uses the following `grind` configuration:
+```lean
+  splits       := 0
+  lookahead    := false
+  mbtc         := false
+  ematch       := 20
+  instances    := 100
+  gen          := 10
+```
+Consider using `#grind_lint inspect <thm>` to focus on specific theorems.
 
 ## \#guard
 Defined in: `Lean.Parser.Command.guardCmd`
@@ -1527,6 +1600,10 @@ Defined in: `Lean.Elab.Tactic.commandConfigElab`
 Defined in: `Lean.Elab.Tactic.configElab`
 
 
+## declare_config_getter
+Defined in: `Lean.Elab.elabConfigGetter`
+
+
 ## declare_int_theorems
 Defined in: `commandDeclare_int_theorems__`
 
@@ -2310,6 +2387,14 @@ Registers a tactic tag, saving its user-facing name and docstring.
 
 Tactic tags can be used by documentation generation tools to classify related tactics.
 
+## register_try?_tactic
+Defined in: `Lean.Parser.Command.registerTryTactic`
+
+`register_try?_tactic tac` registers a tactic `tac` as a suggestion generator for the `try?` tactic.
+
+An optional priority can be specified with `register_try?_tactic (priority := 500) tac`.
+Higher priority generators are tried first. The default priority is 1000.
+
 ## reprove
 Defined in: `Lean.Elab.Command.reprove`
 
@@ -2379,6 +2464,13 @@ commands. Sections can be nested. `section <id>` provides a label to the section
 with the matching `end`. In either case, the `end` can be omitted, in which case the section is
 closed at the end of the file.
 
+## set_library_suggestions
+Defined in: `Lean.setLibrarySuggestionsCmd`
+
+Specify a library suggestion engine.
+Note that Lean does not ship a default library suggestion engine,
+so this is only useful in conjunction with a downstream package which provides one.
+
 ## set_option
 Defined in: `Lean.Parser.Command.set_option`
 
@@ -2395,13 +2487,6 @@ set_option pp.all true in
 ```
 Similarly, `set_option <id> <value> in` can also be used inside terms and tactics to set an option
 only in a single term or tactic.
-
-## set_premise_selector
-Defined in: `Lean.setPremiseSelectorCmd`
-
-Specify a premise selection engine.
-Note that Lean does not ship a default premise selection engine,
-so this is only useful in conjunction with a downstream package which provides one.
 
 ## show_panel_widgets
 Defined in: `Lean.Widget.showPanelWidgetsCmd`

@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `5b4465844e3feb231af0edb5ef1ab8e2523b08a7`
+Mathlib version: `6a54a80825b060ab20dc31751ebdce78b3a3b518`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1867,14 +1867,14 @@ Defined in: `Lean.Parser.Tactic.contradiction`
 Defined in: `Mathlib.Tactic.Contrapose.contrapose`
 
 Transforms the goal into its contrapositive.
-* `contrapose`     turns a goal `P → Q` into `¬ Q → ¬ P`
-* `contrapose h`   first reverts the local assumption `h`, and then uses `contrapose` and `intro h`
+* `contrapose` turns a goal `P → Q` into `¬ Q → ¬ P` and it turns a goal `P ↔ Q` into `¬ P ↔ ¬ Q`
+* `contrapose h` first reverts the local assumption `h`, and then uses `contrapose` and `intro h`
 * `contrapose h with new_h` uses the name `new_h` for the introduced hypothesis
 
 ## contrapose!
 Defined in: `Mathlib.Tactic.Contrapose.contrapose!`
 
-Transforms the goal into its contrapositive and uses pushes negations inside `P` and `Q`.
+Transforms the goal into its contrapositive and pushes negations in the result.
 Usage matches `contrapose`
 
 ## conv
@@ -7279,10 +7279,11 @@ If `h :` is omitted, the name `this` is used.
 Defined in: `Mathlib.Tactic.tacticSuffices_`
 
 
-## suggest_premises
-Defined in: `Lean.Parser.Tactic.suggestPremises`
+## suggestions
+Defined in: `Lean.Parser.Tactic.suggestions`
 
-`#suggest_premises` will suggest premises for the current goal, using the currently registered premise selector.
+`#suggestions` will suggest relevant theorems from the library for the current goal,
+using the currently registered library suggestion engine.
 
 The suggestions are printed in the order of their confidence, from highest to lowest.
 
@@ -7823,6 +7824,11 @@ integer `z` (in the supertype) to `Nat` (the subtype), given a proof that `z ≥
 propositions concerning `z` will still be over `Int`.
 `zify` changes propositions about `Nat` (the subtype) to propositions about `Int` (the supertype),
 without changing the type of any variable.
+
+## ∎
+Defined in: `«tactic∎»`
+
+`∎` (typed as `\qed`) is a macro that expands to `try?` in tactic mode.
 
 syntax ... [Lean.Parser.Tactic.nestedTactic]
 
