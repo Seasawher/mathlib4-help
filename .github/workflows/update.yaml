@@ -22,7 +22,7 @@ jobs:
       updated: ${{ steps.update-tactic-list.outputs.files_changed }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Update Lean project
         id: update-lean-mathlib
