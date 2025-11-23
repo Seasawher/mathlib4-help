@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `337d737caea8838b2303b3cd16fb35e75acedd84`
+Mathlib version: `35f7a9bdabaf259310b5434c0e67f4b7b704b96d`
 
 ## Elab.async
 type: `Bool`
@@ -74,7 +74,7 @@ type: `Bool`
 
 default: `false`
 
-(aesop) collect statistics about Aesop invocations. Use #aesop_stats to display the collected statistics.
+(aesop) Collect statistics about Aesop invocations. Use #aesop_stats to display the collected statistics.
 
 ## aesop.dev.dynamicStructuring
 type: `Bool`
@@ -110,6 +110,13 @@ type: `Bool`
 default: `false`
 
 (aesop) Print smaller error messages. Used for testing.
+
+## aesop.stats.file
+type: `String`
+
+default: `""`
+
+(aesop) Write statistics about Aesop invocations to the given file in JSONL format. Each invocation adds one JSON record to the file.
 
 ## aesop.warn.applyIff
 type: `Bool`
@@ -903,6 +910,13 @@ type: `Bool`
 default: `false`
 
 enable the ppRoundtrip linter
+
+## linter.privateModule
+type: `Bool`
+
+default: `false`
+
+Enable the `privateModule` linter, which lints against nonempty modules that have only private declarations.
 
 ## linter.pythonStyle
 type: `Bool`
@@ -2136,7 +2150,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.26.0-rc1"`
+default: `"v4.26.0-rc2"`
 
 Revision of LeanStateSearch to use
 
