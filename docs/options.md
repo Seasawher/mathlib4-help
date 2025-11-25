@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `c1ee2821db22c395b37586d80ae2b7f9a24ee2cb`
+Mathlib version: `786ca91ad0b41b6ee048e3dcdd23cc71807fddbb`
 
 ## Elab.async
 type: `Bool`
@@ -1268,6 +1268,13 @@ type: `Bool`
 default: `true`
 
 Linter used by translate attributes that checks if the given declaration name is equal to the automatically generated name
+
+## linter.translateReorder
+type: `Bool`
+
+default: `true`
+
+Linter used by translate attributes that checks if the given reorder is equal to the automatically generated one
 
 ## linter.unnecessarySeqFocus
 type: `Bool`
@@ -3996,13 +4003,6 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Tactic.positivity.failure
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.Tactic.propose
 type: `Bool`
 
 default: `false`

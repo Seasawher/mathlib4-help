@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `c1ee2821db22c395b37586d80ae2b7f9a24ee2cb`
+Mathlib version: `786ca91ad0b41b6ee048e3dcdd23cc71807fddbb`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3306,58 +3306,10 @@ The tactic supports all the same syntax variants and options as the `have` term.
   which may be important for performance reasons.
     Consider using the equivalent `let +nondep` to indicate the intent.
 
-## have!?
-Defined in: `Mathlib.Tactic.Propose.«tacticHave!?:_Using__»`
-
-* `have? using a, b, c` tries to find a lemma
-  which makes use of each of the local hypotheses `a, b, c`,
-  and reports any results via trace messages.
-* `have? : h using a, b, c` only returns lemmas whose type matches `h` (which may contain `_`).
-* `have?! using a, b, c` will also call `have` to add results to the local goal state.
-
-Note that `have?` (unlike `apply?`) does not inspect the goal at all,
-only the types of the lemmas in the `using` clause.
-
-`have?` should not be left in proofs; it is a search tool, like `apply?`.
-
-Suggestions are printed as `have := f a b c`.
-
 ## have'
 Defined in: `Lean.Parser.Tactic.tacticHave'`
 
 Similar to `have`, but using `refine'`
-
-## have?
-Defined in: `Mathlib.Tactic.Propose.propose'`
-
-* `have? using a, b, c` tries to find a lemma
-  which makes use of each of the local hypotheses `a, b, c`,
-  and reports any results via trace messages.
-* `have? : h using a, b, c` only returns lemmas whose type matches `h` (which may contain `_`).
-* `have?! using a, b, c` will also call `have` to add results to the local goal state.
-
-Note that `have?` (unlike `apply?`) does not inspect the goal at all,
-only the types of the lemmas in the `using` clause.
-
-`have?` should not be left in proofs; it is a search tool, like `apply?`.
-
-Suggestions are printed as `have := f a b c`.
-
-## have?!
-Defined in: `Mathlib.Tactic.Propose.«tacticHave?!:_Using__»`
-
-* `have? using a, b, c` tries to find a lemma
-  which makes use of each of the local hypotheses `a, b, c`,
-  and reports any results via trace messages.
-* `have? : h using a, b, c` only returns lemmas whose type matches `h` (which may contain `_`).
-* `have?! using a, b, c` will also call `have` to add results to the local goal state.
-
-Note that `have?` (unlike `apply?`) does not inspect the goal at all,
-only the types of the lemmas in the `using` clause.
-
-`have?` should not be left in proofs; it is a search tool, like `apply?`.
-
-Suggestions are printed as `have := f a b c`.
 
 ## haveI
 Defined in: `Lean.Parser.Tactic.tacticHaveI__`
