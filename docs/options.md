@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `786ca91ad0b41b6ee048e3dcdd23cc71807fddbb`
+Mathlib version: `e107beb8dfc1e4cf1cfd9904df8770b3e862c049`
 
 ## Elab.async
 type: `Bool`
@@ -1296,6 +1296,13 @@ type: `Bool`
 default: `true`
 
 enable the 'unreachable tactic' linter
+
+## linter.unusedDecidableInType
+type: `Bool`
+
+default: `false`
+
+enable the unused `Decidable*` instance linter, which lints against `Decidable*` instances in the hypotheses of theorems which are not used in the type, and can therefore be replaced by a use of `classical` in the proof.
 
 ## linter.unusedRCasesPattern
 type: `Bool`
