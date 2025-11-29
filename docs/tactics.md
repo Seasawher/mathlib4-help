@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `b514609d17aaa0e85b230131a8239f2d0e822af6`
+Mathlib version: `f741387cc3de9871a6bb1cb250947059176dbe20`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1053,7 +1053,7 @@ Defined in: `Batteries.Tactic.byContra`
 introducing a hypothesis `h : ¬p` and proving `False`.
 * If `p` is a negation `¬q`, `h : q` will be introduced instead of `¬¬q`.
 * If `p` is decidable, it uses `Decidable.byContradiction` instead of `Classical.byContradiction`.
-* If `h` is omitted, the introduced variable `_: ¬p` will be anonymous.
+* If `h` is omitted, the introduced variable will be called `this`.
 
 ## by_contra!
 Defined in: `byContra!`
