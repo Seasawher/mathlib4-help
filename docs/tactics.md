@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `6a263ebffc52b615a6cda0fc9a15d3879d674d10`
+Mathlib version: `90f5d6d994d62d023ec24dc2fac75d053e04c801`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1061,8 +1061,11 @@ Defined in: `byContra!`
 If the target of the main goal is a proposition `p`,
 `by_contra!` reduces the goal to proving `False` using the additional hypothesis `this : ¬ p`.
 `by_contra! h` can be used to name the hypothesis `h : ¬ p`.
-The hypothesis `¬ p` will be negation normalized using `push_neg`.
+The hypothesis `¬ p` will be normalized using `push_neg`.
 For instance, `¬ a < b` will be changed to `b ≤ a`.
+`by_contra!` can be used with `rcases` patterns.
+For instance, `by_contra! rfl` on `⊢ s.Nonempty` will substitute the equality `s = ∅`,
+and `by_contra! ⟨hp, hq⟩` on `⊢ ¬ p ∨ ¬ q` will introduce `hp : p` and `hq : q`.
 `by_contra! h : q` will normalize negations in `¬ p`, normalize negations in `q`,
 and then check that the two normalized forms are equal.
 The resulting hypothesis is the pre-normalized form, `q`.
@@ -2719,7 +2722,7 @@ Patterns can be used like in the `intro` tactic. Example, given a goal
 Defined in: `Mathlib.Tactic.GCongr.tacticGcongr___With___`
 
 The `gcongr` tactic applies "generalized congruence" rules, reducing a relational goal
-between a LHS and RHS.  For example,
+between an LHS and RHS.  For example,
 ```
 example {a b x c d : ℝ} (h1 : a + 1 ≤ b + 1) (h2 : c + 2 ≤ d + 2) :
     x ^ 2 * a + c ≤ x ^ 2 * b + d := by
@@ -2727,7 +2730,7 @@ example {a b x c d : ℝ} (h1 : a + 1 ≤ b + 1) (h2 : c + 2 ≤ d + 2) :
   · linarith
   · linarith
 ```
-This example has the goal of proving the relation `≤` between a LHS and RHS both of the pattern
+This example has the goal of proving the relation `≤` between an LHS and RHS both of the pattern
 ```
 x ^ 2 * ?_ + ?_
 ```
