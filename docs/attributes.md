@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `6a263ebffc52b615a6cda0fc9a15d3879d674d10`
+Mathlib version: `90f5d6d994d62d023ec24dc2fac75d053e04c801`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -1543,6 +1543,9 @@ have to be assigned in the same file as the declaration.
  Auxiliary attribute for `to_dual` stating that certain arguments are not dualized.
 Similar to `registerParametricAttribute` except that attributes do not
 have to be assigned in the same file as the declaration.
+
+## to_fun
+ generate a copy of a lemma where point-free functions are expanded to their `fun` form
 
 ## trans
  transitive relation
