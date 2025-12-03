@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `90f5d6d994d62d023ec24dc2fac75d053e04c801`
+Mathlib version: `14bfbad331fcd848aa37830a3fb4103af552de12`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -1518,10 +1518,11 @@ directly.
 ## to_additive
  Transport multiplicative to additive
 
+## to_additive_do_translate
+ Auxiliary attribute for `to_additive` stating that the operations on this type should be translated.
+
 ## to_additive_dont_translate
  Auxiliary attribute for `to_additive` stating that the operations on this type should not be translated.
-Similar to `registerParametricAttribute` except that attributes do not
-have to be assigned in the same file as the declaration.
 
 ## to_additive_ignore_args
  Auxiliary attribute for `to_additive` stating that certain arguments are not additivized.
@@ -1534,10 +1535,11 @@ have to be assigned in the same file as the declaration.
 ## to_dual
  Transport to dual
 
+## to_dual_do_translate
+ Auxiliary attribute for `to_dual` stating that the operations on this type should be translated.
+
 ## to_dual_dont_translate
  Auxiliary attribute for `to_dual` stating that the operations on this type should not be translated.
-Similar to `registerParametricAttribute` except that attributes do not
-have to be assigned in the same file as the declaration.
 
 ## to_dual_ignore_args
  Auxiliary attribute for `to_dual` stating that certain arguments are not dualized.
