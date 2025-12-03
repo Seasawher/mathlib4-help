@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `90f5d6d994d62d023ec24dc2fac75d053e04c801`
+Mathlib version: `14bfbad331fcd848aa37830a3fb4103af552de12`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3220,6 +3220,8 @@ This is useful when `grw` tries to rewrite in a position that is not valid for t
 
 To be able to use `grw`, the relevant lemmas need to be tagged with `@[gcongr]`.
 To rewrite inside a transitive relation, you can also give it an `IsTrans` instance.
+
+To let `grw` unfold more aggressively, as in `erw`, use `grw (transparency := default)`.
 
 ## guard_expr
 Defined in: `Lean.Parser.Tactic.guardExpr`
