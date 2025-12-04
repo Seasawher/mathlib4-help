@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `14bfbad331fcd848aa37830a3fb4103af552de12`
+Mathlib version: `c0952c46eb2fda6a7909a689a8a371ed38503611`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1129,6 +1129,20 @@ Create a `calc` proof.
 ## cancel_denoms
 Defined in: `tacticCancel_denoms_`
 
+`cancel_denoms` attempts to remove numerals from the denominators of fractions.
+It works on propositions that are field-valued inequalities.
+
+```lean
+variable [LinearOrderedField α] (a b c : α)
+
+example (h : a / 5 + b / 4 < c) : 4*a + 5*b < 20*c := by
+  cancel_denoms at h
+  exact h
+
+example (h : a > 0) : a / 5 > 0 := by
+  cancel_denoms
+  exact h
+```
 
 ## cancel_denoms
 Defined in: `cancelDenoms`
@@ -2214,14 +2228,6 @@ Defined in: `tacticEconstructor`
 (it calls `apply` using the first matching constructor of an inductive datatype)
 except only non-dependent premises are added as new goals.
 
-## elementwise
-Defined in: `Tactic.Elementwise.tacticElementwise___`
-
-
-## elementwise!
-Defined in: `Tactic.Elementwise.tacticElementwise!___`
-
-
 ## else
 Defined in: `Lean.Parser.Tactic.tacDepIfThenElse`
 
@@ -2592,6 +2598,14 @@ Note that this involves a lot of case splitting, so may be slow.
 ## find
 Defined in: `Mathlib.Tactic.Find.tacticFind`
 
+Display theorems (and definitions) whose result type matches the current goal,
+i.e. which should be `apply`able.
+```lean
+example : True := by find
+```
+`find` will not affect the goal by itself and should be removed from the finished proof.
+For a command that takes the type to search for as an argument,
+see `#find`, which is also available as a tactic.
 
 ## finiteness
 Defined in: `finiteness`
@@ -3281,6 +3295,31 @@ useful within `conv` mode.
 ## have
 Defined in: `Mathlib.Tactic.tacticHave_`
 
+The `have` tactic is for adding opaque definitions and hypotheses to the local context of the main goal.
+The definitions forget their associated value and cannot be unfolded, unlike definitions added by the `let` tactic.
+
+* `have h : t := e` adds the hypothesis `h : t` if `e` is a term of type `t`.
+* `have h := e` uses the type of `e` for `t`.
+* `have : t := e` and `have := e` use `this` for the name of the hypothesis.
+* `have pat := e` for a pattern `pat` is equivalent to `match e with | pat => _`,
+  where `_` stands for the tactics that follow this one.
+  It is convenient for types that have only one applicable constructor.
+  For example, given `h : p ∧ q ∧ r`, `have ⟨h₁, h₂, h₃⟩ := h` produces the
+  hypotheses `h₁ : p`, `h₂ : q`, and `h₃ : r`.
+* The syntax `have (eq := h) pat := e` is equivalent to `match h : e with | pat => _`,
+  which adds the equation `h : e = pat` to the local context.
+
+The tactic supports all the same syntax variants and options as the `have` term.
+
+## Properties and relations
+
+* It is not possible to unfold a variable introduced using `have`, since the definition's value is forgotten.
+  The `let` tactic introduces definitions that can be unfolded.
+* The `have h : t := e` is like doing `let h : t := e; clear_value h`.
+* The `have` tactic is preferred for propositions, and `let` is preferred for non-propositions.
+* Sometimes `have` is used for non-propositions to ensure that the variable is never unfolded,
+  which may be important for performance reasons.
+    Consider using the equivalent `let +nondep` to indicate the intent.
 
 ## have
 Defined in: `Lean.Parser.Tactic.tacticHave__`
@@ -3697,6 +3736,31 @@ The syntax is the same as term-mode `let rec`.
 ## let
 Defined in: `Mathlib.Tactic.tacticLet_`
 
+The `let` tactic is for adding definitions to the local context of the main goal.
+The definition can be unfolded, unlike definitions introduced by `have`.
+
+* `let x : t := e` adds the definition `x : t := e` if `e` is a term of type `t`.
+* `let x := e` uses the type of `e` for `t`.
+* `let : t := e` and `let := e` use `this` for the name of the hypothesis.
+* `let pat := e` for a pattern `pat` is equivalent to `match e with | pat => _`,
+  where `_` stands for the tactics that follow this one.
+  It is convenient for types that let only one applicable constructor.
+  For example, given `p : α × β × γ`, `let ⟨x, y, z⟩ := p` produces the
+  local variables `x : α`, `y : β`, and `z : γ`.
+* The syntax `let (eq := h) pat := e` is equivalent to `match h : e with | pat => _`,
+  which adds the equation `h : e = pat` to the local context.
+
+The tactic supports all the same syntax variants and options as the `let` term.
+
+## Properties and relations
+
+* Unlike `have`, it is possible to unfold definitions introduced using `let`, using tactics
+  such as `simp`, `dsimp`, `unfold`, and `subst`.
+* The `clear_value` tactic turns a `let` definition into a `have` definition after the fact.
+  The tactic might fail if the local context depends on the value of the variable.
+* The `let` tactic is preferred for data (non-propositions).
+* Sometimes `have` is used for non-propositions to ensure that the variable is never unfolded,
+  which may be important for performance reasons.
 
 ## let'
 Defined in: `Lean.Parser.Tactic.tacticLet'__`
@@ -4347,7 +4411,7 @@ Defined in: `Lean.Parser.Tactic.mdup`
 Duplicate a stateful `Std.Do.SPred` hypothesis.
 
 ## measurability
-Defined in: `tacticMeasurability`
+Defined in: `Mathlib.Tactic.measurability`
 
 The tactic `measurability` solves goals of the form `Measurable f`, `AEMeasurable f`,
 `StronglyMeasurable f`, `AEStronglyMeasurable f μ`, or `MeasurableSet s` by applying lemmas tagged
@@ -4361,13 +4425,25 @@ with `fun_prop` rather that `measurability`. The `measurability` attribute is eq
 ## measurability!
 Defined in: `measurability!`
 
+The tactic `measurability` solves goals of the form `Measurable f`, `AEMeasurable f`,
+`StronglyMeasurable f`, `AEStronglyMeasurable f μ`, or `MeasurableSet s` by applying lemmas tagged
+with the `measurability` user attribute.
+
+Note that `measurability` uses `fun_prop` for solving measurability of functions, so statements
+about `Measurable`, `AEMeasurable`, `StronglyMeasurable` and `AEStronglyMeasurable` should be tagged
+with `fun_prop` rather that `measurability`. The `measurability` attribute is equivalent to
+`fun_prop` in these cases for backward compatibility with the earlier implementation.
 
 ## measurability!?
 Defined in: `measurability!?`
 
+The tactic `measurability?` solves goals of the form `Measurable f`, `AEMeasurable f`,
+`StronglyMeasurable f`, `AEStronglyMeasurable f μ`, or `MeasurableSet s` by applying lemmas tagged
+with the `measurability` user attribute, and suggests a faster proof script that can be substituted
+for the tactic call in case of success.
 
 ## measurability?
-Defined in: `tacticMeasurability?`
+Defined in: `Mathlib.Tactic.measurability?`
 
 The tactic `measurability?` solves goals of the form `Measurable f`, `AEMeasurable f`,
 `StronglyMeasurable f`, `AEStronglyMeasurable f μ`, or `MeasurableSet s` by applying lemmas tagged
@@ -6711,10 +6787,48 @@ runs `X` and verifies that it still prints "Try this: Y".
 ## set
 Defined in: `Mathlib.Tactic.setTactic`
 
+`set a := t with h` is a variant of `let a := t`. It adds the hypothesis `h : a = t` to
+the local context and replaces `t` with `a` everywhere it can.
+
+`set a := t with ← h` will add `h : t = a` instead.
+
+`set! a := t with h` does not do any replacing.
+
+```lean
+example (x : Nat) (h : x + x - x = 3) : x + x - x = 3 := by
+  set y := x with ← h2
+  sorry
+/-
+x : Nat
+y : Nat := x
+h : y + y - y = 3
+h2 : x = y
+⊢ y + y - y = 3
+-/
+```
 
 ## set!
 Defined in: `Mathlib.Tactic.tacticSet!_`
 
+`set a := t with h` is a variant of `let a := t`. It adds the hypothesis `h : a = t` to
+the local context and replaces `t` with `a` everywhere it can.
+
+`set a := t with ← h` will add `h : t = a` instead.
+
+`set! a := t with h` does not do any replacing.
+
+```lean
+example (x : Nat) (h : x + x - x = 3) : x + x - x = 3 := by
+  set y := x with ← h2
+  sorry
+/-
+x : Nat
+y : Nat := x
+h : y + y - y = 3
+h2 : x = y
+⊢ y + y - y = 3
+-/
+```
 
 ## set_option
 Defined in: `Lean.Parser.Tactic.set_option`
@@ -7235,6 +7349,11 @@ If `h :` is omitted, the name `this` is used.
 ## suffices
 Defined in: `Mathlib.Tactic.tacticSuffices_`
 
+Given a main goal `ctx ⊢ t`, `suffices h : t' from e` replaces the main goal with `ctx ⊢ t'`,
+`e` must have type `t` in the context `ctx, h : t'`.
+
+The variant `suffices h : t' by tac` is a shorthand for `suffices h : t' from by tac`.
+If `h :` is omitted, the name `this` is used.
 
 ## suggestions
 Defined in: `Lean.Parser.Tactic.suggestions`
@@ -7282,7 +7401,7 @@ Defined in: `Mathlib.Tactic.Tauto.tauto`
 
 `tauto` breaks down assumptions of the form `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`
 and splits a goal of the form `_ ∧ _`, `_ ↔ _` or `∃ _, _` until it can be discharged
-using `reflexivity` or `solve_by_elim`.
+using `rfl` or `solve_by_elim`.
 This is a finishing tactic: it either closes the goal or raises an error.
 
 The Lean 3 version of this tactic by default attempted to avoid classical reasoning
@@ -7665,6 +7784,7 @@ This is similar to the `trivial` tactic but doesn't do things like `contradictio
 ## use_finite_instance
 Defined in: `tacticUse_finite_instance`
 
+Try using `Set.toFinite` to dispatch a `Set.Finite` goal.
 
 ## valid
 Defined in: `CategoryTheory.ComposableArrows.tacticValid`
