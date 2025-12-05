@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `c0952c46eb2fda6a7909a689a8a371ed38503611`
+Mathlib version: `a7f816c359320b9c0383f3c052d5a0574db65b97`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -35,6 +35,16 @@ and standard deviation. The tactic `#count_heartbeats! n in tac` runs it `n` tim
 ## \#find
 Defined in: `Mathlib.Tactic.Find.«tactic#find_»`
 
+The `#find` tactic finds definitions & lemmas using pattern matching on the type. For instance:
+```lean
+#find _ + _ = _ + _
+#find ?n + _ = _ + ?n
+#find (_ : Nat) + _ = _ + _
+#find Nat → Nat
+```
+This is the tactic equivalent to the `#find` command.
+There is also the `find` tactic which looks for
+lemmas which are `apply`able against the current goal.
 
 ## \#leansearch
 Defined in: `LeanSearchClient.leansearch_search_tactic`
@@ -3778,6 +3788,11 @@ Defined in: `Lean.Parser.Tactic.letToHave`
 Transforms `let` expressions into `have` expressions when possible.
 - `let_to_have` transforms `let`s in the target.
 - `let_to_have at h` transforms `let`s in the given local hypothesis.
+
+## lia
+Defined in: `tacticLia`
+
+`lia` is an alias for the `cutsat` tactic, which solves linear integer arithmetic goals.
 
 ## lift
 Defined in: `Mathlib.Tactic.lift`
