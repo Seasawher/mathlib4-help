@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `a7f816c359320b9c0383f3c052d5a0574db65b97`
+Mathlib version: `89ec9c848cb1c5922fa50b91eb5156a46bd71e85`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1047,10 +1047,10 @@ Defined in: `«tacticBy_cases_:_»`
 `by_cases (h :)? p` splits the main goal into two cases, assuming `h : p` in the first branch, and `h : ¬ p` in the second branch.
 
 ## by_cases!
-Defined in: `byCases!`
+Defined in: `Mathlib.Tactic.ByCases.byCases!`
 
 `by_cases! h : p` runs the `by_cases h : p` tactic, followed by
-`try push_neg at h` in the second subgoal. For example,
+`push_neg at h` in the second subgoal. For example,
 - `by_cases! h : a < b` creates one goal with hypothesis `h : a < b` and
   another with `h : b ≤ a`.
 - `by_cases! h : a ≠ b` creates one goal with hypothesis `h : a ≠ b` and
@@ -1066,7 +1066,7 @@ introducing a hypothesis `h : ¬p` and proving `False`.
 * If `h` is omitted, the introduced variable will be called `this`.
 
 ## by_contra!
-Defined in: `byContra!`
+Defined in: `Mathlib.Tactic.ByContra.byContra!`
 
 If the target of the main goal is a proposition `p`,
 `by_contra!` reduces the goal to proving `False` using the additional hypothesis `this : ¬ p`.
@@ -6022,7 +6022,7 @@ which can also cope with identities of the form
 where `a = a'`, `b = b'`, and `c = c'` can be proved using `pure_coherence`
 
 ## push
-Defined in: `Mathlib.Tactic.Push.push`
+Defined in: `Mathlib.Tactic.Push.pushStx`
 
 `push` pushes the given constant away from the head of the expression. For example
 - `push _ ∈ _` rewrites `x ∈ {y} ∪ zᶜ` into `x = y ∨ ¬ x ∈ z`.
@@ -6085,8 +6085,7 @@ For instance, a hypothesis `h : ¬ ∀ x, ∃ y, x ≤ y` will be transformed by
 `push_neg` is a special case of the more general `push` tactic, namely `push Not`.
 The `push` tactic can be extended using the `@[push]` attribute. `push` has special-casing
 built in for `push Not`, so that it can preserve binder names, and so that `¬ (p ∧ q)` can be
-transformed to either `p → ¬ q` (the default) or `¬ p ∨ ¬ q`. To get `¬ p ∨ ¬ q`, use
-`set_option push_neg.use_distrib true`.
+transformed to either `p → ¬ q` (default) or `¬ p ∨ ¬ q` (`push_neg +distrib`).
 
 Tactics that introduce a negation usually have a version that automatically calls `push_neg` on
 that negation. These include `by_cases!`, `contrapose!` and `by_contra!`.
