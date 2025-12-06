@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `a7f816c359320b9c0383f3c052d5a0574db65b97`
+Mathlib version: `89ec9c848cb1c5922fa50b91eb5156a46bd71e85`
 
 ## Elab.async
 type: `Bool`
@@ -1219,7 +1219,28 @@ default: `1`
 
 
 
+## linter.tacticAnalysis.tryAtEachStep.selfReplacements
+type: `Bool`
+
+default: `true`
+
+
+
+## linter.tacticAnalysis.tryAtEachStep.showTiming
+type: `Bool`
+
+default: `true`
+
+
+
 ## linter.tacticAnalysis.tryAtEachStepAesop
+type: `Bool`
+
+default: `false`
+
+
+
+## linter.tacticAnalysis.tryAtEachStepFromEnv
 type: `Bool`
 
 default: `false`
@@ -2066,7 +2087,7 @@ type: `Bool`
 
 default: `false`
 
-Make `push_neg` use `not_and_or` rather than the default `not_and`.
+Set `distrib` to true in `push_neg` and related tactics.
 
 ## quotPrecheck
 type: `Bool`
