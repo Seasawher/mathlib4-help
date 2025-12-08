@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `419be563ec4b4d865cb59bacd8648f872b1a27de`
+Mathlib version: `f0de78130c864056baeec6eff00c438699aec635`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -7885,6 +7885,14 @@ In this way, the wlog-claim `this` can be applied to `x` and `y` in different or
 (exploiting symmetry, which is the typical use case).
 
 By default, the entire context is reverted.
+
+## wlog!
+Defined in: `Mathlib.Tactic.wlog!`
+
+`wlog! h : P` is a variant of the `wlog h : P` tactic that also calls `push_neg` at the generated
+hypothesis `h : ¬ p` in the side goal. `wlog! h : P ∧ Q` will transform `¬ (P ∧ Q)` to `P → ¬ Q`,
+while  `wlog! +distrib h : P ∧ Q` will transform `¬ (P ∧ Q)` to `P ∨ Q`. For more information, see
+the documentation on `push_neg`.
 
 ## zify
 Defined in: `Mathlib.Tactic.Zify.zify`
