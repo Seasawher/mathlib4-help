@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `790901a8c97c730ae7af9bd44fe60c733a21d9ba`
+Mathlib version: `d0cc8265b663c197e6500917efd4383278cf073e`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1992,18 +1992,21 @@ a theorem `foo_def : foo = 42`.
 ## library_note
 Defined in: `Batteries.Util.LibraryNote.commandLibrary_note___`
 
-```
-library_note "some tag" /--
-... some explanation ...
--/
-```
-creates a new "library note", which can then be cross-referenced using
+`library_note «my note» /-- documentation -/` creates a library note named `my note`
+in the `LibraryNote` namespace, whose content is `/-- documentation -/`.
+This can then be cross-referenced using
 ```
 -- See note [some tag]
 ```
 in doc-comments.
+You can access the contents using, for example, `#print LibraryNote.«my note»`.
 Use `#help note "some tag"` to display all notes with the tag `"some tag"` in the infoview.
 This command can be imported from Batteries.Tactic.HelpCmd .
+
+## library_note
+Defined in: `Batteries.Util.LibraryNote.commandLibrary_note____1`
+
+Support the old `library_note "foo"` syntax, with a deprecation warning.
 
 ## library_note2
 Defined in: `commandLibrary_note2____1`
@@ -2011,11 +2014,21 @@ Defined in: `commandLibrary_note2____1`
 Support the old `library_note "foo"` syntax, with a deprecation warning.
 
 ## library_note2
+Defined in: `Batteries.Util.LibraryNote.commandLibrary_note2___`
+
+Support the old `library_note2 «foo»` syntax, with a deprecation warning.
+
+## library_note2
 Defined in: `commandLibrary_note2___`
 
 `library_note2 «my note» /-- documentation -/` creates a library note named `my note`
 in the `Mathlib.LibraryNote` namespace, whose content is `/-- documentation -/`.
 You can access this note using, for example, `#print Mathlib.LibraryNote.«my note»`.
+
+## library_note2
+Defined in: `Batteries.Util.LibraryNote.commandLibrary_note2____1`
+
+Support the old `library_note2 "foo"` syntax, with a deprecation warning.
 
 ## lrat_proof
 Defined in: `Mathlib.Tactic.Sat.commandLrat_proof_Example____`
