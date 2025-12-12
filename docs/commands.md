@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `b6513d2f3e7b05fa944382687824be4b8b4bb5ef`
+Mathlib version: `4d3317200498df0e4852e99d09728b257857d066`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -2009,21 +2009,9 @@ Defined in: `Batteries.Util.LibraryNote.commandLibrary_note____1`
 Support the old `library_note "foo"` syntax, with a deprecation warning.
 
 ## library_note2
-Defined in: `commandLibrary_note2____1`
-
-Support the old `library_note "foo"` syntax, with a deprecation warning.
-
-## library_note2
 Defined in: `Batteries.Util.LibraryNote.commandLibrary_note2___`
 
 Support the old `library_note2 «foo»` syntax, with a deprecation warning.
-
-## library_note2
-Defined in: `commandLibrary_note2___`
-
-`library_note2 «my note» /-- documentation -/` creates a library note named `my note`
-in the `Mathlib.LibraryNote` namespace, whose content is `/-- documentation -/`.
-You can access this note using, for example, `#print Mathlib.LibraryNote.«my note»`.
 
 ## library_note2
 Defined in: `Batteries.Util.LibraryNote.commandLibrary_note2____1`
