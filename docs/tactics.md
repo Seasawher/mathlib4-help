@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `b6513d2f3e7b05fa944382687824be4b8b4bb5ef`
+Mathlib version: `4d3317200498df0e4852e99d09728b257857d066`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2272,7 +2272,7 @@ useless for proving theorems. To actually insert an `ite` application use
 Defined in: `Mathlib.Tactic.ENatToNat.tacticEnat_to_nat`
 
 `enat_to_nat` shifts all `ENat`s in the context to `Nat`, rewriting propositions about them.
-A typical use case is `enat_to_nat; omega`.
+A typical use case is `enat_to_nat; lia`.
 
 ## eq_refl
 Defined in: `Lean.Parser.Tactic.eqRefl`
@@ -5935,7 +5935,7 @@ For each `x : PNat` in the context, add the hypothesis `0 < (↑x : ℕ)`.
 Defined in: `Mathlib.Tactic.PNatToNat.tacticPnat_to_nat`
 
 `pnat_to_nat` shifts all `PNat`s in the context to `Nat`, rewriting propositions about them.
-A typical use case is `pnat_to_nat; omega`.
+A typical use case is `pnat_to_nat; lia`.
 
 ## polyrith
 Defined in: `Mathlib.Tactic.Polyrith.«tacticPolyrithOnly[_]»`
