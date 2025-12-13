@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `4d3317200498df0e4852e99d09728b257857d066`
+Mathlib version: `8f62007a980111b87be592665493301acbb05ea4`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -4333,6 +4333,7 @@ tactic fails.
 ## match_target
 Defined in: `Mathlib.Tactic.tacticMatch_target_`
 
+Deprecated: use `guard_target =~ t` instead.
 
 ## mcases
 Defined in: `Lean.Parser.Tactic.mcases`
