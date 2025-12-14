@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `8f62007a980111b87be592665493301acbb05ea4`
+Mathlib version: `26fffffcccd7299b26cf63fac902165bc553fd56`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -4765,7 +4765,7 @@ Defined in: `Mathlib.Tactic.Monoidal.tacticMonoidal_coherence`
 Close the goal of the form `η = θ`, where `η` and `θ` are 2-isomorphisms made up only of
 associators, unitors, and identities.
 ```lean
-example {C : Type} [Category C] [MonoidalCategory C] :
+example {C : Type} [Category* C] [MonoidalCategory C] :
   (λ_ (𝟙_ C)).hom = (ρ_ (𝟙_ C)).hom := by
   monoidal_coherence
 ```
@@ -6012,7 +6012,7 @@ Defined in: `Mathlib.Tactic.Coherence.pure_coherence`
 `pure_coherence` uses the coherence theorem for monoidal categories to prove the goal.
 It can prove any equality made up only of associators, unitors, and identities.
 ```lean
-example {C : Type} [Category C] [MonoidalCategory C] :
+example {C : Type} [Category* C] [MonoidalCategory C] :
   (λ_ (𝟙_ C)).hom = (ρ_ (𝟙_ C)).hom := by
   pure_coherence
 ```
