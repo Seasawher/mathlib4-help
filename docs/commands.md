@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `26fffffcccd7299b26cf63fac902165bc553fd56`
+Mathlib version: `3ea6690c3470d61c7d4fd71e7efd6336a6d05ffd`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -423,9 +423,14 @@ Defined in: `Lean.Grind.grindLintSkip`
 `#grind_lint skip thm₁ …` marks the given theorem(s) to be skipped entirely by `#grind_lint check`.
 Skipped theorems are neither analyzed nor reported, but may still be used for
 instantiation when analyzing other theorems.
-Example:
+
+`#grind_lint skip suffix name₁ …` marks all theorems with the given suffix(es) to be skipped.
+For example, `#grind_lint skip suffix foo` will skip `bar.foo`, `qux.foo`, etc.
+
+Examples:
 ```lean
 #grind_lint skip Array.range_succ
+#grind_lint skip suffix append
 ```
 
 ## \#grind_lint
@@ -592,7 +597,7 @@ Position reporting:
   `#guard_msgs` appears.
 - `positions := false` does not report position info.
 
-For example, `#guard_msgs (error, drop all) in cmd` means to check warnings and drop
+For example, `#guard_msgs (error, drop all) in cmd` means to check errors and drop
 everything else.
 
 The command elaborator has special support for `#guard_msgs` for linting.
@@ -1777,9 +1782,127 @@ inductive types defined at `Prelude.lean`.
 Temporarily also controls the generation of the `ctorIdx` definition.
 It is meant for bootstrapping purposes only.
 
+## grind_annotated
+Defined in: `Lean.Parser.Command.grindAnnotated`
+
+`grind_annotated "YYYY-MM-DD"` marks the current file as having been manually annotated for `grind`.
+
+When the LibrarySuggestion framework is called with `caller := "grind"` (as happens when using
+`grind +suggestions`), theorems from grind-annotated files are excluded from premise selection.
+This is because these files have already been manually reviewed and annotated with appropriate
+`@[grind]` attributes.
+
+The date argument (in YYYY-MM-DD format) records when the file was annotated. This is currently
+informational only, but may be used in the future to detect files that have been significantly
+modified since annotation and may need re-review.
+
+Example:
+```lean
+grind_annotated "2025-01-15"
+```
+
+This command should typically appear near the top of a file, after imports.
+
 ## grind_pattern
 Defined in: `Lean.Parser.Command.grindPattern`
 
+The `grind_pattern` command can be used to manually select a pattern for theorem instantiation.
+Enabling the option `trace.grind.ematch.instance` causes `grind` to print a trace message for each
+theorem instance it generates, which can be helpful when determining patterns.
+
+When multiple patterns are specified together, all of them must match in the current context before
+`grind` attempts to instantiate the theorem. This is referred to as a *multi-pattern*.
+This is useful for theorems such as transitivity rules, where multiple premises must be simultaneously
+present for the rule to apply.
+
+In the following example, `R` is a transitive binary relation over `Int`.
+```
+opaque R : Int → Int → Prop
+axiom Rtrans {x y z : Int} : R x y → R y z → R x z
+```
+To use the fact that `R` is transitive, `grind` must already be able to satisfy both premises.
+This is represented using a multi-pattern:
+```lean
+grind_pattern Rtrans => R x y, R y z
+
+example {a b c d} : R a b → R b c → R c d → R a d := by
+  grind
+```
+The multi-pattern `R x y`, `R y z` instructs `grind` to instantiate `Rtrans` only when both `R x y`
+and `R y z` are available in the context. In the example, `grind` applies `Rtrans` to derive `R a c`
+from `R a b` and `R b c`, and can then repeat the same reasoning to deduce `R a d` from `R a c` and
+`R c d`.
+
+You can add constraints to restrict theorem instantiation. For example:
+```lean
+grind_pattern extract_extract => (as.extract i j).extract k l where
+  as =/= #[]
+```
+The constraint instructs `grind` to instantiate the theorem only if `as` is **not** definitionally equal
+to `#[]`.
+
+## Constraints
+
+- `x =/= term`: The term bound to `x` (one of the theorem parameters) is **not** definitionally equal to `term`.
+  The term may contain holes (i.e., `_`).
+
+- `x =?= term`: The term bound to `x` is definitionally equal to `term`.
+  The term may contain holes (i.e., `_`).
+
+- `size x < n`: The term bound to `x` has size less than `n`. Implicit arguments
+and binder types are ignored when computing the size.
+
+- `depth x < n`: The term bound to `x` has depth less than `n`.
+
+- `is_ground x`: The term bound to `x` does not contain local variables or meta-variables.
+
+- `is_value x`: The term bound to `x` is a value. That is, it is a constructor fully applied to value arguments,
+a literal (`Nat`, `Int`, `String`, etc.), or a lambda `fun x => t`.
+
+- `is_strict_value x`: Similar to `is_value`, but without lambdas.
+
+- `not_value x`: The term bound to `x` is a **not** value (see `is_value`).
+
+- `not_strict_value x`: Similar to `not_value`, but without lambdas.
+
+- `gen < n`: The theorem instance has generation less than `n`. Recall that each term is assigned a
+generation, and terms produced by theorem instantiation have a generation that is one greater than
+the maximal generation of all the terms used to instantiate the theorem. This constraint complements
+the `gen` option available in `grind`.
+
+- `max_insts < n`: A new instance is generated only if less than `n` instances have been generated so far.
+
+- `guard e`: The instantiation is delayed until `grind` learns that `e` is `true` in this state.
+
+- `check e`: Similar to `guard e`, but `grind` checks whether `e` is implied by its current state by
+assuming `¬ e` and trying to deduce an inconsistency.
+
+## Example
+
+Consider the following example where `f` is a monotonic function
+```
+opaque f : Nat → Nat
+axiom fMono : x ≤ y → f x ≤ f y
+```
+and you want to instruct `grind` to instantiate `fMono` for every pair of terms `f x` and `f y` when
+`x ≤ y` and `x` is **not** definitionally equal to `y`. You can use
+```
+grind_pattern fMono => f x, f y where
+  guard x ≤ y
+  x =/= y
+```
+Then, in the following example, only three instances are generated.
+```lean
+/--
+trace: [grind.ematch.instance] fMono: a ≤ f a → f a ≤ f (f a)
+[grind.ematch.instance] fMono: f a ≤ f (f a) → f (f a) ≤ f (f (f a))
+[grind.ematch.instance] fMono: a ≤ f (f a) → f a ≤ f (f (f a))
+-/
+#guard_msgs in
+example : f b = f c → a ≤ f a → f (f a) ≤ f (f (f a)) := by
+  set_option trace.grind.ematch.instance true in
+  grind
+```
 
 ## grind_propagator
 Defined in: `Lean.Parser.«command_Grind_propagator___(_):=_»`
@@ -2852,6 +2975,19 @@ Defined in: `Mathlib.WhatsNew.commandWhatsnewIn__`
 
 `whatsnew in $command` executes the command and then prints the
 declarations that were added to the environment.
+
+## with_weak_namespace
+Defined in: `Lean.Parser.Command.withWeakNamespace`
+
+`with_weak_namespace <id> <cmd>` changes the current namespace to `<id>` for the duration of
+executing command `<cmd>`, without causing scoped things to go out of scope.
+
+This is in contrast to `namespace <id>` which pushes a new scope and deactivates scoped entries
+from the previous namespace. `with_weak_namespace` modifies the existing scope's namespace,
+so scoped extensions remain active.
+
+This is primarily useful for defining syntax extensions that should be scoped to a different
+namespace than the current one.
 
 ## with_weak_namespace
 Defined in: `Lean.Elab.Command.commandWith_weak_namespace__`

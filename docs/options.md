@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `26fffffcccd7299b26cf63fac902165bc553fd56`
+Mathlib version: `3ea6690c3470d61c7d4fd71e7efd6336a6d05ffd`
 
 ## Elab.async
 type: `Bool`
@@ -172,7 +172,7 @@ type: `Bool`
 
 default: `true`
 
-Use `defeq` attribute rather than checking theorem body to decide whether a theroem can be used in `dsimp` or with `implicitDefEqProofs`.
+Use `defeq` attribute rather than checking theorem body to decide whether a theorem can be used in `dsimp` or with `implicitDefEqProofs`.
 
 ## backward.eqns.deepRecursiveSplit
 type: `Bool`
@@ -216,6 +216,31 @@ default: `true`
 
 specifies transparency mode when normalizing constraints of the form `(f a).i =?= s`, if `true` only reducible definitions and instances are unfolded when reducing `f a`. Otherwise, the default setting is used
 
+## backward.linearNoConfusionType
+type: `Bool`
+
+default: `true`
+
+use the linear-size construction for the `noConfusionType` declaration of an inductive type. Set to false to use the previous, simpler but quadratic-size construction. 
+
+## backward.match.rowMajor
+type: `Bool`
+
+default: `true`
+
+If true (the default), match compilation will split the discrimnants based on position of the first constructor pattern in the first alternative. If false, it splits them from left to right, which can lead to unnecessary code bloat.
+
+## backward.match.sparseCases
+type: `Bool`
+
+default: `true`
+
+if true (the default), generate and use sparse case constructs when splitting inductive
+    types. In some cases this will prevent Lean from noticing that a match statement is complete
+    because it performs less case-splitting for the unreachable case. In this case, give explicit
+    patterns to perform the deeper split with `by contradiction` as the right-hand side.
+     ,
+
 ## backward.privateInPublic
 type: `Bool`
 
@@ -251,31 +276,6 @@ type: `Bool`
 default: `true`
 
 use optimization that relies on 'morally canonical' instances during type class resolution
-
-## backwards.linearNoConfusionType
-type: `Bool`
-
-default: `true`
-
-use the linear-size construction for the `noConfusionType` declaration of an inductive type. Set to false to use the previous, simpler but quadratic-size construction. 
-
-## backwards.match.rowMajor
-type: `Bool`
-
-default: `true`
-
-If true (the default), match compilation will split the discrimnants based on position of the first constructor pattern in the first alternative. If false, it splits them from left to right, which can lead to unnecessary code bloat.
-
-## backwards.match.sparseCases
-type: `Bool`
-
-default: `true`
-
-if true (the default), generate and use sparse case constructs when splitting inductive
-    types. In some cases this will prevent Lean from noticing that a match statement is complete
-    because it performs less case-splitting for the unreachable case. In this case, give explicit
-    patterns to perform the deeper split with `by contradiction` as the right-hand side.
-     ,
 
 ## bootstrap.genMatcherCode
 type: `Bool`
@@ -537,7 +537,7 @@ type: `Bool`
 
 default: `false`
 
-Allow use of module system (experimental)
+no-op, deprecated
 
 ## exponentiation.threshold
 type: `Nat`
@@ -756,6 +756,13 @@ type: `Bool`
 default: `true`
 
 enable the `deprecated.module` linter
+
+## linter.deprecatedCoercions
+type: `Bool`
+
+default: `true`
+
+Validate that no deprecated coercions are used.
 
 ## linter.directoryDependency
 type: `Bool`
@@ -1163,7 +1170,7 @@ default: `false`
 
 
 
-## linter.tacticAnalysis.omegaToCutsat
+## linter.tacticAnalysis.omegaToLia
 type: `Bool`
 
 default: `false`
@@ -1177,7 +1184,7 @@ default: `false`
 
 
 
-## linter.tacticAnalysis.regressions.omegaToCutsat
+## linter.tacticAnalysis.regressions.omegaToLia
 type: `Bool`
 
 default: `false`
@@ -2079,7 +2086,7 @@ type: `Bool`
 default: `false`
 
 show exclusive execution times of various Lean components
-  
+
 See also `trace.profiler` for an alternative profiling system with structured output.
 
 ## profiler.threshold
@@ -2199,7 +2206,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.26.0"`
+default: `"v4.27.0-rc1"`
 
 Revision of LeanStateSearch to use
 
@@ -3407,6 +3414,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Meta.Tactic.injection
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Meta.Tactic.sat
 type: `Bool`
 
@@ -3818,7 +3832,7 @@ type: `Bool`
 
 default: `false`
 
-enable/disable tracing for the given module and submodules
+track the backtracking attempt to synthesize type class instances
 
 ## trace.Meta.synthInstance.answer
 type: `Bool`
@@ -4220,13 +4234,6 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.compiler.ir.elim_dead
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.compiler.ir.elim_dead_branches
 type: `Bool`
 
 default: `false`
@@ -4808,6 +4815,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.ematch.instance.assignment
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ematch.instance.delayed
 type: `Bool`
 
 default: `false`
@@ -5473,6 +5487,13 @@ type: `Nat`
 default: `15`
 
 The maximum number of instance arguments `variable?` will try to insert before giving up
+
+## verbose
+type: `Bool`
+
+default: `true`
+
+
 
 ## warn.exposeOnPrivate
 type: `Bool`

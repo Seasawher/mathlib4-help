@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `26fffffcccd7299b26cf63fac902165bc553fd56`
+Mathlib version: `3ea6690c3470d61c7d4fd71e7efd6336a6d05ffd`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -827,7 +827,7 @@ Lemmas involving `<` or `≤` can also be marked `@[bound]` for use in the relat
 Generate the `.toCtorIdx` and `.ctor.elim` definitions for the given inductive.
 
 This attribute is only meant to be used in `Init.Prelude` to build these constructions for
-types where we did not generate them imediatelly (due to `set_option genCtorIdx false`).
+types where we did not generate them immediately (due to `set_option genCtorIdx false`).
 
 ## ghost_simps
  Simplification rules for ghost equations. 
@@ -1062,6 +1062,10 @@ This corresponds to the `instance (priority := prio)` notation.
 
 ## is_poly
  A stub attribute for `is_poly`. 
+
+## library_suggestions
+ library suggestions selector
+Attribute for registering library suggestions selectors.
 
 ## macro
  macro elaborator
@@ -1468,6 +1472,9 @@ specialized.
 ## stx_parser
  parser
 
+## suggest_for
+ suggest other (incorrect, not-existing) identifiers that someone might use when they actually want this definition
+
 ## symm
  symmetric relation
 Tags symmetry lemmas to be used by the `symm` tactic.
@@ -1500,6 +1507,11 @@ Attribute adding a tactic analysis pass from a `Config` structure.
 
 ## tactic_tag
  Register a tactic parser as an alternative of an existing tactic, so they can be grouped together in documentation.
+
+## tagged_return
+ mark extern definition to always return tagged values
+Marks an extern definition to be guaranteed to always return tagged values.
+This information is used to optimize reference counting in the compiler.
 
 ## term_elab
  term elaborator
