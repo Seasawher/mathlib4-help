@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `26fffffcccd7299b26cf63fac902165bc553fd56`
+Mathlib version: `3ea6690c3470d61c7d4fd71e7efd6336a6d05ffd`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -639,6 +639,11 @@ with conditions resolved when possible with `solve_by_elim`.
 The optional `using` clause provides identifiers in the local context that must be
 used when closing the goal.
 
+Use `+grind` to enable `grind` as a fallback discharger for subgoals.
+Use `+try?` to enable `try?` as a fallback discharger for subgoals.
+Use `-star` to disable fallback to star-indexed lemmas.
+Use `+all` to collect all successful lemmas instead of stopping at the first.
+
 ## apply_assumption
 Defined in: `Lean.Parser.Tactic.applyAssumption`
 
@@ -820,6 +825,11 @@ normalizes `h` with `norm_cast` and tries to use that to close the goal.
 Defined in: `Lean.Parser.Tactic.attemptAll`
 
 Helper internal tactic for implementing the tactic `try?`.
+
+## attempt_all_par
+Defined in: `Lean.Parser.Tactic.attemptAllPar`
+
+Helper internal tactic for implementing the tactic `try?` with parallel execution.
 
 ## aux_group₁
 Defined in: `Mathlib.Tactic.Group.aux_group₁`
@@ -1247,7 +1257,7 @@ You can use `with` to provide the variables names for each constructor.
   uses tactic `tac₁` for the `nil` case, and `tac₂` for the `cons` case,
   and `a` and `as'` are used as names for the new variables introduced.
 - `cases h : e`, where `e` is a variable or an expression,
-  performs cases on `e` as above, but also adds a hypothesis `h : e = ...` to each hypothesis,
+  performs cases on `e` as above, but also adds a hypothesis `h : e = ...` to each goal,
   where `...` is the constructor instance for that particular case.
 
 ## cases'
@@ -2028,8 +2038,10 @@ Defined in: `Lean.Parser.Tactic.cutsat`
 
 `cutsat` solves linear integer arithmetic goals.
 
-It is a implemented as a thin wrapper around the `grind` tactic, enabling only the `cutsat` solver.
+It is a implemented as a thin wrapper around the `grind` tactic, enabling only the `lia` solver.
 Please use `grind` instead if you need additional capabilities.
+
+**Deprecated**: Use `lia` instead.
 
 ## dbg_trace
 Defined in: `Lean.Parser.Tactic.dbgTrace`
@@ -2340,6 +2352,11 @@ with conditions resolved by `solve_by_elim`.
 The optional `using` clause provides identifiers in the local context that must be
 used by `exact?` when closing the goal.  This is most useful if there are multiple
 ways to resolve the goal, and one wants to guide which lemma is used.
+
+Use `+grind` to enable `grind` as a fallback discharger for subgoals.
+Use `+try?` to enable `try?` as a fallback discharger for subgoals.
+Use `-star` to disable fallback to star-indexed lemmas (like `Empty.elim`, `And.left`).
+Use `+all` to collect all successful lemmas instead of stopping at the first.
 
 ## exact_mod_cast
 Defined in: `Lean.Parser.Tactic.tacticExact_mod_cast_`
@@ -2693,7 +2710,7 @@ the goal. With `set_option tactic.fun_induction.unfolding false`, it uses `f.fun
 ## fun_induction
 Defined in: `Lean.Parser.Tactic.funInduction`
 
-The `fun_induction` tactic is a convenience wrapper around the `induction` tactic to use the the
+The `fun_induction` tactic is a convenience wrapper around the `induction` tactic to use the
 functional induction principle.
 
 The tactic invocation
@@ -3064,10 +3081,10 @@ theorems and helps prevent an excessive number of instantiations.
 - `grind only [<name>, ...]` is like `grind [<name>, ...]` but does not use theorems tagged with `@[grind]`.
 - `grind (gen := <num>)` sets the maximum generation.
 
-### Linear integer arithmetic (`cutsat`)
+### Linear integer arithmetic (`lia`)
 
 `grind` can solve goals that reduce to **linear integer arithmetic (LIA)** using an
-integrated decision procedure called **`cutsat`**.  It understands
+integrated decision procedure called **`lia`**.  It understands
 
 * equalities   `p = 0`
 * inequalities  `p ≤ 0`
@@ -3080,7 +3097,7 @@ This *model-based* search is **complete for LIA**.
 
 #### Key options:
 
-* `grind -cutsat` disable the solver (useful for debugging)
+* `grind -lia` disable the solver (useful for debugging)
 * `grind +qlia` accept rational models (shrinks the search space but is incomplete for ℤ)
 
 #### Examples:
@@ -3790,9 +3807,12 @@ Transforms `let` expressions into `have` expressions when possible.
 - `let_to_have at h` transforms `let`s in the given local hypothesis.
 
 ## lia
-Defined in: `tacticLia`
+Defined in: `Lean.Parser.Tactic.lia`
 
-`lia` is an alias for the `cutsat` tactic, which solves linear integer arithmetic goals.
+`lia` solves linear integer arithmetic goals.
+
+It is a implemented as a thin wrapper around the `grind` tactic, enabling only the `lia` solver.
+Please use `grind` instead if you need additional capabilities.
 
 ## lift
 Defined in: `Mathlib.Tactic.lift`
@@ -4357,6 +4377,27 @@ That is, `mcases h with pat` has the following semantics, based on `pat`:
   alternative via `pat₂`.
 
 ## mcases
+Defined in: `Lean.Parser.Tactic.mcasesError`
+
+Like `rcases`, but operating on stateful `Std.Do.SPred` goals.
+Example: Given a goal `h : (P ∧ (Q ∨ R) ∧ (Q → R)) ⊢ₛ R`,
+`mcases h with ⟨-, ⟨hq | hr⟩, hqr⟩` will yield two goals:
+`(hq : Q, hqr : Q → R) ⊢ₛ R` and `(hr : R) ⊢ₛ R`.
+
+That is, `mcases h with pat` has the following semantics, based on `pat`:
+* `pat=□h'` renames `h` to `h'` in the stateful context, regardless of whether `h` is pure
+* `pat=⌜h'⌝` introduces `h' : φ`  to the pure local context if `h : ⌜φ⌝`
+  (c.f. `Lean.Elab.Tactic.Do.ProofMode.IsPure`)
+* `pat=h'` is like `pat=⌜h'⌝` if `h` is pure
+  (c.f. `Lean.Elab.Tactic.Do.ProofMode.IsPure`), otherwise it is like `pat=□h'`.
+* `pat=_` renames `h` to an inaccessible name
+* `pat=-` discards `h`
+* `⟨pat₁, pat₂⟩` matches on conjunctions and existential quantifiers and recurses via
+  `pat₁` and `pat₂`.
+* `⟨pat₁ | pat₂⟩` matches on disjunctions, matching the left alternative via `pat₁` and the right
+  alternative via `pat₂`.
+
+## mcases
 Defined in: `Lean.Parser.Tactic.mcasesMacro`
 
 Like `rcases`, but operating on stateful `Std.Do.SPred` goals.
@@ -4391,6 +4432,18 @@ example (P Q : SPred σs) : P ⊢ₛ Q → Q := by
 
 ## mclear
 Defined in: `Lean.Parser.Tactic.mclearMacro`
+
+`mclear` is like `clear`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ Q → Q := by
+  mintro HP
+  mintro HQ
+  mclear HP
+  mexact HQ
+```
+
+## mclear
+Defined in: `Lean.Parser.Tactic.mclearError`
 
 `mclear` is like `clear`, but operating on a stateful `Std.Do.SPred` goal.
 ```lean
@@ -4496,6 +4549,17 @@ example (Q : SPred σs) : Q ⊢ₛ Q := by
   mexact HQ
 ```
 
+## mexact
+Defined in: `Lean.Parser.Tactic.mexactError`
+
+`mexact` is like `exact`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (Q : SPred σs) : Q ⊢ₛ Q := by
+  mstart
+  mintro HQ
+  mexact HQ
+```
+
 ## mexfalso
 Defined in: `Lean.Parser.Tactic.mexfalsoMacro`
 
@@ -4520,6 +4584,16 @@ example (P : SPred σs) : ⌜False⌝ ⊢ₛ P := by
 
 ## mexists
 Defined in: `Lean.Parser.Tactic.mexistsMacro`
+
+`mexists` is like `exists`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (ψ : Nat → SPred σs) : ψ 42 ⊢ₛ ∃ x, ψ x := by
+  mintro H
+  mexists 42
+```
+
+## mexists
+Defined in: `Lean.Parser.Tactic.mexistsError`
 
 `mexists` is like `exists`, but operating on a stateful `Std.Do.SPred` goal.
 ```lean
@@ -4602,6 +4676,17 @@ example (P Q : SPred σs) : P ⊢ₛ (P → Q) → Q := by
   mexact HQ
 ```
 
+## mhave
+Defined in: `Lean.Parser.Tactic.mhaveError`
+
+`mhave` is like `have`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ (P → Q) → Q := by
+  mintro HP HPQ
+  mhave HQ : Q := by mspecialize HPQ HP; mexact HPQ
+  mexact HQ
+```
+
 ## mintro
 Defined in: `Lean.Parser.Tactic.mintro`
 
@@ -4618,6 +4703,10 @@ That is, `mintro ∀s` brings the topmost state variable `s:σ` in scope and tra
 Beyond that, `mintro` supports the full syntax of `mcases` patterns
 (`mintro pat = (mintro h; mcases h with pat`), and can perform multiple
 introductions in sequence.
+
+## mintro
+Defined in: `Lean.Parser.Tactic.mintroError`
+
 
 ## mintro
 Defined in: `Lean.Parser.Tactic.mintroMacro`
@@ -4862,6 +4951,17 @@ example (Q : SPred σs) (ψ : φ → ⊢ₛ Q): ⌜φ⌝ ⊢ₛ Q := by
   mexact (ψ Hφ)
 ```
 
+## mpure
+Defined in: `Lean.Parser.Tactic.mpureError`
+
+`mpure` moves a pure hypothesis from the stateful context into the pure context.
+```lean
+example (Q : SPred σs) (ψ : φ → ⊢ₛ Q): ⌜φ⌝ ⊢ₛ Q := by
+  mintro Hφ
+  mpure Hφ
+  mexact (ψ Hφ)
+```
+
 ## mpure_intro
 Defined in: `Lean.Parser.Tactic.mpureIntro`
 
@@ -4912,6 +5012,20 @@ example (ψ : Nat → SPred σs) : ψ 42 ⊢ₛ ∃ x, ψ x := by
   mrefine ⟨⌜42⌝, H⟩
 ```
 
+## mrefine
+Defined in: `Lean.Parser.Tactic.mrefineError`
+
+Like `refine`, but operating on stateful `Std.Do.SPred` goals.
+```lean
+example (P Q R : SPred σs) : (P ∧ Q ∧ R) ⊢ₛ P ∧ R := by
+  mintro ⟨HP, HQ, HR⟩
+  mrefine ⟨HP, HR⟩
+
+example (ψ : Nat → SPred σs) : ψ 42 ⊢ₛ ∃ x, ψ x := by
+  mintro H
+  mrefine ⟨⌜42⌝, H⟩
+```
+
 ## mrename_i
 Defined in: `Lean.Parser.Tactic.mrenameI`
 
@@ -4921,6 +5035,22 @@ Defined in: `Lean.Parser.Tactic.mrenameI`
 Defined in: `Lean.Parser.Tactic.mrenameIMacro`
 
 `mrename_i` is like `rename_i`, but names inaccessible stateful hypotheses in a `Std.Do.SPred` goal.
+
+## mrename_i
+Defined in: `Lean.Parser.Tactic.mrenameIError`
+
+`mrename_i` is like `rename_i`, but names inaccessible stateful hypotheses in a `Std.Do.SPred` goal.
+
+## mreplace
+Defined in: `Lean.Parser.Tactic.mreplaceError`
+
+`mreplace` is like `replace`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ (P → Q) → Q := by
+  mintro HP HPQ
+  mreplace HPQ : Q := by mspecialize HPQ HP; mexact HPQ
+  mexact HPQ
+```
 
 ## mreplace
 Defined in: `Lean.Parser.Tactic.mreplaceMacro`
@@ -4946,6 +5076,20 @@ example (P Q : SPred σs) : P ⊢ₛ (P → Q) → Q := by
 
 ## mrevert
 Defined in: `Lean.Parser.Tactic.mrevert`
+
+`mrevert` is like `revert`, but operating on a stateful `Std.Do.SPred` goal.
+```lean
+example (P Q R : SPred σs) : P ∧ Q ∧ R ⊢ₛ P → R := by
+  mintro ⟨HP, HQ, HR⟩
+  mrevert HR
+  mrevert HP
+  mintro HP'
+  mintro HR'
+  mexact HR'
+```
+
+## mrevert
+Defined in: `Lean.Parser.Tactic.mrevertError`
 
 `mrevert` is like `revert`, but operating on a stateful `Std.Do.SPred` goal.
 ```lean
@@ -5085,6 +5229,24 @@ all_goals
 ```
 
 ## mspecialize
+Defined in: `Lean.Parser.Tactic.mspecializeError`
+
+`mspecialize` is like `specialize`, but operating on a stateful `Std.Do.SPred` goal.
+It specializes a hypothesis from the stateful context with hypotheses from either the pure
+or stateful context or pure terms.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ (P → Q) → Q := by
+  mintro HP HPQ
+  mspecialize HPQ HP
+  mexact HPQ
+
+example (y : Nat) (P Q : SPred σs) (Ψ : Nat → SPred σs) (hP : ⊢ₛ P) : ⊢ₛ Q → (∀ x, P → Q → Ψ x) → Ψ (y + 1) := by
+  mintro HQ HΨ
+  mspecialize HΨ (y + 1) hP HQ
+  mexact HΨ
+```
+
+## mspecialize
 Defined in: `Lean.Parser.Tactic.mspecializeMacro`
 
 `mspecialize` is like `specialize`, but operating on a stateful `Std.Do.SPred` goal.
@@ -5141,6 +5303,24 @@ Defined in: `Lean.Parser.Tactic.mspecializePureMacro`
 example (y : Nat) (P Q : SPred σs) (Ψ : Nat → SPred σs) (hP : ⊢ₛ P) (hΨ : ∀ x, ⊢ₛ P → Q → Ψ x) : ⊢ₛ Q → Ψ (y + 1) := by
   mintro HQ
   mspecialize_pure (hΨ (y + 1)) hP HQ => HΨ
+  mexact HΨ
+```
+
+## mspecialize_pure
+Defined in: `Lean.Parser.Tactic.mspecializePureError`
+
+`mspecialize` is like `specialize`, but operating on a stateful `Std.Do.SPred` goal.
+It specializes a hypothesis from the stateful context with hypotheses from either the pure
+or stateful context or pure terms.
+```lean
+example (P Q : SPred σs) : P ⊢ₛ (P → Q) → Q := by
+  mintro HP HPQ
+  mspecialize HPQ HP
+  mexact HPQ
+
+example (y : Nat) (P Q : SPred σs) (Ψ : Nat → SPred σs) (hP : ⊢ₛ P) : ⊢ₛ Q → (∀ x, P → Q → Ψ x) → Ψ (y + 1) := by
+  mintro HQ HΨ
+  mspecialize HΨ (y + 1) hP HQ
   mexact HΨ
 ```
 
