@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `c8989d96db0146e5fa90f13806f341ea81a0da03`
+Mathlib version: `7478ffb26bdb1d28e594d5de3c49a170e30404cf`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -6926,7 +6926,7 @@ Defined in: `Lean.Parser.Tactic.rwSeq`
 ## rw!
 Defined in: `Mathlib.Tactic.DepRewrite.depRwSeq`
 
-`rw!` is like `rewrite!`, but also calls `dsimp` to simplify the result after every substitution.
+`rw!` is like `rewrite!`, but also cleans up introduced refl-casts after every substitution.
 It is available as an ordinary tactic and a `conv` tactic.
 
 ## rw?
