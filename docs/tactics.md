@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `1c119a384d559bccba90477b0ef3a645d77c5bd7`
+Mathlib version: `51192f7a45ed5916e5395b2375273662b68a910f`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -7917,7 +7917,12 @@ example : ∃ x : Nat, x = x := by use 42
 
 example : ∃ x : Nat, ∃ y : Nat, x = y := by use 42, 42
 
-example : ∃ x : String × String, x.1 = x.2 := by use ("forty-two", "forty-two")
+example : Nonempty Nat := by use 5
+
+example : Nonempty (PNat ≃ Nat) := by
+  use PNat.natPred, Nat.succPNat
+  · exact PNat.succPNat_natPred
+  · intro; rfl
 ```
 
 `use! e₁, e₂, ⋯` is similar but it applies constructors everywhere rather than just for
@@ -7927,7 +7932,7 @@ leaves and nodes of the tree of constructors.
 With `use!` one can feed in each `42` one at a time:
 
 ```lean
-example : ∃ p : Nat × Nat, p.1 = p.2 := by use! 42, 42
+example : ∃ n : {n : Nat // n % 2 = 0}, n.val > 10 := by use! 20; simp
 
 example : ∃ p : Nat × Nat, p.1 = p.2 := by use! (42, 42)
 ```
@@ -7957,7 +7962,12 @@ example : ∃ x : Nat, x = x := by use 42
 
 example : ∃ x : Nat, ∃ y : Nat, x = y := by use 42, 42
 
-example : ∃ x : String × String, x.1 = x.2 := by use ("forty-two", "forty-two")
+example : Nonempty Nat := by use 5
+
+example : Nonempty (PNat ≃ Nat) := by
+  use PNat.natPred, Nat.succPNat
+  · exact PNat.succPNat_natPred
+  · intro; rfl
 ```
 
 `use! e₁, e₂, ⋯` is similar but it applies constructors everywhere rather than just for
@@ -7967,7 +7977,7 @@ leaves and nodes of the tree of constructors.
 With `use!` one can feed in each `42` one at a time:
 
 ```lean
-example : ∃ p : Nat × Nat, p.1 = p.2 := by use! 42, 42
+example : ∃ n : {n : Nat // n % 2 = 0}, n.val > 10 := by use! 20; simp
 
 example : ∃ p : Nat × Nat, p.1 = p.2 := by use! (42, 42)
 ```
