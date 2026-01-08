@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `18978c91c03a85d86b990dffa6d69336c85dfb2f`
+Mathlib version: `98379c78c5dd2e3614cd24ab7ad22f5713e0eb63`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -4534,10 +4534,9 @@ for the tactic call in case of success.
 ## mem_tac
 Defined in: `AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.tacticMem_tac`
 
-
-## mem_tac_aux
-Defined in: `AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.tacticMem_tac_aux`
-
+`mem_tac` tries to prove goals of the form `x ∈ 𝒜 i` when `x` has the form of:
+* `y ^ n` where `i = n • j` and `y ∈ 𝒜 j`.
+* a natural number `n`.
 
 ## mexact
 Defined in: `Lean.Parser.Tactic.mexactMacro`

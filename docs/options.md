@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `18978c91c03a85d86b990dffa6d69336c85dfb2f`
+Mathlib version: `98379c78c5dd2e3614cd24ab7ad22f5713e0eb63`
 
 ## Elab.async
 type: `Bool`
@@ -979,14 +979,7 @@ type: `Bool`
 
 default: `false`
 
-enable the commandStart linter
-
-## linter.style.commandStart.verbose
-type: `Bool`
-
-default: `false`
-
-enable the commandStart linter
+deprecated: use the `linter.style.whitespace` option instead
 
 ## linter.style.docString
 type: `Bool`
@@ -1120,6 +1113,20 @@ type: `Bool`
 default: `false`
 
 enable the show linter
+
+## linter.style.whitespace
+type: `Bool`
+
+default: `false`
+
+enable the whitespace linter
+
+## linter.style.whitespace.verbose
+type: `Bool`
+
+default: `false`
+
+report diagnostic information for the `whitespace` linter
 
 ## linter.suspiciousUnexpanderPatterns
 type: `Bool`
