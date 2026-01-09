@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `98379c78c5dd2e3614cd24ab7ad22f5713e0eb63`
+Mathlib version: `80732f7660133e80dc57657649e7e09584749454`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -2122,7 +2122,9 @@ This can then be cross-referenced using
 -- See note [some tag]
 ```
 in doc-comments.
-You can access the contents using, for example, `#print LibraryNote.«my note»`.
+You can access the contents using, for example, `#print LibraryNote.my_note`.
+(Note: spaces in the name are converted to underscores in the declaration name for
+compatibility with the Lean export format.)
 Use `#help note "some tag"` to display all notes with the tag `"some tag"` in the infoview.
 This command can be imported from Batteries.Tactic.HelpCmd .
 
