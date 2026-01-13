@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `7913bc2bd90f91af589a7c7b075023d8f1b95166`
+Mathlib version: `dd555b3a866e7e5e98a690e799b76253c6f04673`
 
 ## Elab.async
 type: `Bool`
@@ -1317,6 +1317,13 @@ type: `Bool`
 default: `true`
 
 Linter used by translate attributes that checks if the given declaration name is equal to the automatically generated name
+
+## linter.translateOverwrite
+type: `Bool`
+
+default: `true`
+
+Linter used by translate attributes that checks if the attribute was already applied
 
 ## linter.translateReorder
 type: `Bool`
