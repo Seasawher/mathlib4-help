@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `7913bc2bd90f91af589a7c7b075023d8f1b95166`
+Mathlib version: `dd555b3a866e7e5e98a690e799b76253c6f04673`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1941,10 +1941,28 @@ in the goal.
 ## conv_lhs
 Defined in: `Mathlib.Tactic.Conv.convLHS`
 
+`conv_lhs => cs` runs the `conv` tactic sequence `cs` on the left hand side of the target.
+
+In general, for an `n`-ary operator as the target, it traverses into the second to last argument.
+It is a synonym for `conv => arg -2; cs`.
+
+* `conv_lhs at h => cs` runs `cs` on the left hand side of hypothesis `h`.
+* `conv_lhs in pat => cs` first looks for a subexpression matching `pat` (see also the `pattern`
+  conv tactic) and then traverses into the left hand side of this subexpression.
+  This syntax also supports the `occs` clause for the pattern.
 
 ## conv_rhs
 Defined in: `Mathlib.Tactic.Conv.convRHS`
 
+`conv_rhs => cs` runs the `conv` tactic sequence `cs` on the right hand side of the target.
+
+In general, for an `n`-ary operator as the target, it traverses into the last argument.
+It is a synonym for `conv => arg -1; cs`.
+
+* `conv_rhs at h => cs` runs `cs` on the right hand side of hypothesis `h`.
+* `conv_rhs in pat => cs` first looks for a subexpression matching `pat` (see the `pattern`
+  conv tactic) and then traverses into the right hand side of this subexpression.
+  This syntax also supports the `occs` clause for the pattern.
 
 ## convert
 Defined in: `Mathlib.Tactic.convert`
@@ -2816,6 +2834,11 @@ subexpressions in the goal.
 ## gcongr_discharger
 Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
+`gcongr_discharger` is used by `gcongr` to discharge side goals.
+
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.27.0-rc1/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+By default it calls `positivity` (after importing the `positivity` tactic).
+Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
 ## generalize
 Defined in: `Lean.Parser.Tactic.generalize`
