@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `dd555b3a866e7e5e98a690e799b76253c6f04673`
+Mathlib version: `2425cadaa48775bf45c07e1f2e01223c48572751`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1933,10 +1933,10 @@ Defined in: `Lean.Parser.Tactic.Conv.convTactic`
 Executes the given conv block without converting regular goal into a `conv` goal.
 
 ## conv?
-Defined in: `tacticConv?`
+Defined in: `Mathlib.Tactic.Conv.tacticConv?`
 
 Display a widget panel allowing to generate a `conv` call zooming to the subexpression selected
-in the goal.
+in the goal or in the type of a local hypothesis or let-decl.
 
 ## conv_lhs
 Defined in: `Mathlib.Tactic.Conv.convLHS`
