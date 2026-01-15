@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `2425cadaa48775bf45c07e1f2e01223c48572751`
+Mathlib version: `79a359dfe4682c5ca375c39522d7c64e95659d5a`
 
 ## Elab.async
 type: `Bool`
@@ -1324,6 +1324,13 @@ type: `Bool`
 default: `true`
 
 Linter used by translate attributes that checks if the attribute was already applied
+
+## linter.translateRedundant
+type: `Bool`
+
+default: `true`
+
+Linter used by translate attributes that checks if the attribute is redundant
 
 ## linter.translateReorder
 type: `Bool`
