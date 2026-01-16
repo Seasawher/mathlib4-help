@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `79a359dfe4682c5ca375c39522d7c64e95659d5a`
+Mathlib version: `721b21cf2bbec8f5709aa776c9f0238a80c8568a`
 
 ## Elab.async
 type: `Bool`
@@ -1366,6 +1366,13 @@ type: `Bool`
 default: `false`
 
 enable the unused `Decidable*` instance linter, which lints against `Decidable*` instances in the hypotheses of theorems which are not used in the type, and can therefore be replaced by a use of `classical` in the proof.
+
+## linter.unusedFintypeInType
+type: `Bool`
+
+default: `false`
+
+enable the unused `Fintype` instance linter, which lints against `Fintype` instances in the hypotheses of theorems which are not used in the type, and can therefore be replaced by a hypothesis of `Finite` or removed entirely.
 
 ## linter.unusedRCasesPattern
 type: `Bool`
