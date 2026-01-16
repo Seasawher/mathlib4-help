@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `79a359dfe4682c5ca375c39522d7c64e95659d5a`
+Mathlib version: `721b21cf2bbec8f5709aa776c9f0238a80c8568a`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2760,7 +2760,34 @@ the goal. With `set_option tactic.fun_induction.unfolding false`, it uses `f.ind
 ## fun_prop
 Defined in: `Mathlib.Meta.FunProp.funPropTacStx`
 
-Tactic to prove function properties
+`fun_prop` solves a goal of the form `P f`, where `P` is a predicate and `f` is a function,
+by decomposing `f` into a composition of elementary functions, and proving `P` on each of those
+by matching against a set of `@[fun_prop]` lemmas.
+
+If `fun_prop` fails to solve a goal with the error "No theorems found", you can solve this issue
+by importing or adding new theorems tagged with the `@[fun_prop]` attribute. See the module
+documentation for `Mathlib/Tactic/FunProp.lean` for a detailed explanation.
+
+* `fun_prop (disch := tac)` uses `tac` to solve potential side goals. Setting this option is
+  required to solve `ContinuousAt/On/Within` goals.
+* `fun_prop [c, ...]` will unfold the constant(s) `c`, ... before decomposing `f`.
+* `fun_prop (config := cfg)` sets advanced configuration options using `cfg : FunProp.Config`
+  (see `FunProp.Config` for details).
+
+Examples:
+
+```lean
+example : Continuous (fun x : ℝ ↦ x * sin x) := by fun_prop
+```
+
+```lean
+-- Specify a discharger to solve `ContinuousAt`/`Within`/`On` goals:
+example (y : ℝ) (hy : y ≠ 0) : ContinuousAt (fun x : ℝ ↦ 1/x) y := by
+  fun_prop (disch := assumption)
+
+example (y : ℝ) (hy : y ≠ 0) : ContinuousAt (fun x => x * (Real.log x) ^ 2 - Real.exp x / x) y := by
+  fun_prop (disch := aesop)
+```
 
 ## funext
 Defined in: `tacticFunext___`
@@ -6205,11 +6232,12 @@ example {a b c d : ℝ} (hab : 0 < a * b) (hb : 0 ≤ b) (hcd : c < d) :
 ## pull
 Defined in: `Mathlib.Tactic.Push.pull`
 
-`pull` is the inverse tactic to `push`.
-It pulls the given constant towards the head of the expression. For example
-- `pull _ ∈ _` rewrites `x ∈ y ∨ ¬ x ∈ z` into `x ∈ y ∪ zᶜ`.
-- `pull (disch := positivity) Real.log` rewrites `log a + 2 * log b` into `log (a * b ^ 2)`.
-- `pull fun _ ↦ _` rewrites `f ^ 2 + 5` into `fun x => f x ^ 2 + 5` where `f` is a function.
+`pull c` rewrites the goal by pulling the constant `c` closer to the head of the expression.
+For instance, `pull _ ∈ _` rewrites `x ∈ y ∨ ¬ x ∈ z` into `x ∈ y ∪ zᶜ`.
+More precisely, the `pull` tactic repeatedly rewrites an expression by applying lemmas
+of the form `... (c ...) = c ...` (where `c` can appear 1 or more times on the left hand side).
+`pull` is the inverse tactic to `push`. To extend the `pull` tactic, you can tag a lemma
+with the `@[push]` attribute. `pull` works as both a tactic and a conv tactic.
 
 A lemma is considered a `pull` lemma if its reverse direction is a `push` lemma
 that actually moves the given constant away from the head. For example
@@ -6219,6 +6247,16 @@ that actually moves the given constant away from the head. For example
   `pull` lemmas for `fun`, because every `push fun _ ↦ _` lemma is also considered a `pull` lemma.
 
 TODO: define a `@[pull]` attribute for tagging `pull` lemmas that are not `push` lemmas.
+
+* `pull _ ~ _` pulls the operator or relation `~`.
+* `pull c at l1 l2 ...` rewrites at the given locations.
+* `pull c at *` rewrites at all hypotheses and the goal.
+* `pull (disch := tac) c` uses the tactic `tac` to discharge any hypotheses for `@[push]` lemmas.
+
+Examples:
+* `pull _ ∈ _` rewrites `x ∈ y ∨ ¬ x ∈ z` into `x ∈ y ∪ zᶜ`.
+* `pull (disch := positivity) Real.log` rewrites `log a + 2 * log b` into `log (a * b ^ 2)`.
+* `pull fun _ ↦ _` rewrites `f ^ 2 + 5` into `fun x => f x ^ 2 + 5` where `f` is a function.
 
 ## pure_coherence
 Defined in: `Mathlib.Tactic.Coherence.pure_coherence`
@@ -6239,21 +6277,28 @@ where `a = a'`, `b = b'`, and `c = c'` can be proved using `pure_coherence`
 ## push
 Defined in: `Mathlib.Tactic.Push.pushStx`
 
-`push` pushes the given constant away from the head of the expression. For example
-- `push _ ∈ _` rewrites `x ∈ {y} ∪ zᶜ` into `x = y ∨ ¬ x ∈ z`.
-- `push (disch := positivity) Real.log` rewrites `log (a * b ^ 2)` into `log a + 2 * log b`.
-- `push ¬ _` is the same as `push_neg` or `push Not`, and it rewrites
-  `¬ ∀ ε > 0, ∃ δ > 0, δ < ε` into `∃ ε > 0, ∀ δ > 0, ε ≤ δ`.
-
-In addition to constants, `push` can be used to push `fun` and `∀` binders:
-- `push fun _ ↦ _` rewrites `fun x => f x ^ 2 + 5` into `f ^ 2 + 5`
-- `push ∀ _, _` rewrites `∀ a, p a ∧ q a` into `(∀ a, p a) ∧ (∀ a, q a)`.
-
-The `push` tactic can be extended using the `@[push]` attribute.
+`push c` rewrites the goal by pushing the constant `c` deeper into an expression.
+For instance, `push _ ∈ _` rewrites `x ∈ {y} ∪ zᶜ` into `x = y ∨ ¬ x ∈ z`.
+More precisely, the `push` tactic repeatedly rewrites an expression by applying lemmas
+of the form `c ... = ... (c ...)` (where `c` can appear 0 or more times on the right hand side).
+To extend the `push` tactic, you can tag a lemma of this form with the `@[push]` attribute.
 
 To instead move a constant closer to the head of the expression, use the `pull` tactic.
 
-To push a constant at a hypothesis, use the `push ... at h` or `push ... at *` syntax.
+`push` works as both a tactic and a conv tactic.
+
+* `push _ ~ _` pushes the (binary) operator `~`, `push ~ _` pushes the (unary) operator `~`.
+* `push c at l1 l2 ...` rewrites at the given locations.
+* `push c at *` rewrites at all hypotheses and the goal.
+* `push (disch := tac) c` uses the tactic `tac` to discharge any hypotheses for `@[push]` lemmas.
+
+Examples:
+* `push _ ∈ _` rewrites `x ∈ {y} ∪ zᶜ` into `x = y ∨ ¬ x ∈ z`.
+* `push (disch := positivity) Real.log` rewrites `log (a * b ^ 2)` into `log a + 2 * log b`.
+* `push ¬ _` is the same as `push_neg` or `push Not`, and it rewrites
+  `¬ ∀ ε > 0, ∃ δ > 0, δ < ε` into `∃ ε > 0, ∀ δ > 0, ε ≤ δ`.
+* `push fun _ ↦ _` rewrites `fun x => f x ^ 2 + 5` into `f ^ 2 + 5`
+* `push ∀ _, _` rewrites `∀ a, p a ∧ q a` into `(∀ a, p a) ∧ (∀ a, q a)`.
 
 ## push_cast
 Defined in: `Lean.Parser.Tactic.pushCast`
@@ -6293,30 +6338,32 @@ See also `norm_cast`.
 ## push_neg
 Defined in: `Mathlib.Tactic.Push.push_neg`
 
-Push negations into the conclusion or a hypothesis.
-For instance, a hypothesis `h : ¬ ∀ x, ∃ y, x ≤ y` will be transformed by `push_neg at h` into
-`h : ∃ x, ∀ y, y < x`. Binder names are preserved.
+`push_neg` rewrites the goal by pushing negations deeper into an expression.
+For instance, the goal `¬ ∀ x, ∃ y, x ≤ y` will be transformed by `push_neg` into
+`∃ x, ∀ y, y < x`. Binder names are preserved (contrary to what would happen with `simp`
+using the relevant lemmas). `push_neg` works as both a tactic and a conv tactic.
 
 `push_neg` is a special case of the more general `push` tactic, namely `push Not`.
 The `push` tactic can be extended using the `@[push]` attribute. `push` has special-casing
-built in for `push Not`, so that it can preserve binder names, and so that `¬ (p ∧ q)` can be
-transformed to either `p → ¬ q` (default) or `¬ p ∨ ¬ q` (`push_neg +distrib`).
+built in for `push Not`.
 
 Tactics that introduce a negation usually have a version that automatically calls `push_neg` on
 that negation. These include `by_cases!`, `contrapose!` and `by_contra!`.
 
-Another example: given a hypothesis
+* `push_neg at l1 l2 ...` rewrites at the given locations.
+* `push_neg at *` rewrites at each hypothesis and the goal.
+* `push_neg +distrib` rewrites `¬ (p ∧ q)` into `¬ p ∨ ¬ q` (by default, the tactic rewrites it
+  into `p → ¬ q` instead).
+
+Example:
+
 ```lean
-h : ¬ ∀ ε > 0, ∃ δ > 0, ∀ x, |x - x₀| ≤ δ → |f x - y₀| ≤ ε
+example (h : ¬ ∀ ε > 0, ∃ δ > 0, ∀ x, |x - x₀| ≤ δ → |f x - y₀| ≤ ε) :
+    ∃ ε > 0, ∀ δ > 0, ∃ x, |x - x₀| ≤ δ ∧ ε < |f x - y₀| := by
+  push_neg at h
+  -- Now we have the hypothesis `h : ∃ ε > 0, ∀ δ > 0, ∃ x, |x - x₀| ≤ δ ∧ ε < |f x - y₀|`
+  exact h
 ```
-writing `push_neg at h` will turn `h` into
-```lean
-h : ∃ ε > 0, ∀ δ > 0, ∃ x, |x - x₀| ≤ δ ∧ ε < |f x - y₀|
-```
-Note that binder names are preserved by this tactic, contrary to what would happen with `simp`
-using the relevant lemmas. One can use this tactic at the goal using `push_neg`,
-at every hypothesis and the goal using `push_neg at *` or at selected hypotheses and the goal
-using say `push_neg at h h' ⊢`, as usual.
 
 ## qify
 Defined in: `Mathlib.Tactic.Qify.qify`
@@ -6796,14 +6843,13 @@ example {p q : Prop} (h : q) : p ∨ q := by
 ## ring
 Defined in: `Mathlib.Tactic.RingNF.ring`
 
-Tactic for evaluating expressions in *commutative* (semi)rings, allowing for variables in the
+`ring` solves equations in *commutative* (semi)rings, allowing for variables in the
 exponent. If the goal is not appropriate for `ring` (e.g. not an equality) `ring_nf` will be
-suggested.
+suggested. See also `ring1`, which fails if the goal is not an equality.
 
 * `ring!` will use a more aggressive reducibility setting to determine equality of atoms.
-* `ring1` fails if the target is not an equality.
 
-For example:
+Examples:
 ```lean
 example (n : ℕ) (m : ℤ) : 2^(n+1) * m = 2 * 2^n * m := by ring
 example (a b : ℤ) (n : ℕ) : (a + b)^(n + 2) = (a^2 + b^2 + a * b + b * a) * (a + b)^n := by ring
@@ -6814,14 +6860,13 @@ example (x : ℕ) (h : x * 2 > 5): x + x > 5 := by ring; assumption -- suggests 
 ## ring!
 Defined in: `Mathlib.Tactic.RingNF.tacticRing!`
 
-Tactic for evaluating expressions in *commutative* (semi)rings, allowing for variables in the
+`ring` solves equations in *commutative* (semi)rings, allowing for variables in the
 exponent. If the goal is not appropriate for `ring` (e.g. not an equality) `ring_nf` will be
-suggested.
+suggested. See also `ring1`, which fails if the goal is not an equality.
 
 * `ring!` will use a more aggressive reducibility setting to determine equality of atoms.
-* `ring1` fails if the target is not an equality.
 
-For example:
+Examples:
 ```lean
 example (n : ℕ) (m : ℤ) : 2^(n+1) * m = 2 * 2^n * m := by ring
 example (a b : ℤ) (n : ℕ) : (a + b)^(n + 2) = (a^2 + b^2 + a * b + b * a) * (a + b)^n := by ring
@@ -6832,54 +6877,90 @@ example (x : ℕ) (h : x * 2 > 5): x + x > 5 := by ring; assumption -- suggests 
 ## ring1
 Defined in: `Mathlib.Tactic.Ring.ring1`
 
-Tactic for solving equations of *commutative* (semi)rings,
+`ring1` solves the goal when it is an equality in *commutative* (semi)rings,
 allowing variables in the exponent.
 
-* This version of `ring` fails if the target is not an equality.
-* The variant `ring1!` will use a more aggressive reducibility setting
-  to determine equality of atoms.
+This version of `ring` fails if the target is not an equality.
+
+* `ring1!` uses a more aggressive reducibility setting to determine equality of atoms.
+
+
+Extensions:
+
+ * * `ring1_nf` additionally uses `ring_nf` to simplify in atoms.
+   * `ring1_nf!` will use a more aggressive reducibility setting
+     to determine equality of atoms.
 
 ## ring1!
 Defined in: `Mathlib.Tactic.Ring.tacticRing1!`
 
-Tactic for solving equations of *commutative* (semi)rings,
+`ring1` solves the goal when it is an equality in *commutative* (semi)rings,
 allowing variables in the exponent.
 
-* This version of `ring` fails if the target is not an equality.
-* The variant `ring1!` will use a more aggressive reducibility setting
-  to determine equality of atoms.
+This version of `ring` fails if the target is not an equality.
+
+* `ring1!` uses a more aggressive reducibility setting to determine equality of atoms.
+
+
+Extensions:
+
+ * * `ring1_nf` additionally uses `ring_nf` to simplify in atoms.
+   * `ring1_nf!` will use a more aggressive reducibility setting
+     to determine equality of atoms.
 
 ## ring1_nf
 Defined in: `Mathlib.Tactic.RingNF.ring1NF`
 
-Tactic for solving equations of *commutative* (semi)rings, allowing variables in the exponent.
+`ring1` solves the goal when it is an equality in *commutative* (semi)rings,
+allowing variables in the exponent.
 
-* This version of `ring1` uses `ring_nf` to simplify in atoms.
-* The variant `ring1_nf!` will use a more aggressive reducibility setting
-  to determine equality of atoms.
+This version of `ring` fails if the target is not an equality.
+
+* `ring1!` uses a more aggressive reducibility setting to determine equality of atoms.
+
+
+Extensions:
+
+ * * `ring1_nf` additionally uses `ring_nf` to simplify in atoms.
+   * `ring1_nf!` will use a more aggressive reducibility setting
+     to determine equality of atoms.
 
 ## ring1_nf!
 Defined in: `Mathlib.Tactic.RingNF.tacticRing1_nf!_`
 
-Tactic for solving equations of *commutative* (semi)rings, allowing variables in the exponent.
+`ring1` solves the goal when it is an equality in *commutative* (semi)rings,
+allowing variables in the exponent.
 
-* This version of `ring1` uses `ring_nf` to simplify in atoms.
-* The variant `ring1_nf!` will use a more aggressive reducibility setting
-  to determine equality of atoms.
+This version of `ring` fails if the target is not an equality.
+
+* `ring1!` uses a more aggressive reducibility setting to determine equality of atoms.
+
+
+Extensions:
+
+ * * `ring1_nf` additionally uses `ring_nf` to simplify in atoms.
+   * `ring1_nf!` will use a more aggressive reducibility setting
+     to determine equality of atoms.
 
 ## ring_nf
 Defined in: `Mathlib.Tactic.RingNF.ringNF`
 
-Simplification tactic for expressions in the language of commutative (semi)rings,
-which rewrites all ring expressions into a normal form.
+`ring_nf` simplifies expressions in the language of commutative (semi)rings,
+which rewrites all ring expressions into a normal form, allowing variables in the exponents.
+
+`ring_nf` works as both a tactic and a conv tactic.
+
+See also the `ring` tactic for solving a goal which is an equation in the language
+of commutative (semi)rings.
+
 * `ring_nf!` will use a more aggressive reducibility setting to identify atoms.
-* `ring_nf (config := cfg)` allows for additional configuration:
+* `ring_nf (config := cfg)` allows for additional configuration (see `RingNF.Config`):
   * `red`: the reducibility setting (overridden by `!`)
   * `zetaDelta`: if true, local let variables can be unfolded (overridden by `!`)
   * `recursive`: if true, `ring_nf` will also recurse into atoms
-* `ring_nf` works as both a tactic and a conv tactic.
-  In tactic mode, `ring_nf at h` can be used to rewrite in a hypothesis.
+* `ring_nf at l1 l2 ...` can be used to rewrite at the given locations.
 
+Examples:
 This can be used non-terminally to normalize ring expressions in the goal such as
 `⊢ P (x + x + x)` ~> `⊢ P (x * 3)`, as well as being able to prove some equations that
 `ring` cannot because they involve ring reasoning inside a subterm, such as
@@ -6888,16 +6969,22 @@ This can be used non-terminally to normalize ring expressions in the goal such a
 ## ring_nf!
 Defined in: `Mathlib.Tactic.RingNF.tacticRing_nf!__`
 
-Simplification tactic for expressions in the language of commutative (semi)rings,
-which rewrites all ring expressions into a normal form.
+`ring_nf` simplifies expressions in the language of commutative (semi)rings,
+which rewrites all ring expressions into a normal form, allowing variables in the exponents.
+
+`ring_nf` works as both a tactic and a conv tactic.
+
+See also the `ring` tactic for solving a goal which is an equation in the language
+of commutative (semi)rings.
+
 * `ring_nf!` will use a more aggressive reducibility setting to identify atoms.
-* `ring_nf (config := cfg)` allows for additional configuration:
+* `ring_nf (config := cfg)` allows for additional configuration (see `RingNF.Config`):
   * `red`: the reducibility setting (overridden by `!`)
   * `zetaDelta`: if true, local let variables can be unfolded (overridden by `!`)
   * `recursive`: if true, `ring_nf` will also recurse into atoms
-* `ring_nf` works as both a tactic and a conv tactic.
-  In tactic mode, `ring_nf at h` can be used to rewrite in a hypothesis.
+* `ring_nf at l1 l2 ...` can be used to rewrite at the given locations.
 
+Examples:
 This can be used non-terminally to normalize ring expressions in the goal such as
 `⊢ P (x + x + x)` ~> `⊢ P (x * 3)`, as well as being able to prove some equations that
 `ring` cannot because they involve ring reasoning inside a subterm, such as
@@ -8094,30 +8181,42 @@ A macro tactic used to prove that `truncateFun` respects ring operations.
 ## wlog
 Defined in: `Mathlib.Tactic.wlog`
 
-`wlog h : P` will add an assumption `h : P` to the main goal, and add a side goal that requires
-showing that the case `h : ¬ P` can be reduced to the case where `P` holds (typically by symmetry).
-
-The side goal will be at the top of the stack. In this side goal, there will be two additional
-assumptions:
+`wlog h : P` adds an assumption `h : P` to the main goal, and adds a side goal that
+requires showing that the case `h : ¬ P` can be reduced to the case where `P` holds
+(typically by symmetry). The side goal will be at the top of the stack. In this side goal,
+there will be two additional assumptions:
 - `h : ¬ P`: the assumption that `P` does not hold
 - `this`: which is the statement that in the old context `P` suffices to prove the goal.
-  By default, the name `this` is used, but the idiom `with H` can be added to specify the name:
-  `wlog h : P with H`.
+  By default, the entire context is reverted to produce `this`.
 
-Typically, it is useful to use the variant `wlog h : P generalizing x y`,
-to revert certain parts of the context before creating the new goal.
-In this way, the wlog-claim `this` can be applied to `x` and `y` in different orders
-(exploiting symmetry, which is the typical use case).
-
-By default, the entire context is reverted.
+* `wlog h : P with H` gives the name `H` to the statement that `P` proves the goal.
+* `wlog h : P generalizing x y ...` reverts certain parts of the context before creating the new
+  goal. In this way, the wlog-claim `this` can be applied to `x` and `y` in different orders
+  (exploiting symmetry, which is the typical use case).
+* `wlog! h : P` also calls `push_neg` at the generated hypothesis `h`.
+  `wlog! h : P ∧ Q` will transform `¬ (P ∧ Q)` to `P → ¬ Q`
+* `wlog! +distrib h : P` also calls `push_neg +distrib` at the generated hypothesis `h`.
+  `wlog! +distrib h : P ∧ Q` will transform `¬ (P ∧ Q)` to `¬P ∨ ¬Q`.
 
 ## wlog!
 Defined in: `Mathlib.Tactic.wlog!`
 
-`wlog! h : P` is a variant of the `wlog h : P` tactic that also calls `push_neg` at the generated
-hypothesis `h : ¬ p` in the side goal. `wlog! h : P ∧ Q` will transform `¬ (P ∧ Q)` to `P → ¬ Q`,
-while  `wlog! +distrib h : P ∧ Q` will transform `¬ (P ∧ Q)` to `P ∨ Q`. For more information, see
-the documentation on `push_neg`.
+`wlog h : P` adds an assumption `h : P` to the main goal, and adds a side goal that
+requires showing that the case `h : ¬ P` can be reduced to the case where `P` holds
+(typically by symmetry). The side goal will be at the top of the stack. In this side goal,
+there will be two additional assumptions:
+- `h : ¬ P`: the assumption that `P` does not hold
+- `this`: which is the statement that in the old context `P` suffices to prove the goal.
+  By default, the entire context is reverted to produce `this`.
+
+* `wlog h : P with H` gives the name `H` to the statement that `P` proves the goal.
+* `wlog h : P generalizing x y ...` reverts certain parts of the context before creating the new
+  goal. In this way, the wlog-claim `this` can be applied to `x` and `y` in different orders
+  (exploiting symmetry, which is the typical use case).
+* `wlog! h : P` also calls `push_neg` at the generated hypothesis `h`.
+  `wlog! h : P ∧ Q` will transform `¬ (P ∧ Q)` to `P → ¬ Q`
+* `wlog! +distrib h : P` also calls `push_neg +distrib` at the generated hypothesis `h`.
+  `wlog! +distrib h : P ∧ Q` will transform `¬ (P ∧ Q)` to `¬P ∨ ¬Q`.
 
 ## zify
 Defined in: `Mathlib.Tactic.Zify.zify`

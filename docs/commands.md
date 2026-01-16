@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `79a359dfe4682c5ca375c39522d7c64e95659d5a`
+Mathlib version: `721b21cf2bbec8f5709aa776c9f0238a80c8568a`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1157,8 +1157,8 @@ which will print the `pull head` form of `e`.
 ## \#push
 Defined in: `Mathlib.Tactic.Push.pushCommand`
 
-The syntax is `#push head e`, where `head` is a constant and `e` is an expression,
-which will print the `push head` form of `e`.
+`#push head e`, where `head` is a constant and `e` is an expression,
+prints the `push head` form of `e`.
 
 `#push` understands local variables, so you can use them to introduce parameters.
 
@@ -1171,8 +1171,8 @@ This can be helpful when you are constructing a set of `push` lemmas for the con
 ## \#push_neg
 Defined in: `Mathlib.Tactic.Push.pushNegCommand`
 
-The syntax is `#push_neg e`, where `e` is an expression,
-which will print the `push_neg` form of `e`.
+`#push_neg e`, where `e` is an expression,
+prints the `push_neg` form of `e`.
 
 `#push_neg` understands local variables, so you can use them to introduce parameters.
 
