@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `0744bd9605d30982e1cb4760af5c910aabd78b14`
+Mathlib version: `a0d377a37dd18ce2b4e909bb2f3753a827d45835`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3917,6 +3917,8 @@ Lift an expression to another type.
 integer `z` (in the supertype) to `ℕ` (the subtype), given a proof that `z ≥ 0`;
 propositions concerning `z` will still be over `ℤ`. `zify` changes propositions about `ℕ` (the
 subtype) to propositions about `ℤ` (the supertype), without changing the type of any variable.
+
+The `norm_cast` tactic can be used after `lift` to normalize introduced casts.
 
 ## lift_lets
 Defined in: `Lean.Parser.Tactic.liftLets`
