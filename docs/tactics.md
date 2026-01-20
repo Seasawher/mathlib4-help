@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `fadadaad324dcbb8feadc4993aa2470128bcd5e7`
+Mathlib version: `f760e25ec70bae816086c65e47146be6c394a7bd`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1500,6 +1500,15 @@ Defined in: `Mathlib.Tactic.Choose.choose`
 The `using hyp` part can be omitted,
 which will effectively cause `choose` to start with an `intro hyp`.
 
+Like `intro`, the `choose` tactic supports type annotations to specify the expected type
+of the introduced variables. This is useful for documentation and for catching mistakes early:
+```lean
+example (h : ∃ n : ℕ, n > 0) : True := by
+  choose (n : ℕ) (hn : n > 0) using h
+  trivial
+```
+If the provided type does not match the actual type, an error is raised.
+
 Examples:
 
 ```
@@ -1539,6 +1548,15 @@ Defined in: `Mathlib.Tactic.Choose.tacticChoose!___Using_`
 
 The `using hyp` part can be omitted,
 which will effectively cause `choose` to start with an `intro hyp`.
+
+Like `intro`, the `choose` tactic supports type annotations to specify the expected type
+of the introduced variables. This is useful for documentation and for catching mistakes early:
+```lean
+example (h : ∃ n : ℕ, n > 0) : True := by
+  choose (n : ℕ) (hn : n > 0) using h
+  trivial
+```
+If the provided type does not match the actual type, an error is raised.
 
 Examples:
 
@@ -2655,20 +2673,32 @@ see `#find`, which is also available as a tactic.
 ## finiteness
 Defined in: `finiteness`
 
-Tactic to solve goals of the form `*** < ∞` and (equivalently) `*** ≠ ∞` in the extended
-nonnegative reals (`ℝ≥0∞`).
+`finiteness` proves goals of the form `*** < ∞` and (equivalently) `*** ≠ ∞` in the extended
+nonnegative reals (`ℝ≥0∞`). Supports passing additional expressions as local hypotheses.
+
+* `finiteness?` additionally shows the proof that `finiteness` found
+* `finiteness_nonterminal` is a version of `finiteness` that may (but doesn't have to) close the
+  goal.
 
 ## finiteness?
 Defined in: `finiteness?`
 
-Tactic to solve goals of the form `*** < ∞` and (equivalently) `*** ≠ ∞` in the extended
-nonnegative reals (`ℝ≥0∞`).
+`finiteness` proves goals of the form `*** < ∞` and (equivalently) `*** ≠ ∞` in the extended
+nonnegative reals (`ℝ≥0∞`). Supports passing additional expressions as local hypotheses.
+
+* `finiteness?` additionally shows the proof that `finiteness` found
+* `finiteness_nonterminal` is a version of `finiteness` that may (but doesn't have to) close the
+  goal.
 
 ## finiteness_nonterminal
 Defined in: `finiteness_nonterminal`
 
-Tactic to solve goals of the form `*** < ∞` and (equivalently) `*** ≠ ∞` in the extended
-nonnegative reals (`ℝ≥0∞`).
+`finiteness` proves goals of the form `*** < ∞` and (equivalently) `*** ≠ ∞` in the extended
+nonnegative reals (`ℝ≥0∞`). Supports passing additional expressions as local hypotheses.
+
+* `finiteness?` additionally shows the proof that `finiteness` found
+* `finiteness_nonterminal` is a version of `finiteness` that may (but doesn't have to) close the
+  goal.
 
 ## first
 Defined in: `Lean.Parser.Tactic.first`
