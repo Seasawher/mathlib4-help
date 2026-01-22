@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `f65659be29e33807fe9b978b9d0333cd6dbe73c3`
+Mathlib version: `60207fc3a013d2848927ef366ffe3724d86febb5`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -5947,38 +5947,38 @@ Further, `nth_rw` will close the remaining goal with `rfl` if possible.
 ## observe
 Defined in: `Mathlib.Tactic.LibrarySearch.observe`
 
-`observe hp : p` asserts the proposition `p`, and tries to prove it using `exact?`.
+`observe hp : p` asserts the proposition `p` as a hypothesis named `hp`, and tries to prove it
+using `exact?`.
 If no proof is found, the tactic fails.
 In other words, this tactic is equivalent to `have hp : p := by exact?`.
 
-If `hp` is omitted, then the placeholder `this` is used.
-
-The variant `observe? hp : p` will emit a trace message of the form `have hp : p := proof_term`.
-This may be particularly useful to speed up proofs.
+* `observe : p` uses the name `this` for the new hypothesis.
+* `observe? hp : p` will emit a trace message of the form `have hp : p := proof_term`.
+  This may be particularly useful to speed up proofs.
 
 ## observe?
 Defined in: `Mathlib.Tactic.LibrarySearch.«tacticObserve?__:_Using__,,»`
 
-`observe hp : p` asserts the proposition `p`, and tries to prove it using `exact?`.
+`observe hp : p` asserts the proposition `p` as a hypothesis named `hp`, and tries to prove it
+using `exact?`.
 If no proof is found, the tactic fails.
 In other words, this tactic is equivalent to `have hp : p := by exact?`.
 
-If `hp` is omitted, then the placeholder `this` is used.
-
-The variant `observe? hp : p` will emit a trace message of the form `have hp : p := proof_term`.
-This may be particularly useful to speed up proofs.
+* `observe : p` uses the name `this` for the new hypothesis.
+* `observe? hp : p` will emit a trace message of the form `have hp : p := proof_term`.
+  This may be particularly useful to speed up proofs.
 
 ## observe?
 Defined in: `Mathlib.Tactic.LibrarySearch.«tacticObserve?__:_»`
 
-`observe hp : p` asserts the proposition `p`, and tries to prove it using `exact?`.
+`observe hp : p` asserts the proposition `p` as a hypothesis named `hp`, and tries to prove it
+using `exact?`.
 If no proof is found, the tactic fails.
 In other words, this tactic is equivalent to `have hp : p := by exact?`.
 
-If `hp` is omitted, then the placeholder `this` is used.
-
-The variant `observe? hp : p` will emit a trace message of the form `have hp : p := proof_term`.
-This may be particularly useful to speed up proofs.
+* `observe : p` uses the name `this` for the new hypothesis.
+* `observe? hp : p` will emit a trace message of the form `have hp : p := proof_term`.
+  This may be particularly useful to speed up proofs.
 
 ## obtain
 Defined in: `Lean.Parser.Tactic.obtain`
