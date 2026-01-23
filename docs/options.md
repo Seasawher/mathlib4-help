@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `60207fc3a013d2848927ef366ffe3724d86febb5`
+Mathlib version: `2e434bfda12a423073051c803d6885bcfc4a9c20`
 
 ## Elab.async
 type: `Bool`
@@ -897,13 +897,6 @@ default: `false`
 
 
 
-## linter.nonbreakingSpace
-type: `Bool`
-
-default: `true`
-
-
-
 ## linter.oldObtain
 type: `Bool`
 
@@ -1338,6 +1331,13 @@ type: `Bool`
 default: `true`
 
 Linter used by translate attributes that checks if the given reorder is equal to the automatically generated one
+
+## linter.unicodeLinter
+type: `Bool`
+
+default: `true`
+
+
 
 ## linter.unnecessarySeqFocus
 type: `Bool`
