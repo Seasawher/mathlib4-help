@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `2e434bfda12a423073051c803d6885bcfc4a9c20`
+Mathlib version: `052a7e014562a322d5733818549e4c27a2267b7b`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2893,7 +2893,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.27.0-rc1/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.27.0/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3760,36 +3760,44 @@ in the form `(hf : f.IsBounded (≥) := by isBoundedDefault)`.
 ## itauto
 Defined in: `Mathlib.Tactic.ITauto.itauto`
 
-A decision procedure for intuitionistic propositional logic. Unlike `finish` and `tauto!` this
-tactic never uses the law of excluded middle (without the `!` option), and the proof search is
-tailored for this use case. (`itauto!` will work as a classical SAT solver, but the algorithm is
-not very good in this situation.)
+`itauto` solves the main goal when it is a tautology of intuitionistic propositional logic.
+Unlike `grind` and `tauto!` this tactic never uses the law of excluded middle (without the `!`
+option), and the proof search is tailored for this use case. `itauto` is complete for intuitionistic
+propositional logic: it will solve any goal that is provable in this logic.
 
+* `itauto [a, b]` will additionally attempt case analysis on `a` and `b` assuming that it can derive
+  `Decidable a` and `Decidable b`.
+* `itauto *` will case on all decidable propositions that it can find among the atomic propositions.
+* `itauto!` will work as a classical SAT solver, but the algorithm is not very good in this
+  situation.
+* `itauto! *` will case on all propositional atoms. *Warning:* This can blow up the proof search, so
+  it should be used sparingly.
+
+Example:
 ```lean
 example (p : Prop) : ¬ (p ↔ ¬ p) := by itauto
 ```
-
-`itauto [a, b]` will additionally attempt case analysis on `a` and `b` assuming that it can derive
-`Decidable a` and `Decidable b`. `itauto *` will case on all decidable propositions that it can
-find among the atomic propositions, and `itauto! *` will case on all propositional atoms.
-*Warning:* This can blow up the proof search, so it should be used sparingly.
 
 ## itauto!
 Defined in: `Mathlib.Tactic.ITauto.itauto!`
 
-A decision procedure for intuitionistic propositional logic. Unlike `finish` and `tauto!` this
-tactic never uses the law of excluded middle (without the `!` option), and the proof search is
-tailored for this use case. (`itauto!` will work as a classical SAT solver, but the algorithm is
-not very good in this situation.)
+`itauto` solves the main goal when it is a tautology of intuitionistic propositional logic.
+Unlike `grind` and `tauto!` this tactic never uses the law of excluded middle (without the `!`
+option), and the proof search is tailored for this use case. `itauto` is complete for intuitionistic
+propositional logic: it will solve any goal that is provable in this logic.
 
+* `itauto [a, b]` will additionally attempt case analysis on `a` and `b` assuming that it can derive
+  `Decidable a` and `Decidable b`.
+* `itauto *` will case on all decidable propositions that it can find among the atomic propositions.
+* `itauto!` will work as a classical SAT solver, but the algorithm is not very good in this
+  situation.
+* `itauto! *` will case on all propositional atoms. *Warning:* This can blow up the proof search, so
+  it should be used sparingly.
+
+Example:
 ```lean
 example (p : Prop) : ¬ (p ↔ ¬ p) := by itauto
 ```
-
-`itauto [a, b]` will additionally attempt case analysis on `a` and `b` assuming that it can derive
-`Decidable a` and `Decidable b`. `itauto *` will case on all decidable propositions that it can
-find among the atomic propositions, and `itauto! *` will case on all propositional atoms.
-*Warning:* This can blow up the proof search, so it should be used sparingly.
 
 ## iterate
 Defined in: `Lean.Parser.Tactic.tacticIterate____`
@@ -6499,9 +6507,10 @@ x : α ⊢ f x + 3 = g x + 3
 ## recover
 Defined in: `Mathlib.Tactic.tacticRecover_`
 
-Modifier `recover` for a tactic (sequence) to debug cases where goals are closed incorrectly.
-The tactic `recover tacs` for a tactic (sequence) `tacs` applies the tactics and then adds goals
-that are not closed, starting from the original goal.
+`recover tacs` applies the tactic (sequence) `tacs` and then re-adds goals that were
+incorrectly marked as closed. This helps to debug issues where a tactic closes goals without
+solving them (i.e. goals were removed from the MetaM state without the metavariable
+being assigned), resulting in the error "(kernel) declaration has metavariables".
 
 ## reduce
 Defined in: `Mathlib.Tactic.tacticReduce__`
@@ -7776,7 +7785,7 @@ example {α} (A B C : Set α) (h1 : A ⊆ B ∪ C) : (A ∩ B) ∪ (A ∩ C) = A
 ## tfae_finish
 Defined in: `Mathlib.Tactic.TFAE.tfaeFinish`
 
-`tfae_finish` is used to close goals of the form `TFAE [P₁, P₂, ...]` once a sufficient collection
+`tfae_finish` closes goals of the form `TFAE [P₁, P₂, ...]` once a sufficient collection
 of hypotheses of the form `Pᵢ → Pⱼ` or `Pᵢ ↔ Pⱼ` have been introduced to the local context.
 
 `tfae_have` can be used to conveniently introduce these hypotheses; see `tfae_have`.
@@ -7793,22 +7802,35 @@ example : TFAE [P, Q, R] := by
 ## tfae_have
 Defined in: `Mathlib.Tactic.TFAE.tfaeHave`
 
-`tfae_have` introduces hypotheses for proving goals of the form `TFAE [P₁, P₂, ...]`. Specifically,
-`tfae_have i <arrow> j := ...` introduces a hypothesis of type `Pᵢ <arrow> Pⱼ` to the local
-context, where `<arrow>` can be `→`, `←`, or `↔`. Note that `i` and `j` are natural number indices
-(beginning at 1) used to specify the propositions `P₁, P₂, ...` that appear in the goal.
+`tfae_have i → j := t`, where the goal is `TFAE [P₁, P₂, ...]` introduces a hypothesis
+`tfae_i_to_j : Pᵢ → Pⱼ` and proof `t` to the local context. Note that `i` and `j` are
+natural number literals (beginning at 1) used as indices to specify the propositions
+`P₁, P₂, ...` that appear in the goal.
 
+Once sufficient hypotheses have been introduced by `tfae_have`, `tfae_finish` can be used to close
+the goal.
+
+All features of `have` are supported by `tfae_have`, including naming, matching,
+destructuring, and goal creation.
+
+* `tfae_have i ← j := t` adds a hypothesis in the reverse direction, of type `Pⱼ → Pᵢ`.
+* `tfae_have i ↔ j := t` adds a hypothesis in the both directions, of type `Pᵢ ↔ Pⱼ`.
+* `tfae_have hij : i → j := t` names the introduced hypothesis `hij` instead of `tfae_i_to_j`.
+* `tfae_have i j | p₁ => t₁ | ...` matches on the assumption `p : Pᵢ`.
+* `tfae_have ⟨hij, hji⟩ : i ↔ j := t` destructures the bi-implication into `hij : Pᵢ → Pⱼ`
+  and `hji : Pⱼ → Pⱼ`.
+* `tfae_have i → j := t ?a` creates a new goal for `?a`.
+
+Examples:
 ```lean4
 example (h : P → R) : TFAE [P, Q, R] := by
   tfae_have 1 → 3 := h
-  ...
+  -- The resulting context now includes `tfae_1_to_3 : P → R`.
+  sorry
 ```
-The resulting context now includes `tfae_1_to_3 : P → R`.
-
-Once sufficient hypotheses have been introduced by `tfae_have`, `tfae_finish` can be used to close
-the goal. For example,
 
 ```lean4
+-- An example of `tfae_have` and `tfae_finish`:
 example : TFAE [P, Q, R] := by
   tfae_have 1 → 2 := sorry /- proof of P → Q -/
   tfae_have 2 → 1 := sorry /- proof of Q → P -/
@@ -7816,10 +7838,8 @@ example : TFAE [P, Q, R] := by
   tfae_finish
 ```
 
-All features of `have` are supported by `tfae_have`, including naming, matching,
-destructuring, and goal creation. These are demonstrated below.
-
 ```lean4
+-- All features of `have` are supported by `tfae_have`:
 example : TFAE [P, Q] := by
   -- assert `tfae_1_to_2 : P → Q`:
   tfae_have 1 → 2 := sorry
@@ -7836,28 +7856,42 @@ example : TFAE [P, Q] := by
 
   -- assert `h : P → Q`; `?a` is a new goal:
   tfae_have h : 1 → 2 := f ?a
-  ...
+
+  sorry
 ```
 
 ## tfae_have
 Defined in: `Mathlib.Tactic.TFAE.tfaeHave'`
 
-`tfae_have` introduces hypotheses for proving goals of the form `TFAE [P₁, P₂, ...]`. Specifically,
-`tfae_have i <arrow> j := ...` introduces a hypothesis of type `Pᵢ <arrow> Pⱼ` to the local
-context, where `<arrow>` can be `→`, `←`, or `↔`. Note that `i` and `j` are natural number indices
-(beginning at 1) used to specify the propositions `P₁, P₂, ...` that appear in the goal.
+`tfae_have i → j := t`, where the goal is `TFAE [P₁, P₂, ...]` introduces a hypothesis
+`tfae_i_to_j : Pᵢ → Pⱼ` and proof `t` to the local context. Note that `i` and `j` are
+natural number literals (beginning at 1) used as indices to specify the propositions
+`P₁, P₂, ...` that appear in the goal.
 
+Once sufficient hypotheses have been introduced by `tfae_have`, `tfae_finish` can be used to close
+the goal.
+
+All features of `have` are supported by `tfae_have`, including naming, matching,
+destructuring, and goal creation.
+
+* `tfae_have i ← j := t` adds a hypothesis in the reverse direction, of type `Pⱼ → Pᵢ`.
+* `tfae_have i ↔ j := t` adds a hypothesis in the both directions, of type `Pᵢ ↔ Pⱼ`.
+* `tfae_have hij : i → j := t` names the introduced hypothesis `hij` instead of `tfae_i_to_j`.
+* `tfae_have i j | p₁ => t₁ | ...` matches on the assumption `p : Pᵢ`.
+* `tfae_have ⟨hij, hji⟩ : i ↔ j := t` destructures the bi-implication into `hij : Pᵢ → Pⱼ`
+  and `hji : Pⱼ → Pⱼ`.
+* `tfae_have i → j := t ?a` creates a new goal for `?a`.
+
+Examples:
 ```lean4
 example (h : P → R) : TFAE [P, Q, R] := by
   tfae_have 1 → 3 := h
-  ...
+  -- The resulting context now includes `tfae_1_to_3 : P → R`.
+  sorry
 ```
-The resulting context now includes `tfae_1_to_3 : P → R`.
-
-Once sufficient hypotheses have been introduced by `tfae_have`, `tfae_finish` can be used to close
-the goal. For example,
 
 ```lean4
+-- An example of `tfae_have` and `tfae_finish`:
 example : TFAE [P, Q, R] := by
   tfae_have 1 → 2 := sorry /- proof of P → Q -/
   tfae_have 2 → 1 := sorry /- proof of Q → P -/
@@ -7865,10 +7899,8 @@ example : TFAE [P, Q, R] := by
   tfae_finish
 ```
 
-All features of `have` are supported by `tfae_have`, including naming, matching,
-destructuring, and goal creation. These are demonstrated below.
-
 ```lean4
+-- All features of `have` are supported by `tfae_have`:
 example : TFAE [P, Q] := by
   -- assert `tfae_1_to_2 : P → Q`:
   tfae_have 1 → 2 := sorry
@@ -7885,7 +7917,8 @@ example : TFAE [P, Q] := by
 
   -- assert `h : P → Q`; `?a` is a new goal:
   tfae_have h : 1 → 2 := f ?a
-  ...
+
+  sorry
 ```
 
 ## toFinite_tac
