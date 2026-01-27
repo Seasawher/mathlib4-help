@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `4ba2c80744ab8172eae748667371af39a3d8e10a`
+Mathlib version: `596a505d495be96d61e4c2ebc048dd79d9dc12da`
 
 ## Elab.async
 type: `Bool`
@@ -347,6 +347,13 @@ type: `Nat`
 default: `16`
 
 (compiler) maximum number of times a recursive definition tagged with `[inline_if_reduce]` can be recursively inlined before generating an error during compilation.
+
+## compiler.maxRecSpecialize
+type: `Nat`
+
+default: `64`
+
+(compiler) maximum number of times a definition tagged with `@[specialize]` can be recursively specialized before generating an error during compilation.
 
 ## compiler.reuse
 type: `Bool`
@@ -2234,7 +2241,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.27.0"`
+default: `"v4.28.0-rc1"`
 
 Revision of LeanStateSearch to use
 
@@ -2258,6 +2265,13 @@ type: `Bool`
 default: `false`
 
 if true, enable warnings when a structure has diamond inheritance
+
+## sym.debug
+type: `Bool`
+
+default: `false`
+
+check invariants
 
 ## synthInstance.checkSynthOrder
 type: `Bool`
@@ -2567,6 +2581,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Compiler.splitSCC
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Compiler.stat
 type: `Bool`
 
@@ -2792,6 +2813,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Elab.Tactic.Do.vcgen
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Elab.Tactic.Do.vcgen.split
 type: `Bool`
 
 default: `false`
@@ -4364,7 +4392,7 @@ type: `Bool`
 
 default: `false`
 
-(trace) enable/disable tracing for the given module and submodules
+enable/disable tracing for the given module and submodules
 
 ## trace.explode
 type: `Bool`
@@ -4674,6 +4702,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.debug.locals
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.debug.matchCond
 type: `Bool`
 
@@ -4829,6 +4864,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.debug.split
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.debug.suggestions
 type: `Bool`
 
 default: `false`

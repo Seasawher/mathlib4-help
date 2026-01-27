@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `4ba2c80744ab8172eae748667371af39a3d8e10a`
+Mathlib version: `596a505d495be96d61e4c2ebc048dd79d9dc12da`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -864,40 +864,24 @@ types where we did not generate them immediately (due to `set_option genCtorIdx 
       using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[grind =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[grind ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
       (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[grind →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
       (that is, it will use the theorem for forwards reasoning).The attribute `[grind]` by itself will effectively try `[grind ←]` (if the conclusion is sufficient for instantiation) and then `[grind →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[grind =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
-Auxiliary function for registering `grind`, `grind!`, `grind?`, and `grind!?` attributes.
-`grind!` is like `grind` but selects minimal indexable subterms.
-The `grind?` and `grind!?` are aliases for `grind` and `grind!` which displays patterns using `logInfo`.
-It is just a convenience for users.
 
 ## grind!
  The `[grind!]` attribute is used to annotate declarations, but selecting minimal indexable subterms.When applied to an equational theorem, `[grind =]`, `[grind =_]`, or `[grind _=_]`will mark the theorem for use in heuristic instantiations by the `grind` tactic,
       using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[grind =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[grind ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
       (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[grind →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
       (that is, it will use the theorem for forwards reasoning).The attribute `[grind]` by itself will effectively try `[grind ←]` (if the conclusion is sufficient for instantiation) and then `[grind →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[grind =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
-Auxiliary function for registering `grind`, `grind!`, `grind?`, and `grind!?` attributes.
-`grind!` is like `grind` but selects minimal indexable subterms.
-The `grind?` and `grind!?` are aliases for `grind` and `grind!` which displays patterns using `logInfo`.
-It is just a convenience for users.
 
 ## grind!?
  The `[grind!?]` attribute is identical to the `[grind!]` attribute, but displays inferred pattern information.When applied to an equational theorem, `[grind =]`, `[grind =_]`, or `[grind _=_]`will mark the theorem for use in heuristic instantiations by the `grind` tactic,
       using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[grind =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[grind ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
       (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[grind →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
       (that is, it will use the theorem for forwards reasoning).The attribute `[grind]` by itself will effectively try `[grind ←]` (if the conclusion is sufficient for instantiation) and then `[grind →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[grind =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
-Auxiliary function for registering `grind`, `grind!`, `grind?`, and `grind!?` attributes.
-`grind!` is like `grind` but selects minimal indexable subterms.
-The `grind?` and `grind!?` are aliases for `grind` and `grind!` which displays patterns using `logInfo`.
-It is just a convenience for users.
 
 ## grind?
  The `[grind?]` attribute is identical to the `[grind]` attribute, but displays inferred pattern information.When applied to an equational theorem, `[grind =]`, `[grind =_]`, or `[grind _=_]`will mark the theorem for use in heuristic instantiations by the `grind` tactic,
       using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[grind =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[grind ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
       (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[grind →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
       (that is, it will use the theorem for forwards reasoning).The attribute `[grind]` by itself will effectively try `[grind ←]` (if the conclusion is sufficient for instantiation) and then `[grind →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[grind =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
-Auxiliary function for registering `grind`, `grind!`, `grind?`, and `grind!?` attributes.
-`grind!` is like `grind` but selects minimal indexable subterms.
-The `grind?` and `grind!?` are aliases for `grind` and `grind!` which displays patterns using `logInfo`.
-It is just a convenience for users.
 
 ## grindPropagatorBuiltinAttr
  Builtin `grind` propagator procedure
@@ -1525,6 +1509,9 @@ Attribute adding a tactic analysis pass from a `Config` structure.
 
 ## tactic_code_action
  Declare a new tactic code action, to appear in the code actions on tactics
+
+## tactic_name
+ Registers a custom name for a tactic. This custom name should be a prefix of the tactic's syntax, because it is used in completion.
 
 ## tactic_parser
  parser
