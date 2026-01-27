@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `4ba2c80744ab8172eae748667371af39a3d8e10a`
+Mathlib version: `596a505d495be96d61e4c2ebc048dd79d9dc12da`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -42,22 +42,11 @@ Defined in: `Lean.Parser.Command.check`
 
 
 ## \#check_assertions
-Defined in: `Mathlib.AssertNotExist.«command#check_assertions!»`
+Defined in: `Lean.Parser.Command.checkAssertions`
 
-`#check_assertions` retrieves all declarations and all imports that were declared
-not to exist so far (including in transitively imported files) and reports their current
-status:
-* ✓ means the declaration or import exists,
-* × means the declaration or import does not exist.
-
-This means that the expectation is that all checks *succeed* by the time `#check_assertions`
-is used, typically once all of `Mathlib` has been built.
-
-If all declarations and imports are available when `#check_assertions` is used,
-then the command logs an info message. Otherwise, it emits a warning.
-
-The variant `#check_assertions!` only prints declarations/imports that are not present in the
-environment.  In particular, it is silent if everything is imported, making it useful for testing.
+`#check_assertions` reports whether all `assert_not_exists` and `assert_not_imported`
+assertions in the current file and its imports have been satisfied.
+Use `#check_assertions!` to only show unsatisfied assertions.
 
 ## \#check_failure
 Defined in: `Lean.Parser.Command.check_failure`
@@ -597,6 +586,11 @@ Position reporting:
   `#guard_msgs` appears.
 - `positions := false` does not report position info.
 
+Substring matching:
+- `substring := true` checks that the docstring appears as a substring of the output
+  (after whitespace normalization). This is useful when you only care about part of the message.
+- `substring := false` (the default) requires exact matching (modulo whitespace normalization).
+
 For example, `#guard_msgs (error, drop all) in cmd` means to check errors and drop
 everything else.
 
@@ -606,6 +600,12 @@ so it elaborates the command it is attached to as if it were a top-level command
 However, the command elaborator runs linters for *all* top-level commands,
 which would include `#guard_msgs` itself, and would cause duplicate and/or uncaptured linter warnings.
 The top-level command elaborator only runs the linters if `#guard_msgs` is not present.
+
+## \#guard_panic
+Defined in: `Lean.guardPanicCmd`
+
+`#guard_panic in cmd` runs `cmd` and succeeds if the command produces a panic message.
+This is useful for testing that a command panics without matching the exact (volatile) panic text.
 
 ## \#help
 Defined in: `Batteries.Tactic.«command#help_Term+____»`
@@ -741,6 +741,12 @@ from the imports.
 
 Note: the command also works when some of the modules passed as arguments are already present in the file's
 imports.
+
+## \#import_path
+Defined in: `Lean.Parser.Command.importPath`
+
+`#import_path Foo` prints the transitive import chain that brings the declaration `Foo`
+into the current file's scope.
 
 ## \#info_trees
 Defined in: `Lean.infoTreesCmd`
@@ -1484,46 +1490,22 @@ of an iff theorem. Use `_` if only one direction is required.
 
 These commands accept all modifiers and attributes that `def` and `theorem` do.
 
-## assert_exists
-Defined in: `commandAssert_exists_`
-
-`assert_exists n` is a user command that asserts that a declaration named `n` exists
-in the current import scope.
-
-Be careful to use names (e.g. `Rat`) rather than notations (e.g. `ℚ`).
-
 ## assert_no_sorry
 Defined in: `commandAssert_no_sorry_`
 
 Throws an error if the given identifier uses sorryAx.
 
 ## assert_not_exists
-Defined in: `commandAssert_not_exists_`
+Defined in: `Lean.Parser.Command.assertNotExists`
 
-`assert_not_exists d₁ d₂ ... dₙ` is a user command that asserts that the declarations named
-`d₁ d₂ ... dₙ` *do not exist* in the current import scope.
-
-Be careful to use names (e.g. `Rat`) rather than notations (e.g. `ℚ`).
-
-It may be used (sparingly!) in mathlib to enforce plans that certain files
-are independent of each other.
-
-If you encounter an error on an `assert_not_exists` command while developing mathlib,
-it is probably because you have introduced new import dependencies to a file.
-
-In this case, you should refactor your work
-(for example by creating new files rather than adding imports to existing files).
-You should *not* delete the `assert_not_exists` statement without careful discussion ahead of time.
-
-`assert_not_exists` statements should generally live at the top of the file, after the module doc.
+`assert_not_exists Foo Bar` asserts that the declarations `Foo` and `Bar` do not exist
+in the current import scope. Used for dependency management.
 
 ## assert_not_imported
-Defined in: `commandAssert_not_imported_`
+Defined in: `Lean.Parser.Command.assertNotImported`
 
-`assert_not_imported m₁ m₂ ... mₙ` checks that each one of the modules `m₁ m₂ ... mₙ` is not
-among the transitive imports of the current file.
-
-The command does not currently check whether the modules `m₁ m₂ ... mₙ` actually exist.
+`assert_not_imported Mod1 Mod2` asserts that the modules `Mod1` and `Mod2` are not
+transitively imported by the current file. Used for dependency management.
 
 ## attribute
 Defined in: `Lean.Parser.Command.attribute`
@@ -1617,6 +1599,18 @@ Defined in: `Lean.Elab.Tactic.configElab`
 
 ## declare_config_getter
 Defined in: `Lean.Elab.elabConfigGetter`
+
+
+## declare_eval_bin
+Defined in: `Lean.Meta.Sym.Simp.commandDeclare_eval_bin__`
+
+
+## declare_eval_bin_bitwise
+Defined in: `Lean.Meta.Sym.Simp.commandDeclare_eval_bin_bitwise__`
+
+
+## declare_eval_bin_bool_pred
+Defined in: `Lean.Meta.Sym.Simp.commandDeclare_eval_bin_bool_pred__`
 
 
 ## declare_int_theorems
@@ -2490,6 +2484,10 @@ Registers an error explanation.
 
 Note that the error name is not relativized to the current namespace.
 
+## register_grind_attr
+Defined in: `Lean.Parser.Command.registerGrindAttr`
+
+
 ## register_hint
 Defined in: `Mathlib.Tactic.Hint.registerHintStx`
 
@@ -2721,7 +2719,7 @@ Defined in: `testExternCmd`
 
 
 ## unif_hint
-Defined in: `Lean.«command__Unif_hint____Where_|_-⊢_»`
+Defined in: `Lean.«command__Unif_hint____Where_|_-⊢__»`
 
 
 ## universe

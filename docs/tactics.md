@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `4ba2c80744ab8172eae748667371af39a3d8e10a`
+Mathlib version: `596a505d495be96d61e4c2ebc048dd79d9dc12da`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1125,7 +1125,7 @@ calc
   _ = z := pyz
 ```
 It is also possible to write the *first* relation as `<lhs>\n  _ = <rhs> :=
-<proof>`. This is useful for aligning relation symbols, especially on longer:
+<proof>`. This is useful for aligning relation symbols, especially on longer
 identifiers:
 ```lean
 calc abc
@@ -1406,10 +1406,17 @@ Defined in: `Lean.Parser.Tactic.change`
   assuming these are definitionally equal.
 * `change t' at h` will change hypothesis `h : t` to have type `t'`, assuming
   assuming `t` and `t'` are definitionally equal.
+* `change a with b` will change occurrences of `a` to `b` in the goal,
+  assuming `a` and `b` are definitionally equal.
+* `change a with b at h` similarly changes `a` to `b` in the type of hypothesis `h`.
 
 ## change
 Defined in: `Lean.Parser.Tactic.changeWith`
 
+* `change tgt'` will change the goal from `tgt` to `tgt'`,
+  assuming these are definitionally equal.
+* `change t' at h` will change hypothesis `h : t` to have type `t'`, assuming
+  assuming `t` and `t'` are definitionally equal.
 * `change a with b` will change occurrences of `a` to `b` in the goal,
   assuming `a` and `b` are definitionally equal.
 * `change a with b at h` similarly changes `a` to `b` in the type of hypothesis `h`.
@@ -2289,13 +2296,25 @@ except only non-dependent premises are added as new goals.
 ## else
 Defined in: `Lean.Parser.Tactic.tacDepIfThenElse`
 
-In tactic mode, `if h : t then tac1 else tac2` can be used as alternative syntax for:
+In tactic mode, `if t then tac1 else tac2` is alternative syntax for:
+```lean
+by_cases t
+· tac1
+· tac2
+```
+It performs case distinction on `h† : t` or `h† : ¬t`, where `h†` is an anonymous hypothesis, and
+`tac1` and `tac2` are the subproofs. (It doesn't actually use nondependent `if`, since this wouldn't
+add anything to the context and hence would be useless for proving theorems. To actually insert an
+`ite` application use `refine if t then ?_ else ?_`.)
+
+The assumptions in each subgoal can be named. `if h : t then tac1 else tac2` can be used as
+alternative syntax for:
 ```lean
 by_cases h : t
 · tac1
 · tac2
 ```
-It performs case distinction on `h : t` or `h : ¬t` and `tac1` and `tac2` are the subproofs.
+It performs case distinction on `h : t` or `h : ¬t`.
 
 You can use `?_` or `_` for either subproof to delay the goal to after the tactic, but
 if a tactic sequence is provided for `tac1` or `tac2` then it will require the goal to be closed
@@ -2310,11 +2329,23 @@ by_cases t
 · tac1
 · tac2
 ```
-It performs case distinction on `h† : t` or `h† : ¬t`, where `h†` is an anonymous
-hypothesis, and `tac1` and `tac2` are the subproofs. (It doesn't actually use
-nondependent `if`, since this wouldn't add anything to the context and hence would be
-useless for proving theorems. To actually insert an `ite` application use
-`refine if t then ?_ else ?_`.)
+It performs case distinction on `h† : t` or `h† : ¬t`, where `h†` is an anonymous hypothesis, and
+`tac1` and `tac2` are the subproofs. (It doesn't actually use nondependent `if`, since this wouldn't
+add anything to the context and hence would be useless for proving theorems. To actually insert an
+`ite` application use `refine if t then ?_ else ?_`.)
+
+The assumptions in each subgoal can be named. `if h : t then tac1 else tac2` can be used as
+alternative syntax for:
+```lean
+by_cases h : t
+· tac1
+· tac2
+```
+It performs case distinction on `h : t` or `h : ¬t`.
+
+You can use `?_` or `_` for either subproof to delay the goal to after the tactic, but
+if a tactic sequence is provided for `tac1` or `tac2` then it will require the goal to be closed
+by the end of the block.
 
 ## enat_to_nat
 Defined in: `Mathlib.Tactic.ENatToNat.tacticEnat_to_nat`
@@ -2705,6 +2736,11 @@ Defined in: `Lean.Parser.Tactic.first`
 
 `first | tac | ...` runs each `tac` until one succeeds, or else fails.
 
+## first_par
+Defined in: `Lean.Parser.Tactic.firstPar`
+
+Helper internal tactic for implementing the tactic `try?` with parallel execution, returning first success.
+
 ## focus
 Defined in: `Lean.Parser.Tactic.focus`
 
@@ -2893,7 +2929,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.27.0/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.28.0-rc1/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3025,6 +3061,8 @@ and lets each reasoning engine read from and contribute to the shared workspace.
 These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
+
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.28.0-rc1/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
@@ -3640,21 +3678,27 @@ be a `let` or function type.
 ## intro
 Defined in: `Lean.Parser.Tactic.introMatch`
 
-The tactic
-```
-intro
-| pat1 => tac1
-| pat2 => tac2
-```
-is the same as:
-```lean
-intro x
-match x with
-| pat1 => tac1
-| pat2 => tac2
-```
-That is, `intro` can be followed by match arms and it introduces the values while
-doing a pattern match. This is equivalent to `fun` with match arms in term mode.
+Introduces one or more hypotheses, optionally naming and/or pattern-matching them.
+For each hypothesis to be introduced, the remaining main goal's target type must
+be a `let` or function type.
+
+* `intro` by itself introduces one anonymous hypothesis, which can be accessed
+  by e.g. `assumption`. It is equivalent to `intro _`.
+* `intro x y` introduces two hypotheses and names them. Individual hypotheses
+  can be anonymized via `_`, given a type ascription, or matched against a pattern:
+  ```lean
+  -- ... ⊢ α × β → ...
+  intro (a, b)
+  -- ..., a : α, b : β ⊢ ...
+  ```
+* `intro rfl` is short for `intro h; subst h`, if `h` is an equality where the left-hand or right-hand side
+  is a variable.
+* Alternatively, `intro` can be combined with pattern matching much like `fun`:
+  ```lean
+  intro
+  | n + 1, 0 => tac
+  | ...
+  ```
 
 ## intros
 Defined in: `Lean.Parser.Tactic.intros`
@@ -3859,6 +3903,8 @@ Defined in: `Lean.Parser.Tactic.letrec`
 
 `let rec f : t := e` adds a recursive definition `f` to the current goal.
 The syntax is the same as term-mode `let rec`.
+
+The tactic supports all the same syntax variants and options as the `let` term.
 
 ## let
 Defined in: `Mathlib.Tactic.tacticLet_`
@@ -4808,6 +4854,19 @@ introductions in sequence.
 ## mintro
 Defined in: `Lean.Parser.Tactic.mintroError`
 
+Like `intro`, but introducing stateful hypotheses into the stateful context of the `Std.Do.SPred`
+proof mode.
+That is, given a stateful goal `(hᵢ : Hᵢ)* ⊢ₛ P → T`, `mintro h` transforms
+into `(hᵢ : Hᵢ)*, (h : P) ⊢ₛ T`.
+
+Furthermore, `mintro ∀s` is like `intro s`, but preserves the stateful goal.
+That is, `mintro ∀s` brings the topmost state variable `s:σ` in scope and transforms
+`(hᵢ : Hᵢ)* ⊢ₛ T` (where the entailment is in `Std.Do.SPred (σ::σs)`) into
+`(hᵢ : Hᵢ s)* ⊢ₛ T s` (where the entailment is in `Std.Do.SPred σs`).
+
+Beyond that, `mintro` supports the full syntax of `mcases` patterns
+(`mintro pat = (mintro h; mcases h with pat`), and can perform multiple
+introductions in sequence.
 
 ## mintro
 Defined in: `Lean.Parser.Tactic.mintroMacro`
@@ -8237,6 +8296,12 @@ Defined in: `Lean.Parser.Tactic.withUnfoldingAll`
 
 `with_unfolding_all tacs` executes `tacs` using the `.all` transparency setting.
 In this setting all definitions that are not opaque are unfolded.
+
+## with_unfolding_none
+Defined in: `Lean.Parser.Tactic.withUnfoldingNone`
+
+`with_unfolding_none tacs` executes `tacs` using the `.none` transparency setting.
+In this setting no definitions are unfolded.
 
 ## witt_truncateFun_tac
 Defined in: `witt_truncateFun_tac`
