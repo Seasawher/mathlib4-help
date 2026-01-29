@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `729040ba96767c3e529643195813b76bc7f89c85`
+Mathlib version: `9a61dbe48902af3f409128d9f65192a21930cd62`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -974,20 +974,19 @@ Defined in: `«command#minimize_imports»`
 ## \#norm_num
 Defined in: `Mathlib.Tactic.normNumCmd`
 
-The basic usage is `#norm_num e`, where `e` is an expression,
-which will print the `norm_num` form of `e`.
-
-Syntax: `#norm_num` (`only`)? (`[` simp lemma list `]`)? `:`? expression
-
-This accepts the same options as the `#simp` command.
-You can specify additional simp lemmas as usual, for example using `#norm_num [f, g] : e`.
-(The colon is optional but helpful for the parser.)
-The `only` restricts `norm_num` to using only the provided lemmas, and so
-`#norm_num only : e` behaves similarly to `norm_num1`.
-
+`#norm_num e`, where `e` is an expression, will print the `norm_num` form of `e`.
 Unlike `norm_num`, this command does not fail when no simplifications are made.
-
 `#norm_num` understands local variables, so you can use them to introduce parameters.
+
+(In the variants below, the `:` is optional but helpful for the parser.)
+
+* `#norm_num [h1, ...] : e` adds the arguments `h1, ...` to the `simp` set in addition to the
+  default `simp` set. All options for `simp` arguments are supported, in particular `←`, `↑`
+  and `↓`.
+* `#norm_num only : e` and `#norm_num only [h1, ...] : e` do not use the default `simp` set for
+  simplification.
+* `#norm_num (config := cfg) : e` uses `cfg` as configuration for `simp` calls (see the `simp`
+  tactic for further details).
 
 ## \#parse
 Defined in: `Mathlib.GuardExceptions.parseCmd`
