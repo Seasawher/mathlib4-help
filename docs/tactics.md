@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `729040ba96767c3e529643195813b76bc7f89c85`
+Mathlib version: `9a61dbe48902af3f409128d9f65192a21930cd62`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -607,10 +607,10 @@ This tactic is like `all_goals try tac` except that it fails if none of the appl
 ## apply
 Defined in: `Mathlib.Tactic.tacticApply_At_`
 
-`apply t at i` will use forward reasoning with `t` at the hypothesis `i`.
-Explicitly, if `t : α₁ → ⋯ → αᵢ → ⋯ → αₙ` and `i` has type `αᵢ`, then this tactic will add
+`apply t at i` uses forward reasoning with `t` at the hypothesis `i`.
+Explicitly, if `t : α₁ → ⋯ → αᵢ → ⋯ → αₙ` and `i` has type `αᵢ`, then this tactic adds
 metavariables/goals for any terms of `αⱼ` for `j = 1, …, i-1`,
-then replace the type of `i` with `αᵢ₊₁ → ⋯ → αₙ` by applying those metavariables and the
+then replaces the type of `i` with `αᵢ₊₁ → ⋯ → αₙ` by applying those metavariables and the
 original `i`.
 
 ## apply
@@ -5882,15 +5882,55 @@ Implementation of `norm_cast` (the full `norm_cast` calls `trivial` afterwards).
 ## norm_num
 Defined in: `Mathlib.Tactic.normNum`
 
-Normalize numerical expressions. Supports the operations `+` `-` `*` `/` `⁻¹` `^` and `%`
-over numerical types such as `ℕ`, `ℤ`, `ℚ`, `ℝ`, `ℂ` and some general algebraic types,
-and can prove goals of the form `A = B`, `A ≠ B`, `A < B` and `A ≤ B`, where `A` and `B` are
-numerical expressions. It also has a relatively simple primality prover.
+`norm_num` normalizes numerical expressions in the goal. By default, it supports the operations
+`+` `-` `*` `/` `⁻¹` `^` and `%` over types with (at least) an `AddMonoidWithOne` instance, such as
+`ℕ`, `ℤ`, `ℚ`, `ℝ`, `ℂ`. In addition to evaluating numerical expressions, `norm_num` will use `simp`
+to simplify the goal. If the goal has the form `A = B`, `A ≠ B`, `A < B` or `A ≤ B`, where `A` and
+`B` are numerical expressions, `norm_num` will try to close it. It also has a relatively simple
+primality prover.
+
+This tactic is extensible. Extensions can allow `norm_num` to evaluate more kinds of expressions, or
+to prove more kinds of propositions. See the `@[norm_num]` attribute for further information on
+extending `norm_num`.
+
+* `norm_num at l` normalizes at location(s) `l`.
+* `norm_num [h1, ...]` adds the arguments `h1, ...` to the `simp` set in addition to the default
+  `simp` set. All options for `simp` arguments are supported, in particular `←`, `↑` and `↓`.
+* `norm_num only` does not use the default `simp` set for simplification. `norm_num only [h1, ...]`
+  uses only the arguments `h1, ...` in addition to the routines tagged `@[norm_num]`.
+  `norm_num only` still performs post-processing steps, like `simp only`, use `norm_num1` if you
+  exclusively want to normalize numerical expressions.
+* `norm_num (config := cfg)` uses `cfg` as configuration for `simp` calls (see the `simp` tactic for
+  further details).
+
+Examples:
+```lean
+example : 43 ≤ 74 + (33 : ℤ) := by norm_num
+example : ¬ (7-2)/(2*3) ≥ (1:ℝ) + 2/(3^2) := by norm_num
+```
 
 ## norm_num1
 Defined in: `Mathlib.Tactic.normNum1`
 
-Basic version of `norm_num` that does not call `simp`.
+`norm_num1` normalizes numerical expressions in the goal. It is a basic version of `norm_num`
+that does not call `simp`.
+
+By default, it supports the operations `+` `-` `*` `/` `⁻¹` `^` and `%` over types with (at least)
+an `AddMonoidWithOne` instance, such as `ℕ`, `ℤ`, `ℚ`, `ℝ`, `ℂ`. If the goal has the form `A = B`,
+`A ≠ B`, `A < B` or `A ≤ B`, where `A` and `B` are numerical expressions, `norm_num1` will try to
+close it. It also has a relatively simple primality prover.
+:e
+This tactic is extensible. Extensions can allow `norm_num1` to evaluate more kinds of expressions,
+or to prove more kinds of propositions. See the `@[norm_num]` attribute for further information on
+extending `norm_num1`.
+
+* `norm_num1 at l` normalizes at location(s) `l`.
+
+Examples:
+```lean
+example : 43 ≤ 74 + (33 : ℤ) := by norm_num1
+example : ¬ (7-2)/(2*3) ≥ (1:ℝ) + 2/(3^2) := by norm_num1
+```
 
 ## nth_grewrite
 Defined in: `Mathlib.Tactic.tacticNth_grewrite_____`
