@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `9a61dbe48902af3f409128d9f65192a21930cd62`
+Mathlib version: `8464d9aff9ae0d2cb64eabd3036b8f4e64becbdd`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -624,11 +624,36 @@ Non-dependent premises are added before dependent ones.
 The `apply` tactic uses higher-order pattern matching, type class resolution,
 and first-order unification with dependent types.
 
+
+Extensions:
+
+ * * `apply (config := cfg) e` allows for additional configuration (see `Lean.Meta.ApplyConfig`):
+     * `newGoals` controls which new goals are added by `apply`, in which order.
+     * `-synthAssignedInstances` will not synthesize instance implicit arguments if they have been
+       assigned by `isDefEq`.
+     * `+allowSynthFailures` will create new goals when instance synthesis fails, rather than erroring.
+     * `+approx` enables `isDefEq` approximations (see `Lean.Meta.approxDefEq`).
+
 ## apply
 Defined in: `Mathlib.Tactic.applyWith`
 
-`apply (config := cfg) e` is like `apply e` but allows you to provide a configuration
-`cfg : ApplyConfig` to pass to the underlying `apply` operation.
+`apply e` tries to match the current goal against the conclusion of `e`'s type.
+If it succeeds, then the tactic returns as many subgoals as the number of premises that
+have not been fixed by type inference or type class resolution.
+Non-dependent premises are added before dependent ones.
+
+The `apply` tactic uses higher-order pattern matching, type class resolution,
+and first-order unification with dependent types.
+
+
+Extensions:
+
+ * * `apply (config := cfg) e` allows for additional configuration (see `Lean.Meta.ApplyConfig`):
+     * `newGoals` controls which new goals are added by `apply`, in which order.
+     * `-synthAssignedInstances` will not synthesize instance implicit arguments if they have been
+       assigned by `isDefEq`.
+     * `+allowSynthFailures` will create new goals when instance synthesis fails, rather than erroring.
+     * `+approx` enables `isDefEq` approximations (see `Lean.Meta.approxDefEq`).
 
 ## apply?
 Defined in: `Lean.Parser.Tactic.apply?`
