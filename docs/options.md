@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `5cb27be88dd78e9476463c255b7852485b175fb7`
+Mathlib version: `7cecd1f8c85841aca0a65b44b82b93f19ebf75e8`
 
 ## Elab.async
 type: `Bool`
@@ -1513,13 +1513,6 @@ default: `false`
 
 Log a message whenever the category theory discharger uses `grind`.
 
-## mathlib.tactic.cc.warning
-type: `Bool`
-
-default: `true`
-
-Show a deprecation warning when using the `cc` tactic
-
 ## maxErrors
 type: `Nat`
 
@@ -2623,27 +2616,6 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.Debug.Meta.Tactic.cc
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.Debug.Meta.Tactic.cc.ac
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.Debug.Meta.Tactic.cc.parentOccs
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
 ## trace.Debug.Meta.Tactic.fun_prop
 type: `Bool`
 
@@ -3429,20 +3401,6 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Meta.Tactic.cases
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.Meta.Tactic.cc.failure
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.Meta.Tactic.cc.merge
 type: `Bool`
 
 default: `false`

@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `5cb27be88dd78e9476463c255b7852485b175fb7`
+Mathlib version: `7cecd1f8c85841aca0a65b44b82b93f19ebf75e8`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1382,29 +1382,6 @@ Defined in: `CategoryTheory.cat_disch`
 A tactic for discharging easy category theory goals, widely used as an autoparameter.
 Currently this defaults to the `aesop_cat` wrapper around `aesop`, but by setting
 the option `mathlib.tactic.category.grind` to `true`, it will use the `grind` tactic instead.
-
-## cc
-Defined in: `Mathlib.Tactic.cc`
-
-The congruence closure tactic `cc` tries to solve the goal by chaining
-equalities from context and applying congruence (i.e. if `a = b`, then `f a = f b`).
-It is a finishing tactic, i.e. it is meant to close
-the current goal, not to make some inconclusive progress.
-A mostly trivial example would be:
-
-```lean
-example (a b c : ℕ) (f : ℕ → ℕ) (h : a = b) (h' : b = c) : f a = f c := by
-  cc
-```
-
-As an example requiring some thinking to do by hand, consider:
-
-```lean
-example (f : ℕ → ℕ) (x : ℕ)
-    (H1 : f (f (f x)) = x) (H2 : f (f (f (f (f x)))) = x) :
-    f x = x := by
-  cc
-```
 
 ## cfc_cont_tac
 Defined in: `cfcContTac`
