@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `7cecd1f8c85841aca0a65b44b82b93f19ebf75e8`
+Mathlib version: `a91febd2bdacb4ddcf022386896232050e185961`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -1574,11 +1574,6 @@ have to be assigned in the same file as the declaration.
 
 ## trans
  transitive relation
-
-## translate_change_numeral
- Auxiliary attribute for `to_additive` that stores functions that have numerals as argument.
-Similar to `registerParametricAttribute` except that attributes do not
-have to be assigned in the same file as the declaration.
 
 ## try_suggestion
  Register a tactic suggestion generator for try? (runs after built-in tactics)
