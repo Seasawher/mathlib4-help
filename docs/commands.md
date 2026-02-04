@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `a91febd2bdacb4ddcf022386896232050e185961`
+Mathlib version: `9687699f0e8199c06fb088bac1e8a1086400082e`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -2716,6 +2716,20 @@ list, so it should be brief.
 ## test_extern
 Defined in: `testExternCmd`
 
+
+## to_dual_insert_cast
+Defined in: `Mathlib.Tactic.ToDual.«commandTo_dual_insert_cast_:=_»`
+
+The `to_dual_insert_cast` attribute is used to tag declarations `foo` that should not be
+unfolded in a proof that is translated. Instead, a rewrite with an equality theorem is inserted.
+This equality theorem can then be translated by the translation attribute.
+
+## to_dual_insert_cast_fun
+Defined in: `Mathlib.Tactic.ToDual.«commandTo_dual_insert_cast_fun_:=_,_»`
+
+The `to_dual_insert_cast_fun` attribute is used to tag types that should not be unfolded in a
+proof that is translated. Instead, a casting function is inserted. This casting function then may be
+translated by the translation attribute.
 
 ## unif_hint
 Defined in: `Lean.«command__Unif_hint____Where_|_-⊢__»`
