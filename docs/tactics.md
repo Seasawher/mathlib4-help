@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `5458d20504e7042f0588610e90ffbbfbf587cd88`
+Mathlib version: `fbfd573ca57a800daf591c2828cebbd691b4a667`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -193,200 +193,140 @@ such as `by _` to make it syntactically correct and show the current goal.
 ## abel
 Defined in: `Mathlib.Tactic.Abel.abel`
 
-Tactic for evaluating equations in the language of
-*additive*, commutative monoids and groups.
+`abel` solves equations in the language of *additive*, commutative monoids and groups.
 
 `abel` and its variants work as both tactics and conv tactics.
 
 * `abel1` fails if the target is not an equality that is provable by the axioms of
   commutative monoids/groups.
 * `abel_nf` rewrites all group expressions into a normal form.
-  * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
+  * `abel_nf at h` rewrites in a hypothesis.
   * `abel_nf (config := cfg)` allows for additional configuration:
-    * `red`: the reducibility setting (overridden by `!`)
-    * `zetaDelta`: if true, local let variables can be unfolded (overridden by `!`)
-    * `recursive`: if true, `abel_nf` will also recurse into atoms
-* `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
+    * `red`: the reducibility setting (overridden by `!`).
+    * `zetaDelta`: if true, local `let` variables can be unfolded (overridden by `!`).
+    * `recursive`: if true, `abel_nf` also recurses into atoms.
+* `abel!`, `abel1!`, `abel_nf!` use a more aggressive reducibility setting to identify atoms.
 
-For example:
-
-```
+Examples:
+```lean
 example [AddCommMonoid α] (a b : α) : a + (b + a) = a + a + b := by abel
 example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by abel
 ```
-
-## Future work
-
-* In mathlib 3, `abel` accepted additional optional arguments:
-  ```
-  syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
-  ```
-  It is undecided whether these features should be restored eventually.
 
 ## abel!
 Defined in: `Mathlib.Tactic.Abel.tacticAbel!`
 
-Tactic for evaluating equations in the language of
-*additive*, commutative monoids and groups.
+`abel` solves equations in the language of *additive*, commutative monoids and groups.
 
 `abel` and its variants work as both tactics and conv tactics.
 
 * `abel1` fails if the target is not an equality that is provable by the axioms of
   commutative monoids/groups.
 * `abel_nf` rewrites all group expressions into a normal form.
-  * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
+  * `abel_nf at h` rewrites in a hypothesis.
   * `abel_nf (config := cfg)` allows for additional configuration:
-    * `red`: the reducibility setting (overridden by `!`)
-    * `zetaDelta`: if true, local let variables can be unfolded (overridden by `!`)
-    * `recursive`: if true, `abel_nf` will also recurse into atoms
-* `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
+    * `red`: the reducibility setting (overridden by `!`).
+    * `zetaDelta`: if true, local `let` variables can be unfolded (overridden by `!`).
+    * `recursive`: if true, `abel_nf` also recurses into atoms.
+* `abel!`, `abel1!`, `abel_nf!` use a more aggressive reducibility setting to identify atoms.
 
-For example:
-
-```
+Examples:
+```lean
 example [AddCommMonoid α] (a b : α) : a + (b + a) = a + a + b := by abel
 example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by abel
 ```
-
-## Future work
-
-* In mathlib 3, `abel` accepted additional optional arguments:
-  ```
-  syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
-  ```
-  It is undecided whether these features should be restored eventually.
 
 ## abel1
 Defined in: `Mathlib.Tactic.Abel.abel1`
 
-Tactic for evaluating equations in the language of
-*additive*, commutative monoids and groups.
+`abel` solves equations in the language of *additive*, commutative monoids and groups.
 
 `abel` and its variants work as both tactics and conv tactics.
 
 * `abel1` fails if the target is not an equality that is provable by the axioms of
   commutative monoids/groups.
 * `abel_nf` rewrites all group expressions into a normal form.
-  * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
+  * `abel_nf at h` rewrites in a hypothesis.
   * `abel_nf (config := cfg)` allows for additional configuration:
-    * `red`: the reducibility setting (overridden by `!`)
-    * `zetaDelta`: if true, local let variables can be unfolded (overridden by `!`)
-    * `recursive`: if true, `abel_nf` will also recurse into atoms
-* `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
+    * `red`: the reducibility setting (overridden by `!`).
+    * `zetaDelta`: if true, local `let` variables can be unfolded (overridden by `!`).
+    * `recursive`: if true, `abel_nf` also recurses into atoms.
+* `abel!`, `abel1!`, `abel_nf!` use a more aggressive reducibility setting to identify atoms.
 
-For example:
-
-```
+Examples:
+```lean
 example [AddCommMonoid α] (a b : α) : a + (b + a) = a + a + b := by abel
 example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by abel
 ```
-
-## Future work
-
-* In mathlib 3, `abel` accepted additional optional arguments:
-  ```
-  syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
-  ```
-  It is undecided whether these features should be restored eventually.
 
 ## abel1!
 Defined in: `Mathlib.Tactic.Abel.abel1!`
 
-Tactic for evaluating equations in the language of
-*additive*, commutative monoids and groups.
+`abel` solves equations in the language of *additive*, commutative monoids and groups.
 
 `abel` and its variants work as both tactics and conv tactics.
 
 * `abel1` fails if the target is not an equality that is provable by the axioms of
   commutative monoids/groups.
 * `abel_nf` rewrites all group expressions into a normal form.
-  * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
+  * `abel_nf at h` rewrites in a hypothesis.
   * `abel_nf (config := cfg)` allows for additional configuration:
-    * `red`: the reducibility setting (overridden by `!`)
-    * `zetaDelta`: if true, local let variables can be unfolded (overridden by `!`)
-    * `recursive`: if true, `abel_nf` will also recurse into atoms
-* `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
+    * `red`: the reducibility setting (overridden by `!`).
+    * `zetaDelta`: if true, local `let` variables can be unfolded (overridden by `!`).
+    * `recursive`: if true, `abel_nf` also recurses into atoms.
+* `abel!`, `abel1!`, `abel_nf!` use a more aggressive reducibility setting to identify atoms.
 
-For example:
-
-```
+Examples:
+```lean
 example [AddCommMonoid α] (a b : α) : a + (b + a) = a + a + b := by abel
 example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by abel
 ```
-
-## Future work
-
-* In mathlib 3, `abel` accepted additional optional arguments:
-  ```
-  syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
-  ```
-  It is undecided whether these features should be restored eventually.
 
 ## abel_nf
 Defined in: `Mathlib.Tactic.Abel.abelNF`
 
-Tactic for evaluating equations in the language of
-*additive*, commutative monoids and groups.
+`abel` solves equations in the language of *additive*, commutative monoids and groups.
 
 `abel` and its variants work as both tactics and conv tactics.
 
 * `abel1` fails if the target is not an equality that is provable by the axioms of
   commutative monoids/groups.
 * `abel_nf` rewrites all group expressions into a normal form.
-  * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
+  * `abel_nf at h` rewrites in a hypothesis.
   * `abel_nf (config := cfg)` allows for additional configuration:
-    * `red`: the reducibility setting (overridden by `!`)
-    * `zetaDelta`: if true, local let variables can be unfolded (overridden by `!`)
-    * `recursive`: if true, `abel_nf` will also recurse into atoms
-* `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
+    * `red`: the reducibility setting (overridden by `!`).
+    * `zetaDelta`: if true, local `let` variables can be unfolded (overridden by `!`).
+    * `recursive`: if true, `abel_nf` also recurses into atoms.
+* `abel!`, `abel1!`, `abel_nf!` use a more aggressive reducibility setting to identify atoms.
 
-For example:
-
-```
+Examples:
+```lean
 example [AddCommMonoid α] (a b : α) : a + (b + a) = a + a + b := by abel
 example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by abel
 ```
-
-## Future work
-
-* In mathlib 3, `abel` accepted additional optional arguments:
-  ```
-  syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
-  ```
-  It is undecided whether these features should be restored eventually.
 
 ## abel_nf!
 Defined in: `Mathlib.Tactic.Abel.tacticAbel_nf!__`
 
-Tactic for evaluating equations in the language of
-*additive*, commutative monoids and groups.
+`abel` solves equations in the language of *additive*, commutative monoids and groups.
 
 `abel` and its variants work as both tactics and conv tactics.
 
 * `abel1` fails if the target is not an equality that is provable by the axioms of
   commutative monoids/groups.
 * `abel_nf` rewrites all group expressions into a normal form.
-  * In tactic mode, `abel_nf at h` can be used to rewrite in a hypothesis.
+  * `abel_nf at h` rewrites in a hypothesis.
   * `abel_nf (config := cfg)` allows for additional configuration:
-    * `red`: the reducibility setting (overridden by `!`)
-    * `zetaDelta`: if true, local let variables can be unfolded (overridden by `!`)
-    * `recursive`: if true, `abel_nf` will also recurse into atoms
-* `abel!`, `abel1!`, `abel_nf!` will use a more aggressive reducibility setting to identify atoms.
+    * `red`: the reducibility setting (overridden by `!`).
+    * `zetaDelta`: if true, local `let` variables can be unfolded (overridden by `!`).
+    * `recursive`: if true, `abel_nf` also recurses into atoms.
+* `abel!`, `abel1!`, `abel_nf!` use a more aggressive reducibility setting to identify atoms.
 
-For example:
-
-```
+Examples:
+```lean
 example [AddCommMonoid α] (a b : α) : a + (b + a) = a + a + b := by abel
 example [AddCommGroup α] (a : α) : (3 : ℤ) • a = a + (2 : ℤ) • a := by abel
 ```
-
-## Future work
-
-* In mathlib 3, `abel` accepted additional optional arguments:
-  ```
-  syntax "abel" (&" raw" <|> &" term")? (location)? : tactic
-  ```
-  It is undecided whether these features should be restored eventually.
 
 ## absurd
 Defined in: `Batteries.Tactic.tacticAbsurd_`
@@ -1288,27 +1228,43 @@ You can use `with` to provide the variables names for each constructor.
 ## cases'
 Defined in: `Mathlib.Tactic.cases'`
 
-The `cases'` tactic is similar to the `cases` tactic in Lean 4 core, but the syntax for giving
-names is different:
+`cases' x`, where the variable `x` has inductive type `t`, splits the main goal,
+producing one goal for each constructor of `t`, in which `x` is replaced by that constructor
+applied to newly introduced variables. This is a backwards-compatible variant of the
+`cases` tactic in Lean 4 core.
 
-```
+Prefer `cases`, `rcases`, or `obtain` when possible, because these tactics promote
+structured proofs.
+
+* `cases' x with n1 n2 ...` names the arguments to the constructors. This is the main difference
+  with `cases` in core Lean.
+* `cases' e`, where `e` is an expression instead of a variable, generalizes `e` in the goal,
+  and then performs induction on the resulting variable.
+* `cases' h : e`, where `e` is an expression instead of a variable, generalizes `e` in the goal,
+  and then splits by cases on the resulting variable, adding to each goal the hypothesis
+  `h : e = _` where `_` is the constructor instance.
+* `cases' x using r` uses `r` as the case matching rule. Here `r` should be a term whose result type
+  is of the form `C t1 t2 ...`, where `C` is a bound variable and `t1`, `t2`, ... (if present) are
+  bound variables.
+
+Example:
+```lean
+example (h : p ∨ q) : q ∨ p := by
+  cases' h with hp hq
+  · exact Or.inr hp
+  · exact Or.inl hq
+
+-- Though the following equivalent spellings should be preferred
 example (h : p ∨ q) : q ∨ p := by
   cases h with
   | inl hp => exact Or.inr hp
   | inr hq => exact Or.inl hq
 
 example (h : p ∨ q) : q ∨ p := by
-  cases' h with hp hq
-  · exact Or.inr hp
-  · exact Or.inl hq
-
-example (h : p ∨ q) : q ∨ p := by
   rcases h with hp | hq
   · exact Or.inr hp
   · exact Or.inl hq
 ```
-
-Prefer `cases` or `rcases` when possible, because these tactics promote structured proofs.
 
 ## cases_first_enat
 Defined in: `Mathlib.Tactic.ENatToNat.tacticCases_first_enat`
@@ -3556,10 +3512,29 @@ You can use `with` to provide the variables names for each constructor.
 ## induction'
 Defined in: `Mathlib.Tactic.induction'`
 
-The `induction'` tactic is similar to the `induction` tactic in Lean 4 core,
-but with slightly different syntax (such as, no requirement to name the constructors).
+`induction' x` applies induction on the variable `x` of the inductive type `t` to the main goal,
+producing one goal for each constructor of `t`, in which `x` is replaced by that constructor
+applied to newly introduced variables. `induction'` adds an inductive hypothesis for
+each recursive argument to the constructor. This is a backwards-compatible variant of the
+`induction` tactic in Lean 4 core.
 
-```
+Prefer `induction` when possible, because it promotes structured proofs.
+
+* `induction' x with n1 n2 ...` names the introduced hypotheses: arguments to constructors and
+  inductive hypotheses. This is the main difference with `induction` in core Lean.
+* `induction' e`, where `e` is an expression instead of a variable, generalizes `e` in the goal,
+  and then performs induction on the resulting variable.
+* `induction' h : e`, where `e` is an expression instead of a variable, generalizes `e` in the goal,
+  and then performs induction on the resulting variable, adding to each goal the hypothesis
+  `h : e = _` where `_` is the constructor instance.
+* `induction' x using r` uses `r` as the principle of induction. Here `r` should be a term whose
+  result type is of the form `C t1 t2 ...`, where `C` is a bound variable and `t1`, `t2`, ... (if
+  present) are bound variables.
+* `induction' x generalizing z1 z2 ...` generalizes over the local variables `z1`, `z2`, ... in the
+  inductive hypothesis.
+
+Example:
+```lean
 open Nat
 
 example (n : ℕ) : 0 < factorial n := by
@@ -3569,6 +3544,7 @@ example (n : ℕ) : 0 < factorial n := by
   · rw [factorial_succ]
     apply mul_pos (succ_pos n) ih
 
+-- Though the following equivalent spellings should be preferred
 example (n : ℕ) : 0 < factorial n := by
   induction n
   case zero =>
