@@ -1,18 +1,21 @@
 # Tactics
 
-Mathlib version: `9c8cb0b3d8c31729c5fa85ffb15242105708aedb`
+Mathlib version: `8aef88ec2d3a81cb3bc79c64958ce1bcf8cddddf`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
 
+`#adaptation_note /-- comment -/` adds an adaptation note to the current file.
 Adaptation notes are comments that are used to indicate that a piece of code
 has been changed to accommodate a change in Lean core.
 They typically require further action/maintenance to be taken in the future.
 
+This syntax works as a command, or inline in tactic or term mode.
+
 ## \#check
 Defined in: `Mathlib.Tactic.«tactic#check__»`
 
-The `#check t` tactic elaborates the term `t` and then pretty prints it with its type as `e : ty`.
+`#check t` elaborates the term `t` and then pretty prints it with its type as `e : ty`.
 
 If `t` is an identifier, then it pretty prints a type declaration form
 for the global constant `t` instead.
@@ -1275,61 +1278,97 @@ Then simplifies expressions involving `⊤` using the `enat_to_nat_top` simp set
 ## cases_type
 Defined in: `Mathlib.Tactic.casesType`
 
-* `cases_type I` applies the `cases` tactic to a hypothesis `h : (I ...)`
-* `cases_type I_1 ... I_n` applies the `cases` tactic to a hypothesis
-  `h : (I_1 ...)` or ... or `h : (I_n ...)`
-* `cases_type* I` is shorthand for `· repeat cases_type I`
-* `cases_type! I` only applies `cases` if the number of resulting subgoals is <= 1.
+`cases_type I` searches for a hypothesis `h : type` where `I` has the form `(I ...)`, and splits the
+main goal by cases on `h`. `cases_type p` fails if no hypothesis type has the identifier `I` as its
+head symbol.
 
-Example: The following tactic destructs all conjunctions and disjunctions in the current goal.
+* `cases_type I_1 ... I_n` searches for a hypothesis `h : type` where `type` has one or more of
+  `I_1`, ..., `I_n` as its head symbol, and splits the main goal by cases on `h`.
+* `cases_type* I` repeatedly performs case splits until no more hypothesis type has `I` as its head
+  symbol. This shorthand for `· repeat cases_type I`.
+* `cases_type! p` and `cases_type!* p` skip a hypothesis if the main goal would be replaced with two
+  or more subgoals.
+
+Example:
 ```lean
-cases_type* Or And
+example (h : a ∧ b ∨ c ∧ d) (h2 : e ∧ f) : True := by
+  -- The following tactic destructs all conjunctions and disjunctions in the current context.
+  cases_type* Or And
+  · clear ‹a› ‹b› ‹e› ‹f›; (fail_if_success clear ‹c›); trivial
+  · clear ‹c› ‹d› ‹e› ‹f›; trivial
 ```
 
 ## cases_type!
 Defined in: `Mathlib.Tactic.casesType!`
 
-* `cases_type I` applies the `cases` tactic to a hypothesis `h : (I ...)`
-* `cases_type I_1 ... I_n` applies the `cases` tactic to a hypothesis
-  `h : (I_1 ...)` or ... or `h : (I_n ...)`
-* `cases_type* I` is shorthand for `· repeat cases_type I`
-* `cases_type! I` only applies `cases` if the number of resulting subgoals is <= 1.
+`cases_type I` searches for a hypothesis `h : type` where `I` has the form `(I ...)`, and splits the
+main goal by cases on `h`. `cases_type p` fails if no hypothesis type has the identifier `I` as its
+head symbol.
 
-Example: The following tactic destructs all conjunctions and disjunctions in the current goal.
+* `cases_type I_1 ... I_n` searches for a hypothesis `h : type` where `type` has one or more of
+  `I_1`, ..., `I_n` as its head symbol, and splits the main goal by cases on `h`.
+* `cases_type* I` repeatedly performs case splits until no more hypothesis type has `I` as its head
+  symbol. This shorthand for `· repeat cases_type I`.
+* `cases_type! p` and `cases_type!* p` skip a hypothesis if the main goal would be replaced with two
+  or more subgoals.
+
+Example:
 ```lean
-cases_type* Or And
+example (h : a ∧ b ∨ c ∧ d) (h2 : e ∧ f) : True := by
+  -- The following tactic destructs all conjunctions and disjunctions in the current context.
+  cases_type* Or And
+  · clear ‹a› ‹b› ‹e› ‹f›; (fail_if_success clear ‹c›); trivial
+  · clear ‹c› ‹d› ‹e› ‹f›; trivial
 ```
 
 ## casesm
 Defined in: `Mathlib.Tactic.casesM`
 
-* `casesm p` applies the `cases` tactic to a hypothesis `h : type`
-  if `type` matches the pattern `p`.
-* `casesm p_1, ..., p_n` applies the `cases` tactic to a hypothesis `h : type`
-  if `type` matches one of the given patterns.
-* `casesm* p` is a more efficient and compact version of `· repeat casesm p`.
-  It is more efficient because the pattern is compiled once.
-* `casesm! p` only applies `cases` if the number of resulting subgoals is <= 1.
+`casesm p` searches for the first hypothesis `h : type` where `type` matches the term `p`,
+and splits the main goal by cases on `h`. Use holes in `p` to indicate arbitrary subexpressions,
+for example `casesm _ ∧ _` will match any conjunction. `casesm p` fails if no hypothesis type
+matches `p`.
 
-Example: The following tactic destructs all conjunctions and disjunctions in the current context.
+* `casesm p_1, ..., p_n` searches for a hypothesis `h : type` where `type` matches one or more of
+  the given patterns `p_1`, ... `p_n`, and splits the main goal by cases on `h`.
+* `casesm* p` repeatedly performs case splits until no more hypothesis type matches `p`.
+  This is a more efficient and compact version of `· repeat casesm p`.
+  It is more efficient because the pattern is compiled once.
+* `casesm! p` and `casesm!* p` skip a hypothesis if the main goal would be replaced with two or more
+  subgoals.
+
+Example:
 ```lean
-casesm* _ ∨ _, _ ∧ _
+example (h : a ∧ b ∨ c ∧ d) (h2 : e ∧ f) : True := by
+  -- The following tactic destructs all conjunctions and disjunctions in the current context.
+  casesm* _∨_, _∧_
+  · clear ‹a› ‹b› ‹e› ‹f›; (fail_if_success clear ‹c›); trivial
+  · clear ‹c› ‹d› ‹e› ‹f›; trivial
 ```
 
 ## casesm!
 Defined in: `Mathlib.Tactic.casesm!`
 
-* `casesm p` applies the `cases` tactic to a hypothesis `h : type`
-  if `type` matches the pattern `p`.
-* `casesm p_1, ..., p_n` applies the `cases` tactic to a hypothesis `h : type`
-  if `type` matches one of the given patterns.
-* `casesm* p` is a more efficient and compact version of `· repeat casesm p`.
-  It is more efficient because the pattern is compiled once.
-* `casesm! p` only applies `cases` if the number of resulting subgoals is <= 1.
+`casesm p` searches for the first hypothesis `h : type` where `type` matches the term `p`,
+and splits the main goal by cases on `h`. Use holes in `p` to indicate arbitrary subexpressions,
+for example `casesm _ ∧ _` will match any conjunction. `casesm p` fails if no hypothesis type
+matches `p`.
 
-Example: The following tactic destructs all conjunctions and disjunctions in the current context.
+* `casesm p_1, ..., p_n` searches for a hypothesis `h : type` where `type` matches one or more of
+  the given patterns `p_1`, ... `p_n`, and splits the main goal by cases on `h`.
+* `casesm* p` repeatedly performs case splits until no more hypothesis type matches `p`.
+  This is a more efficient and compact version of `· repeat casesm p`.
+  It is more efficient because the pattern is compiled once.
+* `casesm! p` and `casesm!* p` skip a hypothesis if the main goal would be replaced with two or more
+  subgoals.
+
+Example:
 ```lean
-casesm* _ ∨ _, _ ∧ _
+example (h : a ∧ b ∨ c ∧ d) (h2 : e ∧ f) : True := by
+  -- The following tactic destructs all conjunctions and disjunctions in the current context.
+  casesm* _∨_, _∧_
+  · clear ‹a› ‹b› ‹e› ‹f›; (fail_if_success clear ‹c›); trivial
+  · clear ‹c› ‹d› ‹e› ‹f›; trivial
 ```
 
 ## cat_disch
@@ -1714,71 +1753,24 @@ while `congr 2` produces the intended `⊢ x + y = y + x`.
 ## congr!
 Defined in: `Congr!.congr!`
 
-Equates pieces of the left-hand side of a goal to corresponding pieces of the right-hand side by
-recursively applying congruence lemmas. For example, with `⊢ f as = g bs` we could get
-two goals `⊢ f = g` and `⊢ as = bs`.
+`congr!` tries to prove the main goal by repeatedly applying congruence rules. For example, on a
+goal of the form `⊢ f a1 a2 ... = f b1 b2 ...`, `congr!` will make new goals `⊢ a1 = b1`,
+`⊢ a2 = b2`, ...
 
-Syntax:
-```lean
-congr!
-congr! n
-congr! with x y z
-congr! n with x y z
-```
-Here, `n` is a natural number and `x`, `y`, `z` are `rintro` patterns (like `h`, `rfl`, `⟨x, y⟩`,
-`_`, `-`, `(h | h)`, etc.).
+`congr!` is a more powerful version of the `congr` tactic that uses congruence lemmas (tagged with
+`@[congr]`), reflexivity rules (tagged with `@[refl]`) and proof discharging strategies. The full
+list of congruence proof strategies is documented in the module `Mathlib.Tactic.CongrExclamation`.
+The `congr!` tactic is used by the `convert` and `convert_to` tactics.
 
-The `congr!` tactic is similar to `congr` but is more insistent in trying to equate left-hand sides
-to right-hand sides of goals. Here is a list of things it can try:
-
-- If `R` in `⊢ R x y` is a reflexive relation, it will convert the goal to `⊢ x = y` if possible.
-  The list of reflexive relations is maintained using the `@[refl]` attribute.
-  As a special case, `⊢ p ↔ q` is converted to `⊢ p = q` during congruence processing and then
-  returned to `⊢ p ↔ q` form at the end.
-
-- If there is a user congruence lemma associated to the goal (for instance, a `@[congr]`-tagged
-  lemma applying to `⊢ List.map f xs = List.map g ys`), then it will use that.
-
-- It uses a congruence lemma generator at least as capable as the one used by `congr` and `simp`.
-  If there is a subexpression that can be rewritten by `simp`, then `congr!` should be able
-  to generate an equality for it.
-
-- It can do congruences of pi types using lemmas like `implies_congr` and `pi_congr`.
-
-- Before applying congruences, it will run the `intros` tactic automatically.
-  The introduced variables can be given names using a `with` clause.
-  This helps when congruence lemmas provide additional assumptions in hypotheses.
-
-- When there is an equality between functions, so long as at least one is obviously a lambda, we
-  apply `funext` or `Function.hfunext`, which allows for congruence of lambda bodies.
-
-- It can try to close goals using a few strategies, including checking
-  definitional equality, trying to apply `Subsingleton.elim` or `proof_irrel_heq`, and using the
-  `assumption` tactic.
-
-The optional parameter is the depth of the recursive applications.
-This is useful when `congr!` is too aggressive in breaking down the goal.
-For example, given `⊢ f (g (x + y)) = f (g (y + x))`,
-`congr!` produces the goals `⊢ x = y` and `⊢ y = x`,
-while `congr! 2` produces the intended `⊢ x + y = y + x`.
-
-The `congr!` tactic also takes a configuration option, for example
-```lean
-congr! (transparency := .default) 2
-```
-This overrides the default, which is to apply congruence lemmas at reducible transparency.
-
-The `congr!` tactic is aggressive with equating two sides of everything. There is a predefined
-configuration that uses a different strategy:
-Try
-```lean
-congr! (config := .unfoldSameFun)
-```
-This only allows congruences between functions applications of definitionally equal functions,
-and it applies congruence lemmas at default transparency (rather than just reducible).
-This is somewhat like `congr`.
-
-See `Congr!.Config` for all options.
+* `congr! n`, where `n` is a positive numeral, controls the depth with which congruence is
+  applied. For example, if the main goal is `n + n + 1 = 2 * n + 1`, then `congr! 1` results in one
+  goal, `⊢ n + n = 2 * n`, and `congr! 2` (or more) results in two (impossible) goals
+  `⊢ HAdd.hAdd = HMul.hMul` and `⊢ n = 2`.
+  By default, the depth is unlimited.
+* `congr! with x ⟨y₁, y₂⟩ (z₁ | z₂)` names or pattern-matches the variables introduced by
+  congruence rules, like `rintro x ⟨y₁, y₂⟩ (z₁ | z₂)` would.
+* `congr! (config := cfg)` uses the configuration options in `cfg` to control the congruence
+  rules (see `Congr!.Config`).
 
 ## congrm
 Defined in: `Mathlib.Tactic.congrM`
@@ -1832,15 +1824,18 @@ the first matching constructor, or else fails.
 ## constructorm
 Defined in: `Mathlib.Tactic.constructorM`
 
-* `constructorm p_1, ..., p_n` applies the `constructor` tactic to the main goal
-  if `type` matches one of the given patterns.
-* `constructorm* p` is a more efficient and compact version of `· repeat constructorm p`.
-  It is more efficient because the pattern is compiled once.
+`constructorm p_1, ..., p_n`, where the main goal has type `type`, applies the first matching
+constructor for `type`, if `type` matches one of the given patterns. If `type` does not match any
+of the patterns, `constructorm` fails.
 
-Example: The following tactic proves any theorem like `True ∧ (True ∨ True)` consisting of
-and/or/true:
+* `constructorm* p_1, ..., p_n` repeatedly applies a constructor until the goal no longer matches
+  `p_1`, ..., `p_n`. This is a more efficient and compact version of
+  `· repeat constructorm p_1, ..., p_n`. It is more efficient because the pattern is compiled once.
+
+Examples:
 ```lean
-constructorm* _ ∨ _, _ ∧ _, True
+example : True ∧ (True ∨ True) := by
+  constructorm* _ ∨ _, _ ∧ _, True
 ```
 
 ## continuity

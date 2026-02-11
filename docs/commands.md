@@ -1,13 +1,16 @@
 # Commands
 
-Mathlib version: `9c8cb0b3d8c31729c5fa85ffb15242105708aedb`
+Mathlib version: `8aef88ec2d3a81cb3bc79c64958ce1bcf8cddddf`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
 
+`#adaptation_note /-- comment -/` adds an adaptation note to the current file.
 Adaptation notes are comments that are used to indicate that a piece of code
 has been changed to accommodate a change in Lean core.
 They typically require further action/maintenance to be taken in the future.
+
+This syntax works as a command, or inline in tactic or term mode.
 
 ## \#aesop_rules
 Defined in: `Aesop.Frontend.Parser.showRules`
