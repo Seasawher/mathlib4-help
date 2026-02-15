@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `738faa552745fad46e80382d1249522aa3caf0c8`
+Mathlib version: `96dd1ce2aace457805a9f3da7fef9e05043b3787`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -215,16 +215,12 @@ Defined in: `Lean.Parser.Tactic.paren`
 the goal be closed at the end like `· tacs`. Like `by` itself, the tactics
 can be either separated by newlines or `;`.
 
-## <;>
-Defined in: `Batteries.Tactic.seq_focus`
-
+syntax ..."<;>"... [Batteries.Tactic.seq_focus]
 `t <;> [t1; t2; ...; tn]` focuses on the first goal and applies `t`, which should result in `n`
 subgoals. It then applies each `ti` to the corresponding goal and collects the resulting
 subgoals.
 
-## <;>
-Defined in: `Lean.Parser.Tactic.«tactic_<;>_»`
-
+syntax ..."<;>"... [Lean.Parser.Tactic.«tactic_<;>_»]
 `tac <;> tac'` runs `tac` on the main goal and `tac'` on each produced goal,
 concatenating all goals produced by `tac'`.
 
@@ -2299,60 +2295,6 @@ Defined in: `tacticEconstructor`
 (it calls `apply` using the first matching constructor of an inductive datatype)
 except only non-dependent premises are added as new goals.
 
-## else
-Defined in: `Lean.Parser.Tactic.tacDepIfThenElse`
-
-In tactic mode, `if t then tac1 else tac2` is alternative syntax for:
-```lean
-by_cases t
-· tac1
-· tac2
-```
-It performs case distinction on `h† : t` or `h† : ¬t`, where `h†` is an anonymous hypothesis, and
-`tac1` and `tac2` are the subproofs. (It doesn't actually use nondependent `if`, since this wouldn't
-add anything to the context and hence would be useless for proving theorems. To actually insert an
-`ite` application use `refine if t then ?_ else ?_`.)
-
-The assumptions in each subgoal can be named. `if h : t then tac1 else tac2` can be used as
-alternative syntax for:
-```lean
-by_cases h : t
-· tac1
-· tac2
-```
-It performs case distinction on `h : t` or `h : ¬t`.
-
-You can use `?_` or `_` for either subproof to delay the goal to after the tactic, but
-if a tactic sequence is provided for `tac1` or `tac2` then it will require the goal to be closed
-by the end of the block.
-
-## else
-Defined in: `Lean.Parser.Tactic.tacIfThenElse`
-
-In tactic mode, `if t then tac1 else tac2` is alternative syntax for:
-```lean
-by_cases t
-· tac1
-· tac2
-```
-It performs case distinction on `h† : t` or `h† : ¬t`, where `h†` is an anonymous hypothesis, and
-`tac1` and `tac2` are the subproofs. (It doesn't actually use nondependent `if`, since this wouldn't
-add anything to the context and hence would be useless for proving theorems. To actually insert an
-`ite` application use `refine if t then ?_ else ?_`.)
-
-The assumptions in each subgoal can be named. `if h : t then tac1 else tac2` can be used as
-alternative syntax for:
-```lean
-by_cases h : t
-· tac1
-· tac2
-```
-It performs case distinction on `h : t` or `h : ¬t`.
-
-You can use `?_` or `_` for either subproof to delay the goal to after the tactic, but
-if a tactic sequence is provided for `tac1` or `tac2` then it will require the goal to be closed
-by the end of the block.
-
 ## enat_to_nat
 Defined in: `Mathlib.Tactic.ENatToNat.tacticEnat_to_nat`
 
@@ -3535,6 +3477,64 @@ Defined in: `Mathlib.Tactic.Hint.hintStx`
 
 The `hint` tactic tries every tactic registered using `register_hint <prio> tac`,
 and reports any that succeed.
+
+## ident
+Defined in: `Lean.Parser.Tactic.unknown`
+
+
+## if
+Defined in: `Lean.Parser.Tactic.tacDepIfThenElse`
+
+In tactic mode, `if t then tac1 else tac2` is alternative syntax for:
+```lean
+by_cases t
+· tac1
+· tac2
+```
+It performs case distinction on `h† : t` or `h† : ¬t`, where `h†` is an anonymous hypothesis, and
+`tac1` and `tac2` are the subproofs. (It doesn't actually use nondependent `if`, since this wouldn't
+add anything to the context and hence would be useless for proving theorems. To actually insert an
+`ite` application use `refine if t then ?_ else ?_`.)
+
+The assumptions in each subgoal can be named. `if h : t then tac1 else tac2` can be used as
+alternative syntax for:
+```lean
+by_cases h : t
+· tac1
+· tac2
+```
+It performs case distinction on `h : t` or `h : ¬t`.
+
+You can use `?_` or `_` for either subproof to delay the goal to after the tactic, but
+if a tactic sequence is provided for `tac1` or `tac2` then it will require the goal to be closed
+by the end of the block.
+
+## if
+Defined in: `Lean.Parser.Tactic.tacIfThenElse`
+
+In tactic mode, `if t then tac1 else tac2` is alternative syntax for:
+```lean
+by_cases t
+· tac1
+· tac2
+```
+It performs case distinction on `h† : t` or `h† : ¬t`, where `h†` is an anonymous hypothesis, and
+`tac1` and `tac2` are the subproofs. (It doesn't actually use nondependent `if`, since this wouldn't
+add anything to the context and hence would be useless for proving theorems. To actually insert an
+`ite` application use `refine if t then ?_ else ?_`.)
+
+The assumptions in each subgoal can be named. `if h : t then tac1 else tac2` can be used as
+alternative syntax for:
+```lean
+by_cases h : t
+· tac1
+· tac2
+```
+It performs case distinction on `h : t` or `h : ¬t`.
+
+You can use `?_` or `_` for either subproof to delay the goal to after the tactic, but
+if a tactic sequence is provided for `tac1` or `tac2` then it will require the goal to be closed
+by the end of the block.
 
 ## induction
 Defined in: `Lean.Parser.Tactic.induction`
@@ -7257,9 +7257,7 @@ Defined in: `Aesop.Frontend.saturate`
 Defined in: `Aesop.Frontend.saturate?`
 
 
-## says
-Defined in: `Mathlib.Tactic.Says.says`
-
+syntax ..."says"... [Mathlib.Tactic.Says.says]
 If you write `X says`, where `X` is a tactic that produces a "Try this: Y" message,
 then you will get a message "Try this: X says Y".
 Once you've clicked to replace `X says` with `X says Y`,
@@ -8451,15 +8449,17 @@ propositions concerning `z` will still be over `Int`.
 `zify` changes propositions about `Nat` (the subtype) to propositions about `Int` (the supertype),
 without changing the type of any variable.
 
+## {
+Defined in: `Lean.Parser.Tactic.nestedTactic`
+
+
+## ·
+Defined in: `Lean.cdot`
+
+`· tac` focuses on the main goal and tries to solve it using `tac`, or else fails.
+
 ## ∎
 Defined in: `«tactic∎»`
 
 `∎` (typed as `\qed`) is a macro that expands to `try?` in tactic mode.
-
-syntax ... [Lean.Parser.Tactic.nestedTactic]
-
-syntax ... [Lean.Parser.Tactic.unknown]
-
-syntax ... [Lean.cdot]
-`· tac` focuses on the main goal and tries to solve it using `tac`, or else fails.
 
