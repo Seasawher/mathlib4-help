@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `60d0c4b32a74031f3f877c8b7e9f17895031d1b7`
+Mathlib version: `738faa552745fad46e80382d1249522aa3caf0c8`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -368,16 +368,20 @@ have global scope anyway so detailed tracking is not necessary.)
 ## \#find
 Defined in: `Mathlib.Tactic.Find.«command#find_»`
 
-The `#find` command finds definitions & lemmas using pattern matching on the type. For instance:
+`#find t` finds definitions and theorems whose result type matches the term `t`, and prints them as
+info lines. Use holes in `t` to indicate arbitrary subexpressions, for example `#find _ ∧ _` will
+match any conjunction.
+
+`#find` is also available as a tactic, and there is also the `find` tactic which looks for lemmas
+which are `apply`able against the current goal.
+
+Examples:
 ```lean
 #find _ + _ = _ + _
 #find ?n + _ = _ + ?n
 #find (_ : Nat) + _ = _ + _
 #find Nat → Nat
 ```
-Inside tactic proofs, the `#find` tactic can be used instead.
-There is also the `find` tactic which looks for
-lemmas which are `apply`able against the current goal.
 
 ## \#find_home
 Defined in: `«command#find_home!_»`

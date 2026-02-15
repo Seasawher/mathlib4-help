@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `60d0c4b32a74031f3f877c8b7e9f17895031d1b7`
+Mathlib version: `738faa552745fad46e80382d1249522aa3caf0c8`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -27,27 +27,69 @@ These become metavariables in the output.
 ## \#count_heartbeats
 Defined in: `Mathlib.CountHeartbeats.«tactic#count_heartbeats_»`
 
-Count the heartbeats used by a tactic, e.g.: `#count_heartbeats simp`.
+`#count_heartbeats tac` counts the heartbeats used by the tactic sequence `tac`
+and prints an info line with the number of heartbeats.
+
+* `#count_heartbeats! n in tac`, where `n` is an optional natural number literal, runs `tac`
+  `n` times on the same goal while counting the heartbeats, and prints an info line with range and
+  standard deviation. `n` can be left out, and defaults to 10.
+
+Example:
+
+```
+example : 1 + 1 = 2 := by
+  -- The next line will print an info message of this format; the exact number may vary.
+  -- info: 4646
+  #count_heartbeats simp
+
+example : 1 + 1 = 2 := by
+  -- The next line will print an info message of this format; the exact numbers may vary.
+  -- info: Min: 4 Max: 4 StdDev: 2%
+  #count_heartbeats! 37 in simp
+```
 
 ## \#count_heartbeats!
 Defined in: `Mathlib.CountHeartbeats.«tactic#count_heartbeats!_In__»`
 
-`#count_heartbeats! in tac` runs a tactic 10 times, counting the heartbeats used, and logs the range
-and standard deviation. The tactic `#count_heartbeats! n in tac` runs it `n` times instead.
+`#count_heartbeats tac` counts the heartbeats used by the tactic sequence `tac`
+and prints an info line with the number of heartbeats.
+
+* `#count_heartbeats! n in tac`, where `n` is an optional natural number literal, runs `tac`
+  `n` times on the same goal while counting the heartbeats, and prints an info line with range and
+  standard deviation. `n` can be left out, and defaults to 10.
+
+Example:
+
+```
+example : 1 + 1 = 2 := by
+  -- The next line will print an info message of this format; the exact number may vary.
+  -- info: 4646
+  #count_heartbeats simp
+
+example : 1 + 1 = 2 := by
+  -- The next line will print an info message of this format; the exact numbers may vary.
+  -- info: Min: 4 Max: 4 StdDev: 2%
+  #count_heartbeats! 37 in simp
+```
 
 ## \#find
 Defined in: `Mathlib.Tactic.Find.«tactic#find_»`
 
-The `#find` tactic finds definitions & lemmas using pattern matching on the type. For instance:
+`#find t` finds definitions and theorems whose result type matches the term `t`, and prints them as
+info lines. Use holes in `t` to indicate arbitrary subexpressions, for example `#find _ ∧ _` will
+match any conjunction. `#find` is also available as a command.
+`#find` will not affect the goal by itself and should be removed from the finished proof.
+
+There is also the `find` tactic which looks for lemmas which are `apply`able against the current
+goal.
+
+Examples:
 ```lean
 #find _ + _ = _ + _
 #find ?n + _ = _ + ?n
 #find (_ : Nat) + _ = _ + _
 #find Nat → Nat
 ```
-This is the tactic equivalent to the `#find` command.
-There is also the `find` tactic which looks for
-lemmas which are `apply`able against the current goal.
 
 ## \#leansearch
 Defined in: `LeanSearchClient.leansearch_search_tactic`
@@ -340,8 +382,24 @@ If `p` is a negation `¬q` then the goal is changed to `⊢ q` instead.
 ## ac_change
 Defined in: `Mathlib.Tactic.acChange`
 
-`ac_change g using n` is `convert_to g using n` followed by `ac_rfl`. It is useful for
-rearranging/reassociating e.g. sums:
+`ac_change t` on a goal `⊢ t'` changes the goal to `⊢ t` and adds new goals for proving the equality
+`t' = t` using congruence, then tries proving these goals by associativity and commutativity. The
+goals are created like `congr!` would.
+In other words, `ac_change t` is like `convert_to t` followed by `ac_refl`.
+
+Like `refine e`, any holes (`?_` or `?x`) in `t` that are not solved by unification are converted
+into new goals, using the hole's name, if any, as the goal case name.
+Like `congr!`, `convert_to` introduces variables while applying congruence rules. These can be
+pattern-matched, like `rintro` would, using the `with` keyword.
+
+* `ac_change t using n`, where `n` is a positive numeral, controls the depth with which congruence
+  is applied. For example, if the main goal is `⊢ Prime ((a * b + 1) + c)`,
+  then `ac_change Prime ((1 + a * b) + c) using 2` solves the side goals, and
+  `ac_change Prime ((1 + a * b) + c) using 3` (or more) results in two (impossible) goals
+  `⊢ 1 = a * b` and `⊢ a * b = 1`.
+  The default value for `n` is 1.
+
+Example:
 ```lean
 example (a b c d e f g N : ℕ) : (a + b) + (c + d) + (e + f) + g ≤ N := by
   ac_change a + d + e + f + c + g + b ≤ _
@@ -1945,89 +2003,84 @@ It is a synonym for `conv => arg -1; cs`.
 ## convert
 Defined in: `Mathlib.Tactic.convert`
 
-The `exact e` and `refine e` tactics require a term `e` whose type is
-definitionally equal to the goal. `convert e` is similar to `refine e`,
-but the type of `e` is not required to exactly match the
-goal. Instead, new goals are created for differences between the type
-of `e` and the goal using the same strategies as the `congr!` tactic.
-For example, in the proof state
+`convert e`, where the term `e` is inferred to have type `t`, replaces the main goal `⊢ t'` with new
+goals for proving the equality `t' = t` using congruence. The goals are created like `congr!` would.
+Like `refine e`, any holes (`?_` or `?x`) in `e` that are not solved by unification are converted
+into new goals, using the hole's name, if any, as the goal case name.
+Like `congr!`, `convert` introduces variables while applying congruence rules. These can be
+pattern-matched, like `rintro` would, using the `with` keyword.
+
+See also `convert_to t`, where `t` specifies the expected type, instead of a proof term of type `t`.
+In other words, `convert_to t` works like `convert (?_ : t)`. Both tactics use the same options.
+
+* `convert ← e` creates equality goals in the opposite direction (with the goal type on the right).
+* `convert e using n`, where `n` is a positive numeral, controls the depth with which congruence is
+  applied. For example, if the main goal is `⊢ Prime (n + n + 1)` and `e : Prime (2 * n + 1)`, then
+  `convert e using 2` results in one goal, `⊢ n + n = 2 * n`, and `convert e using 3` (or more)
+  results in two (impossible) goals `⊢ HAdd.hAdd = HMul.hMul` and `⊢ n = 2`.
+  By default, the depth is unlimited.
+* `convert e with x ⟨y₁, y₂⟩ (z₁ | z₂)` names or pattern-matches the variables introduced by
+  congruence rules, like `rintro x ⟨y₁, y₂⟩ (z₁ | z₂)` would.
+* `convert (config := cfg) e` uses the configuration options in `cfg` to control the congruence
+  rules (see `Congr!.Config`).
+
+Examples:
 
 ```lean
-n : ℕ,
-e : Prime (2 * n + 1)
-⊢ Prime (n + n + 1)
+-- `convert using` controls the depth of congruence.
+example {n : ℕ} (e : Prime (2 * n + 1)) :
+    Prime (n + n + 1) := by
+  convert e using 2
+  -- One goal: ⊢ n + n = 2 * n
+  ring
 ```
-
-the tactic `convert e using 2` will change the goal to
 
 ```lean
-⊢ n + n = 2 * n
-```
+-- `convert` can fail where `exact` succeeds.
+example (h : p 0) : p 1 := by
+  fail_if_success
+    convert h -- fails, left-over goal 1 = 0
+    done
+  exact h -- succeeds
 
-In this example, the new goal can be solved using `ring`.
-
-The `using 2` indicates it should iterate the congruence algorithm up to two times,
-where `convert e` would use an unrestricted number of iterations and lead to two
-impossible goals: `⊢ HAdd.hAdd = HMul.hMul` and `⊢ n = 2`.
-
-A variant configuration is `convert (config := .unfoldSameFun) e`, which only equates function
-applications for the same function (while doing so at the higher `default` transparency).
-This gives the same goal of `⊢ n + n = 2 * n` without needing `using 2`.
-
-The `convert` tactic applies congruence lemmas eagerly before reducing,
-therefore it can fail in cases where `exact` succeeds:
 ```lean
-def p (n : ℕ) := True
-example (h : p 0) : p 1 := by exact h -- succeeds
-example (h : p 0) : p 1 := by convert h -- fails, with leftover goal `1 = 0`
-```
-Limiting the depth of recursion can help with this. For example, `convert h using 1` will work
-in this case.
-
-The syntax `convert ← e` will reverse the direction of the new goals
-(producing `⊢ 2 * n = n + n` in this example).
-
-Internally, `convert e` works by creating a new goal asserting that
-the goal equals the type of `e`, then simplifying it using
-`congr!`. The syntax `convert e using n` can be used to control the
-depth of matching (like `congr! n`). In the example, `convert e using 1`
-would produce a new goal `⊢ n + n + 1 = 2 * n + 1`.
-
-Refer to the `congr!` tactic to understand the congruence operations. One of its many
-features is that if `x y : t` and an instance `Subsingleton t` is in scope,
-then any goals of the form `x = y` are solved automatically.
-
-Like `congr!`, `convert` takes an optional `with` clause of `rintro` patterns,
-for example `convert e using n with x y z`.
-
-The `convert` tactic also takes a configuration option, for example
-```lean
-convert (config := {transparency := .default}) h
-```
-These are passed to `congr!`. See `Congr!.Config` for options.
+-- `convert with` names introduced variables.
+example (p q : Nat → Prop) (h : ∀ ε > 0, p ε) :
+    ∀ ε > 0, q ε := by
+  convert h using 2 with ε hε
+  -- Goal now looks like:
+  -- hε : ε > 0
+  -- ⊢ q ε ↔ p ε
+  sorry
 
 ## convert_to
 Defined in: `Mathlib.Tactic.convertTo`
 
-The `convert_to` tactic is for changing the type of the target or a local hypothesis,
-but unlike the `change` tactic it will generate equality proof obligations using `congr!`
-to resolve discrepancies.
+`convert_to t` on a goal `⊢ t'` changes the goal to `⊢ t` and adds new goals for proving the
+equality `t' = t` using congruence. The goals are created like `congr!` would.
+Any remaining congruence goals come before the main goal.
+Like `refine e`, any holes (`?_` or `?x`) in `t` that are not solved by unification are converted
+into new goals, using the hole's name, if any, as the goal case name.
+Like `congr!`, `convert_to` introduces variables while applying congruence rules. These can be
+pattern-matched, like `rintro` would, using the `with` keyword.
 
-* `convert_to ty` changes the target to `ty`
-* `convert_to ty using n` uses `congr! n` instead of `congr! 1`
-* `convert_to ty at h` changes the type of the local hypothesis `h` to `ty`.
-  Any remaining `congr!` goals come first.
+`convert e`, where `e` is a term of type `t`, uses `e` to close the new main goal. In other words,
+`convert e` works like `convert_to t; refine e`. Both tactics use the same options.
 
-Operating on the target, the tactic `convert_to ty using n`
-is the same as `convert (?_ : ty) using n`.
-The difference is that `convert_to` takes a type but `convert` takes a proof term.
-
-Except for it also being able to operate on local hypotheses,
-the syntax for `convert_to` is the same as for `convert`, and it has variations such as
-`convert_to ← g` and `convert_to (config := {transparency := .default}) g`.
-
-Note that `convert_to ty at h` may leave a copy of `h` if a later local hypotheses or the target
-depends on it, just like in `rw` or `simp`.
+* `convert_to ty at h` changes the type of the local hypothesis `h` to `ty`. If later local
+  hypotheses or the goal depend on `h`, then `convert_to t at h` may leave a copy of `h`.
+* `convert_to ← t` creates equality goals in the opposite direction (with the original goal type on
+  the right).
+* `convert_to t using n`, where `n` is a positive numeral, controls the depth with which congruence
+  is applied. For example, if the main goal is `⊢ Prime (n + n + 1)`,
+  then `convert_to Prime (2 * n + 1) using 2` results in one goal, `⊢ n + n = 2 * n`, and
+  `convert_to Prime (2 * n + 1) using 3` (or more) results in two (impossible) goals
+  `⊢ HAdd.hAdd = HMul.hMul` and `⊢ n = 2`.
+  The default value for `n` is 1.
+* `convert_to t with x ⟨y₁, y₂⟩ (z₁ | z₂)` names or pattern-matches the variables introduced by
+  congruence rules, like `rintro x ⟨y₁, y₂⟩ (z₁ | z₂)` would.
+* `convert_to (config := cfg) t` uses the configuration options in `cfg` to control the congruence
+  rules (see `Congr!.Config`).
 
 ## cutsat
 Defined in: `Lean.Parser.Tactic.cutsat`
@@ -2645,14 +2698,21 @@ Note that this involves a lot of case splitting, so may be slow.
 ## find
 Defined in: `Mathlib.Tactic.Find.tacticFind`
 
-Display theorems (and definitions) whose result type matches the current goal,
-i.e. which should be `apply`able.
-```lean
-example : True := by find
-```
+`find` finds definitions and theorems whose result type matches the current goal exactly,
+and prints them as info lines.
+In other words, `find` lists definitions and theorems that are `apply`able against the current goal.
 `find` will not affect the goal by itself and should be removed from the finished proof.
-For a command that takes the type to search for as an argument,
-see `#find`, which is also available as a tactic.
+
+For a command or tactic that takes the type to search for as an argument, see `#find`.
+
+Example:
+```lean
+example : True := by
+  find
+  -- True.intro: True
+  -- trivial: True
+  -- ...
+```
 
 ## finiteness
 Defined in: `finiteness`
@@ -7537,13 +7597,13 @@ Defined in: `tacticSleep_heartbeats_`
 do nothing for at least n heartbeats
 
 ## slice_lhs
-Defined in: `sliceLHS`
+Defined in: `Mathlib.Tactic.Slice.sliceLHS`
 
 `slice_lhs a b => tac` zooms to the left-hand side, uses associativity for categorical
 composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invokes `tac`.
 
 ## slice_rhs
-Defined in: `sliceRHS`
+Defined in: `Mathlib.Tactic.Slice.sliceRHS`
 
 `slice_rhs a b => tac` zooms to the right-hand side, uses associativity for categorical
 composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invokes `tac`.
