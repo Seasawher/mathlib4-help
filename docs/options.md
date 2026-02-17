@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `3bbc5c706c3a2ef00ded08af13c3f36be6e58a65`
+Mathlib version: `3773dce31aaa147b0493ae873db77f18d4514879`
 
 ## Elab.async
 type: `Bool`
@@ -1296,6 +1296,20 @@ default: `false`
 
 
 
+## linter.tacticAnalysis.verifyGrind
+type: `Bool`
+
+default: `false`
+
+
+
+## linter.tacticAnalysis.verifyGrindSuggestions
+type: `Bool`
+
+default: `false`
+
+
+
 ## linter.trailingWhitespace
 type: `Bool`
 
@@ -2241,7 +2255,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.28.0-rc1"`
+default: `"v4.28.0"`
 
 Revision of LeanStateSearch to use
 
