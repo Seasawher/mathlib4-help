@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `3773dce31aaa147b0493ae873db77f18d4514879`
+Mathlib version: `777913b99d9fe12fbc56a6eb316fca41e4bb4c79`
 
 ## Elab.async
 type: `Bool`
@@ -160,6 +160,13 @@ default: `true`
 
 Use the legacy `do` elaborator instead of the new, extensible implementation.
 
+## backward.dsimp.instances
+type: `Bool`
+
+default: `false`
+
+Let `dsimp` and `simp` simplify instance terms
+
 ## backward.dsimp.proofs
 type: `Bool`
 
@@ -215,6 +222,13 @@ type: `Bool`
 default: `true`
 
 specifies transparency mode when normalizing constraints of the form `(f a).i =?= s`, if `true` only reducible definitions and instances are unfolded when reducing `f a`. Otherwise, the default setting is used
+
+## backward.isDefEq.respectTransparency
+type: `Bool`
+
+default: `true`
+
+if true (the default), do not bump transparency to `.default` when checking whether implicit arguments are definitionally equal
 
 ## backward.linearNoConfusionType
 type: `Bool`
@@ -277,6 +291,13 @@ default: `true`
 
 use optimization that relies on 'morally canonical' instances during type class resolution
 
+## backward.whnf.reducibleClassField
+type: `Bool`
+
+default: `false`
+
+enables better support for unfolding type class fields marked as `[reducible]`
+
 ## bootstrap.genMatcherCode
 type: `Bool`
 
@@ -290,6 +311,13 @@ type: `Bool`
 default: `true`
 
 by default the `inductive`/`structure` commands report an error if the resulting universe is not zero, but may be zero for some universe parameters. Reason: unless this type is a subsingleton, it is hardly what the user wants since it can only eliminate into `Prop`. In the `Init` package, we define subsingletons, and we use this option to disable the check. This option may be deleted in the future after we improve the validator
+
+## cbv.warning
+type: `Bool`
+
+default: `true`
+
+disable `cbv` usage warning
 
 ## checkBinderAnnotations
 type: `Bool`
@@ -510,6 +538,13 @@ type: `Bool`
 default: `false`
 
 whether to use Verso syntax in docstrings
+
+## doc.verso.module
+type: `Bool`
+
+default: `false`
+
+whether to use Verso syntax in module docstrings (falls back to `doc.verso` if not set)
 
 ## doc.verso.suggestions
 type: `Bool`
@@ -2255,7 +2290,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.28.0"`
+default: `"v4.29.0-rc1"`
 
 Revision of LeanStateSearch to use
 
@@ -2413,6 +2448,20 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Compiler.elimDeadVars
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Compiler.explicitBoxing
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Compiler.extendJoinPointContext
 type: `Bool`
 
@@ -2435,6 +2484,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Compiler.floatLetIn
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Compiler.inferBorrow
 type: `Bool`
 
 default: `false`
@@ -2490,6 +2546,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Compiler.pushProj
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Compiler.reduceArity
 type: `Bool`
 
@@ -2504,6 +2567,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Compiler.resetReuse
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Compiler.result
 type: `Bool`
 
@@ -2512,6 +2582,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Compiler.saveBase
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Compiler.saveImpure
 type: `Bool`
 
 default: `false`
@@ -2561,6 +2638,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Compiler.simp.step.new
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Compiler.simpCase
 type: `Bool`
 
 default: `false`
@@ -2623,6 +2707,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Compiler.toImpure
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Compiler.toMono
 type: `Bool`
 
@@ -2631,6 +2722,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Compiler.trace
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Debug.Meta.Tactic.cbv
 type: `Bool`
 
 default: `false`
@@ -3428,6 +3526,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Meta.Tactic.cbv
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Meta.Tactic.contradiction
 type: `Bool`
 
@@ -3883,6 +3988,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Meta.synthInstance.cache
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Meta.synthInstance.instances
 type: `Bool`
 
@@ -4268,20 +4380,6 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.compiler.ir.borrow
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.compiler.ir.boxing
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
 ## trace.compiler.ir.elim_dead
 type: `Bool`
 
@@ -4324,13 +4422,6 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.compiler.ir.reset_reuse
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
 ## trace.compiler.ir.result
 type: `Bool`
 
@@ -4338,7 +4429,7 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.compiler.ir.simp_case
+## trace.compiler.ir.simple_ground
 type: `Bool`
 
 default: `false`

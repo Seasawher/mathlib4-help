@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `3773dce31aaa147b0493ae873db77f18d4514879`
+Mathlib version: `777913b99d9fe12fbc56a6eb316fca41e4bb4c79`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1001,8 +1001,7 @@ In order to avoid calling a SAT solver every time, the proof can be cached with 
 If solving your problem relies inherently on using associativity or commutativity, consider enabling
 the `bv.ac_nf` option.
 
-
-Note: `bv_decide` uses `ofReduceBool` and thus trusts the correctness of the code generator.
+Note: `bv_decide` trusts the correctness of the code generator and adds a axioms asserting its result.
 
 Note: include `import Std.Tactic.BVDecide`
 
@@ -1031,8 +1030,7 @@ In order to avoid calling a SAT solver every time, the proof can be cached with 
 If solving your problem relies inherently on using associativity or commutativity, consider enabling
 the `bv.ac_nf` option.
 
-
-Note: `bv_decide` uses `ofReduceBool` and thus trusts the correctness of the code generator.
+Note: `bv_decide` trusts the correctness of the code generator and adds a axioms asserting its result.
 
 Note: include `import Std.Tactic.BVDecide`
 
@@ -1431,6 +1429,33 @@ Defined in: `CategoryTheory.cat_disch`
 A tactic for discharging easy category theory goals, widely used as an autoparameter.
 Currently this defaults to the `aesop_cat` wrapper around `aesop`, but by setting
 the option `mathlib.tactic.category.grind` to `true`, it will use the `grind` tactic instead.
+
+## cbv
+Defined in: `Lean.Parser.Tactic.cbv`
+
+`cbv` performs simplification that closely mimics call-by-value evaluation.
+It reduces terms by unfolding definitions using their defining equations and
+applying matcher equations. The unfolding is propositional, so `cbv` also works
+with functions defined via well-founded recursion or partial fixpoints.
+
+`cbv` has built-in support for goals of the form `lhs = rhs`. It proceeds in
+two passes:
+1. Reduce `lhs`. If the result is definitionally equal to `rhs`, close the goal.
+2. Otherwise, reduce `rhs`. If the result is now definitionally equal to the
+   reduced `lhs`, close the goal.
+3. If neither check succeeds, generate a new goal `lhs' = rhs'`, where `lhs'`
+   and `rhs'` are the reduced forms of the original sides.
+
+`cbv` is therefore not a finishing tactic in general: it may leave a new
+(simpler) equality goal. For goals that are not equalities, `cbv` currently
+leaves the goal unchanged.
+
+The proofs produced by `cbv` only use the three standard axioms.
+In particular, they do not require trust in the correctness of the code
+generator.
+
+This tactic is experimental and its behavior is likely to change in upcoming
+releases of Lean.
 
 ## cfc_cont_tac
 Defined in: `cfcContTac`
@@ -2120,7 +2145,7 @@ Options:
   It has two key properties: (1) since it uses the kernel, it ignores transparency and can unfold everything,
   and (2) it reduces the `Decidable` instance only once instead of twice.
 - `decide +native` uses the native code compiler (`#eval`) to evaluate the `Decidable` instance,
-  admitting the result via the `Lean.ofReduceBool` axiom.
+  admitting the result via an axiom. This can be significantly more efficient than using reduction, but it is at the cost of increasing the size
   This can be significantly more efficient than using reduction, but it is at the cost of increasing the size
   of the trusted code base.
   Namely, it depends on the correctness of the Lean compiler and all definitions with an `@[implemented_by]` attribute.
@@ -2171,6 +2196,26 @@ For equality goals for types with decidable equality, usually `rfl` can be used 
 example : 1 + 1 = 2 := by decide
 example : 1 + 1 = 2 := by rfl
 ```
+
+## decide_cbv
+Defined in: `Lean.Parser.Tactic.decide_cbv`
+
+`decide_cbv` is a finishing tactic that closes goals of the form `p`, where `p`
+is a `Decidable` proposition. It proceeds in two steps:
+1. Apply `of_decide_eq_true` to transform the goal into `decide p = true`.
+2. Reduce `decide p` via call-by-value normalization. If the result is
+   definitionally equal to `true`, the goal is closed.
+
+`decide_cbv` fails with an error if `decide p` does not reduce to `true`.
+Unlike `cbv`, `decide_cbv` is a terminal tactic: it either closes the goal or
+fails.
+
+The proofs produced by `decide_cbv` only use the three standard axioms.
+In particular, they do not require trust in the correctness of the code
+generator.
+
+This tactic is experimental and its behavior is likely to change in upcoming
+releases of Lean.
 
 ## decreasing_tactic
 Defined in: `tacticDecreasing_tactic`
@@ -2884,7 +2929,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.28.0/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.29.0-rc1/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3017,7 +3062,7 @@ These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
 
-See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.28.0/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.29.0-rc1/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
@@ -3283,6 +3328,22 @@ Defined in: `Lean.Parser.Tactic.grindTrace`
 `grind?` takes the same arguments as `grind`, but reports an equivalent call to `grind only`
 that would be sufficient to close the goal. This is useful for reducing the size of the `grind`
 theorems in a local invocation.
+
+## grind_linarith
+Defined in: `Lean.Parser.Tactic.grind_linarith`
+
+`grind_linarith` solves simple goals about linear arithmetic.
+
+It is a implemented as a thin wrapper around the `grind` tactic, enabling only the `linarith` solver.
+Please use `grind` instead if you need additional capabilities.
+
+## grind_order
+Defined in: `Lean.Parser.Tactic.grind_order`
+
+`grind_order` solves simple goals about partial orders and linear orders.
+
+It is a implemented as a thin wrapper around the `grind` tactic, enabling only the `order` solver.
+Please use `grind` instead if you need additional capabilities.
 
 ## grobner
 Defined in: `Lean.Parser.Tactic.grobner`
@@ -5757,7 +5818,7 @@ of `Decidable p` and then evaluating it to `isTrue ..`. Unlike `decide`, this
 uses `#eval` to evaluate the decidability instance.
 
 This should be used with care because it adds the entire lean compiler to the trusted
-part, and the axiom `Lean.ofReduceBool` will show up in `#print axioms` for theorems using
+part, and a new axiom will show up in `#print axioms` for theorems using
 this method or anything that transitively depends on them. Nevertheless, because it is
 compiled, this can be significantly more efficient than using `decide`, and for very
 large computations this is one way to run external programs and trust the result.

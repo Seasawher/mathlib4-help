@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `3773dce31aaa147b0493ae873db77f18d4514879`
+Mathlib version: `777913b99d9fe12fbc56a6eb316fca41e4bb4c79`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -478,6 +478,12 @@ parenthesizing occurrences of `cat:prec` (`categoryParser cat prec`). Implementa
 `maybeParenthesize` with the precedence and `cat`. If no category parenthesizer is registered, the
 category will never be parenthesized, but still traversed for parenthesizing nested categories.
 
+## cbv_eval
+ Register a theorem as a rewrite rule for `cbv` evaluation of a given definition.
+
+## cbv_opaque
+ Mark declarations that should not be unfolded by the `cbv` tactic
+
 ## class
  type class
 Registers an inductive type or structure as a type class. Using `class` or `class inductive` is
@@ -731,15 +737,19 @@ type. This may prevent the elaborator from incorrectly inferring implicit argume
 
 ## enat_to_nat_coe
  A simp set for pushing coercions from `ℕ` to `ℕ∞` in `enat_to_nat`. 
+A simp set for pushing coercions from `ℕ` to `ℕ∞` in `enat_to_nat`.
 
 ## enat_to_nat_coe_proc
  simproc set for enat_to_nat_coe_proc
+Simplification procedure
 
 ## enat_to_nat_top
  A simp set for simplifying expressions involving `⊤` in `enat_to_nat`. 
+A simp set for simplifying expressions involving `⊤` in `enat_to_nat`.
 
 ## enat_to_nat_top_proc
  simproc set for enat_to_nat_top_proc
+Simplification procedure
 
 ## env_linter
  Use this declaration as a linting test in #lint
@@ -802,9 +812,11 @@ Initialize the attribute `field` grouping the simprocs associated to the field_s
 
 ## fin_omega
  A simp set for the `fin_omega` wrapper around `omega`. 
+A simp set for the `fin_omega` wrapper around `omega`.
 
 ## fin_omega_proc
  simproc set for fin_omega_proc
+Simplification procedure
 
 ## formatter
  Register a formatter for a parser.
@@ -819,9 +831,11 @@ Initialization of `funProp` attribute
 
 ## functor_norm
  Simp set for `functor_norm` 
+Simp set for `functor_norm`
 
 ## functor_norm_proc
  simproc set for functor_norm_proc
+Simplification procedure
 
 ## gcongr
  generalized congruence
@@ -855,9 +869,11 @@ types where we did not generate them immediately (due to `set_option genCtorIdx 
 
 ## ghost_simps
  Simplification rules for ghost equations. 
+Simplification rules for ghost equations.
 
 ## ghost_simps_proc
  simproc set for ghost_simps_proc
+Simplification procedure
 
 ## grind
  The `[grind]` attribute is used to annotate declarations.When applied to an equational theorem, `[grind =]`, `[grind =_]`, or `[grind _=_]`will mark the theorem for use in heuristic instantiations by the `grind` tactic,
@@ -1056,14 +1072,19 @@ in particular for `opaque` instances.
 To assign priorities to instances, `@[instance prio]` can be used (where `prio` is a priority).
 This corresponds to the `instance (priority := prio)` notation.
 
+## instance_reducible
+ instance reducible declaration
+
 ## int_toBitVec
  simp theorems used to convert UIntX/IntX statements into BitVec ones
 
 ## integral_simps
  Simp set for integral rules. 
+Simp set for integral rules.
 
 ## integral_simps_proc
  simproc set for integral_simps_proc
+Simplification procedure
 
 ## irreducible
  irreducible declaration
@@ -1147,9 +1168,20 @@ its output. The list of lemmas should be reasonable (contrary to the output of
 `squeeze_simp [foo, bar]` which might contain tens of lemmas), and the outcome should be quick
 enough.
 
+The simpset `mfld_simps` records several simp lemmas that are
+especially useful in manifolds. It is a subset of the whole set of simp lemmas, but it makes it
+possible to have quicker proofs (when used with `squeeze_simp` or `simp only`) while retaining
+readability.
+
+The typical use case is the following, in a file on manifolds:
+If `simp [foo, bar]` is slow, replace it with `squeeze_simp [foo, bar, mfld_simps]` and paste
+its output. The list of lemmas should be reasonable (contrary to the output of
+`squeeze_simp [foo, bar]` which might contain tens of lemmas), and the outcome should be quick
+enough.
 
 ## mfld_simps_proc
  simproc set for mfld_simps_proc
+Simplification procedure
 
 ## missing_docs_handler
  adds a syntax traversal for the missing docs linter
@@ -1193,15 +1225,52 @@ some of the simp lemmas in the standard simp set:
   `(α_ M M M).inv ≫ (μ ⊗ₘ 𝟙 M) ≫ μ = (𝟙 M ⊗ₘ μ) ≫ μ`
 * It unfolds non-primitive coherence isomorphisms, like the tensor strengths `tensorμ`, `tensorδ`.
 
+`mon_tauto` is a simp set to prove tautologies about morphisms from some (tensor) power of `M`
+to `M`, where `M` is a (commutative) monoid object in a (braided) monoidal category.
+
+**This `simp` set is incompatible with the standard simp set.**
+If you want to use it, make sure to add the following to your simp call to disable the problematic
+default simp lemmas:
+```lean
+-MonoidalCategory.whiskerLeft_id, -MonoidalCategory.id_whiskerRight,
+-MonoidalCategory.tensor_comp, -MonoidalCategory.tensor_comp_assoc,
+-MonObj.mul_assoc, -MonObj.mul_assoc_assoc
+```
+
+The general algorithm it follows is to push the associators `α_` and commutators `β_` inwards until
+they cancel against the right sequence of multiplications.
+
+This approach is justified by the fact that a tautology in the language of (commutative) monoid
+objects "remembers" how it was proved: Every use of a (commutative) monoid object axiom inserts a
+unitor, associator or commutator, and proving a tautology simply amounts to undoing those moves as
+prescribed by the presence of unitors, associators and commutators in its expression.
+
+This simp set is opiniated about its normal form, which is why it cannot be used concurrently with
+some of the simp lemmas in the standard simp set:
+* It eliminates all mentions of whiskers by rewriting them to tensored homs,
+  which goes against `whiskerLeft_id` and `id_whiskerRight`:
+  `X ◁ f = 𝟙 X ⊗ₘ f`, `f ▷ X = 𝟙 X ⊗ₘ f`.
+  This goes against `whiskerLeft_id` and `id_whiskerRight` in the standard simp set.
+* It collapses compositions of tensored homs to the tensored hom of the compositions,
+  which goes against `tensor_comp`:
+  `(f₁ ⊗ₘ g₁) ≫ (f₂ ⊗ₘ g₂) = (f₁ ≫ f₂) ⊗ₘ (g₁ ≫ g₂)`. TODO: Isn't this direction Just Better?
+* It cancels the associators against multiplications,
+  which goes against `mul_assoc`:
+  `(α_ M M M).hom ≫ (𝟙 M ⊗ₘ μ) ≫ μ = (μ ⊗ₘ 𝟙 M) ≫ μ`,
+  `(α_ M M M).inv ≫ (μ ⊗ₘ 𝟙 M) ≫ μ = (𝟙 M ⊗ₘ μ) ≫ μ`
+* It unfolds non-primitive coherence isomorphisms, like the tensor strengths `tensorμ`, `tensorδ`.
 
 ## mon_tauto_proc
  simproc set for mon_tauto_proc
+Simplification procedure
 
 ## monad_norm
  Simp set for `functor_norm` 
+Simp set for `functor_norm`
 
 ## monad_norm_proc
  simproc set for monad_norm_proc
+Simplification procedure
 
 ## mono
  A lemma stating the monotonicity of some function, with respect to appropriate
@@ -1268,9 +1337,13 @@ Defines the user attribute `nolint` for skipping `#lint`
  The `@[nontriviality]` simp set is used by the `nontriviality` tactic to automatically
 discharge theorems about the trivial case (where we know `Subsingleton α` and many theorems
 in e.g. groups are trivially true). 
+The `@[nontriviality]` simp set is used by the `nontriviality` tactic to automatically
+discharge theorems about the trivial case (where we know `Subsingleton α` and many theorems
+in e.g. groups are trivially true).
 
 ## nontriviality_proc
  simproc set for nontriviality_proc
+Simplification procedure
 
 ## norm_cast
  attribute for norm_cast
@@ -1296,9 +1369,11 @@ for parenthesizing syntax of kind `k`.
 
 ## parity_simps
  Simp attribute for lemmas about `Even` 
+Simp attribute for lemmas about `Even`
 
 ## parity_simps_proc
  simproc set for parity_simps_proc
+Simplification procedure
 
 ## partial_fixpoint_monotone
  monotonicity theorem
@@ -1310,9 +1385,11 @@ for functions defined using `partial_fixpoint`.
 
 ## pnat_to_nat_coe
  A simp set for the `pnat_to_nat` tactic. 
+A simp set for the `pnat_to_nat` tactic.
 
 ## pnat_to_nat_coe_proc
  simproc set for pnat_to_nat_coe_proc
+Simplification procedure
 
 ## positivity
  adds a positivity extension
@@ -1363,9 +1440,12 @@ The `push_cast` simp attribute.
 ## qify_simps
  The simpset `qify_simps` is used by the tactic `qify` to move expressions from `ℕ` or `ℤ` to `ℚ`
 which gives a well-behaved division. 
+The simpset `qify_simps` is used by the tactic `qify` to move expressions from `ℕ` or `ℤ` to `ℚ`
+which gives a well-behaved division.
 
 ## qify_simps_proc
  simproc set for qify_simps_proc
+Simplification procedure
 
 ## quot_precheck
  Register a double backtick syntax quotation pre-check.
@@ -1379,9 +1459,11 @@ unfolded, and identifier-less syntax is ultimately assumed to be well-formed.
 
 ## rclike_simps
  "Simp attribute for lemmas about `RCLike`" 
+"Simp attribute for lemmas about `RCLike`"
 
 ## rclike_simps_proc
  simproc set for rclike_simps_proc
+Simplification procedure
 
 ## reassoc
  
@@ -1409,9 +1491,12 @@ special case in the `rfl` tactic.
 ## rify_simps
  The simpset `rify_simps` is used by the tactic `rify` to move expressions from `ℕ`, `ℤ`, or
 `ℚ` to `ℝ`. 
+The simpset `rify_simps` is used by the tactic `rify` to move expressions from `ℕ`, `ℤ`, or
+`ℚ` to `ℝ`.
 
 ## rify_simps_proc
  simproc set for rify_simps_proc
+Simplification procedure
 
 ## run_builtin_parser_attribute_hooks
  explicitly run hooks normally activated by builtin parser attributes
@@ -1521,8 +1606,6 @@ Attribute adding a tactic analysis pass from a `Config` structure.
 
 ## tagged_return
  mark extern definition to always return tagged values
-Marks an extern definition to be guaranteed to always return tagged values.
-This information is used to optimize reference counting in the compiler.
 
 ## term_elab
  term elaborator
@@ -1584,9 +1667,11 @@ Register the @[try_suggestion prio] attribute
 
 ## typevec
  simp set for the manipulation of typevec and arrow expressions 
+simp set for the manipulation of typevec and arrow expressions
 
 ## typevec_proc
  simproc set for typevec_proc
+Simplification procedure
 
 ## unbox
  compiler tries to unbox result values if their types are tagged with `[unbox]`
@@ -1596,6 +1681,9 @@ This attribute currently has no effect.
 
 ## unification_hint
  unification hint
+
+## univ_out_params
+ universe output parameters for a type class
 
 ## unused_variables_ignore_fn
  Marks a function of type `Lean.Linter.IgnoreFunction` for suppressing unused variable warnings
@@ -1630,7 +1718,10 @@ Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
 ## zify_simps
  The simpset `zify_simps` is used by the tactic `zify` to move expressions from `ℕ` to `ℤ`
 which gives a well-behaved subtraction. 
+The simpset `zify_simps` is used by the tactic `zify` to move expressions from `ℕ` to `ℤ`
+which gives a well-behaved subtraction.
 
 ## zify_simps_proc
  simproc set for zify_simps_proc
+Simplification procedure
 
