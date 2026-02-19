@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `777913b99d9fe12fbc56a6eb316fca41e4bb4c79`
+Mathlib version: `9587c3912ad63173494fea158e378473c664a33f`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1960,16 +1960,88 @@ Defined in: `Lean.Parser.Tactic.contradiction`
 ## contrapose
 Defined in: `Mathlib.Tactic.Contrapose.contrapose`
 
-Transforms the goal into its contrapositive.
-* `contrapose` turns a goal `P → Q` into `¬ Q → ¬ P` and it turns a goal `P ↔ Q` into `¬ P ↔ ¬ Q`
-* `contrapose h` first reverts the local assumption `h`, and then uses `contrapose` and `intro h`
-* `contrapose h with new_h` uses the name `new_h` for the introduced hypothesis
+`contrapose` transforms the main goal into its contrapositive. If the goal has the form `⊢ P → Q`,
+then `contrapose turns it into `⊢ ¬ Q → ¬ P`. If the goal has the form `⊢ P ↔ Q`, then `contrapose`
+turns it into `⊢ ¬ P ↔ ¬ Q`.
+
+* `contrapose h` on a goal of the form `h : P ⊢ Q` turns the goal into `h : ¬ Q ⊢ ¬ P`. This is
+  equivalent to `revert h; contrapose; intro h`.
+* `contrapose h with new_h` uses the name `new_h` for the introduced hypothesis. This is equivalent
+  to `revert h; contrapose; intro new_h`.
+* `contrapose!`, `contrapose! h` and `contrapose! h with new_h` push negation deeper into the goal
+  after contraposing (but before introducing the new hypothesis). See the `push_neg` tactic for more
+  details on the pushing algorithm.
+* `contrapose! (config := cfg)` controls the options for negation pushing. All options for
+  `Mathlib.Tactic.Push.Config` are supported:
+  * `contrapose! +distrib` rewrites `¬ (p ∧ q)` into `¬ p ∨ ¬ q` instead of `p → ¬ q`.
+
+Examples:
+```lean4
+variables (P Q R : Prop)
+
+example (H : ¬ Q → ¬ P) : P → Q := by
+  contrapose
+  exact H
+
+example (H : ¬ P ↔ ¬ Q) : P ↔ Q := by
+  contrapose
+  exact H
+
+example (H : ¬ Q → ¬ P) (h : P) : Q := by
+  contrapose h
+  exact H h
+
+example (H : ¬ R → P → ¬ Q) : (P ∧ Q) → R := by
+  contrapose!
+  exact H
+
+example (H : ¬ R → ¬ P ∨ ¬ Q) : (P ∧ Q) → R := by
+  contrapose! +distrib
+  exact H
+```
 
 ## contrapose!
 Defined in: `Mathlib.Tactic.Contrapose.contrapose!`
 
-Transforms the goal into its contrapositive and pushes negations in the result.
-Usage matches `contrapose`
+`contrapose` transforms the main goal into its contrapositive. If the goal has the form `⊢ P → Q`,
+then `contrapose turns it into `⊢ ¬ Q → ¬ P`. If the goal has the form `⊢ P ↔ Q`, then `contrapose`
+turns it into `⊢ ¬ P ↔ ¬ Q`.
+
+* `contrapose h` on a goal of the form `h : P ⊢ Q` turns the goal into `h : ¬ Q ⊢ ¬ P`. This is
+  equivalent to `revert h; contrapose; intro h`.
+* `contrapose h with new_h` uses the name `new_h` for the introduced hypothesis. This is equivalent
+  to `revert h; contrapose; intro new_h`.
+* `contrapose!`, `contrapose! h` and `contrapose! h with new_h` push negation deeper into the goal
+  after contraposing (but before introducing the new hypothesis). See the `push_neg` tactic for more
+  details on the pushing algorithm.
+* `contrapose! (config := cfg)` controls the options for negation pushing. All options for
+  `Mathlib.Tactic.Push.Config` are supported:
+  * `contrapose! +distrib` rewrites `¬ (p ∧ q)` into `¬ p ∨ ¬ q` instead of `p → ¬ q`.
+
+Examples:
+```lean4
+variables (P Q R : Prop)
+
+example (H : ¬ Q → ¬ P) : P → Q := by
+  contrapose
+  exact H
+
+example (H : ¬ P ↔ ¬ Q) : P ↔ Q := by
+  contrapose
+  exact H
+
+example (H : ¬ Q → ¬ P) (h : P) : Q := by
+  contrapose h
+  exact H h
+
+example (H : ¬ R → P → ¬ Q) : (P ∧ Q) → R := by
+  contrapose!
+  exact H
+
+example (H : ¬ R → ¬ P ∨ ¬ Q) : (P ∧ Q) → R := by
+  contrapose! +distrib
+  exact H
+```
 
 ## conv
 Defined in: `Lean.Parser.Tactic.Conv.conv`
