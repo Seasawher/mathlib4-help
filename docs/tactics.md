@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `9587c3912ad63173494fea158e378473c664a33f`
+Mathlib version: `fdca716c87cb52e20ea0a94f93ac69750151f419`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -6390,12 +6390,6 @@ may be paired with any of the other features of `peel`.
 
 This tactic works by repeatedly applying lemmas such as `forall_imp`, `Exists.imp`,
 `Filter.Eventually.mp`, `Filter.Frequently.mp`, and `Filter.Eventually.of_forall`.
-
-## pgame_wf_tac
-Defined in: `SetTheory.PGame.tacticPgame_wf_tac`
-
-Discharges proof obligations of the form `⊢ Subsequent ..` arising in termination proofs
-of definitions using well-founded recursion on `PGame`.
 
 ## pi_lower_bound
 Defined in: `Real.«tacticPi_lower_bound[_,,]»`
