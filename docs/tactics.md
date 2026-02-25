@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `1bc7728a050fc18ca2683f614c531cd7050ff063`
+Mathlib version: `78457cceeec875fb928192efbee68bf9b5cea5f5`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2408,9 +2408,9 @@ example (h : ∀ x : Nat, x = x → True) : True := by
 ## econstructor
 Defined in: `tacticEconstructor`
 
-`econstructor` is like `constructor`
-(it calls `apply` using the first matching constructor of an inductive datatype)
-except only non-dependent premises are added as new goals.
+`econstructor`, on a goal which is an inductive type, solves it by applying the first matching
+constructor, creating new goals for non-dependent arguments to the constructor in the same order.
+This is like `constructor` except only non-dependent arguments are shown as new goals.
 
 ## enat_to_nat
 Defined in: `Mathlib.Tactic.ENatToNat.tacticEnat_to_nat`
@@ -2641,9 +2641,9 @@ rather than putting the dependent goals first.
 ## fconstructor
 Defined in: `tacticFconstructor`
 
-`fconstructor` is like `constructor`
-(it calls `apply` using the first matching constructor of an inductive datatype)
-except that it does not reorder goals.
+`fconstructor`, on a goal which is an inductive type, solves it by applying the first matching
+constructor, creating new goals for all arguments to the constructor in the same order.
+This is like `constructor` except the goals are not reordered.
 
 ## field
 Defined in: `Mathlib.Tactic.FieldSimp.field`
@@ -3001,7 +3001,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.29.0-rc1/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.29.0-rc2/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3134,7 +3134,7 @@ These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
 
-See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.29.0-rc1/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.29.0-rc2/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
