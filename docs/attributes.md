@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `1bc7728a050fc18ca2683f614c531cd7050ff063`
+Mathlib version: `78457cceeec875fb928192efbee68bf9b5cea5f5`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -263,6 +263,13 @@ Registers a delaborator.
 the first success. If the term to be delaborated is an application of a constant `c`, elaborators
 for `app.c` are tried first; this is also done for `Expr.const`s ("nullary applications") to reduce
 special casing. If the term is an `Expr.mdata` with a single key `k`, `mdata.k` is tried first.
+
+## builtin_doElem_control_info
+ (builtin) control info inference elaborator
+Registers a `ControlInfo` inference handler for the given `doElem` syntax node kind.
+
+A handler should have type `ControlInfoHandler` (i.e. `TSyntax \`doElem → TermElabM ControlInfo`).
+For pure handlers, use `fun stx => return ControlInfo.pure`.
 
 ## builtin_doElem_elab
  (builtin) do element elaborator
@@ -625,6 +632,13 @@ special casing. If the term is an `Expr.mdata` with a single key `k`, `mdata.k` 
 ## deprecated
  mark declaration as deprecated
 
+## doElem_control_info
+ control info inference elaborator
+Registers a `ControlInfo` inference handler for the given `doElem` syntax node kind.
+
+A handler should have type `ControlInfoHandler` (i.e. `TSyntax \`doElem → TermElabM ControlInfo`).
+For pure handlers, use `fun stx => return ControlInfo.pure`.
+
 ## doElem_elab
  do element elaborator
 Registers a `do` element elaborator for the given syntax node kind.
@@ -951,6 +965,22 @@ it possible to prove `False` with `native_decide` using incorrect implementation
 variant of this attribute that however doesn't work for unsafe implementations, see `@[csimp]`,
 which requires a proof that the two functions are equal.
 
+## implicit_reducible
+ implicit reducible declaration
+Marks a definition as `[implicit_reducible]`, meaning it is unfolded at
+`TransparencyMode.instances` or above but *not* at `TransparencyMode.reducible`.
+
+Use this attribute for:
+- **Type class instances**: The `instance` command automatically adds `[implicit_reducible]`.
+  Instance diamonds (e.g., `Add Nat` from a direct instance vs via `Semiring`) are definitionally
+  equal but structurally different, so `isDefEq` must unfold them. When using `attribute [instance]`
+  on an existing definition, you typically also need `attribute [implicit_reducible]`.
+- **Definitions used in types that appear in implicit arguments**: For example, `Nat.add`, `Array.size`.
+  When proof automation applies a lemma, implicit arguments are checked with increased transparency
+  so that type-level computations (e.g., `n + 0` vs `n`) are resolved.
+
+`[instance_reducible]` is an alias for this attribute.
+
 ## incremental
  Marks an elaborator (tactic or command, currently) as supporting incremental elaboration. For unmarked elaborators, the corresponding snapshot bundle field in the elaboration context is unset so as to prevent accidental, incorrect reuse.
 Marks an elaborator (tactic or command, currently) as supporting incremental elaboration.
@@ -1073,7 +1103,8 @@ To assign priorities to instances, `@[instance prio]` can be used (where `prio` 
 This corresponds to the `instance (priority := prio)` notation.
 
 ## instance_reducible
- instance reducible declaration
+ alias for implicit_reducible
+Alias for `[implicit_reducible]`. See `implicit_reducible` for documentation.
 
 ## int_toBitVec
  simp theorems used to convert UIntX/IntX statements into BitVec ones

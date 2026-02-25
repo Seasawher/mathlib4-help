@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `1bc7728a050fc18ca2683f614c531cd7050ff063`
+Mathlib version: `78457cceeec875fb928192efbee68bf9b5cea5f5`
 
 ## Elab.async
 type: `Bool`
@@ -209,6 +209,13 @@ default: `false`
 
 use old E-matching pattern inference
 
+## backward.isDefEq.implicitBump
+type: `Bool`
+
+default: `true`
+
+if true, bump transparency to `.instances` for all implicit arguments, not just instance-implicit ones
+
 ## backward.isDefEq.lazyProjDelta
 type: `Bool`
 
@@ -294,7 +301,7 @@ use optimization that relies on 'morally canonical' instances during type class 
 ## backward.whnf.reducibleClassField
 type: `Bool`
 
-default: `false`
+default: `true`
 
 enables better support for unfolding type class fields marked as `[reducible]`
 
@@ -382,6 +389,13 @@ type: `Nat`
 default: `64`
 
 (compiler) maximum number of times a definition tagged with `@[specialize]` can be recursively specialized before generating an error during compilation.
+
+## compiler.relaxedMetaCheck
+type: `Bool`
+
+default: `false`
+
+Allow mixed `meta`/non-`meta` references in the same module. References to imports are unaffected.
 
 ## compiler.reuse
 type: `Bool`
@@ -2290,7 +2304,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.29.0-rc1"`
+default: `"v4.29.0-rc2"`
 
 Revision of LeanStateSearch to use
 
@@ -2456,6 +2470,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Compiler.explicitBoxing
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Compiler.explicitRc
 type: `Bool`
 
 default: `false`
@@ -3149,6 +3170,20 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Elab.do
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Elab.do.match
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Elab.do.step
 type: `Bool`
 
 default: `false`
@@ -4409,13 +4444,6 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.compiler.ir.push_proj
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.compiler.ir.rc
 type: `Bool`
 
 default: `false`
