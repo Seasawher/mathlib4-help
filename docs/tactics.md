@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `78457cceeec875fb928192efbee68bf9b5cea5f5`
+Mathlib version: `5dadd2cebce0a724229b35e4ca3d5c5e25af2b76`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1920,16 +1920,28 @@ example : True ∧ (True ∨ True) := by
 ## continuity
 Defined in: `tacticContinuity`
 
-The tactic `continuity` solves goals of the form `Continuous f` by applying lemmas tagged with the
-`continuity` user attribute.
+`continuity` solves goals of the form `Continuous f` by applying lemmas tagged with the attribute
+`@[continuity]`. If the goal is not solved after attempting all rules, `continuity` fails.
 
 `fun_prop` is a (usually more powerful) alternative to `continuity`.
+
+This tactic is extensible. Tagging lemmas with the `@[continuity]` attribute can allow `continuity`
+to solve more goals.
+
+* `continuity?` reports the proof script found by `continuity`.
 
 ## continuity?
 Defined in: `tacticContinuity?`
 
-The tactic `continuity` solves goals of the form `Continuous f` by applying lemmas tagged with the
-`continuity` user attribute.
+`continuity` solves goals of the form `Continuous f` by applying lemmas tagged with the attribute
+`@[continuity]`. If the goal is not solved after attempting all rules, `continuity` fails.
+
+`fun_prop` is a (usually more powerful) alternative to `continuity`.
+
+This tactic is extensible. Tagging lemmas with the `@[continuity]` attribute can allow `continuity`
+to solve more goals.
+
+* `continuity?` reports the proof script found by `continuity`.
 
 ## contradiction
 Defined in: `Lean.Parser.Tactic.contradiction`
@@ -2514,8 +2526,10 @@ It is useful for existential goals.
 ## existsi
 Defined in: `Mathlib.Tactic.«tacticExistsi_,,»`
 
-`existsi e₁, e₂, ⋯` applies the tactic `refine ⟨e₁, e₂, ⋯, ?_⟩`. It's purpose is to instantiate
-existential quantifiers.
+`existsi e₁, e₂, ⋯` instantiates existential quantifiers in the main goal by using `e₁`, `e₂`, ...
+as witnesses. `existsi e₁, e₂, ⋯` is equivalent to `refine ⟨e₁, e₂, ⋯, ?_⟩`.
+
+See also `exists`: `exists e₁, e₂, ⋯` is equivalent to `existsi e₁, e₂, ⋯; try trivial`.
 
 Examples:
 
@@ -8336,10 +8350,25 @@ example : True := by trivial <;> unreachable!
 ## use
 Defined in: `Mathlib.Tactic.useSyntax`
 
-`use e₁, e₂, ⋯` is similar to `exists`, but unlike `exists` it is equivalent to applying the tactic
-`refine ⟨e₁, e₂, ⋯, ?_, ⋯, ?_⟩` with any number of placeholders (rather than just one) and
+`use e₁, e₂, ⋯` instantiates all existential quantifiers in the main goal by using `e₁`, `e₂`, ...
+as witnesses, creates goals for all the remaining witnesses, and tries to discharge these goals
+automatically.
+
+`use` is similar to `exists` or `existsi`, but unlike `exists` it is equivalent to applying the
+tactic `refine ⟨e₁, e₂, ⋯, ?_, ⋯, ?_⟩` with any number of placeholders (rather than just one) and
 then trying to close goals associated to the placeholders with a configurable discharger (rather
 than just `try trivial`).
+
+* `use! e₁, e₂, ⋯` applies constructors everywhere rather than just for goals that correspond to the
+  last argument of a constructor. This gives the effect that nested constructors are being flattened
+  out, with the supplied values being used along the leaves and nodes of the tree of constructors.
+* `use (discharger := tac) e₁, e₂, ...` calls `tac` as a discharger, on all remaining `Prop`-valued
+  goals. If this option is omitted, `use` calls `try with_reducible use_discharger` as default
+  discharger.
+  To turn off the discharger and keep all goals, use `(discharger := skip)`.
+  To allow "heavy refls", use `(discharger := try use_discharger)`.
+  If `tac` fails on the new goal, `use (discharger := tac)` fails (hint: you might want to use
+  `(discharger := try tac)` instead).
 
 Examples:
 
@@ -8354,37 +8383,41 @@ example : Nonempty (PNat ≃ Nat) := by
   use PNat.natPred, Nat.succPNat
   · exact PNat.succPNat_natPred
   · intro; rfl
-```
 
-`use! e₁, e₂, ⋯` is similar but it applies constructors everywhere rather than just for
-goals that correspond to the last argument of a constructor. This gives the effect that
-nested constructors are being flattened out, with the supplied values being used along the
-leaves and nodes of the tree of constructors.
-With `use!` one can feed in each `42` one at a time:
-
-```lean
+-- With `use!` one can feed in each `42` one at a time:
 example : ∃ n : {n : Nat // n % 2 = 0}, n.val > 10 := by use! 20; simp
 
 example : ∃ p : Nat × Nat, p.1 = p.2 := by use! (42, 42)
-```
-
+/-
 The second line makes use of the fact that `use!` tries refining with the argument before
 applying a constructor. Also note that `use`/`use!` by default uses a tactic
 called `use_discharger` to discharge goals, so `use! 42` will close the goal in this example since
 `use_discharger` applies `rfl`, which as a consequence solves for the other `Nat` metavariable.
-
-These tactics take an optional discharger to handle remaining explicit `Prop` constructor arguments.
-By default it is `use (discharger := try with_reducible use_discharger) e₁, e₂, ⋯`.
-To turn off the discharger and keep all goals, use `(discharger := skip)`.
-To allow "heavy refls", use `(discharger := try use_discharger)`.
+-/
+```
 
 ## use!
 Defined in: `Mathlib.Tactic.«tacticUse!___,,»`
 
-`use e₁, e₂, ⋯` is similar to `exists`, but unlike `exists` it is equivalent to applying the tactic
-`refine ⟨e₁, e₂, ⋯, ?_, ⋯, ?_⟩` with any number of placeholders (rather than just one) and
+`use e₁, e₂, ⋯` instantiates all existential quantifiers in the main goal by using `e₁`, `e₂`, ...
+as witnesses, creates goals for all the remaining witnesses, and tries to discharge these goals
+automatically.
+
+`use` is similar to `exists` or `existsi`, but unlike `exists` it is equivalent to applying the
+tactic `refine ⟨e₁, e₂, ⋯, ?_, ⋯, ?_⟩` with any number of placeholders (rather than just one) and
 then trying to close goals associated to the placeholders with a configurable discharger (rather
 than just `try trivial`).
+
+* `use! e₁, e₂, ⋯` applies constructors everywhere rather than just for goals that correspond to the
+  last argument of a constructor. This gives the effect that nested constructors are being flattened
+  out, with the supplied values being used along the leaves and nodes of the tree of constructors.
+* `use (discharger := tac) e₁, e₂, ...` calls `tac` as a discharger, on all remaining `Prop`-valued
+  goals. If this option is omitted, `use` calls `try with_reducible use_discharger` as default
+  discharger.
+  To turn off the discharger and keep all goals, use `(discharger := skip)`.
+  To allow "heavy refls", use `(discharger := try use_discharger)`.
+  If `tac` fails on the new goal, `use (discharger := tac)` fails (hint: you might want to use
+  `(discharger := try tac)` instead).
 
 Examples:
 
@@ -8399,35 +8432,30 @@ example : Nonempty (PNat ≃ Nat) := by
   use PNat.natPred, Nat.succPNat
   · exact PNat.succPNat_natPred
   · intro; rfl
-```
 
-`use! e₁, e₂, ⋯` is similar but it applies constructors everywhere rather than just for
-goals that correspond to the last argument of a constructor. This gives the effect that
-nested constructors are being flattened out, with the supplied values being used along the
-leaves and nodes of the tree of constructors.
-With `use!` one can feed in each `42` one at a time:
-
-```lean
+-- With `use!` one can feed in each `42` one at a time:
 example : ∃ n : {n : Nat // n % 2 = 0}, n.val > 10 := by use! 20; simp
 
 example : ∃ p : Nat × Nat, p.1 = p.2 := by use! (42, 42)
-```
-
+/-
 The second line makes use of the fact that `use!` tries refining with the argument before
 applying a constructor. Also note that `use`/`use!` by default uses a tactic
 called `use_discharger` to discharge goals, so `use! 42` will close the goal in this example since
 `use_discharger` applies `rfl`, which as a consequence solves for the other `Nat` metavariable.
-
-These tactics take an optional discharger to handle remaining explicit `Prop` constructor arguments.
-By default it is `use (discharger := try with_reducible use_discharger) e₁, e₂, ⋯`.
-To turn off the discharger and keep all goals, use `(discharger := skip)`.
-To allow "heavy refls", use `(discharger := try use_discharger)`.
+-/
+```
 
 ## use_discharger
 Defined in: `Mathlib.Tactic.tacticUse_discharger`
 
-Default discharger to try to use for the `use` and `use!` tactics.
-This is similar to the `trivial` tactic but doesn't do things like `contradiction` or `decide`.
+`use_discharger` is used by `use` to discharge side goals.
+
+This is an extensible tactic using `macro_rules`. By default it can:
+* rewrite a goal `∃ _ : p, q` into `p ∧ q` if `p` is in Prop;
+* solve the goal `p ∧ q` by creating subgoals `p` and `q`;
+* apply `rfl`;
+* solve a goal by applying an assumption;
+* solve the goal `True`.
 
 ## use_finite_instance
 Defined in: `tacticUse_finite_instance`
