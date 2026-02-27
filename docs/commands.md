@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `5dadd2cebce0a724229b35e4ca3d5c5e25af2b76`
+Mathlib version: `edb32313f104774e0d44d9e913c6339263757266`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1149,8 +1149,8 @@ might print out
 ```
 Continuous
   continuous_add, args: [4,5], priority: 1000
-  continuous_add_left, args: [5], priority: 1000
-  continuous_add_right, args [4], priority: 1000
+  continuous_const_add, args: [5], priority: 1000
+  continuous_add_const, args [4], priority: 1000
   ...
 Differentiable
   Differentiable.add, args: [4,5], priority: 1000
@@ -1996,7 +1996,7 @@ This default behavior is customisable as such:
 
 Here are a few extra pieces of information:
   * Run `initialize_simps_projections?` (or `set_option trace.simps.verbose true`)
-  to see the generated projections.
+    to see the generated projections.
 * Running `initialize_simps_projections MyStruct` without arguments is not necessary, it has the
   same effect if you just add `@[simps]` to a declaration.
 * It is recommended to call `@[simps]` or `initialize_simps_projections` in the same file as the
@@ -2069,7 +2069,7 @@ This default behavior is customisable as such:
 
 Here are a few extra pieces of information:
   * Run `initialize_simps_projections?` (or `set_option trace.simps.verbose true`)
-  to see the generated projections.
+    to see the generated projections.
 * Running `initialize_simps_projections MyStruct` without arguments is not necessary, it has the
   same effect if you just add `@[simps]` to a declaration.
 * It is recommended to call `@[simps]` or `initialize_simps_projections` in the same file as the
