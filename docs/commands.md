@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `abc669d11b88e163aed1c05b352b5b16889c4ad8`
+Mathlib version: `99520ad2075aedbef91f8362873dc7632fb0720c`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -154,6 +154,22 @@ Example usage:
 def f := 37
 ```
 displays the info message `Min: 7 Max: 8 StdDev: 14%`.
+
+## \#defeq_abuse
+Defined in: `Mathlib.Tactic.DefEqAbuse.defeqAbuseCmd`
+
+> **WARNING:** `#defeq_abuse` is an experimental tool intended to assist with breaking
+changes to transparency handling. Its syntax may change at any time, and it may not behave as
+expected. Please report unexpected behavior [on Zulip](https://leanprover.zulipchat.com/#narrow/channel/113488-general/topic/backward.2EisDefEq.2ErespectTransparency/with/575685551).
+
+`#defeq_abuse in cmd` runs `cmd` with `backward.isDefEq.respectTransparency` both `true` and
+`false`. If the command succeeds with `false` but fails with `true`, it identifies the specific
+synthesis applications and `isDefEq` checks that fail with the stricter setting.
+
+This is useful for diagnosing `instance` declarations or other commands where type class synthesis
+failures occur during elaboration rather than within a tactic.
+
+The command is re-executed with the permissive setting so that it actually takes effect.
 
 ## \#discr_tree_key
 Defined in: `Lean.Parser.discrTreeKeyCmd`

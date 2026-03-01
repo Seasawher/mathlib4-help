@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `abc669d11b88e163aed1c05b352b5b16889c4ad8`
+Mathlib version: `99520ad2075aedbef91f8362873dc7632fb0720c`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -71,6 +71,20 @@ example : 1 + 1 = 2 := by
   -- info: Min: 4 Max: 4 StdDev: 2%
   #count_heartbeats! 37 in simp
 ```
+
+## \#defeq_abuse
+Defined in: `Mathlib.Tactic.DefEqAbuse.defeqAbuse`
+
+> **WARNING:** `#defeq_abuse` is an experimental tool intended to assist with breaking
+changes to transparency handling. Its syntax may change at any time, and it may not behave as
+expected. Please report unexpected behavior [on Zulip](https://leanprover.zulipchat.com/#narrow/channel/113488-general/topic/backward.2EisDefEq.2ErespectTransparency/with/575685551).
+
+`#defeq_abuse in tac` runs `tac` with `backward.isDefEq.respectTransparency` both `true` and
+`false`. If the tactic succeeds with `false` but fails with `true`, it identifies the specific
+`isDefEq` checks that fail with the stricter setting.
+
+The tactic still executes (using the permissive setting if needed), so proofs remain valid
+during debugging.
 
 ## \#find
 Defined in: `Mathlib.Tactic.Find.«tactic#find_»`
