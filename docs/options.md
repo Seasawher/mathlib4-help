@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `99520ad2075aedbef91f8362873dc7632fb0720c`
+Mathlib version: `0fbcb39f55670cc10d2f94e821d08ed006143d63`
 
 ## Elab.async
 type: `Bool`
@@ -1821,6 +1821,13 @@ default: `false`
 
 (pretty printer) display types of lambda parameters
 
+## pp.fvars.anonymous
+type: `Bool`
+
+default: `true`
+
+(pretty printer) display names for loose free variables (not in the local context) such as `_fvar.22` when true, and otherwise display them as `_fvar._`. Useful for stabilizing output in `#guard_msgs`.
+
 ## pp.implementationDetailHyps
 type: `Bool`
 
@@ -2304,7 +2311,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.29.0-rc2"`
+default: `"v4.29.0-rc3"`
 
 Revision of LeanStateSearch to use
 
