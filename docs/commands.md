@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `0fbcb39f55670cc10d2f94e821d08ed006143d63`
+Mathlib version: `1a8a2360185416286071a4217e5580652ac09776`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1157,7 +1157,7 @@ Defined in: `Lean.Parser.Command.print`
 ## \#print_fun_prop_theorems
 Defined in: `Mathlib.Meta.FunProp.«command#print_fun_prop_theorems__»`
 
-Command that printins all function properties attached to a function.
+Command that prints all function properties attached to a function.
 
 For example
 ```

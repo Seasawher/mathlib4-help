@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `0fbcb39f55670cc10d2f94e821d08ed006143d63`
+Mathlib version: `1a8a2360185416286071a4217e5580652ac09776`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2676,74 +2676,100 @@ This is like `constructor` except the goals are not reordered.
 ## field
 Defined in: `Mathlib.Tactic.FieldSimp.field`
 
-The `field` tactic proves equality goals in (semi-)fields. For example:
-```lean
-example {x y : ℚ} (hx : x + y ≠ 0) : x / (x + y) + y / (x + y) = 1 := by
-  field
-example {a b : ℝ} (ha : a ≠ 0) : a / (a * b) - 1 / b = 0 := by field
-```
-The scope of the tactic is equality goals which are *universal*, in the sense that they are true in
-any field in which the appropriate denominators don't vanish. (That is, they are consequences purely
-of the field axioms.)
-
-Checking the nonvanishing of the necessary denominators is done using a variety of tricks -- in
-particular this part of the reasoning is non-universal, i.e. can be specific to the field at hand
-(order properties, explicit `≠ 0` hypotheses, `CharZero` if that is known, etc).  The user can also
-provide additional terms to help with the nonzeroness proofs. For example:
-```lean
-example {K : Type*} [Field K] (hK : ∀ x : K, x ^ 2 + 1 ≠ 0) (x : K) :
-    1 / (x ^ 2 + 1) + x ^ 2 / (x ^ 2 + 1) = 1 := by
-  field [hK]
-```
+`field` solves equality goals in (semi-)fields. The goal must be an equality which is *universal*,
+in the sense that it is true in any field in which the appropriate denominators don't vanish.
+(That is, it is a consequence purely of the field axioms.)
 
 The `field` tactic is built from the tactics `field_simp` (which clears the denominators) and `ring`
 (which proves equality goals universally true in commutative (semi-)rings). If `field` fails to
 prove your goal, you may still be able to prove your goal by running the `field_simp` and `ring_nf`
-normalizations in some order.  For example, this statement:
+normalizations in some order.
+
+The tactic will try discharge proofs of nonzeroness of denominators, and skip steps if discharging
+fails. These denominators are made out of denominators appearing in the input expression, by
+repeatedly taking products or divisors. The default discharger can be non-universal, i.e. can be
+specific to the field at hand (order properties, explicit `≠ 0` hypotheses, `CharZero` if that is
+known, etc). See `Mathlib.Tactic.FieldSimp.discharge` for full details of the default discharger
+algorithm.
+
+* `field (disch := tac)` uses the tactic sequence `tac` to discharge nonzeroness proofs.
+* `field [t₁, ..., tₙ]` provides terms `t₁`, ..., `tₙ` to the discharger for nonzeroness proofs.
+
+Examples:
 ```lean
-example {a b : ℚ} (H : b + a ≠ 0) : a / (a + b) + b / (b + a) = 1
+example {x y : ℚ} (hx : x + y ≠ 0) : x / (x + y) + y / (x + y) = 1 := by field
+example {a b : ℝ} (ha : a ≠ 0) : a / (a * b) - 1 / b = 0 := by field
+
+-- The user can also provide additional terms to help with nonzeroness proofs:
+example {K : Type*} [Field K] (hK : ∀ x : K, x ^ 2 + 1 ≠ 0) (x : K) :
+    1 / (x ^ 2 + 1) + x ^ 2 / (x ^ 2 + 1) = 1 := by
+  field [hK]
+
+example {a b : ℚ} (H : b + a ≠ 0) : a / (a + b) + b / (b + a) = 1 := by
+  -- `field` cannot prove this on its own.
+  fail_if_success field
+  -- But running `ring_nf` and `field_simp` in a different order works:
+  ring_nf at *
+  field
 ```
-is not proved by `field` but is proved by `ring_nf at *; field`.
 
 ## field_simp
 Defined in: `Mathlib.Tactic.FieldSimp.fieldSimp`
 
-The goal of `field_simp` is to bring expressions in (semi-)fields over a common denominator, i.e. to
-reduce them to expressions of the form `n / d` where neither `n` nor `d` contains any division
-symbol. For example, `x / (1 - y) / (1 + y / (1 - y))` is reduced to `x / (1 - y + y)`:
-```lean
-example (x y z : ℚ) (hy : 1 - y ≠ 0) :
-    ⌊x / (1 - y) / (1 + y / (1 - y))⌋ < 3 := by
-  field_simp
-  -- new goal: `⊢ ⌊x / (1 - y + y)⌋ < 3`
-```
-
-The `field_simp` tactic will also clear denominators in field *(in)equalities*, by
-cross-multiplying. For example, `field_simp` will clear the `x` denominators in the following
-equation:
-```lean
-example {K : Type*} [Field K] {x : K} (hx0 : x ≠ 0) :
-    (x + 1 / x) ^ 2 + (x + 1 / x) = 1 := by
-  field_simp
-  -- new goal: `⊢ (x ^ 2 + 1) * (x ^ 2 + 1 + x) = x ^ 2`
-```
+`field_simp` normalizes expressions in (semi-)fields by rewriting them to a common denominator,
+i.e. to reduce them to expressions of the form `n / d` where neither `n` nor `d` contains any
+division symbol. The `field_simp` tactic will also clear denominators in field *(in)equalities*, by
+cross-multiplying.
 
 A very common pattern is `field_simp; ring` (clear denominators, then the resulting goal is
 solvable by the axioms of a commutative ring). The finishing tactic `field` is a shorthand for this
 pattern.
 
-Cancelling and combining denominators will generally require checking "nonzeroness"/"positivity"
-side conditions. The `field_simp` tactic attempts to discharge these, and will omit such steps if it
-cannot discharge the corresponding side conditions. The discharger will try, among other things,
-`positivity` and `norm_num`, and will also use any nonzeroness/positivity proofs included explicitly
-(e.g. `field_simp [hx]`). If your expression is not completely reduced by `field_simp`, check the
-denominators of the resulting expression and provide proofs that they are nonzero/positive to enable
-further progress.
+The tactic will try discharge proofs of nonzeroness of denominators, and skip steps if discharging
+fails. These denominators are made out of denominators appearing in the input expression,
+by repeatedly taking products or divisors. The default discharger can be non-universal, i.e. can be
+specific to the field at hand (order properties, explicit `≠ 0` hypotheses, `CharZero` if that is
+known, etc). See `field_simp_discharge` for full details of the default discharger algorithm.
+
+* `field_simp at l1 l2 ...` can be used to normalize at the given locations.
+* `field_simp (disch := tac)` uses the tactic sequence `tac` to discharge nonzeroness/positivity
+  proofs.
+* `field_simp [t₁, ..., tₙ]` provides terms `t₁`, ..., `tₙ` to the discharger for
+  nonzeroness/positivity proofs.
+
+Examples:
+```lean
+-- `x / (1 - y) / (1 + y / (1 - y))` is reduced to `x / (1 - y + y)`
+example (x y z : ℚ) (hy : 1 - y ≠ 0) :
+    ⌊x / (1 - y) / (1 + y / (1 - y))⌋ < 3 := by
+  field_simp
+  -- new goal: `⊢ ⌊x / (1 - y + y)⌋ < 3`
+  sorry
+
+-- `field_simp` will clear the `x` denominators in the following equation
+example {K : Type*} [Field K] {x : K} (hx0 : x ≠ 0) :
+    (x + 1 / x) ^ 2 + (x + 1 / x) = 1 := by
+  field_simp
+  -- new goal: `⊢ (x ^ 2 + 1) * (x ^ 2 + 1 + x) = x ^ 2`
+  sorry
+```
 
 ## field_simp_discharge
 Defined in: `Mathlib.Tactic.FieldSimp.tacticField_simp_discharge`
 
-Discharge strategy for the `field_simp` tactic.
+Default discharge strategy for `field` and `field_simp`: try to solve the (in)equality `prop`,
+of the form `t = 0` or `t > 0`, by one of the following strategies:
+
+* Use an assumption from the context.
+* Use the `norm_num` tactic.
+* Use the `positivity` tactic.
+* Use the `simp` tactic with `discharge` as discharger and lemmas stating:
+  * `2 ≠ 0`, `3 ≠ 0`, `4 ≠ 0`
+  * `x ≠ 0 → y ≠ 0 → x * y ≠ 0`
+  * `a ≠ 0 → a ^ n ≠ 0` (for `n : ℕ` and `n : ℤ`)
+  * `↑n + 1 ≠ 0`, if `n : ℕ` and the field has characteristic 0.
+
+If none of the strategies finds a proof for `prop`, the result is `none`.
 
 ## filter_upwards
 Defined in: `Mathlib.Tactic.filterUpwards`
