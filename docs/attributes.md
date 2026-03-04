@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `0fbcb39f55670cc10d2f94e821d08ed006143d63`
+Mathlib version: `1a8a2360185416286071a4217e5580652ac09776`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -1241,7 +1241,7 @@ objects "remembers" how it was proved: Every use of a (commutative) monoid objec
 unitor, associator or commutator, and proving a tautology simply amounts to undoing those moves as
 prescribed by the presence of unitors, associators and commutators in its expression.
 
-This simp set is opiniated about its normal form, which is why it cannot be used concurrently with
+This simp set is opinionated about its normal form, which is why it cannot be used concurrently with
 some of the simp lemmas in the standard simp set:
 * It eliminates all mentions of whiskers by rewriting them to tensored homs,
   which goes against `whiskerLeft_id` and `id_whiskerRight`:
@@ -1276,7 +1276,7 @@ objects "remembers" how it was proved: Every use of a (commutative) monoid objec
 unitor, associator or commutator, and proving a tautology simply amounts to undoing those moves as
 prescribed by the presence of unitors, associators and commutators in its expression.
 
-This simp set is opiniated about its normal form, which is why it cannot be used concurrently with
+This simp set is opinionated about its normal form, which is why it cannot be used concurrently with
 some of the simp lemmas in the standard simp set:
 * It eliminates all mentions of whiskers by rewriting them to tensored homs,
   which goes against `whiskerLeft_id` and `id_whiskerRight`:
