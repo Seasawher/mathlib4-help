@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `44e8425929154e8d3cbd52a087e4e3db80dd820e`
+Mathlib version: `fad8d3adced5e87fac12dcd07dcc262a3a47fdde`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2884,7 +2884,7 @@ Defined in: `Aesop.Frontend.tacticForward?____`
 ## frac_tac
 Defined in: `RatFunc.tacticFrac_tac`
 
-Solve equations for `RatFunc K` by working in `FractionRing K[X]`.
+Solve equations for `K⟮X⟯` by working in `FractionRing K[X]`.
 
 ## fun_cases
 Defined in: `Lean.Parser.Tactic.funCases`
@@ -7791,7 +7791,7 @@ composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invo
 ## smul_tac
 Defined in: `RatFunc.tacticSmul_tac`
 
-Solve equations for `RatFunc K` by applying `RatFunc.induction_on`.
+Solve equations for `K⟮X⟯` by applying `RatFunc.induction_on`.
 
 ## solve
 Defined in: `Lean.solveTactic`
