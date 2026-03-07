@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `fad8d3adced5e87fac12dcd07dcc262a3a47fdde`
+Mathlib version: `6e9770b32070f0b41f9cc08bf2838afdd7d58c17`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1181,7 +1181,7 @@ Defined in: `Lean.Elab.Tactic.tacticCalc?`
 Create a `calc` proof.
 
 ## cancel_denoms
-Defined in: `tacticCancel_denoms_`
+Defined in: `Mathlib.Tactic.cancelDenoms`
 
 `cancel_denoms` attempts to remove numerals from the denominators of fractions.
 It works on propositions that are field-valued inequalities.
@@ -1199,7 +1199,7 @@ example (h : a > 0) : a / 5 > 0 := by
 ```
 
 ## cancel_denoms
-Defined in: `cancelDenoms`
+Defined in: `Mathlib.Tactic.tacticCancel_denoms_`
 
 `cancel_denoms` attempts to remove numerals from the denominators of fractions.
 It works on propositions that are field-valued inequalities.
@@ -2805,7 +2805,9 @@ after `fin_cases p; simp`, there are three goals, `f 0`, `f 1`, and `f 2`.
 ## fin_omega
 Defined in: `Fin.tacticFin_omega`
 
-Preprocessor for `omega` to handle inequalities in `Fin`.
+`fin_omega` is a preprocessor for `omega` to handle inequalities in `Fin`.
+It rewrites all hypotheses and the goal, turning statements about addition, subtraction and
+inequalities in `Fin n` into statements that `omega` can use/solve.
 Note that this involves a lot of case splitting, so may be slow.
 
 ## find
