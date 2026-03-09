@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `06e947358d88e36af006f915f79a04a10fd43cc4`
+Mathlib version: `c287e212ea94add1c127a3a71932a782a488b909`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2152,9 +2152,7 @@ example {n : ℕ} (e : Prime (2 * n + 1)) :
   convert e using 2
   -- One goal: ⊢ n + n = 2 * n
   ring
-```
 
-```lean
 -- `convert` can fail where `exact` succeeds.
 example (h : p 0) : p 1 := by
   fail_if_success
@@ -2162,7 +2160,6 @@ example (h : p 0) : p 1 := by
     done
   exact h -- succeeds
 
-```lean
 -- `convert with` names introduced variables.
 example (p q : Nat → Prop) (h : ∀ ε > 0, p ε) :
     ∀ ε > 0, q ε := by
@@ -2171,6 +2168,7 @@ example (p q : Nat → Prop) (h : ∀ ε > 0, p ε) :
   -- hε : ε > 0
   -- ⊢ q ε ↔ p ε
   sorry
+```
 
 ## convert_to
 Defined in: `Mathlib.Tactic.convertTo`
