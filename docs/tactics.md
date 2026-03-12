@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `c287e212ea94add1c127a3a71932a782a488b909`
+Mathlib version: `cdc017d5ea5d76c08e1e2361d32166ad42f2d676`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2831,31 +2831,73 @@ example : True := by
 Defined in: `finiteness`
 
 `finiteness` proves goals of the form `*** < ∞` and (equivalently) `*** ≠ ∞` in the extended
-nonnegative reals (`ℝ≥0∞`). Supports passing additional expressions as local hypotheses.
+nonnegative reals (`ℝ≥0∞`). If the goal cannot be proven, `finiteness` prints a warning and shows
+its intermediate progress.
 
-* `finiteness?` additionally shows the proof that `finiteness` found
-* `finiteness_nonterminal` is a version of `finiteness` that may (but doesn't have to) close the
-  goal.
+This tactic is based on `aesop`. It calls `assumption`, `intros`, `positivity`, and any
+lemma or rule added to the `finiteness` ruleset, except that all `simp` rules are disabled.
+
+This tactic is extensible. By adding more rules, `finiteness` can prove more goals. For example:
+* `@[aesop (rule_sets := [finiteness]) safe 50] lemma ...`
+* `add_aesop_rules safe tactic (rule_sets := [finiteness]) (by ...)`
+(Note that a `simp` rule cannot be added this way, since all `simp` rules are disabled.)
+
+* `finiteness (clause)` customizes the `aesop` call using the given clause. See `aesop`
+  documentation for detailed explanation. Note that `finiteness` disables `simp`, so
+  `finiteness (add simp [lemma1, lemma2])` does not do anything more than a bare `finiteness`.
+* `finiteness [t₁, ..., tₙ]` adds the terms `t₁`, ..., `tₙ` as local hypotheses before applying
+  the search rules.
+* `finiteness?` additionally shows the proof that `finiteness` found.
+* `finiteness_nonterminal` is a version of `finiteness` that does not report a warning if it fails
+  to close the goal.
 
 ## finiteness?
 Defined in: `finiteness?`
 
 `finiteness` proves goals of the form `*** < ∞` and (equivalently) `*** ≠ ∞` in the extended
-nonnegative reals (`ℝ≥0∞`). Supports passing additional expressions as local hypotheses.
+nonnegative reals (`ℝ≥0∞`). If the goal cannot be proven, `finiteness` prints a warning and shows
+its intermediate progress.
 
-* `finiteness?` additionally shows the proof that `finiteness` found
-* `finiteness_nonterminal` is a version of `finiteness` that may (but doesn't have to) close the
-  goal.
+This tactic is based on `aesop`. It calls `assumption`, `intros`, `positivity`, and any
+lemma or rule added to the `finiteness` ruleset, except that all `simp` rules are disabled.
+
+This tactic is extensible. By adding more rules, `finiteness` can prove more goals. For example:
+* `@[aesop (rule_sets := [finiteness]) safe 50] lemma ...`
+* `add_aesop_rules safe tactic (rule_sets := [finiteness]) (by ...)`
+(Note that a `simp` rule cannot be added this way, since all `simp` rules are disabled.)
+
+* `finiteness (clause)` customizes the `aesop` call using the given clause. See `aesop`
+  documentation for detailed explanation. Note that `finiteness` disables `simp`, so
+  `finiteness (add simp [lemma1, lemma2])` does not do anything more than a bare `finiteness`.
+* `finiteness [t₁, ..., tₙ]` adds the terms `t₁`, ..., `tₙ` as local hypotheses before applying
+  the search rules.
+* `finiteness?` additionally shows the proof that `finiteness` found.
+* `finiteness_nonterminal` is a version of `finiteness` that does not report a warning if it fails
+  to close the goal.
 
 ## finiteness_nonterminal
 Defined in: `finiteness_nonterminal`
 
 `finiteness` proves goals of the form `*** < ∞` and (equivalently) `*** ≠ ∞` in the extended
-nonnegative reals (`ℝ≥0∞`). Supports passing additional expressions as local hypotheses.
+nonnegative reals (`ℝ≥0∞`). If the goal cannot be proven, `finiteness` prints a warning and shows
+its intermediate progress.
 
-* `finiteness?` additionally shows the proof that `finiteness` found
-* `finiteness_nonterminal` is a version of `finiteness` that may (but doesn't have to) close the
-  goal.
+This tactic is based on `aesop`. It calls `assumption`, `intros`, `positivity`, and any
+lemma or rule added to the `finiteness` ruleset, except that all `simp` rules are disabled.
+
+This tactic is extensible. By adding more rules, `finiteness` can prove more goals. For example:
+* `@[aesop (rule_sets := [finiteness]) safe 50] lemma ...`
+* `add_aesop_rules safe tactic (rule_sets := [finiteness]) (by ...)`
+(Note that a `simp` rule cannot be added this way, since all `simp` rules are disabled.)
+
+* `finiteness (clause)` customizes the `aesop` call using the given clause. See `aesop`
+  documentation for detailed explanation. Note that `finiteness` disables `simp`, so
+  `finiteness (add simp [lemma1, lemma2])` does not do anything more than a bare `finiteness`.
+* `finiteness [t₁, ..., tₙ]` adds the terms `t₁`, ..., `tₙ` as local hypotheses before applying
+  the search rules.
+* `finiteness?` additionally shows the proof that `finiteness` found.
+* `finiteness_nonterminal` is a version of `finiteness` that does not report a warning if it fails
+  to close the goal.
 
 ## first
 Defined in: `Lean.Parser.Tactic.first`
@@ -3056,7 +3098,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.29.0-rc4/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.29.0-rc6/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3189,7 +3231,7 @@ These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
 
-See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.29.0-rc4/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.29.0-rc6/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,

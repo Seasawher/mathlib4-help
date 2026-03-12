@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `c287e212ea94add1c127a3a71932a782a488b909`
+Mathlib version: `cdc017d5ea5d76c08e1e2361d32166ad42f2d676`
 
 ## Elab.async
 type: `Bool`
@@ -2311,7 +2311,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.29.0-rc4"`
+default: `"v4.29.0-rc6"`
 
 Revision of LeanStateSearch to use
 
@@ -5683,6 +5683,13 @@ type: `Bool`
 default: `true`
 
 
+
+## warn.classDefReducibility
+type: `Bool`
+
+default: `true`
+
+warn when a `def` of class type is not marked `@[reducible]` or `@[implicit_reducible]`
 
 ## warn.exposeOnPrivate
 type: `Bool`
