@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `e8bf9c44369b9151d46c4703f2fd8718f7149643`
+Mathlib version: `60ed60fabcb93d0a7d5580d1d4775c478788c02e`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1987,7 +1987,7 @@ Defined in: `Lean.Parser.Tactic.contradiction`
 Defined in: `Mathlib.Tactic.Contrapose.contrapose`
 
 `contrapose` transforms the main goal into its contrapositive. If the goal has the form `⊢ P → Q`,
-then `contrapose turns it into `⊢ ¬ Q → ¬ P`. If the goal has the form `⊢ P ↔ Q`, then `contrapose`
+then `contrapose` turns it into `⊢ ¬ Q → ¬ P`. If the goal has the form `⊢ P ↔ Q`, then `contrapose`
 turns it into `⊢ ¬ P ↔ ¬ Q`.
 
 * `contrapose h` on a goal of the form `h : P ⊢ Q` turns the goal into `h : ¬ Q ⊢ ¬ P`. This is
@@ -2030,7 +2030,7 @@ example (H : ¬ R → ¬ P ∨ ¬ Q) : (P ∧ Q) → R := by
 Defined in: `Mathlib.Tactic.Contrapose.contrapose!`
 
 `contrapose` transforms the main goal into its contrapositive. If the goal has the form `⊢ P → Q`,
-then `contrapose turns it into `⊢ ¬ Q → ¬ P`. If the goal has the form `⊢ P ↔ Q`, then `contrapose`
+then `contrapose` turns it into `⊢ ¬ Q → ¬ P`. If the goal has the form `⊢ P ↔ Q`, then `contrapose`
 turns it into `⊢ ¬ P ↔ ¬ Q`.
 
 * `contrapose h` on a goal of the form `h : P ⊢ Q` turns the goal into `h : ¬ Q ⊢ ¬ P`. This is
