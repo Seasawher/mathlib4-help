@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `09d467d7872b13e9a0719ad6b63b4cd2585b8411`
+Mathlib version: `b7a438f1b787b84be53af579081541e7ade0512a`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3526,11 +3526,14 @@ Please use `grind` instead if you need additional capabilities.
 ## group
 Defined in: `Mathlib.Tactic.Group.group`
 
-Tactic for normalizing expressions in multiplicative groups, without assuming
-commutativity, using only the group axioms without any information about which group
-is manipulated.
+`group` normalizes expressions in multiplicative groups that occur in the goal. `group` does not
+assume commutativity, instead using only the group axioms without any information about which group
+is manipulated. If the goal is an equality, and after normalization the two sides are equal, `group`
+closes the goal.
 
-(For additive commutative groups, use the `abel` tactic instead.)
+For additive commutative groups, use the `abel` tactic instead.
+
+* `group at l1 l2 ...` normalizes at the given locations.
 
 Example:
 ```lean
