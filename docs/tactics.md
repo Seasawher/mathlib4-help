@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `09af23f880d656d9a7950647a1e9c01047d502f0`
+Mathlib version: `56e100aabd35a7e33aca9b98aaa7194921f63eff`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -906,12 +906,6 @@ with different strings of structural morphisms with the same source and target.
 That is, `bicategory` can handle goals of the form
 `a ≫ f ≫ b ≫ g ≫ c = a' ≫ f ≫ b' ≫ g ≫ c'`
 where `a = a'`, `b = b'`, and `c = c'` can be proved using `bicategory_coherence`.
-
-## bicategory_coherence
-Defined in: `Mathlib.Tactic.BicategoryCoherence.tacticBicategory_coherence`
-
-Coherence tactic for bicategories.
-Use `pure_coherence` instead, which is a frontend to this one.
 
 ## bicategory_coherence
 Defined in: `Mathlib.Tactic.Bicategory.tacticBicategory_coherence`
@@ -4229,39 +4223,14 @@ Please use `grind` instead if you need additional capabilities.
 ## lift
 Defined in: `Mathlib.Tactic.lift`
 
-Lift an expression to another type.
-* Usage: `'lift' expr 'to' expr ('using' expr)? ('with' id (id id?)?)?`.
-* If `n : ℤ` and `hn : n ≥ 0` then the tactic `lift n to ℕ using hn` creates a new
-  constant of type `ℕ`, also named `n` and replaces all occurrences of the old variable `(n : ℤ)`
-  with `↑n` (where `n` in the new variable). It will clear `n` from the context and
-  try to clear `hn` from the context.
-  + So for example the tactic `lift n to ℕ using hn` transforms the goal
-    `n : ℤ, hn : n ≥ 0, h : P n ⊢ n = 3` to `n : ℕ, h : P ↑n ⊢ ↑n = 3`
-    (here `P` is some term of type `ℤ → Prop`).
-* The argument `using hn` is optional, the tactic `lift n to ℕ` does the same, but also creates a
-  new subgoal that `n ≥ 0` (where `n` is the old variable).
-  This subgoal will be placed at the top of the goal list.
-  + So for example the tactic `lift n to ℕ` transforms the goal
-    `n : ℤ, h : P n ⊢ n = 3` to two goals
-    `n : ℤ, h : P n ⊢ n ≥ 0` and `n : ℕ, h : P ↑n ⊢ ↑n = 3`.
-* You can also use `lift n to ℕ using e` where `e` is any expression of type `n ≥ 0`.
-* Use `lift n to ℕ with k` to specify the name of the new variable.
-* Use `lift n to ℕ with k hk` to also specify the name of the equality `↑k = n`. In this case, `n`
-  will remain in the context. You can use `rfl` for the name of `hk` to substitute `n` away
-  (i.e. the default behavior).
-* You can also use `lift e to ℕ with k hk` where `e` is any expression of type `ℤ`.
-  In this case, the `hk` will always stay in the context, but it will be used to rewrite `e` in
-  all hypotheses and the target.
-  + So for example the tactic `lift n + 3 to ℕ using hn with k hk` transforms the goal
-    `n : ℤ, hn : n + 3 ≥ 0, h : P (n + 3) ⊢ n + 3 = 2 * n` to the goal
-    `n : ℤ, k : ℕ, hk : ↑k = n + 3, h : P ↑k ⊢ ↑k = 2 * n`.
-* The tactic `lift n to ℕ using h` will remove `h` from the context. If you want to keep it,
-  specify it again as the third argument to `with`, like this: `lift n to ℕ using h with n rfl h`.
-* More generally, this can lift an expression from `α` to `β` assuming that there is an instance
-  of `CanLift α β`. In this case the proof obligation is specified by `CanLift.prf`.
-* Given an instance `CanLift β γ`, it can also lift `α → β` to `α → γ`; more generally, given
-  `β : Π a : α, Type*`, `γ : Π a : α, Type*`, and `[Π a : α, CanLift (β a) (γ a)]`, it
-  automatically generates an instance `CanLift (Π a, β a) (Π a, γ a)`.
+`lift e to t with x` lifts the expression `e` to the type `t` by introducing a new variable `x : t`
+such that `↑x = e`, and then replacing occurrences of `e` with `↑x`. `lift` requires an instance of
+the class `CanLift t' t coe cond`, where `t'` is the type of `e`, and creates a side goal for the
+lifting condition, of the form `⊢ cond x`, placing this on top of the goal stack.
+
+Given an instance `CanLift β γ`, `lift` can also lift `α → β` to `α → γ`; more generally, given
+`β : Π a : α, Type*`, `γ : Π a : α, Type*`, and `[Π a : α, CanLift (β a) (γ a)]`, it
+automatically generates an instance `CanLift (Π a, β a) (Π a, γ a)`.
 
 `lift` is in some sense dual to the `zify` tactic. `lift (z : ℤ) to ℕ` will change the type of an
 integer `z` (in the supertype) to `ℕ` (the subtype), given a proof that `z ≥ 0`;
@@ -4269,6 +4238,58 @@ propositions concerning `z` will still be over `ℤ`. `zify` changes proposition
 subtype) to propositions about `ℤ` (the supertype), without changing the type of any variable.
 
 The `norm_cast` tactic can be used after `lift` to normalize introduced casts.
+
+* `lift e to t using h with x` uses the expression `h` to prove the lifting condition `cond e`.
+  If `h` is a variable, `lift` will try to clear it from the context. If you want to keep `h` in
+  the context, write `lift e to t using h with x rfl h` (see below).
+* If `e` is a variable, `lift e to t` is equivalent to `lift e to t with e`. The original variable
+  `e` will be cleared from the context.
+* `lift e to t with x hx` adds `hx : ↑x = e` to the context (and if `e` is a variable, does not
+  clear it).
+* `lift e to t with x hx h` adds `hx : ↑x = e` and `h : cond e` to the context (and if `e` is a
+  variable, does not clear it). In particular, `lift e to t using h with x hx h`, where `h` is a
+  variable, keeps `h` in the context.
+* `lift e to t with x rfl h` adds `h : cond e` to the context (and if `e` is a variable, does not
+  clear it). In particular, `lift e to t using h with x rfl h`, where `h` is a variable, keeps `h`
+  in the context.
+
+Examples:
+```lean
+def P (n : ℤ) : Prop := n = 3
+
+example (n : ℤ) (h : P n) : n = 3 := by
+  lift n to ℕ
+  /-
+  Two goals:
+  n : ℤ, h : P n ⊢ n ≥ 0
+  n : ℕ, h : P ↑n ⊢ ↑n = 3
+  -/
+  · unfold P at h; linarith
+  · exact h
+
+example (n : ℤ) (hn : n ≥ 0) (h : P n) : n = 3 := by
+  lift n to ℕ using hn
+  /-
+  One goal:
+  n : ℕ
+  h : P ↑n
+  ⊢ ↑n = 3
+  -/
+  exact h
+
+example (n : ℤ) (hn : n + 3 ≥ 0) (h : P (n + 3)) :
+    n + 3 = n * 2 + 3 := by
+  lift n + 3 to ℕ using hn with k hk
+  /-
+  One goal:
+  n : ℤ
+  k : ℕ
+  hk : ↑k = n + 3
+  h : P ↑k
+  ⊢ ↑k = 2 * n + 3
+  -/
+  unfold P at h; linarith
+```
 
 ## lift_lets
 Defined in: `Lean.Parser.Tactic.liftLets`
@@ -5192,14 +5213,12 @@ example (P Q : SPred σs) : P ⊢ₛ P ∨ Q := by
 ## mod_cases
 Defined in: `Mathlib.Tactic.ModCases.«tacticMod_cases_:_%_»`
 
-* The tactic `mod_cases h : e % 3` will perform a case disjunction on `e`.
-  If `e : ℤ`, then it will yield subgoals containing the assumptions
-  `h : e ≡ 0 [ZMOD 3]`, `h : e ≡ 1 [ZMOD 3]`, `h : e ≡ 2 [ZMOD 3]`
-  respectively. If `e : ℕ` instead, then it works similarly, except with
-  `[MOD 3]` instead of `[ZMOD 3]`.
-* In general, `mod_cases h : e % n` works
-  when `n` is a positive numeral and `e` is an expression of type `ℕ` or `ℤ`.
-* If `h` is omitted as in `mod_cases e % n`, it will be default-named `H`.
+`mod_cases h : e % n`, where `n` is a positive numeral and `e` is an expression of type `ℕ` or `ℤ`,
+performs a case disjunction on the value of `e` modulo `n`. If `e : ℤ`, the goal is split into
+`n` subgoals containing the new hypotheses `h : e ≡ 0 [ZMOD n]`, ..., `h : e ≡ n-1 [ZMOD n]`
+respectively. If `e : ℕ` instead, then the hypotheses contain `[MOD n]` instead of `[ZMOD n]`.
+
+* `mod_cases e % n`, with `h` omitted, gives the default name `H` to the new hypotheses.
 
 ## module
 Defined in: `Mathlib.Tactic.Module.tacticModule`
@@ -5285,12 +5304,6 @@ example {C : Type} [Category* C] [MonoidalCategory C] :
   monoidal_coherence
 ```
 
-## monoidal_coherence
-Defined in: `Mathlib.Tactic.Coherence.tacticMonoidal_coherence`
-
-Coherence tactic for monoidal categories.
-Use `pure_coherence` instead, which is a frontend to this one.
-
 ## monoidal_nf
 Defined in: `Mathlib.Tactic.Monoidal.tacticMonoidal_nf`
 
@@ -5304,56 +5317,62 @@ Simp lemmas for rewriting a hom in monoidal categories into a normal form.
 ## move_add
 Defined in: `Mathlib.MoveAdd.tacticMove_add_`
 
-The tactic `move_add` rearranges summands of expressions.
-Calling `move_add [a, ← b, ...]` matches `a, b,...` with summands in the main goal.
-It then moves `a` to the far right and `b` to the far left of each addition in which they appear.
-The side to which the summands are moved is determined by the presence or absence of the arrow `←`.
+`move_oper op [a]` repeatedly moves `a` to the far right hand side in applications of `op`.
+Here the constant `op` refers to a binary associative commutative operation, and `a` is any term
+(potentially with underscores).
 
-The inputs `a, b,...` can be any terms, also with underscores.
-The tactic uses the first "new" summand that unifies with each one of the given inputs.
+If `a` contains underscores, they are filled in by unification with the first matching occurrence.
+Subterms with different values for the underscores are not matched, unless you repeat `a`.
 
-There is a multiplicative variant, called `move_mul`.
+Currently, `move_oper` supports the operators `HAdd.hAdd` (`· + ·`), `HMul.hMul` (`· * ·`),
+`And` (`· ∧ ·`), `Or` (`· ∨ ·`), `Max.max` and `Min.min`. To support more operations, add them to
+`Mathlib.MoveAdd.moveOperSimpCtx`.
 
-There is also a general tactic for a "binary associative commutative operation": `move_oper`.
-In this case the syntax requires providing first a term whose head symbol is the operation.
-E.g. `move_oper HAdd.hAdd [...]` is the same as `move_add`, while `move_oper Max.max [...]`
-rearranges `max`s.
+* `move_add [...]` uses addition as the operation: it abbreviates `move_oper HAdd.add [...]`.
+* `move_mul [...]` uses multiplication as the operation: it abbreviates `move_oper HMul.mul [...]`.
+* `move_oper op [← a]` moves the atoms matching `a` to the far left hand side instead of the right.
+* `move_oper op [a, b, ← c, ← d, ...]` moves multiple atoms simultaneously, in the order indicated
+  by the arguments: `c` will appear to the left of `d` and `a` will appear to the left of `b`.
 
 ## move_mul
 Defined in: `Mathlib.MoveAdd.tacticMove_mul_`
 
-The tactic `move_add` rearranges summands of expressions.
-Calling `move_add [a, ← b, ...]` matches `a, b,...` with summands in the main goal.
-It then moves `a` to the far right and `b` to the far left of each addition in which they appear.
-The side to which the summands are moved is determined by the presence or absence of the arrow `←`.
+`move_oper op [a]` repeatedly moves `a` to the far right hand side in applications of `op`.
+Here the constant `op` refers to a binary associative commutative operation, and `a` is any term
+(potentially with underscores).
 
-The inputs `a, b,...` can be any terms, also with underscores.
-The tactic uses the first "new" summand that unifies with each one of the given inputs.
+If `a` contains underscores, they are filled in by unification with the first matching occurrence.
+Subterms with different values for the underscores are not matched, unless you repeat `a`.
 
-There is a multiplicative variant, called `move_mul`.
+Currently, `move_oper` supports the operators `HAdd.hAdd` (`· + ·`), `HMul.hMul` (`· * ·`),
+`And` (`· ∧ ·`), `Or` (`· ∨ ·`), `Max.max` and `Min.min`. To support more operations, add them to
+`Mathlib.MoveAdd.moveOperSimpCtx`.
 
-There is also a general tactic for a "binary associative commutative operation": `move_oper`.
-In this case the syntax requires providing first a term whose head symbol is the operation.
-E.g. `move_oper HAdd.hAdd [...]` is the same as `move_add`, while `move_oper Max.max [...]`
-rearranges `max`s.
+* `move_add [...]` uses addition as the operation: it abbreviates `move_oper HAdd.add [...]`.
+* `move_mul [...]` uses multiplication as the operation: it abbreviates `move_oper HMul.mul [...]`.
+* `move_oper op [← a]` moves the atoms matching `a` to the far left hand side instead of the right.
+* `move_oper op [a, b, ← c, ← d, ...]` moves multiple atoms simultaneously, in the order indicated
+  by the arguments: `c` will appear to the left of `d` and `a` will appear to the left of `b`.
 
 ## move_oper
 Defined in: `Mathlib.MoveAdd.moveOperTac`
 
-The tactic `move_add` rearranges summands of expressions.
-Calling `move_add [a, ← b, ...]` matches `a, b,...` with summands in the main goal.
-It then moves `a` to the far right and `b` to the far left of each addition in which they appear.
-The side to which the summands are moved is determined by the presence or absence of the arrow `←`.
+`move_oper op [a]` repeatedly moves `a` to the far right hand side in applications of `op`.
+Here the constant `op` refers to a binary associative commutative operation, and `a` is any term
+(potentially with underscores).
 
-The inputs `a, b,...` can be any terms, also with underscores.
-The tactic uses the first "new" summand that unifies with each one of the given inputs.
+If `a` contains underscores, they are filled in by unification with the first matching occurrence.
+Subterms with different values for the underscores are not matched, unless you repeat `a`.
 
-There is a multiplicative variant, called `move_mul`.
+Currently, `move_oper` supports the operators `HAdd.hAdd` (`· + ·`), `HMul.hMul` (`· * ·`),
+`And` (`· ∧ ·`), `Or` (`· ∨ ·`), `Max.max` and `Min.min`. To support more operations, add them to
+`Mathlib.MoveAdd.moveOperSimpCtx`.
 
-There is also a general tactic for a "binary associative commutative operation": `move_oper`.
-In this case the syntax requires providing first a term whose head symbol is the operation.
-E.g. `move_oper HAdd.hAdd [...]` is the same as `move_add`, while `move_oper Max.max [...]`
-rearranges `max`s.
+* `move_add [...]` uses addition as the operation: it abbreviates `move_oper HAdd.add [...]`.
+* `move_mul [...]` uses multiplication as the operation: it abbreviates `move_oper HMul.mul [...]`.
+* `move_oper op [← a]` moves the atoms matching `a` to the far left hand side instead of the right.
+* `move_oper op [a, b, ← c, ← d, ...]` moves multiple atoms simultaneously, in the order indicated
+  by the arguments: `c` will appear to the left of `d` and `a` will appear to the left of `b`.
 
 ## mpure
 Defined in: `Lean.Parser.Tactic.mpure`
@@ -6672,6 +6691,11 @@ Users will typically just use the `coherence` tactic,
 which can also cope with identities of the form
 `a ≫ f ≫ b ≫ g ≫ c = a' ≫ f ≫ b' ≫ g ≫ c'`
 where `a = a'`, `b = b'`, and `c = c'` can be proved using `pure_coherence`
+
+## pure_coherence_internal
+Defined in: `Mathlib.Tactic.Coherence.pure_coherence_internal`
+
+The same as `pure_coherence`, but used internally in `coherence` without the warning.
 
 ## push
 Defined in: `Mathlib.Tactic.Push.pushStx`
