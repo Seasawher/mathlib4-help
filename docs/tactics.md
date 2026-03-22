@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `56e100aabd35a7e33aca9b98aaa7194921f63eff`
+Mathlib version: `9b50fb6dba391c6d9de63a000997e5337b25cb9d`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -22,6 +22,22 @@ for the global constant `t` instead.
 Use `#check (t)` to pretty print it as an elaborated expression.
 
 Like the `#check` command, the `#check` tactic allows stuck typeclass instance problems.
+These become metavariables in the output.
+
+To display only explicit arguments in the type signature, see `#check'`.
+
+## \#check'
+Defined in: `Mathlib.Tactic.«tactic#check'__»`
+
+The `#check' t` tactic elaborates the term `t` and then pretty prints it with its type as `e : ty`.
+In contrast to `#check t`, we only pretty-print explicit arguments, and omit implicit or type class
+arguments. Currently this only works when `t` is the name of a declaration.
+
+If `t` is an identifier, then it pretty prints a type declaration form
+for the global constant `t` instead.
+Use `#check' (t)` to pretty print it as an elaborated expression.
+
+Like other `#check` commands, the `#check'` tactic allows stuck typeclass instance problems.
 These become metavariables in the output.
 
 ## \#count_heartbeats
