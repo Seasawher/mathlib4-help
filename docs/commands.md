@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `56e100aabd35a7e33aca9b98aaa7194921f63eff`
+Mathlib version: `9b50fb6dba391c6d9de63a000997e5337b25cb9d`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -43,6 +43,12 @@ The command `#show_kind tac` may help to find the `SyntaxNodeKind`.
 ## \#check
 Defined in: `Lean.Parser.Command.check`
 
+
+## \#check'
+Defined in: `Mathlib.Tactic.«command#check'_»`
+
+The `#check'` command is like `#check`, but only prints explicit arguments in the signature
+(i.e., omitting implicit and typeclass arguments).
 
 ## \#check_assertions
 Defined in: `Lean.Parser.Command.checkAssertions`
