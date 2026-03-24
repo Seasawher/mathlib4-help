@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `1727ba1c5621107e8be7019b5cd5966970146a92`
+Mathlib version: `c46a698c8f81fb63a4691969a78fccfb1876c019`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3108,7 +3108,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.29.0-rc6/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.29.0-rc7/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3241,7 +3241,7 @@ These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
 
-See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.29.0-rc6/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.29.0-rc7/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
@@ -8127,7 +8127,7 @@ Defined in: `Mathlib.Tactic.«tacticSwap_var__,,»`
 
 `swap_var swap_rule₁, swap_rule₂, ⋯` applies `swap_rule₁` then `swap_rule₂` then `⋯`.
 
-A *swap_rule* is of the form `x y` or `x ↔ y`, and "applying it" means swapping the variable name
+A `swap_rule` is of the form `x y` or `x ↔ y`, and "applying it" means swapping the variable name
 `x` by `y` and vice-versa on all hypotheses and the goal.
 
 ```lean
