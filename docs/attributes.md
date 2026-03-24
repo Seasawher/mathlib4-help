@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `1727ba1c5621107e8be7019b5cd5966970146a92`
+Mathlib version: `c46a698c8f81fb63a4691969a78fccfb1876c019`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -822,7 +822,7 @@ Register an Expr presenter. It must have the type `ProofWidgets.ExprPresenter`.
 
 ## field
  Attribute grouping the simprocs associated to the field_simp tactic
-Initialize the attribute `field` grouping the simprocs associated to the field_simp tactic.
+Initialize the attribute `field` grouping the simprocs associated to the `field_simp` tactic.
 
 ## fin_omega
  A simp set for the `fin_omega` wrapper around `omega`. 

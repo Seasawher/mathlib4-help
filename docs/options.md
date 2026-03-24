@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `1727ba1c5621107e8be7019b5cd5966970146a92`
+Mathlib version: `c46a698c8f81fb63a4691969a78fccfb1876c019`
 
 ## Elab.async
 type: `Bool`
@@ -208,6 +208,34 @@ type: `Bool`
 default: `false`
 
 use old E-matching pattern inference
+
+## backward.inferInstanceAs.wrap
+type: `Bool`
+
+default: `true`
+
+normalize instance bodies to constructor-based normal form in `inferInstanceAs` and the default `deriving` handler
+
+## backward.inferInstanceAs.wrap.data
+type: `Bool`
+
+default: `true`
+
+wrap data fields in auxiliary definitions to fix their types
+
+## backward.inferInstanceAs.wrap.instances
+type: `Bool`
+
+default: `true`
+
+wrap non-reducible instances in auxiliary definitions to fix their types
+
+## backward.inferInstanceAs.wrap.reuseSubInstances
+type: `Bool`
+
+default: `true`
+
+when recursing into sub-instances, reuse existing instances for the target type instead of re-wrapping them, which can be important to avoid non-defeq instance diamonds
 
 ## backward.isDefEq.implicitBump
 type: `Bool`
@@ -2318,7 +2346,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.29.0-rc6"`
+default: `"v4.29.0-rc7"`
 
 Revision of LeanStateSearch to use
 
@@ -3764,6 +3792,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Meta.instanceNormalForm
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Meta.instantiateMVars
 type: `Bool`
 
@@ -4031,6 +4066,13 @@ default: `false`
 track the backtracking attempt to synthesize type class instances
 
 ## trace.Meta.synthInstance.answer
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.synthInstance.apply
 type: `Bool`
 
 default: `false`
