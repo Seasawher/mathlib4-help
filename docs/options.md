@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `c46a698c8f81fb63a4691969a78fccfb1876c019`
+Mathlib version: `fb131a4c00206d8cd49a35e1e93480623d95c72d`
 
 ## Elab.async
 type: `Bool`
@@ -1078,6 +1078,13 @@ type: `Bool`
 default: `true`
 
 enable the style.docString.empty linter
+
+## linter.style.docStringVerso
+type: `Bool`
+
+default: `false`
+
+enable the style.docStringVerso linter
 
 ## linter.style.dollarSyntax
 type: `Bool`
@@ -2346,7 +2353,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.29.0-rc7"`
+default: `"v4.29.0-rc8"`
 
 Revision of LeanStateSearch to use
 
