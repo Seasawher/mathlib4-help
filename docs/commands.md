@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `fb131a4c00206d8cd49a35e1e93480623d95c72d`
+Mathlib version: `d9deee6132c7fc50fdaac0d162313fb8fb0cbc30`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -2488,6 +2488,22 @@ provided are definitionally equal to the original declaration. However, this doe
 capture some details (like binders), so the following works without error.
 ```lean
 recall Nat.add_comm {n m : Nat} : n + m = m + n
+```
+
+Docstrings are permitted but are ignored:
+```lean
+/-- The additive commutativity of natural numbers. -/
+recall Nat.add_comm (n m : Nat) : n + m = m + n
+```
+
+## recall?
+Defined in: `Mathlib.Tactic.Recall.recall?`
+
+The `recall?` command looks up a previous definition and suggests the correct
+`recall` statement for it.
+```lean
+recall? Nat.add_comm
+-- Try this: recall Nat.add_comm (n m : Nat) : n + m = m + n
 ```
 
 ## recommended_spelling
