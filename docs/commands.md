@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `06a46dae3216ddc2e41426c8f6694ea9607116b7`
+Mathlib version: `fdd294c6997d6fad7a8348b8d68e8173a65b628a`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -109,7 +109,7 @@ There are also shorthand commands for several common conv tactics:
 * `#whnf e` is short for `#conv whnf => e`
 * `#simp e` is short for `#conv simp => e`
 * `#norm_num e` is short for `#conv norm_num => e`
-* `#push_neg e` is short for `#conv push_neg => e`
+* `#push c => e` is short for `#conv push c => e`
 
 ## \#count_heartbeats
 Defined in: `Mathlib.CountHeartbeats.«command#count_heartbeatsApproximatelyIn__»`
@@ -1209,14 +1209,6 @@ Defined in: `Mathlib.Tactic.Push.pushTree`
 
 `#push_discr_tree X` shows the discrimination tree of all lemmas used by `push X`.
 This can be helpful when you are constructing a set of `push` lemmas for the constant `X`.
-
-## \#push_neg
-Defined in: `Mathlib.Tactic.Push.pushNegCommand`
-
-`#push_neg e`, where `e` is an expression,
-prints the `push_neg` form of `e`.
-
-`#push_neg` understands local variables, so you can use them to introduce parameters.
 
 ## \#reduce
 Defined in: `Lean.reduceCmd`

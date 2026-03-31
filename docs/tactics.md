@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `06a46dae3216ddc2e41426c8f6694ea9607116b7`
+Mathlib version: `fdd294c6997d6fad7a8348b8d68e8173a65b628a`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1104,7 +1104,7 @@ Defined in: `«tacticBy_cases_:_»`
 Defined in: `Mathlib.Tactic.ByCases.byCases!`
 
 `by_cases! h : p` runs the `by_cases h : p` tactic, followed by
-`push_neg at h` in the second subgoal. For example,
+`push Not at h` in the second subgoal. For example,
 - `by_cases! h : a < b` creates one goal with hypothesis `h : a < b` and
   another with `h : b ≤ a`.
 - `by_cases! h : a ≠ b` creates one goal with hypothesis `h : a ≠ b` and
@@ -1125,7 +1125,7 @@ Defined in: `Mathlib.Tactic.ByContra.byContra!`
 If the target of the main goal is a proposition `p`,
 `by_contra!` reduces the goal to proving `False` using the additional hypothesis `this : ¬ p`.
 `by_contra! h` can be used to name the hypothesis `h : ¬ p`.
-The hypothesis `¬ p` will be normalized using `push_neg`.
+The hypothesis `¬ p` will be normalized using `push Not`.
 For instance, `¬ a < b` will be changed to `b ≤ a`.
 `by_contra!` can be used with `rcases` patterns.
 For instance, `by_contra! rfl` on `⊢ s.Nonempty` will substitute the equality `s = ∅`,
@@ -2005,7 +2005,7 @@ turns it into `⊢ ¬ P ↔ ¬ Q`.
 * `contrapose h with new_h` uses the name `new_h` for the introduced hypothesis. This is equivalent
   to `revert h; contrapose; intro new_h`.
 * `contrapose!`, `contrapose! h` and `contrapose! h with new_h` push negation deeper into the goal
-  after contraposing (but before introducing the new hypothesis). See the `push_neg` tactic for more
+  after contraposing (but before introducing the new hypothesis). See the `push Not` tactic for more
   details on the pushing algorithm.
 * `contrapose! (config := cfg)` controls the options for negation pushing. All options for
   `Mathlib.Tactic.Push.Config` are supported:
@@ -2048,7 +2048,7 @@ turns it into `⊢ ¬ P ↔ ¬ Q`.
 * `contrapose h with new_h` uses the name `new_h` for the introduced hypothesis. This is equivalent
   to `revert h; contrapose; intro new_h`.
 * `contrapose!`, `contrapose! h` and `contrapose! h with new_h` push negation deeper into the goal
-  after contraposing (but before introducing the new hypothesis). See the `push_neg` tactic for more
+  after contraposing (but before introducing the new hypothesis). See the `push Not` tactic for more
   details on the pushing algorithm.
 * `contrapose! (config := cfg)` controls the options for negation pushing. All options for
   `Mathlib.Tactic.Push.Config` are supported:
@@ -3052,46 +3052,53 @@ Patterns can be used like in the `intro` tactic. Example, given a goal
 ## gcongr
 Defined in: `Mathlib.Tactic.GCongr.tacticGcongr___With___`
 
-The `gcongr` tactic applies "generalized congruence" rules, reducing a relational goal
-between an LHS and RHS.  For example,
-```
+`gcongr` applies "generalized congruence" rules to recursively reduce a goal of form
+`⊢ R (f a₁ ... aₙ) (f b₁ ... bₙ)` to (possibly multiple) goal(s) `⊢ Rᵢ aᵢ bᵢ`, keeping only the
+distinct pairs `aᵢ ≠ bᵢ`, where `Rᵢ` is a possibly different relation (depending on the
+precise rule). The relations `R`, `Rᵢ` can be any two-argument relation, including `· → ·`.
+
+This tactic is extensible: to add a "generalized congruence" rule, tag a theorem with the attribute
+`@[gcongr]`.
+
+If a "generalized congruence" lemma has a side goal, `gcongr` will try to discharge it using
+`gcongr_discharger`, which is an extensible tactic based on `positivity`. Side goals not discharged
+in this way are left for the user.
+
+* `gcongr with x y ... z` names the variables that are introduced by descending into binders (for
+  example sums or suprema).
+* `gcongr n`, where `n` is a natural number literal, limits the depth of the recursive applications.
+  This is useful if `gcongr` is too aggressive in breaking down the goal.
+* `gcongr t`, where `t` is a term with `?_` holes, performs congruence up to the holes in `t`.
+  In other words, `gcongr f ?_` turns a goal `⊢ R (f x) (f y)` into `⊢ R x y` (but no further).
+  This is useful if `gcongr` is too aggressive in breaking down the goal.
+
+Examples:
+```lean
 example {a b x c d : ℝ} (h1 : a + 1 ≤ b + 1) (h2 : c + 2 ≤ d + 2) :
     x ^ 2 * a + c ≤ x ^ 2 * b + d := by
+  -- LHS and RHS both have the form x ^ 2 * ?_ + ?_
   gcongr
-  · linarith
-  · linarith
+  · -- New goal: ⊢ a ≤ b
+    linarith
+  · -- ⊢ New goal: c ≤ d
+    linarith
+-- Resulting proof term is:
+--   add_le_add (mul_le_mul_of_nonneg_left ?_ (Even.pow_nonneg (even_two_mul 1) x)) ?_
+-- where `add_le_add` and `mul_le_mul_of_nonneg_left` are generalized congruence lemmas
+-- and the side goal `0 ≤ x ^ 2` is discharged by `gcongr_discharger`.
 ```
-This example has the goal of proving the relation `≤` between an LHS and RHS both of the pattern
-```
-x ^ 2 * ?_ + ?_
-```
-(with inputs `a`, `c` on the left and `b`, `d` on the right); after the use of
-`gcongr`, we have the simpler goals `a ≤ b` and `c ≤ d`.
 
-A depth limit or a pattern can be provided explicitly;
-this is useful if a non-maximal match is desired:
-```lean
+```
 example {a b c d x : ℝ} (h : a + c + 1 ≤ b + d + 1) :
     x ^ 2 * (a + c) + 5 ≤ x ^ 2 * (b + d) + 5 := by
+  -- Using a pattern to limit the depth.
   gcongr x ^ 2 * ?_ + 5 -- or `gcongr 2`
+  -- New goal: ⊢ a + c ≤ b + d
   linarith
 ```
 
-The "generalized congruence" rules are the library lemmas which have been tagged with the
-attribute `@[gcongr]`.  For example, the first example constructs the proof term
 ```
-add_le_add (mul_le_mul_of_nonneg_left ?_ (Even.pow_nonneg (even_two_mul 1) x)) ?_
-```
-using the generalized congruence lemmas `add_le_add` and `mul_le_mul_of_nonneg_left`.
-
-The tactic attempts to discharge side goals to these "generalized congruence" lemmas (such as the
-side goal `0 ≤ x ^ 2` in the above application of `mul_le_mul_of_nonneg_left`) using the tactic
-`gcongr_discharger`, which wraps `positivity` but can also be extended. Side goals not discharged
-in this way are left for the user.
-
-`gcongr` will descend into binders (for example sums or suprema). To name the bound variables,
-use `with`:
-```lean
+-- Descending into binders (here: ⨆).
 example {f g : ℕ → ℝ≥0∞} (h : ∀ n, f n ≤ g n) : ⨆ n, f n ≤ ⨆ n, g n := by
   gcongr with i
   exact h i
@@ -3108,7 +3115,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.29.0-rc8/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.29.0/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3241,7 +3248,7 @@ These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
 
-See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.29.0-rc8/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.29.0/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
@@ -4769,37 +4776,44 @@ Both now support multiple discriminants.
 ## match_scalars
 Defined in: `Mathlib.Tactic.Module.tacticMatch_scalars`
 
-Given a goal which is an equality in a type `M` (with `M` an `AddCommMonoid`), parse the LHS and
-RHS of the goal as linear combinations of `M`-atoms over some semiring `R`, and reduce the goal to
-the respective equalities of the `R`-coefficients of each atom.
+Given a goal parseable as a linear combination `⊢ a • x + ... + b • y = c • x + ... + d • y`,
+`match_scalars` splits up the goal into equalities of the scalars for each respective atom. This
+means the example goal above is replaced by goals `⊢ a = c` (from `x`), ..., `⊢ b = d` (from `y`).
 
-For example, this produces the goal `⊢ a * 1 + b * 1 = (b + a) * 1`:
+The `module` tactic is equivalent to `match_scalars <;> ring1`.
+
+`match_scalars` can parse into expressions made of the operators `+`, `-`, `•` and the numeral `0`.
+Any other subexpressions (including variables) are treated as atoms.
+If the goal is an equality in the type `M`, then `match_scalars` requires an `AddCommMonoid M`
+instance. If the goal contains a scalar multiplication `(a : R) • (x : M)`, this requires a
+`Semiring R` and `Module R M` instance. If any of the instances are missing, `match_scalars` fails.
+
+The scalar type for the goals produced by the `match_scalars` tactic is the largest scalar type
+encountered; for example, if `ℕ`, `ℚ` and a characteristic-zero field `K` all occur as scalars, then
+the goals produced are equalities in `K` with the appropriate casts (from `ℕ`, `ℤ`, `ℚ`) and
+`algebraMap`s (otherwise) inserted. Inserted casts are simplified by lemmas tagged `@[push_cast]`.
+If the set of scalar types encountered is not totally ordered (in the sense that for all rings `R`,
+`S` encountered, it holds that either `Algebra R S` or `Algebra S R`), then `match_scalars` fails.
+
+Examples:
 ```lean
 example [AddCommMonoid M] [Semiring R] [Module R M] (a b : R) (x : M) :
     a • x + b • x = (b + a) • x := by
   match_scalars
-```
-This produces the two goals `⊢ a * (a * 1) + b * (b * 1) = 1` (from the `x` atom) and
-`⊢ a * -(b * 1) + b * (a * 1) = 0` (from the `y` atom):
-```lean
+  -- one goal: `⊢ a * 1 + b * 1 = (b + a) * 1`
+
 example [AddCommGroup M] [Ring R] [Module R M] (a b : R) (x : M) :
     a • (a • x - b • y) + (b • a • y + b • b • x) = x := by
   match_scalars
-```
-This produces the goal `⊢ -2 * (a * 1) = a * (-2 * 1)`:
-```lean
-example [AddCommGroup M] [Ring R] [Module R M] (a : R) (x : M) :
-    -(2:R) • a • x = a • (-2:ℤ) • x  := by
-  match_scalars
-```
-The scalar type for the goals produced by the `match_scalars` tactic is the largest scalar type
-encountered; for example, if `ℕ`, `ℚ` and a characteristic-zero field `K` all occur as scalars, then
-the goals produced are equalities in `K`.  A variant of `push_cast` is used internally in
-`match_scalars` to interpret scalars from the other types in this largest type.
+  -- two goals:
+  -- `⊢ a * (a * 1) + b * (b * 1) = 1` (from the `x` atom)
+  -- `⊢ a * -(b * 1) + b * (a * 1) = 0` (from the `y` atom)
 
-If the set of scalar types encountered is not totally ordered (in the sense that for all rings `R`,
-`S` encountered, it holds that either `Algebra R S` or `Algebra S R`), then the `match_scalars`
-tactic fails.
+example [AddCommGroup M] [Ring R] [Module R M] (a : R) (x : M) :
+    -(2:R) • a • x = a • (-2:ℤ) • x := by
+  match_scalars
+  -- one goal: `⊢ -2 * (a * 1) = a * (-2 * 1)`
+```
 
 ## match_target
 Defined in: `Mathlib.Tactic.tacticMatch_target_`
@@ -5239,16 +5253,15 @@ respectively. If `e : ℕ` instead, then the hypotheses contain `[MOD n]` instea
 ## module
 Defined in: `Mathlib.Tactic.Module.tacticModule`
 
-Given a goal which is an equality in a type `M` (with `M` an `AddCommMonoid`), parse the LHS and
-RHS of the goal as linear combinations of `M`-atoms over some commutative semiring `R`, and prove
-the goal by checking that the LHS- and RHS-coefficients of each atom are the same up to
-ring-normalization in `R`.
+Given a goal parseable as a linear combination `⊢ a • x + ... + b • y = c • x + ... + d • y`,
+`module` proves the equalities of the scalars for each respective atom, by ring normalization.
+This means the example goal above is solved if `ring` can prove `⊢ a = c` (from `x`), ..., `⊢ b = d`
+(from `y`).
 
-(If the proofs of coefficient-wise equality will require more reasoning than just
-ring-normalization, use the tactic `match_scalars` instead, and then prove coefficient-wise equality
-by hand.)
+`module` is equivalent to `match_scalars <;> ring1`. If `ring1` fails to prove one of the
+equalities, you can instead use `match_scalars` followed by specialized proofs for each scalar.
 
-Example uses of the `module` tactic:
+Examples:
 ```lean
 example [AddCommMonoid M] [CommSemiring R] [Module R M] (a b : R) (x : M) :
     a • x + b • x = (b + a) • x := by
@@ -6745,13 +6758,15 @@ To instead move a constant closer to the head of the expression, use the `pull` 
 * `push _ ~ _` pushes the (binary) operator `~`, `push ~ _` pushes the (unary) operator `~`.
 * `push c at l1 l2 ...` rewrites at the given locations.
 * `push c at *` rewrites at all hypotheses and the goal.
+* `push +distrib Not` rewrites `¬ (p ∧ q)` into `¬ p ∨ ¬ q` (without `+distrib`, it rewrites it
+  into `p → ¬ q` instead).
 * `push (disch := tac) c` uses the tactic `tac` to discharge any hypotheses for `@[push]` lemmas.
 
 Examples:
+* `push Not` is the same as `push ¬ _`, and it rewrites `¬ ∀ ε > 0, ∃ δ > 0, δ < ε` into
+  `∃ ε > 0, ∀ δ > 0, ε ≤ δ`. Notably, this preserves the binder names.
 * `push _ ∈ _` rewrites `x ∈ {y} ∪ zᶜ` into `x = y ∨ ¬ x ∈ z`.
 * `push (disch := positivity) Real.log` rewrites `log (a * b ^ 2)` into `log a + 2 * log b`.
-* `push ¬ _` is the same as `push_neg` or `push Not`, and it rewrites
-  `¬ ∀ ε > 0, ∃ δ > 0, δ < ε` into `∃ ε > 0, ∀ δ > 0, ε ≤ δ`.
 * `push fun _ ↦ _` rewrites `fun x => f x ^ 2 + 5` into `f ^ 2 + 5`
 * `push ∀ _, _` rewrites `∀ a, p a ∧ q a` into `(∀ a, p a) ∧ (∀ a, q a)`.
 
@@ -7011,28 +7026,28 @@ This also exists as a `conv`-mode tactic.
 ## rel
 Defined in: `Mathlib.Tactic.GCongr.«tacticRel[_]»`
 
-The `rel` tactic applies "generalized congruence" rules to solve a relational goal by
-"substitution".  For example,
-```
+`rel [h₁, ..., hₙ]` uses "generalized congruence" rules to solve a goal of form
+`⊢ R (f a₁ ... aₙ) (f b₁ ... bₙ)` by substituting with the terms `hᵢ : Rᵢ aᵢ bᵢ`. The relations
+`R`, `Rᵢ` can be any two-argument relation, including `· → ·`.
+
+This tactic is extensible: to add a "generalized congruence" rule, tag a theorem with the attribute
+`@[gcongr]`.
+
+If a "generalized congruence" lemma has a side goal, `rel` will try to discharge it using
+`gcongr_discharger`, which is an extensible tactic based on `positivity`. If side goals cannot be
+discharged, or the terms `h₁`, ..., `hₙ` cannot solve the goals, the tactic fails.
+
+Examples:
+```lean
 example {a b x c d : ℝ} (h1 : a ≤ b) (h2 : c ≤ d) :
     x ^ 2 * a + c ≤ x ^ 2 * b + d := by
   rel [h1, h2]
+-- In this example we "substitute" the hypotheses `a ≤ b` and `c ≤ d` into the LHS `x ^ 2 * a + c`
+-- of the goal and obtain the RHS `x ^ 2 * b + d`, thus proving the goal.
+-- This constructs the proof term:
+--   add_le_add (mul_le_mul_of_nonneg_left h1 (pow_bit0_nonneg x 1)) h2
+-- using the generalized congruence lemmas `add_le_add` and `mul_le_mul_of_nonneg_left`.
 ```
-In this example we "substitute" the hypotheses `a ≤ b` and `c ≤ d` into the LHS `x ^ 2 * a + c` of
-the goal and obtain the RHS `x ^ 2 * b + d`, thus proving the goal.
-
-The "generalized congruence" rules used are the library lemmas which have been tagged with the
-attribute `@[gcongr]`.  For example, the first example constructs the proof term
-```
-add_le_add (mul_le_mul_of_nonneg_left h1 (pow_bit0_nonneg x 1)) h2
-```
-using the generalized congruence lemmas `add_le_add` and `mul_le_mul_of_nonneg_left`.  If there are
-no applicable generalized congruence lemmas, the tactic fails.
-
-The tactic attempts to discharge side goals to these "generalized congruence" lemmas (such as the
-side goal `0 ≤ x ^ 2` in the above application of `mul_le_mul_of_nonneg_left`) using the tactic
-`gcongr_discharger`, which wraps `positivity` but can also be extended. If the side goals cannot
-be discharged in this way, the tactic fails.
 
 ## rename
 Defined in: `Lean.Parser.Tactic.rename`
@@ -8691,9 +8706,9 @@ there will be two additional assumptions:
 * `wlog h : P generalizing x y ...` reverts certain parts of the context before creating the new
   goal. In this way, the wlog-claim `this` can be applied to `x` and `y` in different orders
   (exploiting symmetry, which is the typical use case).
-* `wlog! h : P` also calls `push_neg` at the generated hypothesis `h`.
+* `wlog! h : P` also calls `push Not` at the generated hypothesis `h`.
   `wlog! h : P ∧ Q` will transform `¬ (P ∧ Q)` to `P → ¬ Q`
-* `wlog! +distrib h : P` also calls `push_neg +distrib` at the generated hypothesis `h`.
+* `wlog! +distrib h : P` also calls `push +distrib Not` at the generated hypothesis `h`.
   `wlog! +distrib h : P ∧ Q` will transform `¬ (P ∧ Q)` to `¬P ∨ ¬Q`.
 
 ## wlog!
@@ -8711,9 +8726,9 @@ there will be two additional assumptions:
 * `wlog h : P generalizing x y ...` reverts certain parts of the context before creating the new
   goal. In this way, the wlog-claim `this` can be applied to `x` and `y` in different orders
   (exploiting symmetry, which is the typical use case).
-* `wlog! h : P` also calls `push_neg` at the generated hypothesis `h`.
+* `wlog! h : P` also calls `push Not` at the generated hypothesis `h`.
   `wlog! h : P ∧ Q` will transform `¬ (P ∧ Q)` to `P → ¬ Q`
-* `wlog! +distrib h : P` also calls `push_neg +distrib` at the generated hypothesis `h`.
+* `wlog! +distrib h : P` also calls `push +distrib Not` at the generated hypothesis `h`.
   `wlog! +distrib h : P ∧ Q` will transform `¬ (P ∧ Q)` to `¬P ∨ ¬Q`.
 
 ## zify

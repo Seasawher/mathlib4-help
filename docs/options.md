@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `06a46dae3216ddc2e41426c8f6694ea9607116b7`
+Mathlib version: `fdd294c6997d6fad7a8348b8d68e8173a65b628a`
 
 ## Elab.async
 type: `Bool`
@@ -214,7 +214,7 @@ type: `Bool`
 
 default: `true`
 
-normalize instance bodies to constructor-based normal form in `inferInstanceAs` and the default `deriving` handler
+wrap instance bodies in `inferInstanceAs` and the default `deriving` handler
 
 ## backward.inferInstanceAs.wrap.data
 type: `Bool`
@@ -2353,7 +2353,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.29.0-rc8"`
+default: `"v4.29.0"`
 
 Revision of LeanStateSearch to use
 
@@ -3799,13 +3799,6 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.Meta.instanceNormalForm
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
 ## trace.Meta.instantiateMVars
 type: `Bool`
 
@@ -4143,6 +4136,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Meta.whnf
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.wrapInstance
 type: `Bool`
 
 default: `false`
