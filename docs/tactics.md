@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `fdd294c6997d6fad7a8348b8d68e8173a65b628a`
+Mathlib version: `c6cdc1bb118778092f976bf4598bc63349b6d3c7`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -6670,14 +6670,23 @@ Notes:
 ## positivity
 Defined in: `Mathlib.Tactic.Positivity.positivity`
 
-Tactic solving goals of the form `0 ≤ x`, `0 < x` and `x ≠ 0`.  The tactic works recursively
-according to the syntax of the expression `x`, if the atoms composing the expression all have
-numeric lower bounds which can be proved positive/nonnegative/nonzero by `norm_num`.  This tactic
-either closes the goal or fails.
+`positivity` solves goals of the form `0 ≤ x`, `0 < x` and `x ≠ 0`. The tactic works recursively
+according to the syntax of the expression `x`, by attempting to prove subexpressions are
+positive/nonnegative/nonzero and combining this into a final proof. This tactic either closes the
+goal or fails.
 
-`positivity [t₁, …, tₙ]` first executes `have := t₁; …; have := tₙ` in the current goal,
-then runs `positivity`. This is useful when `positivity` needs derived premises such as `0 < y`
-for division/reciprocal, or `0 ≤ x` for real powers.
+For each subexpression `e`, `positivity` will try to:
+* try `@[positivity]`-tagged extensions to recursively prove `e` is positive/nonnegative/nonzero
+  based on its subexpressions (see the `positivity` attribute for more details), or
+* try the `norm_num` tactic to prove `e` is positive/nonnegative/nonzero, or
+* try showing `e : t` is nonnegative because there is a `CanonicallyOrderedAdd t` instance, or
+* use a local hypothesis of the form `0 ≤ e`, `0 < e` or `e ≠ 0`.
+
+This tactic is extensible. See the `positivity` attribute documentation for more details.
+
+* `positivity [t₁, …, tₙ]` first executes `have := t₁; …; have := tₙ` in the current goal,
+  then runs `positivity`. This is useful when `positivity` needs derived premises such as `0 < y`
+  for division/reciprocal, or `0 ≤ x` for real powers.
 
 Examples:
 ```lean
