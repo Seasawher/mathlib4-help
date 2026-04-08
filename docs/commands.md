@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `205a0ba54c047cafda226494138ba715ab6bf28c`
+Mathlib version: `2ee41a0315994fc1b24421078d4011e19745a19b`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1079,6 +1079,8 @@ Defined in: `Lean.Parser.Command.printSig`
 ## \#print
 Defined in: `Lean.Parser.Command.printAxioms`
 
+Prints the axioms used by a declaration, directly or indirectly.
+Please consult [the reference manual](https://lean-lang.org/doc/reference/4.30.0-rc1/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
 
 ## \#print
 Defined in: `Lean.Parser.Command.printTacTags`
@@ -1551,6 +1553,18 @@ transitively imported by the current file. Used for dependency management.
 Defined in: `Lean.Parser.Command.attribute`
 
 
+## builtin_cbv_simproc
+Defined in: `Lean.Parser.«command__Builtin_cbv_simproc____(_):=_»`
+
+
+## builtin_cbv_simproc_decl
+Defined in: `Lean.Parser.«command_Builtin_cbv_simproc_decl_(_):=_»`
+
+
+## builtin_cbv_simproc_pattern%
+Defined in: `Lean.Parser.cbvSimprocPatternBuiltin`
+
+
 ## builtin_dsimproc
 Defined in: `Lean.Parser.«command__Builtin_dsimproc__[_]_(_):=_»`
 
@@ -1580,6 +1594,24 @@ A builtin simplification procedure declaration.
 Defined in: `Lean.Parser.simprocPatternBuiltin`
 
 Auxiliary command for associating a pattern with a builtin simplification procedure.
+
+## cbv_simproc
+Defined in: `Lean.Parser.«command__Cbv_simproc____(_):=_»`
+
+A user-defined simplification procedure used by the `cbv` tactic.
+The body must have type `Lean.Meta.Sym.Simp.Simproc` (`Expr → SimpM Result`).
+Procedures are indexed by a discrimination tree pattern and fire at one of three phases:
+`↓` (pre), `cbv_eval` (eval), or `↑` (post, default).
+
+## cbv_simproc_decl
+Defined in: `Lean.Parser.«command_Cbv_simproc_decl_(_):=_»`
+
+A `cbv_simproc` declaration without automatically adding it to the cbv simproc set.
+To activate, use `attribute [cbv_simproc]`.
+
+## cbv_simproc_pattern%
+Defined in: `Lean.Parser.cbvSimprocPattern`
+
 
 ## class
 Defined in: `Lean.Parser.Command.classAbbrev`
@@ -2578,6 +2610,22 @@ Defined in: `Lean.Option.registerOption`
 Defined in: `Lean.Parser.Command.registerSimpAttr`
 
 
+## register_sym_simp
+Defined in: `Lean.Parser.Command.registerSymSimp`
+
+Register a named `Sym.simp` variant.
+
+```
+register_sym_simp myVariant where
+  pre  := telescope
+  post := ground >> rewrite [thm1, thm2] with self
+  maxSteps := 50000
+```
+
+## register_sym_simp_attr
+Defined in: `Lean.Parser.Command.registerSymSimpAttr`
+
+
 ## register_tactic_tag
 Defined in: `Lean.Parser.Command.register_tactic_tag`
 
@@ -2623,7 +2671,7 @@ This is the same as `#eval show TermElabM Unit from discard do doSeq`.
 Defined in: `Lean.runMeta`
 
 The `run_meta doSeq` command executes code in `MetaM Unit`.
-This is the same as `#eval show MetaM Unit from do discard doSeq`.
+This is the same as `#eval show MetaM Unit from discard do doSeq`.
 
 (This is effectively a synonym for `run_elab` since `MetaM` lifts to `TermElabM`.)
 

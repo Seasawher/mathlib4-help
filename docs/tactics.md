@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `205a0ba54c047cafda226494138ba715ab6bf28c`
+Mathlib version: `2ee41a0315994fc1b24421078d4011e19745a19b`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1462,24 +1462,21 @@ It reduces terms by unfolding definitions using their defining equations and
 applying matcher equations. The unfolding is propositional, so `cbv` also works
 with functions defined via well-founded recursion or partial fixpoints.
 
-`cbv` has built-in support for goals of the form `lhs = rhs`. It proceeds in
-two passes:
-1. Reduce `lhs`. If the result is definitionally equal to `rhs`, close the goal.
-2. Otherwise, reduce `rhs`. If the result is now definitionally equal to the
-   reduced `lhs`, close the goal.
-3. If neither check succeeds, generate a new goal `lhs' = rhs'`, where `lhs'`
-   and `rhs'` are the reduced forms of the original sides.
+`cbv` reduces the goal type (and optionally hypothesis types) using call-by-value
+evaluation. For equation goals (`lhs = rhs`), `cbv` automatically attempts `refl`
+after reduction to close the goal.
 
-`cbv` is therefore not a finishing tactic in general: it may leave a new
-(simpler) equality goal. For goals that are not equalities, `cbv` currently
-leaves the goal unchanged.
+`cbv` supports the standard `at` location syntax:
+- `cbv` — reduce the goal target
+- `cbv at h` — reduce hypothesis `h`
+- `cbv at h |-` — reduce hypothesis `h` and the goal target
+- `cbv at *` — reduce all non-dependent propositional hypotheses and the goal target
+
+`cbv` is not a finishing tactic in general: it may leave a new (simpler) goal.
 
 The proofs produced by `cbv` only use the three standard axioms.
 In particular, they do not require trust in the correctness of the code
 generator.
-
-This tactic is experimental and its behavior is likely to change in upcoming
-releases of Lean.
 
 ## cfc_cont_tac
 Defined in: `cfcContTac`
@@ -1501,17 +1498,6 @@ calculus, specifically concerning whether `f 0 = 0`.
 
 ## change
 Defined in: `Lean.Parser.Tactic.change`
-
-* `change tgt'` will change the goal from `tgt` to `tgt'`,
-  assuming these are definitionally equal.
-* `change t' at h` will change hypothesis `h : t` to have type `t'`, assuming
-  assuming `t` and `t'` are definitionally equal.
-* `change a with b` will change occurrences of `a` to `b` in the goal,
-  assuming `a` and `b` are definitionally equal.
-* `change a with b at h` similarly changes `a` to `b` in the type of hypothesis `h`.
-
-## change
-Defined in: `Lean.Parser.Tactic.changeWith`
 
 * `change tgt'` will change the goal from `tgt` to `tgt'`,
   assuming these are definitionally equal.
@@ -1776,10 +1762,10 @@ introducing the arguments and trying the following approaches in order:
 
 1. seeing if `rfl` works
 2. seeing if the `compare` at hand is nonetheless essentially `compareOfLessAndEq`, but, because of
-implicit arguments, requires us to unfold the defs and split the `if`s in the definition of
-`compareOfLessAndEq`
+   implicit arguments, requires us to unfold the defs and split the `if`s in the definition of
+   `compareOfLessAndEq`
 3. seeing if we can split by cases on the arguments, then see if the defs work themselves out
-  (useful when `compare` is defined via a `match` statement, as it is for `Bool`)
+   (useful when `compare` is defined via a `match` statement, as it is for `Bool`)
 
 ## compute_degree
 Defined in: `Mathlib.Tactic.ComputeDegree.computeDegree`
@@ -2319,9 +2305,6 @@ fails.
 The proofs produced by `decide_cbv` only use the three standard axioms.
 In particular, they do not require trust in the correctness of the code
 generator.
-
-This tactic is experimental and its behavior is likely to change in upcoming
-releases of Lean.
 
 ## decreasing_tactic
 Defined in: `tacticDecreasing_tactic`
@@ -3115,7 +3098,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.29.0/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.30.0-rc1/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3248,7 +3231,7 @@ These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
 
-See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.29.0/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.30.0-rc1/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
@@ -8174,6 +8157,21 @@ A `swap_rule` is of the form `x y` or `x ↔ y`, and "applying it" means swappin
 example {P Q : Prop} (q : P) (p : Q) : P ∧ Q := by
   swap_var p ↔ q
   exact ⟨p, q⟩
+```
+
+## sym
+Defined in: `Lean.Parser.Tactic.sym`
+
+`sym` enters an interactive symbolic simulation mode built on `grind`.
+Unlike `grind =>`, it does not eagerly introduce hypotheses or apply by-contradiction,
+giving the user explicit control over `intro`, `apply`, and `internalize` steps.
+
+Example:
+```lean
+example (x : Nat) : myP x → myQ x := by
+  sym [myP_myQ] =>
+    intro h
+    finish
 ```
 
 ## symm
