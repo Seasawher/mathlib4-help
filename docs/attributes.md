@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `205a0ba54c047cafda226494138ba715ab6bf28c`
+Mathlib version: `2ee41a0315994fc1b24421078d4011e19745a19b`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -391,6 +391,12 @@ unfolded, and identifier-less syntax is ultimately assumed to be well-formed.
 ## builtin_structInstFieldDecl_parser
  Builtin parser
 
+## builtin_sym_discharger
+ (builtin) sym_discharger elaborator
+
+## builtin_sym_simproc
+ (builtin) sym_simproc elaborator
+
 ## builtin_syntax_parser
  Builtin parser
 
@@ -484,6 +490,12 @@ Registers a parenthesizer for a syntax category.
 parenthesizing occurrences of `cat:prec` (`categoryParser cat prec`). Implementations should call
 `maybeParenthesize` with the precedence and `cat`. If no category parenthesizer is registered, the
 category will never be parenthesized, but still traversed for parenthesizing nested categories.
+
+## cbvSimprocAttr
+ Cbv simplification procedure
+
+## cbvSimprocBuiltinAttr
+ Builtin cbv simplification procedure
 
 ## cbv_eval
  Register a theorem as a rewrite rule for `cbv` evaluation of a given definition.
@@ -631,6 +643,9 @@ special casing. If the term is an `Expr.mdata` with a single key `k`, `mdata.k` 
 
 ## deprecated
  mark declaration as deprecated
+
+## deprecated_arg
+ mark a parameter as deprecated
 
 ## doElem_control_info
  control info inference elaborator
@@ -1576,6 +1591,12 @@ The `simps` attribute.
 ## spec
  Marks Hoare triple specifications and simp theorems to use with the `mspec` and `mvcgen` tactics
 
+## spec_invariant_type
+ marks a type as an invariant type for the `mvcgen` tactic
+Marks a type as an invariant type for the `mvcgen` tactic.
+Goals whose type is an application of a tagged type will be classified
+as invariants rather than verification conditions.
+
 ## specialize
  mark definition to always be specialized
 Marks a definition to always be specialized during code generation.
@@ -1598,6 +1619,15 @@ specialized.
 
 ## suggest_for
  suggest other (incorrect, not-existing) identifiers that someone might use when they actually want this definition
+
+## sym_discharger
+ sym_discharger elaborator
+
+## sym_simp
+ Sym.simp theorem
+
+## sym_simproc
+ sym_simproc elaborator
 
 ## symm
  symmetric relation
@@ -1738,6 +1768,13 @@ constructor. You should not have any fields in `variable_alias` structures.
 
 Notice that `VectorSpace` is not a class; the `variable?` command allows non-classes with the
 `variable_alias` attribute to use instance binders.
+
+## weak_specialize
+ mark type for weak specialization: instances are only specialized when another argument already triggers specialization
+Marks a type for weak specialization: Parameters of this type are only specialized when
+another argument already triggers specialization. Unlike `@[nospecialize]`, if specialization
+happens for other reasons, parameters of this type will participate in the specialization
+rather than being ignored.
 
 ## wf_preprocess
  simp lemma used in the preprocessing of well-founded recursive function definitions, in particular to add additional hypotheses to the context. Also see `wfParam`.

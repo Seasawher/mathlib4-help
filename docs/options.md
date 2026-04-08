@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `205a0ba54c047cafda226494138ba715ab6bf28c`
+Mathlib version: `2ee41a0315994fc1b24421078d4011e19745a19b`
 
 ## Elab.async
 type: `Bool`
@@ -347,12 +347,19 @@ default: `true`
 
 by default the `inductive`/`structure` commands report an error if the resulting universe is not zero, but may be zero for some universe parameters. Reason: unless this type is a subsingleton, it is hardly what the user wants since it can only eliminate into `Prop`. In the `Init` package, we define subsingletons, and we use this option to disable the check. This option may be deleted in the future after we improve the validator
 
+## cbv.maxSteps
+type: `Nat`
+
+default: `100000`
+
+Controls the maximum number of steps for the `cbv` tactic.
+
 ## cbv.warning
 type: `Bool`
 
-default: `true`
+default: `false`
 
-disable `cbv` usage warning
+When enabled, displays a warning that the `cbv` tactic is being used.
 
 ## checkBinderAnnotations
 type: `Bool`
@@ -397,6 +404,20 @@ default: `true`
 
 (compiler) enable/disable closed term caching
 
+## compiler.ignoreBorrowAnnotation
+type: `Bool`
+
+default: `false`
+
+Ignore user defined borrow inference annotations. This is useful for export/extern forward declarations
+
+## compiler.inLeanIR
+type: `Bool`
+
+default: `false`
+
+Internal. Indicates whether the compiler is currently running in `leanir`.
+
 ## compiler.maxRecInline
 type: `Nat`
 
@@ -418,6 +439,13 @@ default: `64`
 
 (compiler) maximum number of times a definition tagged with `@[specialize]` can be recursively specialized before generating an error during compilation.
 
+## compiler.postponeCompile
+type: `Bool`
+
+default: `false`
+
+Internal. Toggle experimental `leanir` separate compilation.
+
 ## compiler.relaxedMetaCheck
 type: `Bool`
 
@@ -438,6 +466,13 @@ type: `Nat`
 default: `1`
 
 (compiler) function declarations with size `≤ small` is inlined even if there are multiple occurrences.
+
+## compiler.traceUnnormalized
+type: `Bool`
+
+default: `false`
+
+don't normalize declarations before tracing them at each pipeline step (this is useful for debugging purposes)
 
 ## contrapose.negate_iff
 type: `Bool`
@@ -708,6 +743,13 @@ default: `false`
 
 code-action for `grind` parameters
 
+## grind.unusedLemmaThreshold
+type: `Nat`
+
+default: `0`
+
+report E-matching lemmas activated at least this many times but not used in the proof (0 = disabled)
+
 ## grind.warning
 type: `Bool`
 
@@ -833,6 +875,13 @@ type: `Bool`
 default: `true`
 
 if true, generate deprecation warnings
+
+## linter.deprecated.arg
+type: `Bool`
+
+default: `true`
+
+if true, generate deprecation warnings and errors for deprecated parameters
 
 ## linter.deprecated.module
 type: `Bool`
@@ -1940,6 +1989,13 @@ default: `5000`
 
 (pretty printer) maximum number of expressions to visit, after which terms will pretty print as `⋯`
 
+## pp.mdata
+type: `Bool`
+
+default: `false`
+
+(pretty printer) displays a representation of mdata annotations
+
 ## pp.motives.all
 type: `Bool`
 
@@ -2353,7 +2409,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.29.0"`
+default: `"v4.30.0-rc1"`
 
 Revision of LeanStateSearch to use
 
@@ -2483,6 +2539,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Compiler.coalesceRc
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Compiler.commonJoinPointArgs
 type: `Bool`
 
@@ -2512,6 +2575,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Compiler.elimDeadVars
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Compiler.expandResetReuse
 type: `Bool`
 
 default: `false`
@@ -2721,6 +2791,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Compiler.simpleGround
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.Compiler.specialize
 type: `Bool`
 
@@ -2799,6 +2876,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Debug.Meta.Tactic.cbv
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Debug.Meta.Tactic.cbv.reduce
 type: `Bool`
 
 default: `false`
@@ -3611,6 +3695,34 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Meta.Tactic.cbv
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.Tactic.cbv.controlFlow
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.Tactic.cbv.rewrite
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.Tactic.cbv.simprocs
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.Tactic.cbv.unfold
 type: `Bool`
 
 default: `false`
@@ -4478,20 +4590,6 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.compiler.ir.elim_dead
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.compiler.ir.expand_reset_reuse
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
 ## trace.compiler.ir.inferMeta
 type: `Bool`
 
@@ -4506,21 +4604,7 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.compiler.ir.push_proj
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
 ## trace.compiler.ir.result
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
-## trace.compiler.ir.simple_ground
 type: `Bool`
 
 default: `false`
@@ -5129,13 +5213,6 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.grind.issues
-type: `Bool`
-
-default: `false`
-
-enable/disable tracing for the given module and submodules
-
 ## trace.grind.lia
 type: `Bool`
 
@@ -5636,6 +5713,27 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.string_diagram
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.sym.debug.canon
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.sym.issues
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.sym.simp.debug.cache
 type: `Bool`
 
 default: `false`
