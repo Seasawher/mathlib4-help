@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `91b2017b29915a0ebbbede1710c0167c1b48e775`
+Mathlib version: `ffb5b8a658e7cef52effb19190059bbc49387a54`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -2288,6 +2288,23 @@ variable (R : Type) [CommRing R]
 name_poly_vars X, Y, Z over R
 
 #check Y -- Y : MvPolynomial (Fin 3) R
+```
+
+## name_power_vars
+Defined in: `Mathlib.Tactic.namePowerVarsOver`
+
+The command `name_power_vars` names variables in
+`MvPowerSeries (Fin n) R` for the appropriate value of `n`.
+The notation introduced by this command is local.
+
+Usage:
+
+```lean
+variable (R : Type) [CommRing R]
+
+name_power_vars X, Y, Z over R
+
+#check Y -- Y : MvPowerSeries (Fin 3) R
 ```
 
 ## namespace
