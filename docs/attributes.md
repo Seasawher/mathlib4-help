@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `ffb5b8a658e7cef52effb19190059bbc49387a54`
+Mathlib version: `b43655dfe2152718a16bab2b8ef8a80ebdd87aa7`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -507,6 +507,59 @@ category will never be parenthesized, but still traversed for parenthesizing nes
  type class
 Registers an inductive type or structure as a type class. Using `class` or `class inductive` is
 generally preferred over using `@[class] structure` or `@[class] inductive` directly.
+
+## coassoc_simps
+ `coassoc_simps` is a simp set useful to prove tautologies on coalgebras.
+
+The general algorithm it follows is to push the associators `TensorProduct.assoc` and
+commutators `TensorProduct.comm` inwards (to the right) until they cancel against
+co-multiplications.
+
+The simp set makes the following choice of normal form
+* It regards `TensorProduct.map`, `TensorProduct.assoc`, `TensorProduct.comm` as the primitive
+  constructions and rewrites everything else such as `lTensor`, `leftComm` using them.
+* It rewrites both sides into a right associated composition of linear maps.
+  In particular `LinearMap.comp_assoc` and `LinearEquiv.coe_trans` are tagged.
+* It rewrites `(f₂ ⊗ g₂) ∘ (f₁ ⊗ g₁)` into `(f₂ ∘ f₁) ⊗ (g₂ ∘ g₁)`.
+
+## Notes
+
+- It is not confluent with `(ε ⊗ₘ id) ∘ₗ δ = λ⁻¹`.
+  It is often useful to `trans` (or `calc`) with a term containing
+  `(ε ⊗ₘ _) ∘ₗ δ` or `(_ ⊗ₘ ε) ∘ₗ δ`,
+  and use one of `map_counit_comp_comul_left` `map_counit_comp_comul_right`
+  `map_counit_comp_comul_left_assoc` `map_counit_comp_comul_right_assoc` to continue.
+
+- Some lemmas (e.g. `lid_comp_map : λ ∘ₗ (f ⊗ₘ g) = g ∘ₗ λ ∘ₗ (f ⊗ₘ id)`) loops when tagged as simp,
+  so we wrap it inside a rudimentary simproc that only fires when `g ≠ id`.
+
+`coassoc_simps` is a simp set useful to prove tautologies on coalgebras.
+
+The general algorithm it follows is to push the associators `TensorProduct.assoc` and
+commutators `TensorProduct.comm` inwards (to the right) until they cancel against
+co-multiplications.
+
+The simp set makes the following choice of normal form
+* It regards `TensorProduct.map`, `TensorProduct.assoc`, `TensorProduct.comm` as the primitive
+  constructions and rewrites everything else such as `lTensor`, `leftComm` using them.
+* It rewrites both sides into a right associated composition of linear maps.
+  In particular `LinearMap.comp_assoc` and `LinearEquiv.coe_trans` are tagged.
+* It rewrites `(f₂ ⊗ g₂) ∘ (f₁ ⊗ g₁)` into `(f₂ ∘ f₁) ⊗ (g₂ ∘ g₁)`.
+
+## Notes
+
+- It is not confluent with `(ε ⊗ₘ id) ∘ₗ δ = λ⁻¹`.
+  It is often useful to `trans` (or `calc`) with a term containing
+  `(ε ⊗ₘ _) ∘ₗ δ` or `(_ ⊗ₘ ε) ∘ₗ δ`,
+  and use one of `map_counit_comp_comul_left` `map_counit_comp_comul_right`
+  `map_counit_comp_comul_left_assoc` `map_counit_comp_comul_right_assoc` to continue.
+
+- Some lemmas (e.g. `lid_comp_map : λ ∘ₗ (f ⊗ₘ g) = g ∘ₗ λ ∘ₗ (f ⊗ₘ id)`) loops when tagged as simp,
+  so we wrap it inside a rudimentary simproc that only fires when `g ≠ id`.
+
+## coassoc_simps_proc
+ simproc set for coassoc_simps_proc
+Simplification procedure
 
 ## code_action_provider
  Use to decorate methods for suggesting code actions. This is a low-level interface for making code actions.
