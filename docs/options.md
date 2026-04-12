@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `ffb5b8a658e7cef52effb19190059bbc49387a54`
+Mathlib version: `b43655dfe2152718a16bab2b8ef8a80ebdd87aa7`
 
 ## Elab.async
 type: `Bool`
@@ -1437,6 +1437,13 @@ default: `false`
 
 
 ## linter.tacticAnalysis.verifyGrind
+type: `Bool`
+
+default: `false`
+
+
+
+## linter.tacticAnalysis.verifyGrindOnly
 type: `Bool`
 
 default: `false`
