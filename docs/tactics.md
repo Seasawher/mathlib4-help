@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `0c73bccd4452ab0441931f7ddbb70ab4fbf24a2b`
+Mathlib version: `044631201f8d40db203ed9d71a0ad69ff2d48ffa`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -4028,35 +4028,38 @@ example : ∀ (f : Nat → Nat), AllEven f → AllEven (fun k => f (k + 1)) := b
 ## introv
 Defined in: `Mathlib.Tactic.introv`
 
-The tactic `introv` allows the user to automatically introduce the variables of a theorem and
-explicitly name the non-dependent hypotheses.
-Any dependent hypotheses are assigned their default names.
+`introv` introduces the parameters to a dependent function according to their parameter name. If the
+first parameter is not depended on by the rest of the function type, `introv` with no (remaining)
+arguments does nothing.
+
+* `introv h₁ h₂ ...` introduces non-depended-on parameters in between sequences of depended-on
+  parameters, using the names `h₁`, `h₂`, ... in turn. Use `_` to anonymize a specific hypothesis.
 
 Examples:
 ```lean
 example : ∀ a b : Nat, a = b → b = a := by
-  introv h,
+  introv h
+  /-
+  The goal state is:
+  a b : ℕ,
+  h : a = b
+  ⊢ b = a
+  -/
   exact h.symm
-```
-The state after `introv h` is
-```
-a b : ℕ,
-h : a = b
-⊢ b = a
 ```
 
 ```
 example : ∀ a b : Nat, a = b → ∀ c, b = c → a = c := by
-  introv h₁ h₂,
+  introv h₁ h₂
+  /-
+  The goal state is:
+  a b : ℕ,
+  h₁ : a = b,
+  c : ℕ,
+  h₂ : b = c
+  ⊢ a = c
+  -/
   exact h₁.trans h₂
-```
-The state after `introv h₁ h₂` is
-```
-a b : ℕ,
-h₁ : a = b,
-c : ℕ,
-h₂ : b = c
-⊢ a = c
 ```
 
 ## isBoundedDefault
@@ -6830,8 +6833,23 @@ example (h : ¬ ∀ ε > 0, ∃ δ > 0, ∀ x, |x - x₀| ≤ δ → |f x - y₀
 ## qify
 Defined in: `Mathlib.Tactic.Qify.qify`
 
-The `qify` tactic is used to shift propositions from `ℕ` or `ℤ` to `ℚ`.
-This is often useful since `ℚ` has well-behaved division.
+`qify` rewrites the main goal by shifting propositions from `ℕ` or `ℤ` to `ℚ`.
+This is often useful since `ℚ` has well-behaved subtraction and division.
+
+`qify` makes use of the `@[zify_simps]` and `@[qify_simps]` attributes to insert casts into
+propositions, and the `push_cast` tactic to simplify the `ℚ`-valued expressions.
+
+`qify` is in some sense dual to the `lift` tactic. `lift (q : ℚ) to ℤ` will change the type of a
+rational number `q` (in the supertype) to `ℤ` (the subtype), given a proof that `q.den = 1`;
+propositions concerning `q` will still be over `ℚ`. `qify` changes propositions about `ℕ` or `ℤ`
+(the subtype) to propositions about `ℚ` (the supertype), without changing the type of any variable.
+
+* `qify at l1 l2 ...` rewrites at the given locations.
+* `qify [h₁, ..., hₙ]` uses the expressions `h₁`, ..., `hₙ` as extra lemmas for simplification.
+  This is especially useful in the presence of nat subtraction or of division: passing arguments of
+  type `· ≤ ·` or `· ∣ ·` will allow `push_cast` to do more work.
+
+Examples:
 ```lean
 example (a b c x y z : ℕ) (h : ¬ x*y*z < 0) : c < a + 3*b := by
   qify
@@ -6841,16 +6859,12 @@ example (a b c x y z : ℕ) (h : ¬ x*y*z < 0) : c < a + 3*b := by
   ⊢ ↑c < ↑a + 3 * ↑b
   -/
   sorry
-```
-`qify` can be given extra lemmas to use in simplification. This is especially useful in the
-presence of nat subtraction: passing `≤` arguments will allow `push_cast` to do more work.
-```lean
+
 example (a b c : ℤ) (h : a / b = c) (hab : b ∣ a) (hb : b ≠ 0) : a = c * b := by
+  -- Divisibility hypothesis allows pushing `· / ·`.
   qify [hab] at h hb ⊢
   exact (div_eq_iff hb).1 h
 ```
-`qify` makes use of the `@[zify_simps]` and `@[qify_simps]` attributes to move propositions,
-and the `push_cast` tactic to simplify the `ℚ`-valued expressions.
 
 ## rcases
 Defined in: `Lean.Parser.Tactic.rcases`
@@ -8741,8 +8755,23 @@ there will be two additional assumptions:
 ## zify
 Defined in: `Mathlib.Tactic.Zify.zify`
 
-The `zify` tactic is used to shift propositions from `Nat` to `Int`.
-This is often useful since `Int` has well-behaved subtraction.
+`zify` rewrites the main goal by shifting propositions from `ℕ` to `ℤ`.
+This is often useful since `ℤ` has well-behaved subtraction.
+
+`zify` makes use of the `@[zify_simps]` attribute to insert casts into propositions, and the
+`push_cast` tactic to simplify the `ℤ`-valued expressions.
+
+`zify` is in some sense dual to the `lift` tactic. `lift (z : Int) to Nat` will change the type of
+an integer `z` (in the supertype) to `Nat` (the subtype), given a proof that `z ≥ 0`; propositions
+concerning `z` will still be over `Int`. `zify` changes propositions about `Nat` (the subtype) to
+propositions about `Int` (the supertype), without changing the type of any variable.
+
+* `zify at l1 l2 ...` rewrites at the given locations.
+* `zify [h₁, ..., hₙ]` uses the expressions `h₁`, ..., `hₙ` as extra lemmas for simplification.
+  This is especially useful in the presence of nat subtraction or of division: passing arguments of
+  type `· ≤ ·` will allow `push_cast` to do more work.
+
+Examples:
 ```lean
 example (a b c x y z : Nat) (h : ¬ x*y*z < 0) : c < a + 3*b := by
   zify
@@ -8751,22 +8780,14 @@ example (a b c x y z : Nat) (h : ¬ x*y*z < 0) : c < a + 3*b := by
   h : ¬↑x * ↑y * ↑z < 0
   ⊢ ↑c < ↑a + 3 * ↑b
   -/
-```
-`zify` can be given extra lemmas to use in simplification. This is especially useful in the
-presence of nat subtraction: passing `≤` arguments will allow `push_cast` to do more work.
-```lean
-example (a b c : Nat) (h : a - b < c) (hab : b ≤ a) : false := by
+  sorry
+
+example (a b c : Nat) (h : a - b < c) (hab : b ≤ a) : False := by
+  -- Nonnegativity hypothesis allows pushing `· - ·`.
   zify [hab] at h
   /- h : ↑a - ↑b < ↑c -/
+  sorry
 ```
-`zify` makes use of the `@[zify_simps]` attribute to move propositions,
-and the `push_cast` tactic to simplify the `Int`-valued expressions.
-`zify` is in some sense dual to the `lift` tactic.
-`lift (z : Int) to Nat` will change the type of an
-integer `z` (in the supertype) to `Nat` (the subtype), given a proof that `z ≥ 0`;
-propositions concerning `z` will still be over `Int`.
-`zify` changes propositions about `Nat` (the subtype) to propositions about `Int` (the supertype),
-without changing the type of any variable.
 
 ## {
 Defined in: `Lean.Parser.Tactic.nestedTactic`
