@@ -213,9 +213,9 @@ example := #search "If a natural number n is less than m, then the successor of 
 example : 3 ≤ 5 := by
   #search "If a natural number n is less than m, then the successor of n is less than the successor of m."
   sorry
-```
 
 In tactic mode, if the query string is not supplied, then [LeanStateSearch](https://premise-search.com) is queried based on the goal state.
+```lean
 
 ## \#statesearch
 Defined in: `LeanSearchClient.statesearch_search_tactic`
