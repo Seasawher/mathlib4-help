@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `044631201f8d40db203ed9d71a0ad69ff2d48ffa`
+Mathlib version: `185383820340d9929ea650ecb2a53f4ed4d79344`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -780,7 +780,20 @@ Normalize casts in the goal and the given expression, then `apply` the expressio
 ## apply_rewrite
 Defined in: `Mathlib.Tactic.tacticApply_rewrite___`
 
-`apply_rewrite [rules]` is a shorthand for `grewrite +implicationHyp [rules]`.
+`apply_rewrite [e₁, ..., eₙ]` uses the expressions `e₁`, ..., `eₙ` as generalized rewrite rules, of
+type `pᵢ → qᵢ`, on the main goal, replacing occurrences of `pᵢ` with `qᵢ`. The difference with
+`grewrite` is that `grewrite` would turn `pᵢ` into a side goal and expect `qᵢ` to be a relation.
+
+If an expression `e` is a defined constant, then the equational theorems associated with `e` are
+used. This provides a convenient way to unfold `e`.
+
+* `apply_rewrite [← e]` applies the rewrite rule `e : p → q` in the reverse direction, replacing
+  occurrences of `q` with `p`.
+* `apply_rewrite (config := cfg) [e₁, ..., eₙ]` uses `cfg` as configuration. See `GRewrite.Config`
+  for details.
+  To let `apply_rewrite` unfold more aggressively, as in `erw`, use
+  `apply_rewrite (transparency := default) [e₁, ..., eₙ]`.
+* `apply_rewrite [e₁, ..., eₙ] at l` rewrites at the location(s) `l`.
 
 ## apply_rfl
 Defined in: `Lean.Parser.Tactic.applyRfl`
@@ -815,7 +828,20 @@ a lemma from the list until it gets stuck.
 ## apply_rw
 Defined in: `Mathlib.Tactic.applyRwSeq`
 
-`apply_rw [rules]` is a shorthand for `grw +implicationHyp [rules]`.
+`apply_rw [e₁, ..., eₙ]` uses the expressions `e₁`, ..., `eₙ` as generalized rewrite rules, of type
+`pᵢ → qᵢ`, on the main goal, replacing occurrences of `pᵢ` with `qᵢ`. The difference with `grw` is
+that `grw` would turn `pᵢ` into a side goal and expect `qᵢ` to be a relation.
+
+If an expression `e` is a defined constant, then the equational theorems associated with `e` are
+used. This provides a convenient way to unfold `e`.
+
+* `apply_rw [← e]` applies the rewrite rule `e : p → q` in the reverse direction, replacing
+  occurrences of `q` with `p`.
+* `apply_rw (config := cfg) [e₁, ..., eₙ]` uses `cfg` as configuration. See `GRewrite.Config`
+  for details.
+  To let `apply_rw` unfold more aggressively, as in `erw`, use
+  `apply_rw (transparency := default) [e₁, ..., eₙ]`.
+* `apply_rw [e₁, ..., eₙ] at l` rewrites at the location(s) `l`.
 
 ## arith_mult
 Defined in: `ArithmeticFunction.arith_mult`
@@ -3217,8 +3243,37 @@ A macro for a common simplification when rewriting with ghost component equation
 ## grewrite
 Defined in: `Mathlib.Tactic.grewriteSeq`
 
-`grewrite [e]` is like `grw [e]`, but it doesn't try to close the goal with `rfl`.
-This is analogous to `rw` and `rewrite`, where `rewrite` doesn't try to close the goal with `rfl`.
+`grewrite [e₁, ..., eₙ]` uses each expression `eᵢ : Rᵢ aᵢ bᵢ` (where `Rᵢ` is any two-argument
+relation) as a generalized rewrite rule on the main goal, replacing occurrences of `aᵢ` with `bᵢ`.
+Occurrences of `bᵢ` are not rewritten, even if logically possible. Use `grewrite [← eᵢ]` to rewrite
+in the other direction, replacing occurrences of `bᵢ` with `aᵢ`.
+
+If an expression `e` is a defined constant, then the equational theorems associated with `e` are
+used. This provides a convenient way to unfold `e`. If `e` has parameters, the tactic will try to
+fill these in by unification with the matching part of the target. Parameters are only filled in
+once per rule, restricting which later rewrites can be found. Parameters that are not filled in
+after unification will create side goals.
+
+To be able to use `grewrite`, the relevant lemmas need to be tagged with `@[gcongr]`.
+To rewrite inside a transitive relation, you can also give it an `IsTrans` instance.
+The strict inequality `a < b` is turned into the non-strict inequality `a ≤ b` to rewrite with it.
+A future version of `grewrite` may get special support for making better use of strict inequalities.
+
+`grw` is like `grewrite` but tries to close the goal afterwards by "cheap" (reducible) `rfl`.
+To rewrite only in the `n`-th position, use `nth_grewrite n`.
+This is useful when `grewrite` tries to rewrite in a position that is not valid for the given
+relation.
+`apply_rewrite [e₁, ..., eₙ]` is a shorthand for `grewrite +implicationHyp [e₁, ..., eₙ]`: it
+interprets `· → ·` as a relation instead of adding the hypothesis as a side condition.
+
+* `grewrite [← e]` applies the rewrite rule `e : R a b` in the reverse direction, replacing
+  occurrences of `b` with `a`.
+* `grewrite (config := cfg) [e₁, ..., eₙ]` uses `cfg` as configuration. See `GRewrite.Config` for
+  details.
+  * To let `grewrite` unfold more aggressively, as in `erw`, use
+    `grewrite (transparency := default) [e₁, ..., eₙ]`.
+  * `grewrite +implicationHyp [e₁, ..., eₙ]` interprets `· → ·` as a relation (see `apply_rewrite`).
+* `grewrite [e₁, ..., eₙ] at l` rewrites at the location(s) `l`.
 
 ## grind
 Defined in: `Lean.Parser.Tactic.grind`
@@ -3546,9 +3601,39 @@ example {G : Type} [Group G] (a b c d : G) (h : c = (a*b^2)*((b*b)⁻¹*a⁻¹)*
 ## grw
 Defined in: `Mathlib.Tactic.grwSeq`
 
-`grw [e]` works just like `rw [e]`, but `e` can be a relation other than `=` or `↔`.
+`grw [e₁, ..., eₙ]` uses each expression `eᵢ : Rᵢ aᵢ bᵢ` (where `Rᵢ` is any two-argument
+relation) as a generalized rewrite rule on the main goal, replacing occurrences of `aᵢ` with `bᵢ`,
+then tries to close the main goal by "cheap" (reducible) `rfl`.
+Occurrences of `bᵢ` are not rewritten, even if logically possible. Use `grw [← eᵢ]` to rewrite
+in the other direction, replacing occurrences of `bᵢ` with `aᵢ`.
 
-For example:
+If an expression `e` is a defined constant, then the equational theorems associated with `e` are
+used. This provides a convenient way to unfold `e`. If `e` has parameters, the tactic will try to
+fill these in by unification with the matching part of the target. Parameters are only filled in
+once per rule, restricting which later rewrites can be found. Parameters that are not filled in
+after unification will create side goals.
+
+To be able to use `grw`, the relevant lemmas need to be tagged with `@[gcongr]`.
+To rewrite inside a transitive relation, you can also give it an `IsTrans` instance.
+The strict inequality `a < b` is turned into the non-strict inequality `a ≤ b` to rewrite with it.
+A future version of `grw` may get special support for making better use of strict inequalities.
+
+`grewrite` is like `grw` but does not try to apply `rfl` afterwards.
+To rewrite only in the `n`-th position, use `nth_grw n`.
+This is useful when `grw` tries to rewrite in a position that is not valid for the given relation.
+`apply_rw [rules]` is a shorthand for `grw +implicationHyp [rules]`: it interprets `· → ·` as a
+relation instead of adding the hypothesis as a side condition.
+
+* `grw [← e]` applies the rewrite rule `e : R a b` in the reverse direction, replacing occurrences
+  of `b` with `a`.
+* `grw (config := cfg) [e₁, ..., eₙ]` uses `cfg` as configuration. See `GRewrite.Config` for
+  details.
+  * To let `grw` unfold more aggressively, as in `erw`, use
+    `grw (transparency := default) [e₁, ..., eₙ]`.
+  * `grw +implicationHyp [e₁, ..., e\_n]` interprets `· → ·` as a relation (see `apply_rw`).
+* `grw [e₁, ..., eₙ] at l` rewrites at the location(s) `l`.
+
+Examples:
 
 ```lean
 variable {a b c d n : ℤ}
@@ -3562,25 +3647,11 @@ example (h : a ≡ b [ZMOD n]) : a ^ 2 ≡ b ^ 2 [ZMOD n] := by
 example (h₁ : a ∣ b) (h₂ : b ∣ a ^ 2 * c) : a ∣ b ^ 2 * c := by
   grw [h₁] at *
   exact h₂
-```
 
-To replace the RHS with the LHS of the given relation, use the `←` notation (just like in `rw`):
-
-```
+-- To replace the RHS with the LHS of the given relation, use the `←` notation (just like in `rw`):
 example (h₁ : a < b) (h₂ : b ≤ c) : a + d ≤ c + d := by
   grw [← h₂, ← h₁]
 ```
-
-The strict inequality `a < b` is turned into the non-strict inequality `a ≤ b` to rewrite with it.
-A future version of `grw` may get special support for making better use of strict inequalities.
-
-To rewrite only in the `n`-th position, use `nth_grw n`.
-This is useful when `grw` tries to rewrite in a position that is not valid for the given relation.
-
-To be able to use `grw`, the relevant lemmas need to be tagged with `@[gcongr]`.
-To rewrite inside a transitive relation, you can also give it an `IsTrans` instance.
-
-To let `grw` unfold more aggressively, as in `erw`, use `grw (transparency := default)`.
 
 ## guard_expr
 Defined in: `Lean.Parser.Tactic.guardExpr`
@@ -6251,12 +6322,61 @@ example : ¬ (7-2)/(2*3) ≥ (1:ℝ) + 2/(3^2) := by norm_num1
 ## nth_grewrite
 Defined in: `Mathlib.Tactic.tacticNth_grewrite_____`
 
-`nth_grewrite` is just like `nth_rewrite`, but for `grewrite`.
+`nth_grewrite n₁ ... nₖ [e₁, ..., eₙ]` is a variant of `grewrite` that for each expression
+`eᵢ : R aᵢ bᵢ` only replaces the `n₁, ..., nₖ`th occurrence of `aᵢ` with `bᵢ`.
+Occurrences of `bᵢ` are not rewritten, even if logically possible. Use
+`nth_grewrite n₁ ... nₖ [← eᵢ]` to rewrite in the other direction, replacing occurrences of `bᵢ`
+with `aᵢ`.
+
+If an expression `e` is a defined constant, then the equational theorems associated with `e` are
+used. This provides a convenient way to unfold `e`. If `e` has parameters, the tactic will try to
+fill these in by unification with the matching part of the target. Parameters are only filled in
+once per rule, restricting which later rewrites can be found. Parameters that are not filled in
+after unification will create side goals.
+
+To be able to use `nth_grewrite`, the relevant lemmas need to be tagged with `@[gcongr]`.
+To rewrite inside a transitive relation, you can also give it an `IsTrans` instance.
+The strict inequality `a < b` is turned into the non-strict inequality `a ≤ b` to rewrite with it.
+A future version of `nth_grewrite` may get special support for making better use of strict
+inequalities.
+
+* `nth_grewrite n₁ ... nₖ [← e]` applies the rewrite rule `e : R a b` in the reverse direction,
+  replacing the `n₁, ..., nₖ`th occurrences of `b` with `a`.
+* `nth_grewrite (config := cfg) n₁ ... nₖ [e₁, ..., eₙ]` uses `cfg` as configuration. See
+  `GRewrite.Config` for details.
+  * To let `nth_grewrite` unfold more aggressively, as in `erw`, use
+    `nth_grewrite (transparency := default) n₁ ... nₖ [e₁, ..., eₙ]`.
+  * `nth_grewrite +implicationHyp n₁ ... nₖ [e₁, ..., eₙ]` interprets `· → ·` as a relation.
+* `nth_grewrite n₁ ... nₖ [e₁, ..., eₙ] at l` rewrites at the location(s) `l`.
 
 ## nth_grw
 Defined in: `Mathlib.Tactic.tacticNth_grw_____`
 
-`nth_grw` is just like `nth_rw`, but for `grw`.
+`nth_grw n₁ ... nₖ [e₁, ..., eₙ]` is a variant of `grw` that for each expression `eᵢ : R aᵢ bᵢ` only
+replaces the `n₁, ..., nₖ`th occurrence of `aᵢ` with `bᵢ`. Occurrences of `bᵢ` are not rewritten,
+even if logically possible. Use `nth_grw n₁ ... nₖ [← eᵢ]` to rewrite in the other direction,
+replacing occurrences of `bᵢ` with `aᵢ`.
+
+If an expression `e` is a defined constant, then the equational theorems associated with `e` are
+used. This provides a convenient way to unfold `e`. If `e` has parameters, the tactic will try to
+fill these in by unification with the matching part of the target. Parameters are only filled in
+once per rule, restricting which later rewrites can be found. Parameters that are not filled in
+after unification will create side goals.
+
+To be able to use `nth_grw`, the relevant lemmas need to be tagged with `@[gcongr]`.
+To rewrite inside a transitive relation, you can also give it an `IsTrans` instance.
+The strict inequality `a < b` is turned into the non-strict inequality `a ≤ b` to rewrite with it.
+A future version of `nth_grw` may get special support for making better use of strict
+inequalities.
+
+* `nth_grw n₁ ... nₖ [← e]` applies the rewrite rule `e : R a b` in the reverse direction, replacing
+  the `n₁, ..., nₖ`th occurrences of `b` with `a`.
+* `nth_grw (config := cfg) n₁ ... nₖ [e₁, ..., eₙ]` uses `cfg` as configuration. See
+  `GRewrite.Config` for details.
+  * To let `nth_grw` unfold more aggressively, as in `erw`, use
+    `nth_grw (transparency := default) n₁ ... nₖ [e₁, ..., eₙ]`.
+  * `nth_grw +implicationHyp n₁ ... nₖ [e₁, ..., eₙ]` interprets `· → ·` as a relation.
+* `nth_grw n₁ ... nₖ [e₁, ..., eₙ] at l` rewrites at the location(s) `l`.
 
 ## nth_rewrite
 Defined in: `Mathlib.Tactic.tacticNth_rewrite_____`
