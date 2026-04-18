@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `9470b68e2f52705134448bb88b97d85470c06908`
+Mathlib version: `2ea7849dc03421f178d390e283cd1a60f5b33a81`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -826,7 +826,8 @@ For each found declaration, it prints a line
 ```
 'declaration_name' corresponds to tag 'declaration_tag'.
 ```
-The variant `#kerodon_tags!` also adds the theorem statement after each summary line.
+The variant `#kerodon_tags!` also adds the theorem statement (for theorems)
+or declaration type (for definitions, structures, instances, etc.) after each summary line.
 
 ## \#leansearch
 Defined in: `LeanSearchClient.leansearch_search_cmd`
@@ -1357,7 +1358,8 @@ For each found declaration, it prints a line
 ```
 'declaration_name' corresponds to tag 'declaration_tag'.
 ```
-The variant `#stacks_tags!` also adds the theorem statement after each summary line.
+The variant `#stacks_tags!` also adds the theorem statement (for theorems)
+or declaration type (for definitions, structures, instances, etc.) after each summary line.
 
 ## \#string_diagram
 Defined in: `Mathlib.Tactic.Widget.stringDiagram`
