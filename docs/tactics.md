@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `8e3c989104daaa052921bf43de9eef0e1ac9fbf5`
+Mathlib version: `9470b68e2f52705134448bb88b97d85470c06908`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -583,6 +583,44 @@ Defined in: `Aesop.tacticAesop_unfold_`
 ## aesop_unfold
 Defined in: `Aesop.tacticAesop_unfold_At_`
 
+
+## algebra
+Defined in: `Mathlib.Tactic.Algebra.algebra`
+
+`algebra` solves equalities in the language of algebras: ring operations and scalar
+multiplications.
+
+Given a goal which is an equality in a commutative `R`-algebra `A`, `algebra` parses the LHS and
+RHS of the goal as polynomial expressions of `A`-atoms with coefficients in some semiring `R`, and
+closes the goal if the two expressions are the same. The `R`-coefficients are put into ring normal
+form.
+
+By default, the scalar ring `R` is inferred automatically by looking for scalar multiplications and
+`algebraMap`s present in the expressions. The inference procedure assumes that any two rings `R`
+and `S` that appear are comparable, in the sense that either `R` is an `S`-algebra or `S` is an
+`R`-algebra.
+
+* `algebra with R` uses the term `R` as the scalar ring, instead of attempting to infer it
+automatically.
+
+## algebra
+Defined in: `Mathlib.Tactic.Algebra.algebraWith`
+
+`algebra` solves equalities in the language of algebras: ring operations and scalar
+multiplications.
+
+Given a goal which is an equality in a commutative `R`-algebra `A`, `algebra` parses the LHS and
+RHS of the goal as polynomial expressions of `A`-atoms with coefficients in some semiring `R`, and
+closes the goal if the two expressions are the same. The `R`-coefficients are put into ring normal
+form.
+
+By default, the scalar ring `R` is inferred automatically by looking for scalar multiplications and
+`algebraMap`s present in the expressions. The inference procedure assumes that any two rings `R`
+and `S` that appear are comparable, in the sense that either `R` is an `S`-algebra or `S` is an
+`R`-algebra.
+
+* `algebra with R` uses the term `R` as the scalar ring, instead of attempting to infer it
+automatically.
 
 ## algebraize
 Defined in: `Mathlib.Tactic.tacticAlgebraize__`
@@ -7399,32 +7437,47 @@ Implementation notes:
 ## rify
 Defined in: `Mathlib.Tactic.Rify.rify`
 
-The `rify` tactic is used to shift propositions from `ℕ`, `ℤ` or `ℚ` to `ℝ`.
+`rify` rewrites the main goal by shifting propositions from `ℕ`, `ℤ`, `ℚ` or `ℝ≥0` to `ℝ`.
 Although less useful than its cousins `zify` and `qify`, it can be useful when your
 goal or context already involves real numbers.
 
-In the example below, assumption `hn` is about natural numbers, `hk` is about integers
+`rify` makes use of the `@[zify_simps]`, `@[qify_simps]` and `@[rify_simps]` attributes to insert
+casts into propositions, and the `push_cast` tactic to simplify the `ℝ`-valued expressions.
+
+`rify` is in some sense dual to the `lift` tactic. `lift (r : ℝ) to ℚ` will change the type of a
+real number `r` (in the supertype) to `ℚ` (the subtype), given a proof that `r` is rational;
+propositions concerning `r` will still be over `ℝ`. `rify` changes propositions about `ℕ`, `ℤ`, `ℚ`
+or `ℝ≥0` (the subtype) to propositions about `ℝ` (the supertype), without changing the type of any
+variable.
+
+* `rify at l1 l2 ...` rewrites at the given locations.
+* `rify [h₁, ..., hₙ]` uses the expressions `h₁`, ..., `hₙ` as extra lemmas for simplification.
+  This is especially useful in the presence of nat subtraction or of division: passing arguments of
+  type `· ≤ ·` or `· ∣ ·` will allow `push_cast` to do more work.
+
+Examples:
+```lean
+/--
+import Mathlib
+
+open Real
+Here, the assumption `hn` is about natural numbers, `hk` is about integers
 and involves casting a natural number to `ℤ`, and the conclusion is about real numbers.
-The proof uses `rify` to lift both assumptions to `ℝ` before calling `linarith`.
-```
+-/
 example {n : ℕ} {k : ℤ} (hn : 8 ≤ n) (hk : 2 * k ≤ n + 2) :
     (0 : ℝ) < n - k - 1 := by
   rify at hn hk /- Now have hn : 8 ≤ (n : ℝ)   hk : 2 * (k : ℝ) ≤ (n : ℝ) + 2 -/
   linarith
-```
 
-`rify` makes use of the `@[zify_simps]`, `@[qify_simps]` and `@[rify_simps]` attributes to move
-propositions, and the `push_cast` tactic to simplify the `ℝ`-valued expressions.
-
-`rify` can be given extra lemmas to use in simplification. This is especially useful in the
-presence of nat subtraction: passing `≤` arguments will allow `push_cast` to do more work.
-```lean
+-- Extra hypotheses allow `push_cast` to do more work.
 example (a b c : ℕ) (h : a - b < c) (hab : b ≤ a) : a < b + c := by
-  rify [hab] at h ⊢
+  rify [hab] at h ⊢ -- Here `zify` or `qify` would have also worked.
   linarith
+
+example (a b : ℕ) (ha : π ≤ a) : 3 ≤ a + b := by
+  rify
+  linarith [pi_gt_three]
 ```
-Note that `zify` or `qify` would work just as well in the above example (and `zify` is the natural
-choice since it is enough to get rid of the pathological `ℕ` subtraction).
 
 ## right
 Defined in: `Lean.Parser.Tactic.right`
