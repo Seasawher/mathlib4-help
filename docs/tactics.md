@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `cc9c9b783856525faeb0001e6e53a0887c58f58c`
+Mathlib version: `6a3c0a920ac9ec1d2f23245887cfebe46fa64a32`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3097,7 +3097,7 @@ Patterns can be used like in the `intro` tactic. Example, given a goal
 `funext (a, b)` applies `funext` once and performs pattern matching on the newly introduced pair.
 
 ## gcongr
-Defined in: `Mathlib.Tactic.GCongr.tacticGcongr___With___`
+Defined in: `Mathlib.Tactic.GCongr.gcongr`
 
 `gcongr` applies "generalized congruence" rules to recursively reduce a goal of form
 `⊢ R (f a₁ ... aₙ) (f b₁ ... bₙ)` to (possibly multiple) goal(s) `⊢ Rᵢ aᵢ bᵢ`, keeping only the
@@ -4653,7 +4653,7 @@ above.  This variant is implemented only for linear combinations of equalities (
 inequalities).
 
 ## linear_combination'
-Defined in: `Mathlib.Tactic.LinearCombination'.linearCombination'`
+Defined in: `Mathlib.Tactic.LinearCombinationPrime.linearCombination'`
 
 `linear_combination'` attempts to simplify the target by creating a linear combination
   of a list of equalities and subtracting it from the target.
@@ -4734,7 +4734,7 @@ example (a b : ℚ) (h : ∀ p q : ℚ, p = q) : 3*a + qc = 3*b + 2*qc := by
 ```
 
 ## linear_combination2
-Defined in: `Mathlib.Tactic.LinearCombination'.tacticLinear_combination2____`
+Defined in: `Mathlib.Tactic.LinearCombinationPrime.tacticLinear_combination2____`
 
 `linear_combination'` attempts to simplify the target by creating a linear combination
   of a list of equalities and subtracting it from the target.
@@ -7735,18 +7735,15 @@ Defined in: `Aesop.Frontend.saturate?`
 
 
 syntax ..."says"... [Mathlib.Tactic.Says.says]
-If you write `X says`, where `X` is a tactic that produces a "Try this: Y" message,
-then you will get a message "Try this: X says Y".
-Once you've clicked to replace `X says` with `X says Y`,
-afterwards `X says Y` will only run `Y`.
+`tac₁ says tac₂` runs `tac₂`. In CI it also runs `tac₁` and validates that `tac₁` produces
+a "Try this: `tac₂`" message. Use `set_option says.verify true` to enable the validation step on
+your own machine.
 
-The typical usage case is:
-```lean
-simp? [X] says simp only [X, Y, Z]
-```
+The `says` combinator is intended to be used when `tac₁` is meaningful but slow and `tac₂` is faster
+but hard to read: for example, `simp? [X] says simp only [X, Y, Z]`.
 
-If you use `set_option says.verify true` (set automatically during CI) then `X says Y`
-runs `X` and verifies that it still prints "Try this: Y".
+To generate or update the correct value of `tac₂`, write `tac₁ says`. You will get a message
+"Try this: `tac₁ says tac₂`.
 
 ## set
 Defined in: `Mathlib.Tactic.setTactic`
