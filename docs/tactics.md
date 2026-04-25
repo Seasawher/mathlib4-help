@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `58a5d529504159690019ab1131c2edb51f2f79e4`
+Mathlib version: `54b0ef542785b8778fdb225e9ca67538e24a81ed`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -6633,13 +6633,15 @@ but it opens a namespace only within the tactics `tacs`.
 ## order
 Defined in: `Mathlib.Tactic.Order.tacticOrder_`
 
-A finishing tactic for solving goals in arbitrary `Preorder`, `PartialOrder`,
-or `LinearOrder`. Supports `⊤`, `⊥`, and lattice operations.
+`order` solves the main goal if it can be derived from the local hypotheses and the axioms of
+`Preorder`, `PartialOrder` or `LinearOrder`. Also supports `⊤`, `⊥` and lattice operations.
 
-## order_core
-Defined in: `Mathlib.Tactic.Order.order_core`
+This tactic fails if it cannot prove the main goal.
 
-`order_core` is the part of the `order` tactic that tries to find a contradiction.
+* `order [e₁, ..., eₙ]` uses the terms `e₁`, ... `eₙ` as hypotheses, in addition to the local
+  context.
+* `order only [e₁, ..., eₙ]` uses only the terms `e₁`, ... `eₙ` as hypotheses (ignoring the local
+  context).
 
 ## peel
 Defined in: `Mathlib.Tactic.Peel.peel`
@@ -8182,14 +8184,17 @@ Defined in: `Batteries.Tactic.tacticSplit_ands`
 ## split_ifs
 Defined in: `Mathlib.Tactic.splitIfs`
 
-Splits all if-then-else-expressions into multiple goals.
-Given a goal of the form `g (if p then x else y)`, `split_ifs` will produce
-two goals: `p ⊢ g x` and `¬p ⊢ g y`.
-If there are multiple ite-expressions, then `split_ifs` will split them all,
-starting with a top-most one whose condition does not contain another
-ite-expression.
-`split_ifs at *` splits all ite-expressions in all hypotheses as well as the goal.
-`split_ifs with h₁ h₂ h₃` overrides the default names for the hypotheses.
+`split_ifs` splits the main goal in two goals for every if-then-else expression it contains,
+by applying excluded middle to the condition. If the goal has the form `g (if p then x else y)`,
+`split_ifs` will result in two goals `h✝ : p ⊢ g x` and `h✝ : ¬p ⊢ g y`. If there are multiple
+if-then-else expressions, then `split_ifs` will split them all, starting with a top-most one whose
+condition does not contain another if-then-else expression.
+
+* `split_ifs with h₁ h₂ h₃` names the introduced hypotheses.
+  Note that names are not reused across splits: on a goal of the form
+  `⊢ (if p then 1 else 2) + (if q then 3 else 4)`, use `split_ifs with hp hq hq` to name all
+  the hypotheses.
+* `split_ifs at l` splits the if-then-else expressions at location(s) `l`.
 
 ## squeeze_scope
 Defined in: `Batteries.Tactic.squeezeScope`
@@ -8226,34 +8231,21 @@ and less messy than commenting the remainder of the proof.
 ## subsingleton
 Defined in: `Mathlib.Tactic.subsingletonStx`
 
-The `subsingleton` tactic tries to prove a goal of the form `x = y` or `x ≍ y`
-using the fact that the types involved are *subsingletons*
-(a type with exactly zero or one terms).
-To a first approximation, it does `apply Subsingleton.elim`.
-As a nicety, `subsingleton` first runs the `intros` tactic.
-
-- If the goal is an equality, it either closes the goal or fails.
-- `subsingleton [inst1, inst2, ...]` can be used to add additional `Subsingleton` instances
-  to the local context. This can be more flexible than
-  `have := inst1; have := inst2; ...; subsingleton` since the tactic does not require that
-  all placeholders be solved for.
+`subsingleton` proves the main goal of the form `∀ a ... b, x = y` or `∀ a ... b, x ≍ y` using the
+fact that the type(s) of `x` and `y` are *subsingletons* (a type with exactly zero or one elements).
+If `subsingleton` cannot close the goal, it fails.
 
 Techniques the `subsingleton` tactic can apply:
 - proof irrelevance
 - heterogeneous proof irrelevance (via `proof_irrel_heq`)
 - using `Subsingleton` (via `Subsingleton.elim`)
-- proving `BEq` instances are equal if they are both lawful (via `lawful_beq_subsingleton`)
+- proving instances of the type `BEq α` are equal if they are both lawful
+  (via `lawful_beq_subsingleton`)
 
-### Properties
-
-The tactic is careful not to accidentally specialize `Sort _` to `Prop`,
-avoiding the following surprising behavior of `apply Subsingleton.elim`:
-```lean
-example (α : Sort _) (x y : α) : x = y := by apply Subsingleton.elim
-```
-The reason this `example` goes through is that
-it applies the `∀ (p : Prop), Subsingleton p` instance,
-specializing the universe level metavariable in `Sort _` to `0`.
+* `subsingleton [inst1, inst2, ...]` can be used to add additional `Subsingleton` instances
+  to the local context. This can be more flexible than
+  `have := inst1; have := inst2; ...; subsingleton` since the tactic does not require that
+  all placeholders be solved for.
 
 ## subst
 Defined in: `Lean.Parser.Tactic.subst`
