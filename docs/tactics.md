@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `54b0ef542785b8778fdb225e9ca67538e24a81ed`
+Mathlib version: `80a6231dcf1d3a8fa73740f6266d77f68c7ff596`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -946,16 +946,6 @@ Helper internal tactic for implementing the tactic `try?`.
 Defined in: `Lean.Parser.Tactic.attemptAllPar`
 
 Helper internal tactic for implementing the tactic `try?` with parallel execution.
-
-## aux_group₁
-Defined in: `Mathlib.Tactic.Group.aux_group₁`
-
-Auxiliary tactic for the `group` tactic. Calls the simplifier only.
-
-## aux_group₂
-Defined in: `Mathlib.Tactic.Group.aux_group₂`
-
-Auxiliary tactic for the `group` tactic. Calls `ring_nf` to normalize exponents.
 
 ## bddDefault
 Defined in: `tacticBddDefault`
