@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `c63c4e5c93f3fd95ca1912c351063be5b666a204`
+Mathlib version: `429fc043adf0bed8205e59c61a8dc3ea12831504`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1748,10 +1748,13 @@ definition to the user via `decreasing_by`. It is not necessary to use this tact
 ## clear
 Defined in: `Lean.Elab.Tactic.clearExceptTactic`
 
-Clears all hypotheses it can, except those provided after a minus sign. Example:
+Clears all hypotheses it can, except those provided after a minus sign, class instances, and
+hidden auxiliary declarations (for example recursive hypotheses). Example:
 ```lean
   clear * - h₁ h₂
 ```
+The intent is that `clear * -` only clears user-visible local declarations; hidden auxiliary
+declarations should be handled by more specific mechanisms when needed.
 
 ## clear
 Defined in: `Lean.Parser.Tactic.clear`
