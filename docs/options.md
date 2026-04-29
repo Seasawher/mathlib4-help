@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `429fc043adf0bed8205e59c61a8dc3ea12831504`
+Mathlib version: `bd3f02d97418c5b9da572cb60de155f0998187f2`
 
 ## Elab.async
 type: `Bool`
@@ -924,6 +924,13 @@ type: `Bool`
 default: `true`
 
 Linter, mostly used by translate attributes, that checks that the source declaration doesn't have certain attributes
+
+## linter.fast_instance_existing
+type: `Bool`
+
+default: `true`
+
+Show a warning if `fast_instance%` can be replaced with `inferInstance`.
 
 ## linter.flexible
 type: `Bool`
