@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `177caf0bccd154a7e9ce7f82eba9399c25d697a8`
+Mathlib version: `07de3072413e608bacca32c543e792a37815be64`
 
 ## Elab.async
 type: `Bool`
@@ -1197,6 +1197,13 @@ type: `Bool`
 default: `false`
 
 enable the longLine linter
+
+## linter.style.longLine.maxLineLength
+type: `Nat`
+
+default: `100`
+
+maximum line length before the longLine linter emits a warning
 
 ## linter.style.maxHeartbeats
 type: `Bool`
