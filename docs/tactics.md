@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `6bc88240a1f927685aa5a2f8e73ea3101087163c`
+Mathlib version: `5269d6b03eed9a6fe22cbc7d60fd765426542b5b`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -8549,12 +8549,20 @@ A tactic useful for transferring proofs for `encard` to their corresponding `car
 ## trace
 Defined in: `Lean.Parser.Tactic.trace`
 
-Evaluates a term to a string (when possible), and prints it as a trace message.
+`trace msg` displays `msg` in the info view. 
+
+Extensions:
+
+ * `msg` can be a literal string, or a term that evaluates to a string.
 
 ## trace
 Defined in: `Lean.Parser.Tactic.traceMessage`
 
-`trace msg` displays `msg` in the info view.
+`trace msg` displays `msg` in the info view. 
+
+Extensions:
+
+ * `msg` can be a literal string, or a term that evaluates to a string.
 
 ## trace_state
 Defined in: `Lean.Parser.Tactic.traceState`
