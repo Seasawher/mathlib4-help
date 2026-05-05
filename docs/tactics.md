@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `8d6de37e7bbc54ff0e990ef68f520d847048452d`
+Mathlib version: `6bc88240a1f927685aa5a2f8e73ea3101087163c`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -7286,32 +7286,36 @@ Defined in: `Mathlib.Tactic.replace'`
 Acts like `have`, but removes a hypothesis with the same name as
 this one if possible. For example, if the state is:
 
-Then after `replace h : β` the state will be:
-
 ```lean
-case h
 f : α → β
 h : α
-⊢ β
+⊢ goal
+```
 
+Then after `replace h := f h` the state will be:
+
+```lean
 f : α → β
 h : β
 ⊢ goal
 ```
 
-whereas `have h : β` would result in:
+whereas `have h := f h` would result in:
 
 ```lean
-case h
 f : α → β
-h : α
-⊢ β
-
-f : α → β
-h✝ : α
+h† : α
 h : β
 ⊢ goal
 ```
+
+This can be used to simulate the `specialize` and `apply at` tactics of Coq.
+
+
+Extensions:
+
+ * `replace h : t`, without a subsequent proof, creates a new main goal `case h : ... ⊢ t`.
+   This form is considered deprecated in Mathlib: use `replace h : t := _` instead.
 
 ## replace
 Defined in: `Lean.Parser.Tactic.replace`
@@ -7343,6 +7347,12 @@ h : β
 ```
 
 This can be used to simulate the `specialize` and `apply at` tactics of Coq.
+
+
+Extensions:
+
+ * `replace h : t`, without a subsequent proof, creates a new main goal `case h : ... ⊢ t`.
+   This form is considered deprecated in Mathlib: use `replace h : t := _` instead.
 
 ## restrict_tac
 Defined in: `TopCat.Presheaf.restrict_tac`
