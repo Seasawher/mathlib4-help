@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `5269d6b03eed9a6fe22cbc7d60fd765426542b5b`
+Mathlib version: `c40af5f6570a041351b8f5e13fef75d62b1abc97`
 
 ## Elab.async
 type: `Bool`
