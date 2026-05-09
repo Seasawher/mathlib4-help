@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `6ac03968135f47e493271a20fdc64970d912a898`
+Mathlib version: `043e9e04135db0b68a30660692afa6849a93a243`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -8623,7 +8623,7 @@ Produces the text `Try this: <tac>` with the given tactic, and then executes it.
 ## type_check
 Defined in: `tacticType_check_`
 
-Type check the given expression, and trace its type.
+`type_check e` type checks the term `e` and prints its type to the infoview.
 
 ## unfold
 Defined in: `Lean.Parser.Tactic.unfold`
