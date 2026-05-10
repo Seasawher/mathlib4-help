@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `043e9e04135db0b68a30660692afa6849a93a243`
+Mathlib version: `34d82a7cc54f0d0e8ba2ac3adff968c3806c3ec1`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -2849,6 +2849,12 @@ list, so it should be brief.
 Defined in: `testExternCmd`
 
 
+## to_additive_name_hint
+Defined in: `Mathlib.Tactic.ToAdditive.commandTo_additive_name_hint__`
+
+`to_additive_name_hint src tgt` lets `to_additive` translate the name segment `src` to `tgt`
+for the rest of the file current. `src` and `tgt` should both be capitalized.
+
 ## to_dual_insert_cast
 Defined in: `Mathlib.Tactic.ToDual.«commandTo_dual_insert_cast_:=_»`
 
@@ -2862,6 +2868,12 @@ Defined in: `Mathlib.Tactic.ToDual.«commandTo_dual_insert_cast_fun_:=_,_»`
 The `to_dual_insert_cast_fun` attribute is used to tag types that should not be unfolded in a
 proof that is translated. Instead, a casting function is inserted. This casting function then may be
 translated by the translation attribute.
+
+## to_dual_name_hint
+Defined in: `Mathlib.Tactic.ToDual.commandTo_dual_name_hint__`
+
+`to_dual_name_hint src tgt` lets `to_dual` translate between the name segments `src` and `tgt`
+for the rest of the file current. `src` and `tgt` should both be capitalized.
 
 ## unif_hint
 Defined in: `Lean.«command__Unif_hint____Where_|_-⊢__»`
