@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `3ed56edbc1359f18270768392dabe2193ffec087`
+Mathlib version: `defda893c008015592dbbf4e7d7c00a58aa62745`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -1803,6 +1803,12 @@ This attribute currently has no effect.
  Marks a function of type `Lean.Linter.IgnoreFunction` for suppressing unused variable warnings
 Adds the `@[{builtin_}unused_variables_ignore_fn]` attribute, which is applied
 to declarations of type `IgnoreFunction` for use by the unused variables linter.
+
+## use_set_notation_for_order
+ use set notation for order operations on this type
+The `@[use_set_notation_for_order]` attribute marks that order operations on the given type
+should use set-style notation. For example, `⊆` for `≤` and `∪` for `⊔`.
+This affects both elaboration and delaboration.
 
 ## variable_alias
  Attribute to record aliases for the `variable?` command.
