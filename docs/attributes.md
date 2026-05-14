@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `defda893c008015592dbbf4e7d7c00a58aa62745`
+Mathlib version: `e9da88d74d4f24032858100ad765d947c57e94a0`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -1510,6 +1510,23 @@ Marks a structure to be pretty printed using the anonymous constructor notation 
 ## prio_parser
  parser
 
+## pull_end
+ The simpset `pull_end` translates algebraic formulations of endomorphisms into the standard
+formulation of homomorphisms, so for example `1 : Equiv α α` becomes `Equiv.refl α` and
+`a * b` becomes `b.trans a`.
+
+The dual simpset is `push_end`.
+
+The simpset `pull_end` translates algebraic formulations of endomorphisms into the standard
+formulation of homomorphisms, so for example `1 : Equiv α α` becomes `Equiv.refl α` and
+`a * b` becomes `b.trans a`.
+
+The dual simpset is `push_end`.
+
+## pull_end_proc
+ simproc set for pull_end_proc
+Simplification procedure
+
 ## pushAttr
  attribute for push
 The `push` attribute is used to tag lemmas that "push" a constant into an expression.
@@ -1535,6 +1552,23 @@ To tag the reverse direction of the lemma, use `@[push ←]`.
 ## push_cast
  The `push_cast` simp attribute uses `norm_cast` lemmas to move casts toward the leaf nodes of the expression.
 The `push_cast` simp attribute.
+
+## push_end
+ The simpset `push_end` translates the standard formulations of endomorphisms to the
+algebraic formulation, so for example `Equiv.refl α` becomes `1 : Equiv α α` and
+`b.trans a` becomes `a * b`.
+
+The dual simpset is `pull_end`.
+
+The simpset `push_end` translates the standard formulations of endomorphisms to the
+algebraic formulation, so for example `Equiv.refl α` becomes `1 : Equiv α α` and
+`b.trans a` becomes `a * b`.
+
+The dual simpset is `pull_end`.
+
+## push_end_proc
+ simproc set for push_end_proc
+Simplification procedure
 
 ## qify_simps
  The simpset `qify_simps` is used by the tactic `qify` to move expressions from `ℕ` or `ℤ` to `ℚ`
@@ -1841,6 +1875,9 @@ rather than being ignored.
 ## widget_module
  Registers a widget module. Its type must implement Lean.Widget.ToModule.
 Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
+
+## wikidataTag
+ Apply a Wikidata identifier to a declaration.
 
 ## zify_simps
  The simpset `zify_simps` is used by the tactic `zify` to move expressions from `ℕ` to `ℤ`

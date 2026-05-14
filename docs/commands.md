@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `defda893c008015592dbbf4e7d7c00a58aa62745`
+Mathlib version: `e9da88d74d4f24032858100ad765d947c57e94a0`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -818,7 +818,7 @@ The `#instances` command is closely related to `#synth`, but `#synth` does the f
 instance synthesis algorithm and `#instances` does the first step of finding potential instances.
 
 ## \#kerodon_tags
-Defined in: `Mathlib.StacksTag.kerodonTags`
+Defined in: `Mathlib.CrossRef.kerodonTags`
 
 The `#kerodon_tags` command retrieves all declarations that have the `kerodon` attribute.
 
@@ -1350,7 +1350,7 @@ Defined in: `Mathlib.Tactic.Conv.«command#simpOnly_=>__»`
   It is mostly useful for disambiguating the expression `e` from the lemmas.
 
 ## \#stacks_tags
-Defined in: `Mathlib.StacksTag.stacksTags`
+Defined in: `Mathlib.CrossRef.stacksTags`
 
 `#stacks_tags` retrieves all declarations that have the `stacks` attribute.
 
@@ -1460,6 +1460,18 @@ Useful for debugging widgets.
 The type of `<widget>` must implement `Widget.ToModule`,
 and the type of `<props>` must implement `Server.RpcEncodable`.
 In particular, `<props> : Json` works.
+
+## \#wikidata_tags
+Defined in: `Mathlib.CrossRef.wikidataTags`
+
+The `#wikidata_tags` command retrieves all declarations that have the `wikidata` attribute.
+
+For each found declaration, it prints a line
+```
+'declaration_name' corresponds to tag 'declaration_tag'.
+```
+The variant `#wikidata_tags!` also adds the theorem statement (for theorems)
+or declaration type (for definitions, structures, instances, etc.) after each summary line.
 
 ## \#with_exporting
 Defined in: `Lean.Parser.Command.withExporting`
