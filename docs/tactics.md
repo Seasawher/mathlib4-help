@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `e9da88d74d4f24032858100ad765d947c57e94a0`
+Mathlib version: `0fb2045029635862ffb234635a111c80a55e2a87`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3053,7 +3053,8 @@ by importing or adding new theorems tagged with the `@[fun_prop]` attribute. See
 documentation for `Mathlib/Tactic/FunProp.lean` for a detailed explanation.
 
 * `fun_prop (disch := tac)` uses `tac` to solve potential side goals. Setting this option is
-  required to solve `ContinuousAt/On/Within` goals.
+  required to solve `ContinuousAt/On/Within` goals. Assumptions from the local context are
+  automatically discharged.
 * `fun_prop [c, ...]` will unfold the constant(s) `c`, ... before decomposing `f`.
 * `fun_prop (config := cfg)` sets advanced configuration options using `cfg : FunProp.Config`
   (see `FunProp.Config` for details).
@@ -3066,9 +3067,9 @@ example : Continuous (fun x : ℝ ↦ x * sin x) := by fun_prop
 ```
 
 ```lean
--- Specify a discharger to solve `ContinuousAt`/`Within`/`On` goals:
+-- Solving `ContinuousAt`/`Within`/`On` goals might require using dischargers:
 example (y : ℝ) (hy : y ≠ 0) : ContinuousAt (fun x : ℝ ↦ 1/x) y := by
-  fun_prop (disch := assumption)
+  fun_prop
 
 example (y : ℝ) (hy : y ≠ 0) : ContinuousAt (fun x => x * (Real.log x) ^ 2 - Real.exp x / x) y := by
   fun_prop (disch := aesop)
@@ -8682,7 +8683,8 @@ An auxiliary tactic closing goals `UniqueDiffWithinAt ℝ s a` where
 ## unit_interval
 Defined in: `Tactic.Interactive.tacticUnit_interval`
 
-A tactic that solves `0 ≤ ↑x`, `0 ≤ 1 - ↑x`, `↑x ≤ 1`, and `1 - ↑x ≤ 1` for `x : I`.
+`unit_interval` solves the goals `0 ≤ ↑x`, `0 ≤ 1 - ↑x`, `↑x ≤ 1`, and `1 - ↑x ≤ 1` for
+any expression `x : I`.
 
 ## unreachable!
 Defined in: `Batteries.Tactic.unreachable`
