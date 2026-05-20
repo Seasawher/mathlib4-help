@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `43c85791613e5af5818d0075adf97f065b3203f1`
+Mathlib version: `0956725d75503873b1ab7636b95f62c47c24d593`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -8371,22 +8371,24 @@ add a hypothesis `h_symm : b ~ a`.
 ## tauto
 Defined in: `Mathlib.Tactic.Tauto.tauto`
 
-`tauto` breaks down assumptions of the form `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`
+`tauto` proves tautologies in classical propositional logic.
+It breaks down assumptions of the form `_ ∧ _`, `_ ∨ _`, `_ ↔ _` and `∃ _, _`
 and splits a goal of the form `_ ∧ _`, `_ ↔ _` or `∃ _, _` until it can be discharged
-using `rfl` or `solve_by_elim`.
+using `rfl`, `contradiction` or `solve_by_elim`.
 This is a finishing tactic: it either closes the goal or raises an error.
 
-The Lean 3 version of this tactic by default attempted to avoid classical reasoning
-where possible. This Lean 4 version makes no such attempt. The `itauto` tactic
+This tactic makes no attempt to avoid classical reasoning. The `itauto` tactic
 is designed for that purpose.
 
 ## tauto_set
 Defined in: `Mathlib.Tactic.TautoSet.tacticTauto_set`
 
-`tauto_set` attempts to prove tautologies involving hypotheses and goals of the form `X ⊆ Y`
-or `X = Y`, where `X`, `Y` are expressions built using ∪, ∩, \, and ᶜ from finitely many
+`tauto_set` proves tautologies involving hypotheses and goals of the form `X ⊆ Y`
+or `X = Y`, where `X`, `Y` are expressions built using `∪`, `∩`, `\`, and `ᶜ` from finitely many
 variables of type `Set α`. It also unfolds expressions of the form `Disjoint A B` and
 `symmDiff A B`.
+In other words, this tactic proves propositional tautologies, expressed in the language of sets.
+This is a finishing tactic: it either closes the goal or raises an error.
 
 Examples:
 ```lean
