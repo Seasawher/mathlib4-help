@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `466d6fa005a854840a46058bfc80693522048672`
+Mathlib version: `a0d161d3d692f468904ddac6edd881813fb27aca`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -8622,11 +8622,6 @@ Helper internal tactic used to implement `evalSuggest` in `try?`
 Defined in: `Mathlib.Tactic.tacticTry_this__`
 
 Produces the text `Try this: <tac>` with the given tactic, and then executes it.
-
-## type_check
-Defined in: `tacticType_check_`
-
-`type_check e` type checks the term `e` and prints its type to the infoview.
 
 ## unfold
 Defined in: `Lean.Parser.Tactic.unfold`
