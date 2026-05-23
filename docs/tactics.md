@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `a0d161d3d692f468904ddac6edd881813fb27aca`
+Mathlib version: `9dd2956d7524d4c11b43e4b8d3f8defcc1c4e771`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -418,6 +418,37 @@ into new goals, using the hole's name, if any, as the goal case name.
 Like `congr!`, `convert_to` introduces variables while applying congruence rules. These can be
 pattern-matched, like `rintro` would, using the `with` keyword.
 
+* `ac_change! t` uses default transparency when solving side goals. This is currently the same
+  behaviour as `ac_change`, but `ac_change` will use reducible transparency in the future.
+* `ac_change t using n`, where `n` is a positive numeral, controls the depth with which congruence
+  is applied. For example, if the main goal is `⊢ Prime ((a * b + 1) + c)`,
+  then `ac_change Prime ((1 + a * b) + c) using 2` solves the side goals, and
+  `ac_change Prime ((1 + a * b) + c) using 3` (or more) results in two (impossible) goals
+  `⊢ 1 = a * b` and `⊢ a * b = 1`.
+  The default value for `n` is 1.
+
+Example:
+```lean
+example (a b c d e f g N : ℕ) : (a + b) + (c + d) + (e + f) + g ≤ N := by
+  ac_change a + d + e + f + c + g + b ≤ _
+  -- ⊢ a + d + e + f + c + g + b ≤ N
+```
+
+## ac_change!
+Defined in: `Mathlib.Tactic.acChange!`
+
+`ac_change t` on a goal `⊢ t'` changes the goal to `⊢ t` and adds new goals for proving the equality
+`t' = t` using congruence, then tries proving these goals by associativity and commutativity. The
+goals are created like `congr!` would.
+In other words, `ac_change t` is like `convert_to t` followed by `ac_refl`.
+
+Like `refine e`, any holes (`?_` or `?x`) in `t` that are not solved by unification are converted
+into new goals, using the hole's name, if any, as the goal case name.
+Like `congr!`, `convert_to` introduces variables while applying congruence rules. These can be
+pattern-matched, like `rintro` would, using the `with` keyword.
+
+* `ac_change! t` uses default transparency when solving side goals. This is currently the same
+  behaviour as `ac_change`, but `ac_change` will use reducible transparency in the future.
 * `ac_change t using n`, where `n` is a positive numeral, controls the depth with which congruence
   is applied. For example, if the main goal is `⊢ Prime ((a * b + 1) + c)`,
   then `ac_change Prime ((1 + a * b) + c) using 2` solves the side goals, and
@@ -2185,6 +2216,61 @@ pattern-matched, like `rintro` would, using the `with` keyword.
 See also `convert_to t`, where `t` specifies the expected type, instead of a proof term of type `t`.
 In other words, `convert_to t` works like `convert (?_ : t)`. Both tactics use the same options.
 
+* `convert! e` uses default transparency when solving side goals. This is currently the same
+  behaviour as `convert`, but `convert` will use reducible transparency in the future.
+* `convert ← e` creates equality goals in the opposite direction (with the goal type on the right).
+* `convert e using n`, where `n` is a positive numeral, controls the depth with which congruence is
+  applied. For example, if the main goal is `⊢ Prime (n + n + 1)` and `e : Prime (2 * n + 1)`, then
+  `convert e using 2` results in one goal, `⊢ n + n = 2 * n`, and `convert e using 3` (or more)
+  results in two (impossible) goals `⊢ HAdd.hAdd = HMul.hMul` and `⊢ n = 2`.
+  By default, the depth is unlimited.
+* `convert e with x ⟨y₁, y₂⟩ (z₁ | z₂)` names or pattern-matches the variables introduced by
+  congruence rules, like `rintro x ⟨y₁, y₂⟩ (z₁ | z₂)` would.
+* `convert (config := cfg) e` uses the configuration options in `cfg` to control the congruence
+  rules (see `Congr!.Config`).
+
+Examples:
+
+```lean
+-- `convert using` controls the depth of congruence.
+example {n : ℕ} (e : Prime (2 * n + 1)) :
+    Prime (n + n + 1) := by
+  convert e using 2
+  -- One goal: ⊢ n + n = 2 * n
+  ring
+
+-- `convert` can fail where `exact` succeeds.
+example (h : p 0) : p 1 := by
+  fail_if_success
+    convert h -- fails, left-over goal 1 = 0
+    done
+  exact h -- succeeds
+
+-- `convert with` names introduced variables.
+example (p q : Nat → Prop) (h : ∀ ε > 0, p ε) :
+    ∀ ε > 0, q ε := by
+  convert h using 2 with ε hε
+  -- Goal now looks like:
+  -- hε : ε > 0
+  -- ⊢ q ε ↔ p ε
+  sorry
+```
+
+## convert!
+Defined in: `Mathlib.Tactic.convert!`
+
+`convert e`, where the term `e` is inferred to have type `t`, replaces the main goal `⊢ t'` with new
+goals for proving the equality `t' = t` using congruence. The goals are created like `congr!` would.
+Like `refine e`, any holes (`?_` or `?x`) in `e` that are not solved by unification are converted
+into new goals, using the hole's name, if any, as the goal case name.
+Like `congr!`, `convert` introduces variables while applying congruence rules. These can be
+pattern-matched, like `rintro` would, using the `with` keyword.
+
+See also `convert_to t`, where `t` specifies the expected type, instead of a proof term of type `t`.
+In other words, `convert_to t` works like `convert (?_ : t)`. Both tactics use the same options.
+
+* `convert! e` uses default transparency when solving side goals. This is currently the same
+  behaviour as `convert`, but `convert` will use reducible transparency in the future.
 * `convert ← e` creates equality goals in the opposite direction (with the goal type on the right).
 * `convert e using n`, where `n` is a positive numeral, controls the depth with which congruence is
   applied. For example, if the main goal is `⊢ Prime (n + n + 1)` and `e : Prime (2 * n + 1)`, then
@@ -2237,6 +2323,39 @@ pattern-matched, like `rintro` would, using the `with` keyword.
 `convert e`, where `e` is a term of type `t`, uses `e` to close the new main goal. In other words,
 `convert e` works like `convert_to t; refine e`. Both tactics use the same options.
 
+* `convert_to! t` uses default transparency when solving side goals. This is currently the same
+  behaviour as `convert_to`, but `convert_to` will use reducible transparency in the future.
+* `convert_to ty at h` changes the type of the local hypothesis `h` to `ty`. If later local
+  hypotheses or the goal depend on `h`, then `convert_to t at h` may leave a copy of `h`.
+* `convert_to ← t` creates equality goals in the opposite direction (with the original goal type on
+  the right).
+* `convert_to t using n`, where `n` is a positive numeral, controls the depth with which congruence
+  is applied. For example, if the main goal is `⊢ Prime (n + n + 1)`,
+  then `convert_to Prime (2 * n + 1) using 2` results in one goal, `⊢ n + n = 2 * n`, and
+  `convert_to Prime (2 * n + 1) using 3` (or more) results in two (impossible) goals
+  `⊢ HAdd.hAdd = HMul.hMul` and `⊢ n = 2`.
+  The default value for `n` is 1.
+* `convert_to t with x ⟨y₁, y₂⟩ (z₁ | z₂)` names or pattern-matches the variables introduced by
+  congruence rules, like `rintro x ⟨y₁, y₂⟩ (z₁ | z₂)` would.
+* `convert_to (config := cfg) t` uses the configuration options in `cfg` to control the congruence
+  rules (see `Congr!.Config`).
+
+## convert_to!
+Defined in: `Mathlib.Tactic.convert_to!`
+
+`convert_to t` on a goal `⊢ t'` changes the goal to `⊢ t` and adds new goals for proving the
+equality `t' = t` using congruence. The goals are created like `congr!` would.
+Any remaining congruence goals come before the main goal.
+Like `refine e`, any holes (`?_` or `?x`) in `t` that are not solved by unification are converted
+into new goals, using the hole's name, if any, as the goal case name.
+Like `congr!`, `convert_to` introduces variables while applying congruence rules. These can be
+pattern-matched, like `rintro` would, using the `with` keyword.
+
+`convert e`, where `e` is a term of type `t`, uses `e` to close the new main goal. In other words,
+`convert e` works like `convert_to t; refine e`. Both tactics use the same options.
+
+* `convert_to! t` uses default transparency when solving side goals. This is currently the same
+  behaviour as `convert_to`, but `convert_to` will use reducible transparency in the future.
 * `convert_to ty at h` changes the type of the local hypothesis `h` to `ty`. If later local
   hypotheses or the goal depend on `h`, then `convert_to t at h` may leave a copy of `h`.
 * `convert_to ← t` creates equality goals in the opposite direction (with the original goal type on
