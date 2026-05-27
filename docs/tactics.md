@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `2df375a51851cfdad21c081e247e73795d999881`
+Mathlib version: `ddf19b2b18af6774615f61e96757dd940abbd07c`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3275,7 +3275,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.30.0-rc2/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.30.0/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3437,7 +3437,7 @@ These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
 
-See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.30.0-rc2/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.30.0/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
@@ -6875,7 +6875,7 @@ admit. If it gives up or finds a counter-example, it reports an error.
 For more information on writing your own `Sampleable` and `Testable`
 instances, see `Testing.Plausible.Testable`.
 
-Optional arguments given with `plausible (config : { ... })`
+Optional arguments given with `plausible (config := { ... })`
 * `numInst` (default 100): number of examples to test properties with
 * `maxSize` (default 100): final size argument
 
