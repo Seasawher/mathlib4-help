@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `66f91e0e147dc07b68d139b807e1523f099027c2`
+Mathlib version: `f6eb107aa5bb646ed61edaab0bec89a8483ce5e0`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3009,6 +3009,7 @@ lemma or rule added to the `finiteness` ruleset, except that all `simp` rules ar
 This tactic is extensible. By adding more rules, `finiteness` can prove more goals. For example:
 * `@[aesop (rule_sets := [finiteness]) safe 50] lemma ...`
 * `add_aesop_rules safe tactic (rule_sets := [finiteness]) (by ...)`
+
 (Note that a `simp` rule cannot be added this way, since all `simp` rules are disabled.)
 
 * `finiteness (clause)` customizes the `aesop` call using the given clause. See `aesop`
@@ -3033,6 +3034,7 @@ lemma or rule added to the `finiteness` ruleset, except that all `simp` rules ar
 This tactic is extensible. By adding more rules, `finiteness` can prove more goals. For example:
 * `@[aesop (rule_sets := [finiteness]) safe 50] lemma ...`
 * `add_aesop_rules safe tactic (rule_sets := [finiteness]) (by ...)`
+
 (Note that a `simp` rule cannot be added this way, since all `simp` rules are disabled.)
 
 * `finiteness (clause)` customizes the `aesop` call using the given clause. See `aesop`
@@ -3057,6 +3059,7 @@ lemma or rule added to the `finiteness` ruleset, except that all `simp` rules ar
 This tactic is extensible. By adding more rules, `finiteness` can prove more goals. For example:
 * `@[aesop (rule_sets := [finiteness]) safe 50] lemma ...`
 * `add_aesop_rules safe tactic (rule_sets := [finiteness]) (by ...)`
+
 (Note that a `simp` rule cannot be added this way, since all `simp` rules are disabled.)
 
 * `finiteness (clause)` customizes the `aesop` call using the given clause. See `aesop`
@@ -3275,7 +3278,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.30.0/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.31.0-rc1/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3437,7 +3440,7 @@ These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
 
-See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.30.0/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.31.0-rc1/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
@@ -3990,6 +3993,21 @@ It performs case distinction on `h : t` or `h : ¬t`.
 You can use `?_` or `_` for either subproof to delay the goal to after the tactic, but
 if a tactic sequence is provided for `tac1` or `tac2` then it will require the goal to be closed
 by the end of the block.
+
+## impossible
+Defined in: `Lean.Parser.Tactic.impossible`
+
+`impossible by t` uses the tactic `t` to prove that the current goal is impossible
+to prove.
+
+If the goal is `xs ⊢ P`, the tactic `t` sees the goal `¬(∀ xs, P)`. Any expression metavariables in
+the original goal turn into variables in the context.
+
+Universe parameters of the surrounding declaration are kept fixed (not abstracted); the `+levels`
+option turns them into fresh level metavariables instead. Universe metavariables in the goal are
+rejected.
+
+The original goal is closed as if `sorry` was used.
 
 ## induction
 Defined in: `Lean.Parser.Tactic.induction`
@@ -6219,6 +6237,16 @@ theorem mySum_suggest_invariant (l : List Nat) : mySum l = l.sum := by
   all_goals admit
 ```
 
+## mvcgen'
+Defined in: `Lean.Parser.Tactic.mvcgen'`
+
+Experimental Sym-based drop-in for `mvcgen`; see `mvcgen` for documentation.
+
+## mvcgen'
+Defined in: `Lean.Parser.Tactic.mvcgen'Macro`
+
+Experimental Sym-based drop-in for `mvcgen`; see `mvcgen` for documentation.
+
 ## mvcgen?
 Defined in: `Lean.Parser.Tactic.mvcgenHint`
 
@@ -7403,8 +7431,8 @@ See also:
 ## replace
 Defined in: `Mathlib.Tactic.replace'`
 
-Acts like `have`, but removes a hypothesis with the same name as
-this one if possible. For example, if the state is:
+`replace h := e` is like `have h := e`, but it removes a previous hypothesis
+of the same name as this one if possible. For example, if the state is:
 
 ```lean
 f : α → β
@@ -7429,7 +7457,10 @@ h : β
 ⊢ goal
 ```
 
-This can be used to simulate the `specialize` and `apply at` tactics of Coq.
+The tactic `specialize h a₁ ... aₙ` is a way to write `replace h := h a₁ ... aₙ`,
+automatically inferring which hypothesis should be replaced.
+
+The `replace` tactic can be used to simulate Rocq's `apply at` tactic.
 
 
 Extensions:
@@ -7440,8 +7471,8 @@ Extensions:
 ## replace
 Defined in: `Lean.Parser.Tactic.replace`
 
-Acts like `have`, but removes a hypothesis with the same name as
-this one if possible. For example, if the state is:
+`replace h := e` is like `have h := e`, but it removes a previous hypothesis
+of the same name as this one if possible. For example, if the state is:
 
 ```lean
 f : α → β
@@ -7466,7 +7497,10 @@ h : β
 ⊢ goal
 ```
 
-This can be used to simulate the `specialize` and `apply at` tactics of Coq.
+The tactic `specialize h a₁ ... aₙ` is a way to write `replace h := h a₁ ... aₙ`,
+automatically inferring which hypothesis should be replaced.
+
+The `replace` tactic can be used to simulate Rocq's `apply at` tactic.
 
 
 Extensions:
@@ -8066,12 +8100,12 @@ and the goal.
 * `simp_intro x y z ..` introduces variables named `x y z` and then keeps introducing `_` binders
 * `simp_intro (config := cfg) (discharger := tac) x y .. only [h₁, h₂]`:
   `simp_intro` takes the same options as `simp` (see `simp`)
-```
-example : x + 0 = y → x = z := by
-  simp_intro h
-  -- h: x = y ⊢ y = z
-  sorry
-```
+  ```
+  example : x + 0 = y → x = z := by
+    simp_intro h
+    -- h: x = y ⊢ y = z
+    sorry
+  ```
 
 ## simp_rw
 Defined in: `Mathlib.Tactic.tacticSimp_rw___`
@@ -8112,15 +8146,71 @@ Defined in: `Lean.Parser.Tactic.simpa`
 This is a "finishing" tactic modification of `simp`. It has two forms.
 
 * `simpa [rules, ⋯] using e` will simplify the goal and the type of
-`e` using `rules`, then try to close the goal using `e`.
+  `e` using `rules`, then try to close the goal using `e`.
 
-Simplifying the type of `e` makes it more likely to match the goal
-(which has also been simplified). This construction also tends to be
-more robust under changes to the simp lemma set.
+  Simplifying the type of `e` makes it more likely to match the goal
+  (which has also been simplified). This construction also tends to be
+  more robust under changes to the simp lemma set.
+
+  The final match between the simplified `e` and the simplified goal uses
+  **reducible** transparency, so it does not unfold semireducible definitions.
+  Write `simpa [rules, ⋯] using! e` to perform the match at the ambient
+  (default/semireducible) transparency instead.
 
 * `simpa [rules, ⋯]` will simplify the goal and the type of a
-hypothesis `this` if present in the context, then try to close the goal using
-the `assumption` tactic.
+  hypothesis `this` if present in the context, then try to close the goal using
+  the `assumption` tactic.
+
+As with `simp`, the `!` modifier after `simpa` enables auto-unfolding of
+definitions in the simp set.
+
+## simpa
+Defined in: `Lean.Parser.Tactic.simpaUsingBang`
+
+This is a "finishing" tactic modification of `simp`. It has two forms.
+
+* `simpa [rules, ⋯] using e` will simplify the goal and the type of
+  `e` using `rules`, then try to close the goal using `e`.
+
+  Simplifying the type of `e` makes it more likely to match the goal
+  (which has also been simplified). This construction also tends to be
+  more robust under changes to the simp lemma set.
+
+  The final match between the simplified `e` and the simplified goal uses
+  **reducible** transparency, so it does not unfold semireducible definitions.
+  Write `simpa [rules, ⋯] using! e` to perform the match at the ambient
+  (default/semireducible) transparency instead.
+
+* `simpa [rules, ⋯]` will simplify the goal and the type of a
+  hypothesis `this` if present in the context, then try to close the goal using
+  the `assumption` tactic.
+
+As with `simp`, the `!` modifier after `simpa` enables auto-unfolding of
+definitions in the simp set.
+
+## simpa!
+Defined in: `Lean.Parser.Tactic.tacticSimpa!__1`
+
+This is a "finishing" tactic modification of `simp`. It has two forms.
+
+* `simpa [rules, ⋯] using e` will simplify the goal and the type of
+  `e` using `rules`, then try to close the goal using `e`.
+
+  Simplifying the type of `e` makes it more likely to match the goal
+  (which has also been simplified). This construction also tends to be
+  more robust under changes to the simp lemma set.
+
+  The final match between the simplified `e` and the simplified goal uses
+  **reducible** transparency, so it does not unfold semireducible definitions.
+  Write `simpa [rules, ⋯] using! e` to perform the match at the ambient
+  (default/semireducible) transparency instead.
+
+* `simpa [rules, ⋯]` will simplify the goal and the type of a
+  hypothesis `this` if present in the context, then try to close the goal using
+  the `assumption` tactic.
+
+As with `simp`, the `!` modifier after `simpa` enables auto-unfolding of
+definitions in the simp set.
 
 ## simpa!
 Defined in: `Lean.Parser.Tactic.tacticSimpa!_`
@@ -8128,15 +8218,23 @@ Defined in: `Lean.Parser.Tactic.tacticSimpa!_`
 This is a "finishing" tactic modification of `simp`. It has two forms.
 
 * `simpa [rules, ⋯] using e` will simplify the goal and the type of
-`e` using `rules`, then try to close the goal using `e`.
+  `e` using `rules`, then try to close the goal using `e`.
 
-Simplifying the type of `e` makes it more likely to match the goal
-(which has also been simplified). This construction also tends to be
-more robust under changes to the simp lemma set.
+  Simplifying the type of `e` makes it more likely to match the goal
+  (which has also been simplified). This construction also tends to be
+  more robust under changes to the simp lemma set.
+
+  The final match between the simplified `e` and the simplified goal uses
+  **reducible** transparency, so it does not unfold semireducible definitions.
+  Write `simpa [rules, ⋯] using! e` to perform the match at the ambient
+  (default/semireducible) transparency instead.
 
 * `simpa [rules, ⋯]` will simplify the goal and the type of a
-hypothesis `this` if present in the context, then try to close the goal using
-the `assumption` tactic.
+  hypothesis `this` if present in the context, then try to close the goal using
+  the `assumption` tactic.
+
+As with `simp`, the `!` modifier after `simpa` enables auto-unfolding of
+definitions in the simp set.
 
 ## simpa?
 Defined in: `Lean.Parser.Tactic.tacticSimpa?_`
@@ -8144,15 +8242,47 @@ Defined in: `Lean.Parser.Tactic.tacticSimpa?_`
 This is a "finishing" tactic modification of `simp`. It has two forms.
 
 * `simpa [rules, ⋯] using e` will simplify the goal and the type of
-`e` using `rules`, then try to close the goal using `e`.
+  `e` using `rules`, then try to close the goal using `e`.
 
-Simplifying the type of `e` makes it more likely to match the goal
-(which has also been simplified). This construction also tends to be
-more robust under changes to the simp lemma set.
+  Simplifying the type of `e` makes it more likely to match the goal
+  (which has also been simplified). This construction also tends to be
+  more robust under changes to the simp lemma set.
+
+  The final match between the simplified `e` and the simplified goal uses
+  **reducible** transparency, so it does not unfold semireducible definitions.
+  Write `simpa [rules, ⋯] using! e` to perform the match at the ambient
+  (default/semireducible) transparency instead.
 
 * `simpa [rules, ⋯]` will simplify the goal and the type of a
-hypothesis `this` if present in the context, then try to close the goal using
-the `assumption` tactic.
+  hypothesis `this` if present in the context, then try to close the goal using
+  the `assumption` tactic.
+
+As with `simp`, the `!` modifier after `simpa` enables auto-unfolding of
+definitions in the simp set.
+
+## simpa?
+Defined in: `Lean.Parser.Tactic.tacticSimpa?__1`
+
+This is a "finishing" tactic modification of `simp`. It has two forms.
+
+* `simpa [rules, ⋯] using e` will simplify the goal and the type of
+  `e` using `rules`, then try to close the goal using `e`.
+
+  Simplifying the type of `e` makes it more likely to match the goal
+  (which has also been simplified). This construction also tends to be
+  more robust under changes to the simp lemma set.
+
+  The final match between the simplified `e` and the simplified goal uses
+  **reducible** transparency, so it does not unfold semireducible definitions.
+  Write `simpa [rules, ⋯] using! e` to perform the match at the ambient
+  (default/semireducible) transparency instead.
+
+* `simpa [rules, ⋯]` will simplify the goal and the type of a
+  hypothesis `this` if present in the context, then try to close the goal using
+  the `assumption` tactic.
+
+As with `simp`, the `!` modifier after `simpa` enables auto-unfolding of
+definitions in the simp set.
 
 ## simpa?!
 Defined in: `Lean.Parser.Tactic.tacticSimpa?!_`
@@ -8160,15 +8290,47 @@ Defined in: `Lean.Parser.Tactic.tacticSimpa?!_`
 This is a "finishing" tactic modification of `simp`. It has two forms.
 
 * `simpa [rules, ⋯] using e` will simplify the goal and the type of
-`e` using `rules`, then try to close the goal using `e`.
+  `e` using `rules`, then try to close the goal using `e`.
 
-Simplifying the type of `e` makes it more likely to match the goal
-(which has also been simplified). This construction also tends to be
-more robust under changes to the simp lemma set.
+  Simplifying the type of `e` makes it more likely to match the goal
+  (which has also been simplified). This construction also tends to be
+  more robust under changes to the simp lemma set.
+
+  The final match between the simplified `e` and the simplified goal uses
+  **reducible** transparency, so it does not unfold semireducible definitions.
+  Write `simpa [rules, ⋯] using! e` to perform the match at the ambient
+  (default/semireducible) transparency instead.
 
 * `simpa [rules, ⋯]` will simplify the goal and the type of a
-hypothesis `this` if present in the context, then try to close the goal using
-the `assumption` tactic.
+  hypothesis `this` if present in the context, then try to close the goal using
+  the `assumption` tactic.
+
+As with `simp`, the `!` modifier after `simpa` enables auto-unfolding of
+definitions in the simp set.
+
+## simpa?!
+Defined in: `Lean.Parser.Tactic.tacticSimpa?!__1`
+
+This is a "finishing" tactic modification of `simp`. It has two forms.
+
+* `simpa [rules, ⋯] using e` will simplify the goal and the type of
+  `e` using `rules`, then try to close the goal using `e`.
+
+  Simplifying the type of `e` makes it more likely to match the goal
+  (which has also been simplified). This construction also tends to be
+  more robust under changes to the simp lemma set.
+
+  The final match between the simplified `e` and the simplified goal uses
+  **reducible** transparency, so it does not unfold semireducible definitions.
+  Write `simpa [rules, ⋯] using! e` to perform the match at the ambient
+  (default/semireducible) transparency instead.
+
+* `simpa [rules, ⋯]` will simplify the goal and the type of a
+  hypothesis `this` if present in the context, then try to close the goal using
+  the `assumption` tactic.
+
+As with `simp`, the `!` modifier after `simpa` enables auto-unfolding of
+definitions in the simp set.
 
 ## sizeOf_list_dec
 Defined in: `List.tacticSizeOf_list_dec`
@@ -8273,12 +8435,18 @@ Close the main goal with `sorry` if its type contains `sorry`, and fail otherwis
 ## specialize
 Defined in: `Lean.Parser.Tactic.specialize`
 
-The tactic `specialize h a₁ ... aₙ` works on local hypothesis `h`.
-The premises of this hypothesis, either universal quantifications or
-non-dependent implications, are instantiated by concrete terms coming
-from arguments `a₁` ... `aₙ`.
-The tactic adds a new hypothesis with the same name `h := h a₁ ... aₙ`
-and tries to clear the previous one.
+`specialize h a₁ ... aₙ` is equivalent to `replace h := h a₁ ... aₙ`.
+It specializes the local hypothesis `h` by instantiating
+universal quantifications and implications using the concrete terms `a₁` ... `aₙ`.
+The tactic adds a new hypothesis with the same name and tries to remove
+the original `h` if possible.
+
+Example: given `h : ∀ (n : Nat), p n → q n` and `h' : p 2`,
+then `specialize h 2 h'` replaces `h` with `h : q 2`.
+
+The tactic also supports instantiating particular universal quantifiers
+using named argument syntax. Example: given `h : ∀ (m n : Nat), p m n`,
+then `specialize h (n := 2)` replaces `h` with `h : ∀ (m : Nat), p m 2`.
 
 ## specialize_all
 Defined in: `Mathlib.Tactic.TautoSet.specialize_all`
@@ -8403,7 +8571,7 @@ Applies `subst` to all hypotheses of the form `h : x = t` or `h : t = x`.
 ## substs
 Defined in: `Mathlib.Tactic.Substs.substs`
 
-Applies the `subst` tactic to all given hypotheses from left to right.
+Deprecated: this functionality exists in `subst` now.
 
 ## success_if_fail_with_msg
 Defined in: `Mathlib.Tactic.successIfFailWithMsg`
@@ -8727,6 +8895,10 @@ macro_rules | `(tactic| trivial) => `(tactic| simp)
 Defined in: `Lean.Parser.Tactic.tacticTry_`
 
 `try tac` runs `tac` and succeeds even if `tac` failed.
+
+## try?
+Defined in: `Lean.Parser.Tactic.tryTraceWith`
+
 
 ## try?
 Defined in: `Lean.Parser.Tactic.tryTrace`
