@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `66f91e0e147dc07b68d139b807e1523f099027c2`
+Mathlib version: `f6eb107aa5bb646ed61edaab0bec89a8483ce5e0`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -114,11 +114,12 @@ will help the `algebraize` tactic access the corresponding `Algebra` property.
 There are two cases for what declaration corresponding to this `Name` can be.
 
 1. An inductive type (i.e. the `Algebra` property itself), in this case it is assumed that the
-`RingHom` and the `Algebra` property are definitionally the same, and the tactic will construct the
-`Algebra` property by giving the `RingHom` property as a term.
+   `RingHom` and the `Algebra` property are definitionally the same, and the tactic will construct
+   the `Algebra` property by giving the `RingHom` property as a term.
 2. A lemma (or constructor) proving the `Algebra` property from the `RingHom` property. In this case
-it is assumed that the `RingHom` property is the final argument, and that no other explicit argument
-is needed. The tactic then constructs the `Algebra` property by applying the lemma or constructor.
+   it is assumed that the `RingHom` property is the final argument, and that no other explicit
+   argument is needed. The tactic then constructs the `Algebra` property by applying the lemma or
+   constructor.
 
 Finally, if no argument is provided to the `algebraize` attribute, it is assumed that the tagged
 declaration has name `RingHom.Property` and that the corresponding `Algebra` property has name
@@ -184,6 +185,22 @@ syntax and don't have access to the expression tree.
 
 ## attr_parser
  parser
+
+## backward_defeq
+ mark theorem as a definitional equality under the permissive pre-stricter-inference rules, used by `dsimp` when `set_option backward.defeqAttrib.useBackward true`
+Marks a theorem as a definitional equality under the permissive transparency rules that
+predated the stricter `@[defeq]` inference (i.e. an equality that holds at `.default` or
+`.all` transparency, but possibly not at `.instances` transparency as required by `dsimp`).
+
+Such theorems are inferred automatically by `inferDefEqAttr`: any theorem that the old
+`:= rfl` inference would have accepted is tagged `@[backward_defeq]`, and additionally
+tagged `@[defeq]` when it also passes the stricter check at instance transparency.
+
+`dsimp` ignores `@[backward_defeq]` theorems by default. Setting
+`set_option backward.defeqAttrib.useBackward true` (typically scoped to a single proof
+with `set_option ... in`) makes `dsimp` treat them like `@[defeq]` theorems, which
+provides a local backwards-compatibility escape hatch for proofs broken by the stricter
+inference.
 
 ## bitvec_to_nat
  simp lemmas converting `BitVec` goals to `Nat` goals
@@ -314,6 +331,9 @@ the Lean source code.
 ## builtin_doc_role
  docstring role expander
 
+## builtin_env_linter
+ Use this declaration as a linting test in `lake builtin-lint`
+
 ## builtin_formatter
  (builtin) Register a formatter for a parser.
 Registers a formatter for a parser.
@@ -365,6 +385,10 @@ directly.
 ## builtin_missing_docs_handler
  (builtin) adds a syntax traversal for the missing docs linter
 
+## builtin_nolint
+ Do not report this declaration in any of the tests of `lake builtin-lint`
+Defines the user attribute `builtin_nolint` for skipping environment linters.
+
 ## builtin_parenthesizer
  (builtin) Register a parenthesizer for a parser.
 Registers a parenthesizer for a parser.
@@ -393,6 +417,9 @@ unfolded, and identifier-less syntax is ultimately assumed to be well-formed.
 
 ## builtin_sym_discharger
  (builtin) sym_discharger elaborator
+
+## builtin_sym_dsimproc
+ (builtin) sym_dsimproc elaborator
 
 ## builtin_sym_simproc
  (builtin) sym_simproc elaborator
@@ -671,18 +698,21 @@ axioms (like `sorryAx`).
 
 ## defeq
  mark theorem as a definitional equality, to be used by `dsimp`
-Marks the theorem as a definitional equality.
+Marks the theorem as a definitional equality that can be used by `dsimp`.
 
-The theorem must be an equality that holds by `rfl`. This allows `dsimp` to use this theorem
-when rewriting.
-
-A theorem with with a definition that is (syntactically) `:= rfl` is implicitly marked `@[defeq]`.
-To avoid this behavior, write `:= (rfl)` instead.
+The theorem must be an equality that holds at `.instances` transparency. A theorem
+with a definition that is (syntactically) `:= rfl` is implicitly marked `@[defeq]`
+(and also `@[backward_defeq]`, since the latter is a superset); write `:= (rfl)`
+instead to suppress this.
 
 The attribute should be given before a `@[simp]` attribute to have effect.
 
-When using the module system, an exported theorem can only be `@[defeq]` if all definitions that
-need to be unfolded to prove the theorem are exported and exposed.
+When using the module system, an exported theorem can only be `@[defeq]` if all
+definitions that need to be unfolded to prove the theorem are exported and exposed.
+
+Tagging a theorem with `@[defeq]` automatically also tags it with `@[backward_defeq]`,
+maintaining the invariant that `@[defeq]` theorems form a subset of `@[backward_defeq]`
+theorems.
 
 ## delab
  Register a delaborator
@@ -1251,6 +1281,18 @@ def isYellow (color : String) : Bool :=
 
 ## method_specs
  generate method specification theorems
+Generate method specification theorems for the methods of the given type class instance.
+
+This expects all (non-proof) methods of the instance to be defined via separate helper functions,
+which must take the same arguments as the instance itself, in the same order.
+
+If it is applied to an instance
+```
+instance instClsT : Cls T where op := opImpl
+```
+it produces a theorem `instClsT.op_spec` based on `opImpl.eq_def`, but phrased in terms of the
+overloaded `Cls.op` operation, and similarly `instClsT.op_spec_<n>` based on the equational theorems
+`opImpl.eq_<n>`.
 
 ## method_specs_simp
  simp lemma used to post-process the theorem created by `@[method_specs]`.
@@ -1406,6 +1448,12 @@ be exposed in a section tagged `@[expose]`
 
 This only has an effect if both the module the definition is defined in and the importing module
 have the module system enabled.
+
+## no_fallback
+ disables automatic fallback on tactic macro/elab failure
+Disables automatic fallback of this tactic macro/elaborator to other macros/elaborators of the same
+syntax on failure. An elaborator that does not handle the given syntax should still signal this by
+throwing `unsupportedSyntax`, which is not affected by this attribute.
 
 ## noinline
  mark definition to never be inlined
@@ -1710,6 +1758,9 @@ specialized.
 ## sym_discharger
  sym_discharger elaborator
 
+## sym_dsimproc
+ sym_dsimproc elaborator
+
 ## sym_simp
  Sym.simp theorem
 
@@ -1754,6 +1805,8 @@ Attribute adding a tactic analysis pass from a `Config` structure.
 
 ## tagged_return
  mark extern definition to always return tagged values
+Marks an extern definition to be guaranteed to always return tagged values.
+This information is used to optimize reference counting in the compiler.
 
 ## term_elab
  term elaborator

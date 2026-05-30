@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `66f91e0e147dc07b68d139b807e1523f099027c2`
+Mathlib version: `f6eb107aa5bb646ed61edaab0bec89a8483ce5e0`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1081,7 +1081,7 @@ Defined in: `Lean.Parser.Command.printSig`
 Defined in: `Lean.Parser.Command.printAxioms`
 
 Prints the axioms used by a declaration, directly or indirectly.
-Please consult [the reference manual](https://lean-lang.org/doc/reference/4.30.0/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
+Please consult [the reference manual](https://lean-lang.org/doc/reference/4.31.0-rc1/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
 
 ## \#print
 Defined in: `Lean.Parser.Command.printTacTags`
@@ -1301,18 +1301,10 @@ In tactic mode, if the query string is not supplied, then [LeanStateSearch](http
 ```lean
 
 ## \#show_deprecated_modules
-Defined in: `Mathlib.Linter.«command#show_deprecated_modules»`
+Defined in: `Lean.Parser.Command.showDeprecatedModules`
 
-A utility command to show the current entries of the `deprecatedModuleExt` in the format:
-```lean
-Deprecated modules
-
-'MathlibTest.DeprecatedModule' deprecates to
-#[Mathlib.Tactic.Linter.DocPrime, Mathlib.Tactic.Linter.DocString]
-with message 'We can also give more details about the deprecation'
-
-...
-```
+`#show_deprecated_modules` displays all modules in the current environment that have been
+marked with `deprecated_module`.
 
 ## \#show_kind
 Defined in: `Mathlib.Linter.UnusedTactic.«command#show_kind_»`
@@ -1518,6 +1510,23 @@ Declares a binder predicate.  For example:
 binder_predicate x " > " y:term => `($x > $y)
 ```
 
+## @[
+Defined in: `Mathlib.Tactic.scopedNS`
+
+`scoped[NS]` is similar to the `scoped` modifier on attributes and notations,
+but it scopes the syntax in the specified namespace instead of the current namespace.
+```lean
+scoped[Matrix] postfix:1024 "ᵀ" => Matrix.transpose
+-- declares `ᵀ` as a notation for matrix transposition
+-- which is only accessible if you `open Matrix` or `open scoped Matrix`.
+
+namespace Nat
+
+scoped[Nat.Count] attribute [instance] CountSet.fintype
+-- make the definition Nat.CountSet.fintype an instance,
+-- but only if `Nat.Count` is open
+```
+
 ## abbrev
 Defined in: `Lean.Parser.Command.declaration`
 
@@ -1668,16 +1677,93 @@ Defined in: `commandDeclare_bitwise_uint_theorems__`
 
 
 ## declare_command_config_elab
+Defined in: `Lean.Elab.ConfigEval.declareCommandConfig`
+
+`declare_core_config_elab f struct binders* [where ...]` defines a configuration elaborator
+```lean
+f binders* (cfg : Syntax) (init : struct := {}) (logExceptions : Bool := true) : CommandElabM struct
+```
+that evaluates the `cfg` configuration items to update `init`.
+Acceptable configuration syntax is documented in `Lean.Elab.ConfigEval.foldConfigM`,
+which includes anything that looks like `Lean.Parser.Term.optConfig`, possibly wrapped
+in null nodes.
+
+The command will transitively derive any necessary `ConfigEval.EvalTerm`/`ConfigEval.EvalExpr`
+instances to support evaluation of configuration options for structure fields.
+These instances will be `private local`.
+
+See `ConfigEval.defEvalConfigItemCmd` for further documentation.
+
+See also `declare_core_config_elab`, `declare_term_config_elab`, and `declare_config_elab`.
+
+## declare_command_config_elab_legacy
 Defined in: `Lean.Elab.Tactic.commandConfigElab`
 
+`declare_command_config_elab_legacy elabName TypeName` declares a function `elabName : Syntax → CommandElabM TypeName`
+that elaborates a command configuration.
+The configuration can be from `Lean.Parser.Tactic.optConfig` or `Lean.Parser.Tactic.config`,
+and these can also be wrapped in null nodes (for example, from `(config)?`).
+
+The elaborator has error recovery enabled.
+
+This command has been deprecated since 2026-05-14. Use `declare_command_config_elab` instead.
 
 ## declare_config_elab
+Defined in: `Lean.Elab.ConfigEval.declareTacticConfig`
+
+`declare_config_elab f struct binders* [where ...]` defines a configuration elaborator
+```lean
+f binders* (cfg : Syntax) (init : struct := {}) (logExceptions : Bool := true) : TacticM struct
+```
+that evaluates the `cfg` configuration items to update `init`.
+Acceptable configuration syntax is documented in `Lean.Elab.ConfigEval.foldConfigM`,
+which includes anything that looks like `Lean.Parser.Term.optConfig`, possibly wrapped
+in null nodes.
+
+When `logExceptions` is true, it uses the current `recover` state to decide whether or not to
+recover by logging errors and skipping invalid options.
+
+The command will transitively derive any necessary `ConfigEval.EvalTerm`/`ConfigEval.EvalExpr`
+instances to support evaluation of configuration options for structure fields.
+These instances will be `private local`.
+
+See `ConfigEval.defEvalConfigItemCmd` for further documentation.
+
+See also `declare_core_config_elab`, `declare_term_config_elab`, and `declare_command_config_elab`.
+
+## declare_config_elab_legacy
 Defined in: `Lean.Elab.Tactic.configElab`
 
+`declare_config_elab_legacy elabName TypeName` declares a function `elabName : Syntax → TacticM TypeName`
+that elaborates a tactic configuration.
+The tactic configuration can be from `Lean.Parser.Tactic.optConfig` or `Lean.Parser.Tactic.config`,
+and these can also be wrapped in null nodes (for example, from `(config)?`).
 
-## declare_config_getter
-Defined in: `Lean.Elab.elabConfigGetter`
+The elaborator responds to the current recovery state.
 
+For defining elaborators for commands, use `declare_command_config_elab`.
+
+This command has been deprecated since 2026-05-14. Use `declare_config_elab` instead.
+
+## declare_core_config_elab
+Defined in: `Lean.Elab.ConfigEval.declareCoreConfigElab`
+
+`declare_core_config_elab f struct binders* [where ...]` defines a configuration elaborator
+```lean
+f binders* (cfg : Syntax) (init : struct := {}) (logExceptions : Bool := false) : CoreM struct
+```
+that evaluates the `cfg` configuration items to update `init`.
+Acceptable configuration syntax is documented in `Lean.Elab.ConfigEval.foldConfigM`,
+which includes anything that looks like `Lean.Parser.Term.optConfig`, possibly wrapped
+in null nodes.
+
+The command will transitively derive any necessary `ConfigEval.EvalTerm`/`ConfigEval.EvalExpr`
+instances to support evaluation of configuration options for structure fields.
+These instances will be `private local`.
+
+See `ConfigEval.defEvalConfigItemCmd` for further documentation.
+
+See also `declare_term_config_elab`, `declare_config_elab`, and `declare_command_config_elab`.
 
 ## declare_eval_bin
 Defined in: `Lean.Meta.Sym.Simp.commandDeclare_eval_bin__`
@@ -1707,6 +1793,29 @@ Defined in: `commandDeclare_sint_simprocs_`
 Defined in: `Lean.Parser.Command.syntaxCat`
 
 
+## declare_term_config_elab
+Defined in: `Lean.Elab.ConfigEval.declareTermConfigElab`
+
+`declare_term_config_elab f struct binders* [where ...]` defines a configuration elaborator
+```lean
+f binders* (cfg : Syntax) (init : struct := {}) (logExceptions : Bool := true) : TermElabM struct
+```
+that evaluates the `cfg` configuration items to update `init`.
+Acceptable configuration syntax is documented in `Lean.Elab.ConfigEval.foldConfigM`,
+which includes anything that looks like `Lean.Parser.Term.optConfig`, possibly wrapped
+in null nodes.
+
+When `logExceptions` is true, it uses the current `errToSorry` state to decide whether or not to
+recover by logging errors and skipping invalid options.
+
+The command will transitively derive any necessary `ConfigEval.EvalTerm`/`ConfigEval.EvalExpr`
+instances to support evaluation of configuration options for structure fields.
+These instances will be `private local`.
+
+See `ConfigEval.defEvalConfigItemCmd` for further documentation.
+
+See also `declare_core_config_elab`, `declare_config_elab`, and `declare_command_config_elab`.
+
 ## declare_uint_simprocs
 Defined in: `commandDeclare_uint_simprocs_`
 
@@ -1714,6 +1823,27 @@ Defined in: `commandDeclare_uint_simprocs_`
 ## declare_uint_theorems
 Defined in: `commandDeclare_uint_theorems__`
 
+
+## def_eval_config_item
+Defined in: `Lean.Elab.ConfigEval.defEvalConfigItemCmd`
+
+`def_eval_config_item f binders* for struct` defines a `ConfigEval.EvalConfigItem struct` structure named `f`
+parameterized by the given binders. This structure contains a setter for updating a configuration
+object of type `struct`.
+
+The command will transitively derive any necessary `ConfigEval.EvalTerm`/`ConfigEval.EvalExpr`
+instances to support evaluation of configuration options for structure fields.
+The syntax supports `public`/`private` modifiers. It also supports `scoped`/`local`, which apply
+to any derived instances.
+
+The `EvalConfigItem struct` structure can be customized with a `where` clause.
+The possible items of the `where` clause are:
+- `omit f1, f2, f3` disables generating setters for fields `f1`, `f2`, and `f3` of `struct`
+- `option key := fun cfg item => ...` adds a configuration option named `key` with the given
+expression as its handler. The handler is only called when the key is an exact match.
+The provided value is in `item.value`. Such a handler implies `omit key`.
+- `option key* := fun cfg item => ...` adds configuration options with `key` as a proper prefix.
+The most-specific `*` handler is called if no handlers for exact matches apply.
 
 ## deprecate
 Defined in: `Mathlib.Tactic.DeprecateTo.commandDeprecateTo______`
@@ -1751,12 +1881,27 @@ However, its use is mostly intended for debugging purposes, where having a varia
 make tests time-dependent.
 
 ## deprecated_module
-Defined in: `Mathlib.Linter.deprecated_modules`
+Defined in: `Lean.Parser.Command.deprecated_module`
 
-`deprecated_module "Optional string" (since := "yyyy-mm-dd")` deprecates the current module `A`
-in favour of its direct imports.
-This means that any file that directly imports `A` will get a notification on the `import A` line
-suggesting to instead import the *direct imports* of `A`.
+`deprecated_module` marks the current module as deprecated.
+When another module imports a deprecated module, a warning is emitted during elaboration.
+
+```
+deprecated_module "use NewModule instead" (since := "2026-03-19")
+```
+
+The warning message is optional but recommended.
+The warning can be disabled with `set_option linter.deprecated.module false` or
+`-Dlinter.deprecated.module=false`.
+
+## deprecated_syntax
+Defined in: `Lean.Parser.Command.deprecatedSyntax`
+
+Mark a syntax kind as deprecated. When this syntax is elaborated, a warning will be emitted.
+
+```
+deprecated_syntax Lean.Parser.Term.let_fun "use `have` instead" (since := "2026-03-18")
+```
 
 ## deriving
 Defined in: `Lean.Parser.Command.deriving`
@@ -2057,8 +2202,8 @@ This default behavior is customisable as such:
   name `coe_foo_snd_fst`.
 
 Here are a few extra pieces of information:
-  * Run `initialize_simps_projections?` (or `set_option trace.simps.verbose true`)
-    to see the generated projections.
+* Run `initialize_simps_projections?` (or `set_option trace.simps.verbose true`)
+  to see the generated projections.
 * Running `initialize_simps_projections MyStruct` without arguments is not necessary, it has the
   same effect if you just add `@[simps]` to a declaration.
 * It is recommended to call `@[simps]` or `initialize_simps_projections` in the same file as the
@@ -2130,8 +2275,8 @@ This default behavior is customisable as such:
   name `coe_foo_snd_fst`.
 
 Here are a few extra pieces of information:
-  * Run `initialize_simps_projections?` (or `set_option trace.simps.verbose true`)
-    to see the generated projections.
+* Run `initialize_simps_projections?` (or `set_option trace.simps.verbose true`)
+  to see the generated projections.
 * Running `initialize_simps_projections MyStruct` without arguments is not necessary, it has the
   same effect if you just add `@[simps]` to a declaration.
 * It is recommended to call `@[simps]` or `initialize_simps_projections` in the same file as the
@@ -2641,6 +2786,18 @@ Defined in: `Lean.Option.registerOption`
 Defined in: `Lean.Parser.Command.registerSimpAttr`
 
 
+## register_sym_dsimp
+Defined in: `Lean.Parser.Command.registerSymDSimp`
+
+Register a named `Sym.dsimp` variant.
+
+```
+register_sym_dsimp myVariant where
+  pre  := match
+  post := ground >> zeta_delta
+  maxSteps := 50000
+```
+
 ## register_sym_simp
 Defined in: `Lean.Parser.Command.registerSymSimp`
 
@@ -2705,23 +2862,6 @@ The `run_meta doSeq` command executes code in `MetaM Unit`.
 This is the same as `#eval show MetaM Unit from discard do doSeq`.
 
 (This is effectively a synonym for `run_elab` since `MetaM` lifts to `TermElabM`.)
-
-## scoped
-Defined in: `Mathlib.Tactic.scopedNS`
-
-`scoped[NS]` is similar to the `scoped` modifier on attributes and notations,
-but it scopes the syntax in the specified namespace instead of the current namespace.
-```lean
-scoped[Matrix] postfix:1024 "ᵀ" => Matrix.transpose
--- declares `ᵀ` as a notation for matrix transposition
--- which is only accessible if you `open Matrix` or `open scoped Matrix`.
-
-namespace Nat
-
-scoped[Nat.Count] attribute [instance] CountSet.fintype
--- make the definition Nat.CountSet.fintype an instance,
--- but only if `Nat.Count` is open
-```
 
 ## seal
 Defined in: `Lean.Parser.commandSeal__`
@@ -2951,6 +3091,12 @@ structure Pair (α : Type u) (β : Type v) : Type (max u v) where
 #check Pair.{v, w}
 -- Pair : Type v → Type w → Type (max v w)
 ```
+
+## unlock_limits
+Defined in: `Lean.Parser.Command.unlock_limits`
+
+`unlock_limits` disables all built-in resource limit options (currently `maxRecDepth`,
+`maxHeartbeats`, and `synthInstance.maxHeartbeats`) in the current scope by setting them to 0.
 
 ## unseal
 Defined in: `Lean.Parser.commandUnseal__`

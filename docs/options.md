@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `66f91e0e147dc07b68d139b807e1523f099027c2`
+Mathlib version: `f6eb107aa5bb646ed61edaab0bec89a8483ce5e0`
 
 ## Elab.async
 type: `Bool`
@@ -153,6 +153,13 @@ default: `true`
 
 Insert monadic lifts (i.e., `liftM` and coercions) when needed.
 
+## backward.defeqAttrib.useBackward
+type: `Bool`
+
+default: `false`
+
+When true, `dsimp` also uses theorems tagged `@[backward_defeq]`, i.e. theorems inferred to be rfl only at default (not instance) transparency. Set this locally (e.g. `set_option backward.defeqAttrib.useBackward true in ...`) to restore the pre-stricter-inference behavior for a specific proof.
+
 ## backward.do.legacy
 type: `Bool`
 
@@ -264,6 +271,13 @@ type: `Bool`
 default: `true`
 
 if true (the default), do not bump transparency to `.default` when checking whether implicit arguments are definitionally equal
+
+## backward.isDefEq.respectTransparency.types
+type: `Bool`
+
+default: `false`
+
+if true, do not bump transparency to `.default` when checking whether the type of a metavariable matches the type of the term being assigned to it.
 
 ## backward.linearNoConfusionType
 type: `Bool`
@@ -538,6 +552,13 @@ default: `false`
 
 If true, whenever `dsimp` fails to apply a rewrite rule because it is not marked as `defeq`, check whether it would have been considered as a rfl theorem before the introduction of the `defeq` attribute, and warn if it was. Note that this is a costly check.
 
+## debug.tactic.try.onlyUserSuggestions
+type: `Bool`
+
+default: `false`
+
+if set, `try?` skips its built-in suggestion branches (simple, simp, grind, simp_all, induction/fun_induction, exact?) and only runs tactics produced by user-registered `@[try_suggestion]` generators. Primarily intended for tests that want to exercise the `try?` machinery without paying for library search and other expensive default branches.
+
 ## debug.terminalTacticsAsSorry
 type: `Bool`
 
@@ -736,6 +757,13 @@ default: `false`
 
 check proofs between the elements of all equivalence classes
 
+## grind.ematch.diagnostics
+type: `Bool`
+
+default: `false`
+
+enable E-matching theorem instantiation diagnostics
+
 ## grind.param.codeAction
 type: `Bool`
 
@@ -848,6 +876,13 @@ default: `true`
 
 enable the `auxLemma` linter
 
+## linter.checkUnivs
+type: `Bool`
+
+default: `false`
+
+enable the `checkUnivs` linter, which warns when a declaration has a universe parameter that only ever occurs in a `max u v` together with another parameter, never on its own.
+
 ## linter.commandRanges
 type: `Bool`
 
@@ -876,6 +911,13 @@ default: `false`
 
 if set to `true`, then the countHeartbeats linter rounds down to the nearest 1000 the heartbeat count
 
+## linter.defProp
+type: `Bool`
+
+default: `false`
+
+enable the `defProp` linter, which warns when a `def` is used to introduce a declaration whose type is a `Prop`; such a declaration should be written using `theorem` instead.
+
 ## linter.deprecated
 type: `Bool`
 
@@ -895,7 +937,21 @@ type: `Bool`
 
 default: `true`
 
-enable the `deprecated.module` linter
+if true, generate warnings when importing deprecated modules
+
+## linter.deprecated.options
+type: `Bool`
+
+default: `true`
+
+if true, generate deprecation warnings for deprecated options
+
+## linter.deprecated.syntax
+type: `Bool`
+
+default: `true`
+
+if true, generate warnings when deprecated syntax is used
 
 ## linter.deprecatedCoercions
 type: `Bool`
@@ -931,6 +987,41 @@ type: `Bool`
 default: `true`
 
 Linter, mostly used by translate attributes, that checks that the source declaration doesn't have certain attributes
+
+## linter.extra
+type: `Bool`
+
+default: `false`
+
+enables the set of extra linters — linters that are turned off by default and only available via `lake lint`. An extra linter early-returns unless this option is true.
+
+## linter.extra.dupNamespace
+type: `Bool`
+
+default: `false`
+
+enable the duplicated namespace linter
+
+## linter.extra.unnecessarySeqFocus
+type: `Bool`
+
+default: `false`
+
+enable the 'unnecessary <;>' linter
+
+## linter.extra.unreachableTactic
+type: `Bool`
+
+default: `false`
+
+enable the 'unreachable tactic' linter
+
+## linter.extra.unusedDecidableInType
+type: `Bool`
+
+default: `false`
+
+enable the unused `Decidable*` instance linter, which lints against `Decidable*` instances in the hypotheses of theorems which are not used in the type, and can therefore be replaced by a use of `classical` in the proof.
 
 ## linter.fast_instance_existing
 type: `Bool`
@@ -1085,6 +1176,13 @@ type: `Bool`
 default: `false`
 
 
+
+## linter.redundantVisibility
+type: `Bool`
+
+default: `false`
+
+warn on redundant `private`/`public` visibility modifiers
 
 ## linter.setNotationForOrder
 type: `Bool`
@@ -1492,6 +1590,13 @@ default: `false`
 
 
 
+## linter.tacticCheckInstances
+type: `Bool`
+
+default: `false`
+
+enable the linter that type-checks every tactic goal at `.instances` transparency
+
 ## linter.trailingWhitespace
 type: `Bool`
 
@@ -1695,6 +1800,13 @@ default: `false`
 
 if true, do not generate error if an alternative is not used
 
+## match.maxCounterExamples
+type: `Nat`
+
+default: `5`
+
+Maximum number of missing-case counter-examples to generate. When this limit is reached, the match compiler stops exploring further case splits for counter-example generation. Increase if you need to see all missing cases.
+
 ## mathlib.tactic.category.grind
 type: `Bool`
 
@@ -1735,7 +1847,7 @@ type: `Nat`
 
 default: `512`
 
-maximum recursion depth for many Lean procedures
+maximum recursion depth for many Lean procedures, 0 means no limit
 
 ## maxSynthPendingDepth
 type: `Nat`
@@ -2427,6 +2539,13 @@ default: `true`
 
 When true, interactive goals for tactics will be decorated with diffing information. 
 
+## simp.rfl.checkTransparency
+type: `Bool`
+
+default: `false`
+
+if true, Lean generates a warning if the left and right-hand sides of the `[simp]` equation are not definitionally equal at the restricted transparency level used by `simp` 
+
 ## simprocs
 type: `Bool`
 
@@ -2451,7 +2570,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.30.0"`
+default: `"v4.31.0-rc1"`
 
 Revision of LeanStateSearch to use
 
@@ -2539,12 +2658,47 @@ default: `false`
 
 When tracing is enabled, calls to `simp` or `dsimp` will print an equivalent `simp only` call.
 
+## tactic.simp.user.exampleBool
+type: `Bool`
+
+default: `false`
+
+(simp user option) example Bool-valued option, for testing
+
+## tactic.simp.user.exampleInt
+type: `Int`
+
+default: `0`
+
+(simp user option) example Int-valued option, for testing
+
+## tactic.simp.user.exampleNat
+type: `Nat`
+
+default: `0`
+
+(simp user option) example Nat-valued option, for testing
+
+## tactic.simp.user.exampleString
+type: `String`
+
+default: `""`
+
+(simp user option) example String-valued option, for testing
+
 ## tactic.skipAssignedInstances
 type: `Bool`
 
 default: `true`
 
 in the `rw` and `simp` tactics, if an instance implicit argument is assigned, do not try to synthesize instance.
+
+## tactic.tryOnEmptyBy
+type: `Bool`
+
+default: `false`
+
+when an empty `by` block is encountered interactively, run `try?` to suggest a proof (currently disabled by default; may become the default in a future release)
 
 ## timeout
 type: `Nat`
@@ -2953,6 +3107,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Elab
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Elab.ConfigEval
 type: `Bool`
 
 default: `false`
@@ -3533,14 +3694,14 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.Elab.struct
+## trace.Elab.structInst
 type: `Bool`
 
 default: `false`
 
 enable/disable tracing for the given module and submodules
 
-## trace.Elab.struct.modifyOp
+## trace.Elab.structInst.modifyOp
 type: `Bool`
 
 default: `false`
@@ -3821,6 +3982,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Meta.Tactic.simp.all
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.Tactic.simp.backwardDefEq
 type: `Bool`
 
 default: `false`
@@ -4681,6 +4849,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.diagnostics
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.explode
 type: `Bool`
 
@@ -5172,6 +5347,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.ematch
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.ematch.diagnostics.compact
 type: `Bool`
 
 default: `false`
@@ -5705,6 +5887,13 @@ if false, limit text in exported trace nodes to trace class name and `TraceData.
 
 This is useful when we are interested in the time taken by specific subsystems instead of specific invocations, which is the common case.
 
+## trace.profiler.serve
+type: `Bool`
+
+default: `false`
+
+serve the `trace.profiler` data over HTTP and open it in `https://profiler.firefox.com`; blocks until interrupted with Ctrl+C
+
 ## trace.profiler.threshold
 type: `Nat`
 
@@ -5908,6 +6097,13 @@ default: `true`
 
 warn about uses of `@[expose]` on private declarations
 
+## warn.redundantExpose
+type: `Bool`
+
+default: `true`
+
+warn about redundant `@[expose]`/`@[no_expose]` attributes
+
 ## warn.refl_coherence
 type: `Bool`
 
@@ -5921,6 +6117,20 @@ type: `Bool`
 default: `true`
 
 warn about uses of `sorry` in declarations added to the environment
+
+## warning.simp.otherHead
+type: `Bool`
+
+default: `true`
+
+If true, warns when the left-hand side of a `@[simp]` theorem is headed by a `.other` key in the discrimination tree (e.g. a lambda expression). Such lemmas can cause slowdowns.
+
+## warning.simp.varHead
+type: `Bool`
+
+default: `true`
+
+If true, warns when the head symbol of the left-hand side of a `@[simp]` theorem is a variable. Such lemmas are tried on every simp step, which can be slow.
 
 ## warningAsError
 type: `Bool`
