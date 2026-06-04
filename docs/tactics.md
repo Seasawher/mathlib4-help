@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `0531bb79fea20efc9ce6942db46b96be5a919400`
+Mathlib version: `c87658adb9aa6d5273e39afc190687fd072313e9`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2906,10 +2906,10 @@ example {a b : ℚ} (H : b + a ≠ 0) : a / (a + b) + b / (b + a) = 1 := by
 ## field_simp
 Defined in: `Mathlib.Tactic.FieldSimp.fieldSimp`
 
-`field_simp` normalizes expressions in (semi-)fields by rewriting them to a common denominator,
-i.e. to reduce them to expressions of the form `n / d` where neither `n` nor `d` contains any
-division symbol. The `field_simp` tactic will also clear denominators in field *(in)equalities*, by
-cross-multiplying.
+`field_simp` normalizes expressions in (semi-)fields (i.e., does not require additive inverses)
+by rewriting them to a common denominator, i.e. to reduce them to expressions of the form `n / d`
+where neither `n` nor `d` contains any division symbol. The `field_simp` tactic will also clear
+denominators in field *(in)equalities*, by cross-multiplying.
 
 A very common pattern is `field_simp; ring` (clear denominators, then the resulting goal is
 solvable by the axioms of a commutative ring). The finishing tactic `field` is a shorthand for this
