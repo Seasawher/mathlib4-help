@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `6933418b3e0ad7fc58ceb6784856b4b5dafabfeb`
+Mathlib version: `0531bb79fea20efc9ce6942db46b96be5a919400`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -985,6 +985,29 @@ Sets are automatically bounded or cobounded in complete lattices. To use the sam
 in complete and conditionally complete lattices but let automation fill automatically the
 boundedness proofs in complete lattices, we use the tactic `bddDefault` in the statements,
 in the form `(hA : BddAbove A := by bddDefault)`.
+
+## bdsimp
+Defined in: `bdsimp`
+
+`bdsimp` definitionally simplifies the goal. This is a backward compatibility macro for `dsimp`.
+Like `dsimp`, it applies only theorems that hold by reflexivity, and the result is guaranteed to be
+definitionally equal to the input. The difference is that `bdsimp` allows any theorem whose proof is
+reflexivity, while `dsimp` requires the proof to hold at `.instances` transparency level.
+
+This tactic is a temporary workaround.
+`bdsimp` also rewrites in depended-on positions, which means the result can fail to typecheck at
+the expected `.instances` transparency level. For example:
+```lean
+@[expose] def two := 2
+@[defeq] lemma two_eq : two = 2 := by rfl
+instance : NeZero two := inferInstanceAs (NeZero 2)
+
+example (x : Fin two) : x * 0 = 0 := by
+  bdsimp only [two_eq]
+  fail_if_success rw [Fin.mul_zero] -- Fails: `x : Fin two` but `· * · : Fin 2 → Fin 2 → Fin 2`
+```
+
+This tactic supports all options supported by `dsimp`.
 
 ## beta_reduce
 Defined in: `Mathlib.Tactic.betaReduceStx`
