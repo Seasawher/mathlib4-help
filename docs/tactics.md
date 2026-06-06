@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `9f6a6b1d07396a49fa4c3a4744522208518dafa8`
+Mathlib version: `d46bd45325c5cdf0ecf5cee0f5ff6d6e3586eb35`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -418,8 +418,7 @@ into new goals, using the hole's name, if any, as the goal case name.
 Like `congr!`, `convert_to` introduces variables while applying congruence rules. These can be
 pattern-matched, like `rintro` would, using the `with` keyword.
 
-* `ac_change! t` uses default transparency when solving side goals. This is currently the same
-  behaviour as `ac_change`, but `ac_change` will use reducible transparency in the future.
+* `ac_change! t` uses default transparency, rather than reducible, when solving side goals.
 * `ac_change t using n`, where `n` is a positive numeral, controls the depth with which congruence
   is applied. For example, if the main goal is `⊢ Prime ((a * b + 1) + c)`,
   then `ac_change Prime ((1 + a * b) + c) using 2` solves the side goals, and
@@ -447,8 +446,7 @@ into new goals, using the hole's name, if any, as the goal case name.
 Like `congr!`, `convert_to` introduces variables while applying congruence rules. These can be
 pattern-matched, like `rintro` would, using the `with` keyword.
 
-* `ac_change! t` uses default transparency when solving side goals. This is currently the same
-  behaviour as `ac_change`, but `ac_change` will use reducible transparency in the future.
+* `ac_change! t` uses default transparency, rather than reducible, when solving side goals.
 * `ac_change t using n`, where `n` is a positive numeral, controls the depth with which congruence
   is applied. For example, if the main goal is `⊢ Prime ((a * b + 1) + c)`,
   then `ac_change Prime ((1 + a * b) + c) using 2` solves the side goals, and
@@ -2239,8 +2237,7 @@ pattern-matched, like `rintro` would, using the `with` keyword.
 See also `convert_to t`, where `t` specifies the expected type, instead of a proof term of type `t`.
 In other words, `convert_to t` works like `convert (?_ : t)`. Both tactics use the same options.
 
-* `convert! e` uses default transparency when solving side goals. This is currently the same
-  behaviour as `convert`, but `convert` will use reducible transparency in the future.
+* `convert! e` uses default transparency, rather than reducible, when solving side goals.
 * `convert ← e` creates equality goals in the opposite direction (with the goal type on the right).
 * `convert e using n`, where `n` is a positive numeral, controls the depth with which congruence is
   applied. For example, if the main goal is `⊢ Prime (n + n + 1)` and `e : Prime (2 * n + 1)`, then
@@ -2263,6 +2260,7 @@ example {n : ℕ} (e : Prime (2 * n + 1)) :
   ring
 
 -- `convert` can fail where `exact` succeeds.
+def p (n : ℕ) := True
 example (h : p 0) : p 1 := by
   fail_if_success
     convert h -- fails, left-over goal 1 = 0
@@ -2292,8 +2290,7 @@ pattern-matched, like `rintro` would, using the `with` keyword.
 See also `convert_to t`, where `t` specifies the expected type, instead of a proof term of type `t`.
 In other words, `convert_to t` works like `convert (?_ : t)`. Both tactics use the same options.
 
-* `convert! e` uses default transparency when solving side goals. This is currently the same
-  behaviour as `convert`, but `convert` will use reducible transparency in the future.
+* `convert! e` uses default transparency, rather than reducible, when solving side goals.
 * `convert ← e` creates equality goals in the opposite direction (with the goal type on the right).
 * `convert e using n`, where `n` is a positive numeral, controls the depth with which congruence is
   applied. For example, if the main goal is `⊢ Prime (n + n + 1)` and `e : Prime (2 * n + 1)`, then
@@ -2316,6 +2313,7 @@ example {n : ℕ} (e : Prime (2 * n + 1)) :
   ring
 
 -- `convert` can fail where `exact` succeeds.
+def p (n : ℕ) := True
 example (h : p 0) : p 1 := by
   fail_if_success
     convert h -- fails, left-over goal 1 = 0
@@ -2346,8 +2344,7 @@ pattern-matched, like `rintro` would, using the `with` keyword.
 `convert e`, where `e` is a term of type `t`, uses `e` to close the new main goal. In other words,
 `convert e` works like `convert_to t; refine e`. Both tactics use the same options.
 
-* `convert_to! t` uses default transparency when solving side goals. This is currently the same
-  behaviour as `convert_to`, but `convert_to` will use reducible transparency in the future.
+* `convert_to! t` uses default transparency, rather than reducible, when solving side goals.
 * `convert_to ty at h` changes the type of the local hypothesis `h` to `ty`. If later local
   hypotheses or the goal depend on `h`, then `convert_to t at h` may leave a copy of `h`.
 * `convert_to ← t` creates equality goals in the opposite direction (with the original goal type on
@@ -2377,8 +2374,7 @@ pattern-matched, like `rintro` would, using the `with` keyword.
 `convert e`, where `e` is a term of type `t`, uses `e` to close the new main goal. In other words,
 `convert e` works like `convert_to t; refine e`. Both tactics use the same options.
 
-* `convert_to! t` uses default transparency when solving side goals. This is currently the same
-  behaviour as `convert_to`, but `convert_to` will use reducible transparency in the future.
+* `convert_to! t` uses default transparency, rather than reducible, when solving side goals.
 * `convert_to ty at h` changes the type of the local hypothesis `h` to `ty`. If later local
   hypotheses or the goal depend on `h`, then `convert_to t at h` may leave a copy of `h`.
 * `convert_to ← t` creates equality goals in the opposite direction (with the original goal type on
