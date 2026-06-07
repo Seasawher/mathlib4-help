@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `d46bd45325c5cdf0ecf5cee0f5ff6d6e3586eb35`
+Mathlib version: `e37757ed82844c1022c4a1aea5974bcaccdc6656`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -949,7 +949,7 @@ Simp set for `functor_norm`
  simproc set for functor_norm_proc
 Simplification procedure
 
-## gcongr
+## gcongrAttr
  generalized congruence
 Attribute marking "generalized congruence" (`gcongr`) lemmas.  Such lemmas must have a
 conclusion of a form such as `f x₁ y z₁ ∼ f x₂ y z₂`; that is, a relation between the application of
@@ -959,8 +959,9 @@ a function to two argument lists, in which the "varying argument" pairs (here `x
 The antecedents of such a lemma are classified as generating "main goals" if they are of the form
 `x₁ ≈ x₂` for some "varying argument" pair `x₁`/`x₂` (and a possibly different relation `≈` to `∼`),
 or more generally of the form `∀ i h h' j h'', f₁ i j ≈ f₂ i j` (say) for some "varying argument"
-pair `f₁`/`f₂`. (Other antecedents are considered to generate "side goals".) The index of the
-"varying argument" pair corresponding to each "main" antecedent is recorded.
+pair `f₁`/`f₂`, where the arguments of `f₁` and `f₂` are the same list of variables which have to
+be bound by the preceding `∀`. (Other antecedents are considered to generate "side goals".)
+Use `gcongr only` to relax these conditions. A `gcongr only` lemma is not used by `grw`.
 
 If a lemma such as `add_le_add : a ≤ b → c ≤ d → a + c ≤ b + d` has been tagged with `gcongr`,
 then a direct consequence like `a ≤ b → a + c ≤ b + c` does *not* need to be tagged.

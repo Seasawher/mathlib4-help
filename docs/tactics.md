@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `d46bd45325c5cdf0ecf5cee0f5ff6d6e3586eb35`
+Mathlib version: `e37757ed82844c1022c4a1aea5974bcaccdc6656`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -845,7 +845,7 @@ Defined in: `Lean.Parser.Tactic.tacticApply_mod_cast_`
 Normalize casts in the goal and the given expression, then `apply` the expression to the goal.
 
 ## apply_rewrite
-Defined in: `Mathlib.Tactic.tacticApply_rewrite___`
+Defined in: `Mathlib.Tactic.GRewrite.tacticApply_rewrite___`
 
 `apply_rewrite [e₁, ..., eₙ]` uses the expressions `e₁`, ..., `eₙ` as generalized rewrite rules, of
 type `pᵢ → qᵢ`, on the main goal, replacing occurrences of `pᵢ` with `qᵢ`. The difference with
@@ -893,7 +893,7 @@ Unlike `solve_by_elim`, `apply_rules` does not perform backtracking, and greedil
 a lemma from the list until it gets stuck.
 
 ## apply_rw
-Defined in: `Mathlib.Tactic.applyRwSeq`
+Defined in: `Mathlib.Tactic.GRewrite.applyRwSeq`
 
 `apply_rw [e₁, ..., eₙ]` uses the expressions `e₁`, ..., `eₙ` as generalized rewrite rules, of type
 `pᵢ → qᵢ`, on the main goal, replacing occurrences of `pᵢ` with `qᵢ`. The difference with `grw` is
@@ -3414,7 +3414,7 @@ Defined in: `WittVector.Tactic.ghostSimp`
 A macro for a common simplification when rewriting with ghost component equations.
 
 ## grewrite
-Defined in: `Mathlib.Tactic.grewriteSeq`
+Defined in: `Mathlib.Tactic.GRewrite.grewriteSeq`
 
 `grewrite [e₁, ..., eₙ]` uses each expression `eᵢ : Rᵢ aᵢ bᵢ` (where `Rᵢ` is any two-argument
 relation) as a generalized rewrite rule on the main goal, replacing occurrences of `aᵢ` with `bᵢ`.
@@ -3772,7 +3772,7 @@ example {G : Type} [Group G] (a b c d : G) (h : c = (a*b^2)*((b*b)⁻¹*a⁻¹)*
 ```
 
 ## grw
-Defined in: `Mathlib.Tactic.grwSeq`
+Defined in: `Mathlib.Tactic.GRewrite.grwSeq`
 
 `grw [e₁, ..., eₙ]` uses each expression `eᵢ : Rᵢ aᵢ bᵢ` (where `Rᵢ` is any two-argument
 relation) as a generalized rewrite rule on the main goal, replacing occurrences of `aᵢ` with `bᵢ`,
@@ -6518,7 +6518,7 @@ example : ¬ (7-2)/(2*3) ≥ (1:ℝ) + 2/(3^2) := by norm_num1
 ```
 
 ## nth_grewrite
-Defined in: `Mathlib.Tactic.tacticNth_grewrite_____`
+Defined in: `Mathlib.Tactic.GRewrite.tacticNth_grewrite_____`
 
 `nth_grewrite n₁ ... nₖ [e₁, ..., eₙ]` is a variant of `grewrite` that for each expression
 `eᵢ : R aᵢ bᵢ` only replaces the `n₁, ..., nₖ`th occurrence of `aᵢ` with `bᵢ`.
@@ -6548,7 +6548,7 @@ inequalities.
 * `nth_grewrite n₁ ... nₖ [e₁, ..., eₙ] at l` rewrites at the location(s) `l`.
 
 ## nth_grw
-Defined in: `Mathlib.Tactic.tacticNth_grw_____`
+Defined in: `Mathlib.Tactic.GRewrite.tacticNth_grw_____`
 
 `nth_grw n₁ ... nₖ [e₁, ..., eₙ]` is a variant of `grw` that for each expression `eᵢ : R aᵢ bᵢ` only
 replaces the `n₁, ..., nₖ`th occurrence of `aᵢ` with `bᵢ`. Occurrences of `bᵢ` are not rewritten,
