@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `d46bd45325c5cdf0ecf5cee0f5ff6d6e3586eb35`
+Mathlib version: `e37757ed82844c1022c4a1aea5974bcaccdc6656`
 
 ## Elab.async
 type: `Bool`
@@ -4108,6 +4108,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Meta.gcongr
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.grewrite
 type: `Bool`
 
 default: `false`
