@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `5a6fc726c807c8625f1abfdfe710464adb658e69`
+Mathlib version: `96fd0fff3b8837985ae21dd02e712cb5df72ec05`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1081,7 +1081,7 @@ Defined in: `Lean.Parser.Command.printSig`
 Defined in: `Lean.Parser.Command.printAxioms`
 
 Prints the axioms used by a declaration, directly or indirectly.
-Please consult [the reference manual](https://lean-lang.org/doc/reference/4.31.0-rc1/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
+Please consult [the reference manual](https://lean-lang.org/doc/reference/4.31.0-rc2/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
 
 ## \#print
 Defined in: `Lean.Parser.Command.printTacTags`
@@ -2659,13 +2659,39 @@ This proof would be a welcome contribution to the library!
 
 The syntax of `proof_wanted` declarations is just like that of `theorem`, but without `:=` or the
 proof. Lean checks that `proof_wanted` declarations are well-formed (e.g. it ensures that all the
-mentioned names are in scope, and that the theorem statement is a valid proposition), but they are
-discarded afterwards. This means that they cannot be used as axioms.
+mentioned names are in scope, and that the theorem statement is a valid proposition), and records a
+private placeholder declaration of type `... → ProofWanted statement`.
+
+Modifiers (such as `@[simp]`) are accepted for syntactic compatibility with `theorem` but are
+currently ignored.
+
+Inside another `proof_wanted`'s statement, write `❰foo❱` to assume an earlier `proof_wanted`
+named `foo`. The bracket may only appear inside the statement, since there is no proof body. It
+desugars to a fresh hypothesis binder of the matching type; for parametrised `foo : ∀ args,
+ProofWanted _`, the binder type is itself Π-quantified, so `❰foo❱ x y` applies the parameter to
+`x y`. `❰foo❱` only resolves names within the current file, since the placeholders are
+`private`.
 
 Typical usage:
 ```lean
-@[simp] proof_wanted empty_find? [BEq α] [Hashable α] {a : α} :
-    (∅ : HashMap α β).find? a = none
+-- A parameterless wanted fact:
+proof_wanted size_of_two_pushes_onto_empty :
+    ((#[] : Array Nat).push 1 |>.push 2).size = 2
+
+-- Referencing an earlier `proof_wanted` inside a statement (here in the `Fin`
+-- bound proof, which rewrites by the wanted fact):
+proof_wanted first_index_after_two_pushes :
+    (⟨0, by rw [❰size_of_two_pushes_onto_empty❱]; decide⟩
+      : Fin ((#[] : Array Nat).push 1 |>.push 2).size).val = 0
+
+-- A parametrised wanted fact:
+proof_wanted size_after_two_pushes {α : Type _} (a : Array α) (x y : α) :
+    ((a.push x).push y).size = a.size + 2
+
+-- Referencing the parametrised wanted with arguments: `❰foo❱ a x y`.
+proof_wanted index_after_two_pushes {α : Type _} (a : Array α) (x y : α) :
+    (⟨a.size, by rw [❰size_after_two_pushes❱ a x y]; omega⟩
+      : Fin ((a.push x).push y).size).val = a.size
 ```
 
 ## recall
@@ -2829,15 +2855,6 @@ Defined in: `Lean.Parser.Command.registerTryTactic`
 An optional priority can be specified with `register_try?_tactic (priority := 500) tac`.
 Higher priority generators are tried first. The default priority is 1000.
 
-## reprove
-Defined in: `Lean.Elab.Command.reprove`
-
-Reproves a list of declarations with a given tactic sequence.
-
-```lean
-reprove theorem1 theorem2 theorem3 by simp
-```
-
 ## reset_grind_attrs%
 Defined in: `Lean.Parser.resetGrindAttrs`
 
@@ -2996,10 +3013,6 @@ Adds more documentation as an extension of the documentation for a given tactic.
 
 The extended documentation is placed in the command's docstring. It is shown as part of a bulleted
 list, so it should be brief.
-
-## test_extern
-Defined in: `testExternCmd`
-
 
 ## to_additive_name_hint
 Defined in: `Mathlib.Tactic.ToAdditive.commandTo_additive_name_hint__`

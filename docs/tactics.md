@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `5a6fc726c807c8625f1abfdfe710464adb658e69`
+Mathlib version: `96fd0fff3b8837985ae21dd02e712cb5df72ec05`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3297,7 +3297,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.31.0-rc1/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.31.0-rc2/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3459,7 +3459,7 @@ These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
 
-See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.31.0-rc1/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.31.0-rc2/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
@@ -9131,13 +9131,6 @@ A wrapper for `omega` which prefaces it with some quick and useful attempts
 Defined in: `MeasureTheory.tacticVolume_tac`
 
 The tactic `exact volume`, to be used in optional (`autoParam`) arguments.
-
-## wait_for_unblock_async
-Defined in: `Lean.Server.Test.Cancel.tacticWait_for_unblock_async`
-
-Spawns a `logSnapshotTask` that waits for `unblock` to be called, which is expected to happen in a
-subsequent document version that does not invalidate this tactic. Complains if cancellation token
-was set before unblocking, i.e. if the tactic was invalidated after all.
 
 ## whisker_simps
 Defined in: `Mathlib.Tactic.BicategoryCoherence.whisker_simps`
