@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `738e54320ae6a5779890067dd9800b1d46ce2ab2`
+Mathlib version: `6a9feeac6e8e210571ad3518cdf635838240dad1`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -97,6 +97,19 @@ Running `#clear_deprecations "YYYY₁-MM₁-DD₁" "YYYY₂-MM₂-DD₂"`, witho
 the removal, but still emits the same verbose output.
 
 This function is intended for automated use by the `remove_deprecations` automation.
+
+## \#click_suggestions
+Defined in: `Mathlib.Tactic.ClickSuggestions.«command#click_suggestions»`
+
+`#click_suggestions` enables a widget in the infoview that gives tactic suggestions for
+the expression in the tactic state that was (most recently) selected with shift-click.
+Each suggestion has an insert button for pasting it into the editor, at the position of the cursor.
+
+Theorems are searched for use in `apply`, `apply at`, `rw` and `grw`.
+These suggestions are grouped and sorted by the pattern that the lemmas match with.
+Rewrites that don't change the goal and rewrites that create the same goal as another rewrite
+are filtered out, as well as suggestions that create new goal(s) with metavariables in them.
+To see all suggestions, click on the filter button (▼) in the top right.
 
 ## \#conv
 Defined in: `Mathlib.Tactic.Conv.«command#conv_=>_»`
@@ -1399,7 +1412,7 @@ if the number of imports does not exceed `x`, then the message involves `x`, rat
 actual, possibly varying, number of imports.
 
 ## \#unfold?
-Defined in: `Mathlib.Tactic.InteractiveUnfold.unfoldCommand`
+Defined in: `Mathlib.Tactic.ClickSuggestions.«command#unfold?_»`
 
 `#unfold? e` gives all unfolds of `e`.
 In tactic mode, use `unfold?` instead.

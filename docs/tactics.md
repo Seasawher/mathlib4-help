@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `738e54320ae6a5779890067dd9800b1d46ce2ab2`
+Mathlib version: `6a9feeac6e8e210571ad3518cdf635838240dad1`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -8946,20 +8946,6 @@ For non-recursive global definitions, this tactic is identical to `delta`.
 For recursive global definitions, it uses the "unfolding lemma" `id.eq_def`,
 which is generated for each recursive definition, to unfold according to the recursive definition given by the user.
 Only one level of unfolding is performed, in contrast to `simp only [id]`, which unfolds definition `id` recursively.
-
-## unfold?
-Defined in: `Mathlib.Tactic.InteractiveUnfold.tacticUnfold?`
-
-Replace the selected expression with a definitional unfolding.
-- After each unfolding, we apply `whnfCore` to simplify the expression.
-- Explicit natural number expressions are evaluated.
-- Unfolds of class projections of instances marked with `@[default_instance]` are not shown.
-  This is relevant for notational type classes like `+`: we don't want to suggest `Add.add a b`
-  as an unfolding of `a + b`. Similarly for `OfNat n : Nat` which unfolds into `n : Nat`.
-
-To use `unfold?`, shift-click an expression in the tactic state.
-This gives a list of rewrite suggestions for the selected expression.
-Click on a suggestion to replace `unfold?` by a tactic that performs this rewrite.
 
 ## unfold_projs
 Defined in: `Mathlib.Tactic.unfoldProjsStx`

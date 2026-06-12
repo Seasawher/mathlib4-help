@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `738e54320ae6a5779890067dd9800b1d46ce2ab2`
+Mathlib version: `6a9feeac6e8e210571ad3518cdf635838240dad1`
 
 ## Elab.async
 type: `Bool`
@@ -388,6 +388,13 @@ type: `Bool`
 default: `true`
 
 Enables transforming `let`s to `have`s after elaborating declarations.
+
+## click_suggestions.debug
+type: `Bool`
+
+default: `false`
+
+let `#click_suggestions` show the candidate lemmas that failed to apply
 
 ## compiler.check
 type: `Bool`
