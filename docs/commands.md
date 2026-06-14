@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `17060bc5e373ca7d41348c1cb1b1522bdd4b0af1`
+Mathlib version: `e80d076d5230771e8dd8e3d1907fb1af9ffd3a85`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1523,23 +1523,6 @@ Declares a binder predicate.  For example:
 binder_predicate x " > " y:term => `($x > $y)
 ```
 
-## @[
-Defined in: `Mathlib.Tactic.scopedNS`
-
-`scoped[NS]` is similar to the `scoped` modifier on attributes and notations,
-but it scopes the syntax in the specified namespace instead of the current namespace.
-```lean
-scoped[Matrix] postfix:1024 "ᵀ" => Matrix.transpose
--- declares `ᵀ` as a notation for matrix transposition
--- which is only accessible if you `open Matrix` or `open scoped Matrix`.
-
-namespace Nat
-
-scoped[Nat.Count] attribute [instance] CountSet.fintype
--- make the definition Nat.CountSet.fintype an instance,
--- but only if `Nat.Count` is open
-```
-
 ## abbrev
 Defined in: `Lean.Parser.Command.declaration`
 
@@ -1857,6 +1840,28 @@ expression as its handler. The handler is only called when the key is an exact m
 The provided value is in `item.value`. Such a handler implies `omit key`.
 - `option key* := fun cfg item => ...` adds configuration options with `key` as a proper prefix.
 The most-specific `*` handler is called if no handlers for exact matches apply.
+
+## def_wanted
+Defined in: `«def_wanted»`
+
+This construction would be a welcome contribution to the library!
+
+The syntax mirrors `theorem_wanted` but admits any `Sort` (not just `Prop`). It records a
+placeholder declaration of type `... → DefWanted type` and accepts the same `❰…❱`
+bracket syntax for cross-referencing earlier `theorem_wanted` or `def_wanted`
+declarations, including parametrised ones — `❰foo❱ x y` applies `foo`'s parameters. A partial
+body may be supplied with `... := body`; as with `theorem_wanted`, a body without any `❰…❱`
+reference is rejected with an actionable "Try this:" suggesting `def`.
+
+Modifiers (such as `@[simp]`) are accepted for syntactic compatibility with `def` but are
+currently ignored.
+
+Typical usage:
+```lean
+def_wanted decision_procedure (n : Nat) : Decidable (Nat.Prime n)
+
+def_wanted prime_dec_3 : Decidable (Nat.Prime 3) := ❰decision_procedure❱ 3
+```
 
 ## deprecate
 Defined in: `Mathlib.Tactic.DeprecateTo.commandDeprecateTo______`
@@ -2336,6 +2341,36 @@ Defined in: `Mathlib.Tactic.ToAdditive.commandInsert_to_additive_translation__`
 into the `to_additive` dictionary. This is useful for translating namespaces that don't (yet)
 have a corresponding translated declaration.
 
+## instance_wanted
+Defined in: `«instance_wanted»`
+
+This typeclass instance would be a welcome contribution to the library!
+
+The syntax mirrors `instance` (the name is optional, auto-generated from the class head if
+absent) and the payload must be a typeclass. The placeholder is recorded as
+`DefWanted (TheClass …)` like `def_wanted`, but additionally the declared
+name is registered so every subsequent `theorem_wanted` / `def_wanted` /
+`instance_wanted` automatically picks up a `[d_…]` instance binder for it. Lean's typeclass
+synth then resolves uses of the class without an explicit `❰…❱` reference — matching the
+auto-availability of regular `instance` declarations.
+
+The registration is **module-scoped and order-sensitive**: every `instance_wanted` declared
+earlier in the current file is auto-included as a binder on every later wanted declaration
+(without any class-name filtering — opting in via `instance_wanted` is taken as a request for
+the instance to be ambient). Registrations persist across `section` / `namespace` boundaries
+within the file and are dropped at module boundaries (the placeholder defs are `private`, so
+nothing propagates to importers).
+
+Typical usage:
+```lean
+def_wanted Jacobian (C : Over (Spec (.of k))) [IsProper C.hom] : Over (Spec (.of k))
+
+instance_wanted : GrpObj (❰Jacobian❱ C)
+
+theorem_wanted comp_ofCurve … : … = η[❰Jacobian❱ C]
+  -- automatically picks up the GrpObj instance, no haveI needed
+```
+
 ## irreducible_def
 Defined in: `Lean.Elab.Command.command_Irreducible_def____`
 
@@ -2668,44 +2703,8 @@ Defined in: `Lean.Parser.Command.mixfix`
 ## proof_wanted
 Defined in: `«proof_wanted»`
 
-This proof would be a welcome contribution to the library!
-
-The syntax of `proof_wanted` declarations is just like that of `theorem`, but without `:=` or the
-proof. Lean checks that `proof_wanted` declarations are well-formed (e.g. it ensures that all the
-mentioned names are in scope, and that the theorem statement is a valid proposition), and records a
-private placeholder declaration of type `... → ProofWanted statement`.
-
-Modifiers (such as `@[simp]`) are accepted for syntactic compatibility with `theorem` but are
-currently ignored.
-
-Inside another `proof_wanted`'s statement, write `❰foo❱` to assume an earlier `proof_wanted`
-named `foo`. The bracket may only appear inside the statement, since there is no proof body. It
-desugars to a fresh hypothesis binder of the matching type; for parametrised `foo : ∀ args,
-ProofWanted _`, the binder type is itself Π-quantified, so `❰foo❱ x y` applies the parameter to
-`x y`. `❰foo❱` only resolves names within the current file, since the placeholders are
-`private`.
-
-Typical usage:
-```lean
--- A parameterless wanted fact:
-proof_wanted size_of_two_pushes_onto_empty :
-    ((#[] : Array Nat).push 1 |>.push 2).size = 2
-
--- Referencing an earlier `proof_wanted` inside a statement (here in the `Fin`
--- bound proof, which rewrites by the wanted fact):
-proof_wanted first_index_after_two_pushes :
-    (⟨0, by rw [❰size_of_two_pushes_onto_empty❱]; decide⟩
-      : Fin ((#[] : Array Nat).push 1 |>.push 2).size).val = 0
-
--- A parametrised wanted fact:
-proof_wanted size_after_two_pushes {α : Type _} (a : Array α) (x y : α) :
-    ((a.push x).push y).size = a.size + 2
-
--- Referencing the parametrised wanted with arguments: `❰foo❱ a x y`.
-proof_wanted index_after_two_pushes {α : Type _} (a : Array α) (x y : α) :
-    (⟨a.size, by rw [❰size_after_two_pushes❱ a x y]; omega⟩
-      : Fin ((a.push x).push y).size).val = a.size
-```
+`proof_wanted` is a synonym for `theorem_wanted`; see its documentation. (It is expected to be
+deprecated in favour of `theorem_wanted` eventually.)
 
 ## recall
 Defined in: `Mathlib.Tactic.Recall.recall`
@@ -2893,6 +2892,23 @@ This is the same as `#eval show MetaM Unit from discard do doSeq`.
 
 (This is effectively a synonym for `run_elab` since `MetaM` lifts to `TermElabM`.)
 
+## scoped
+Defined in: `Mathlib.Tactic.scopedNS`
+
+`scoped[NS]` is similar to the `scoped` modifier on attributes and notations,
+but it scopes the syntax in the specified namespace instead of the current namespace.
+```lean
+scoped[Matrix] postfix:1024 "ᵀ" => Matrix.transpose
+-- declares `ᵀ` as a notation for matrix transposition
+-- which is only accessible if you `open Matrix` or `open scoped Matrix`.
+
+namespace Nat
+
+scoped[Nat.Count] attribute [instance] CountSet.fintype
+-- make the definition Nat.CountSet.fintype an instance,
+-- but only if `Nat.Count` is open
+```
+
 ## seal
 Defined in: `Lean.Parser.commandSeal__`
 
@@ -3026,6 +3042,59 @@ Adds more documentation as an extension of the documentation for a given tactic.
 
 The extended documentation is placed in the command's docstring. It is shown as part of a bulleted
 list, so it should be brief.
+
+## theorem_wanted
+Defined in: `«theorem_wanted»`
+
+This proof would be a welcome contribution to the library!
+
+The syntax of `theorem_wanted` declarations is just like that of `theorem`. Without `:=` and a
+proof body it records a wanted theorem; with one it records a partial proof that still depends on
+other wanted lemmas. Lean checks that `theorem_wanted` declarations are well-formed (e.g. it
+ensures that all the mentioned names are in scope, and that the theorem statement is a valid
+proposition), and records a private placeholder declaration of type `... → ProofWanted statement`.
+
+Modifiers (such as `@[simp]`) are accepted for syntactic compatibility with `theorem` but are
+currently ignored.
+
+`proof_wanted` is a synonym for `theorem_wanted`.
+
+Inside another `theorem_wanted` or `def_wanted`, write `❰foo❱` to reference an earlier
+`theorem_wanted` or `def_wanted` named `foo`. The bracket may appear in the statement or
+the body, and each distinct reference becomes a fresh parameter binder of the matching type. For
+parametrised `foo : ∀ args, ProofWanted _`, the binder type is itself Π-quantified, so `❰foo❱ x
+y` applies the parameter to `x y`. `❰foo❱` only resolves names within the current file, since
+the placeholders are `private`.
+
+A body must reference at least one `❰…❱` (in the statement or the body); otherwise the body is
+a complete proof and the declaration should be a `theorem`.
+
+Typical usage:
+```lean
+-- A parameterless wanted fact:
+theorem_wanted size_of_two_pushes_onto_empty :
+    ((#[] : Array Nat).push 1 |>.push 2).size = 2
+
+-- Referencing an earlier `theorem_wanted` inside a statement (here in the `Fin`
+-- bound proof, which rewrites by the wanted fact):
+theorem_wanted first_index_after_two_pushes :
+    (⟨0, by rw [❰size_of_two_pushes_onto_empty❱]; decide⟩
+      : Fin ((#[] : Array Nat).push 1 |>.push 2).size).val = 0
+
+-- A parametrised wanted fact:
+theorem_wanted size_after_two_pushes {α : Type _} (a : Array α) (x y : α) :
+    ((a.push x).push y).size = a.size + 2
+
+-- Referencing the parametrised wanted with arguments: `❰foo❱ a x y`.
+theorem_wanted index_after_two_pushes {α : Type _} (a : Array α) (x y : α) :
+    (⟨a.size, by rw [❰size_after_two_pushes❱ a x y]; omega⟩
+      : Fin ((a.push x).push y).size).val = a.size
+
+-- A partial proof may be supplied with `:= body`, deferring the harder step via `❰…❱`:
+theorem_wanted size_after_three_pushes {α : Type _} (a : Array α) (x y z : α) :
+    (((a.push x).push y).push z).size = a.size + 3 := by
+  rw [Array.size_push, ❰size_after_two_pushes❱ a x y]
+```
 
 ## to_additive_name_hint
 Defined in: `Mathlib.Tactic.ToAdditive.commandTo_additive_name_hint__`
