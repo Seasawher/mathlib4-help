@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `43f7f5c74481a10840e1f071e82345be3c03b8cf`
+Mathlib version: `cbeca4d743ba17b79fd585e31f4cd035b555da98`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -1427,8 +1427,6 @@ be replaced by `(tac; tac')` because the latter would expose `tac` to a differen
 
 ## mvcgen_simp
  simp theorems internally used by `mvcgen`
-This attribute should not be used directly.
-It is an implementation detail of the `mvcgen` tactic.
 
 ## never_extract
  instruct the compiler that function applications using the tagged declaration should not be extracted when they are closed terms, nor common subexpression should be performed. This is useful for declarations that have implicit effects.
@@ -1729,9 +1727,6 @@ The `simps` attribute.
 
 ## spec_invariant_type
  marks a type as an invariant type for the `mvcgen` tactic
-Marks a type as an invariant type for the `mvcgen` tactic.
-Goals whose type is an application of a tagged type will be classified
-as invariants rather than verification conditions.
 
 ## specialize
  mark definition to always be specialized

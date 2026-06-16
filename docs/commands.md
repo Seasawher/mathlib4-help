@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `43f7f5c74481a10840e1f071e82345be3c03b8cf`
+Mathlib version: `cbeca4d743ba17b79fd585e31f4cd035b555da98`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1094,7 +1094,7 @@ Defined in: `Lean.Parser.Command.printSig`
 Defined in: `Lean.Parser.Command.printAxioms`
 
 Prints the axioms used by a declaration, directly or indirectly.
-Please consult [the reference manual](https://lean-lang.org/doc/reference/4.31.0-rc2/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
+Please consult [the reference manual](https://lean-lang.org/doc/reference/4.31.0/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
 
 ## \#print
 Defined in: `Lean.Parser.Command.printTacTags`
@@ -1760,18 +1760,6 @@ These instances will be `private local`.
 See `ConfigEval.defEvalConfigItemCmd` for further documentation.
 
 See also `declare_term_config_elab`, `declare_config_elab`, and `declare_command_config_elab`.
-
-## declare_eval_bin
-Defined in: `Lean.Meta.Sym.Simp.commandDeclare_eval_bin__`
-
-
-## declare_eval_bin_bitwise
-Defined in: `Lean.Meta.Sym.Simp.commandDeclare_eval_bin_bitwise__`
-
-
-## declare_eval_bin_bool_pred
-Defined in: `Lean.Meta.Sym.Simp.commandDeclare_eval_bin_bool_pred__`
-
 
 ## declare_int_theorems
 Defined in: `commandDeclare_int_theorems__`
@@ -2794,10 +2782,6 @@ Registers an error explanation.
 
 Note that the error name is not relativized to the current namespace.
 
-## register_grind_attr
-Defined in: `Lean.Parser.Command.registerGrindAttr`
-
-
 ## register_hint
 Defined in: `Mathlib.Tactic.Hint.registerHintStx`
 
@@ -2847,10 +2831,6 @@ register_sym_simp myVariant where
   post := ground >> rewrite [thm1, thm2] with self
   maxSteps := 50000
 ```
-
-## register_sym_simp_attr
-Defined in: `Lean.Parser.Command.registerSymSimpAttr`
-
 
 ## register_tactic_tag
 Defined in: `Lean.Parser.Command.register_tactic_tag`
