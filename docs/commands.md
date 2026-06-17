@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `cbeca4d743ba17b79fd585e31f4cd035b555da98`
+Mathlib version: `2fb84f40125bfc66936eff5dea70c236315f17b2`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -3097,10 +3097,10 @@ proof that is translated. Instead, a casting function is inserted. This casting 
 translated by the translation attribute.
 
 ## to_dual_name_hint
-Defined in: `Mathlib.Tactic.ToDual.commandTo_dual_name_hint__`
+Defined in: `Mathlib.Tactic.ToDual.«commandTo_dual_name_hint__,,»`
 
-`to_dual_name_hint src tgt` lets `to_dual` translate between the name segments `src` and `tgt`
-for the rest of the file current. `src` and `tgt` should both be capitalized.
+`to_dual_name_hint src₁ tgt₁, ..., srcₙ tgtₙ` lets `to_dual` translate between the name segments
+`srcᵢ` and `tgtᵢ` for the rest of the file current. The name segments should be capitalized.
 
 ## unif_hint
 Defined in: `Lean.«command__Unif_hint____Where_|_-⊢__»`
