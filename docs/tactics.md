@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `2fb84f40125bfc66936eff5dea70c236315f17b2`
+Mathlib version: `7ab1c47ce634c21b7321b7ee660f0645f75bca9b`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2237,9 +2237,10 @@ pattern-matched, like `rintro` would, using the `with` keyword.
 See also `convert_to t`, where `t` specifies the expected type, instead of a proof term of type `t`.
 In other words, `convert_to t` works like `convert (?_ : t)`. Both tactics use the same options.
 
-* `convert! e` uses default transparency, rather than reducible, when solving side goals.
+* `convert! e` uses default transparency, rather than reducible, when solving side goals, and
+  it tries to apply congruence even if the two expressions do not have the same head constant.
 * `convert ← e` creates equality goals in the opposite direction (with the goal type on the right).
-* `convert e using n`, where `n` is a positive numeral, controls the depth with which congruence is
+* `convert e using n`, where `n` is a numeral, controls the depth with which congruence is
   applied. For example, if the main goal is `⊢ Prime (n + n + 1)` and `e : Prime (2 * n + 1)`, then
   `convert e using 2` results in one goal, `⊢ n + n = 2 * n`, and `convert e using 3` (or more)
   results in two (impossible) goals `⊢ HAdd.hAdd = HMul.hMul` and `⊢ n = 2`.
@@ -2252,10 +2253,9 @@ In other words, `convert_to t` works like `convert (?_ : t)`. Both tactics use t
 Examples:
 
 ```lean
--- `convert using` controls the depth of congruence.
 example {n : ℕ} (e : Prime (2 * n + 1)) :
     Prime (n + n + 1) := by
-  convert e using 2
+  convert e
   -- One goal: ⊢ n + n = 2 * n
   ring
 
@@ -2270,7 +2270,7 @@ example (h : p 0) : p 1 := by
 -- `convert with` names introduced variables.
 example (p q : Nat → Prop) (h : ∀ ε > 0, p ε) :
     ∀ ε > 0, q ε := by
-  convert h using 2 with ε hε
+  convert h with ε hε
   -- Goal now looks like:
   -- hε : ε > 0
   -- ⊢ q ε ↔ p ε
@@ -2290,9 +2290,10 @@ pattern-matched, like `rintro` would, using the `with` keyword.
 See also `convert_to t`, where `t` specifies the expected type, instead of a proof term of type `t`.
 In other words, `convert_to t` works like `convert (?_ : t)`. Both tactics use the same options.
 
-* `convert! e` uses default transparency, rather than reducible, when solving side goals.
+* `convert! e` uses default transparency, rather than reducible, when solving side goals, and
+  it tries to apply congruence even if the two expressions do not have the same head constant.
 * `convert ← e` creates equality goals in the opposite direction (with the goal type on the right).
-* `convert e using n`, where `n` is a positive numeral, controls the depth with which congruence is
+* `convert e using n`, where `n` is a numeral, controls the depth with which congruence is
   applied. For example, if the main goal is `⊢ Prime (n + n + 1)` and `e : Prime (2 * n + 1)`, then
   `convert e using 2` results in one goal, `⊢ n + n = 2 * n`, and `convert e using 3` (or more)
   results in two (impossible) goals `⊢ HAdd.hAdd = HMul.hMul` and `⊢ n = 2`.
@@ -2305,10 +2306,9 @@ In other words, `convert_to t` works like `convert (?_ : t)`. Both tactics use t
 Examples:
 
 ```lean
--- `convert using` controls the depth of congruence.
 example {n : ℕ} (e : Prime (2 * n + 1)) :
     Prime (n + n + 1) := by
-  convert e using 2
+  convert e
   -- One goal: ⊢ n + n = 2 * n
   ring
 
@@ -2323,7 +2323,7 @@ example (h : p 0) : p 1 := by
 -- `convert with` names introduced variables.
 example (p q : Nat → Prop) (h : ∀ ε > 0, p ε) :
     ∀ ε > 0, q ε := by
-  convert h using 2 with ε hε
+  convert h with ε hε
   -- Goal now looks like:
   -- hε : ε > 0
   -- ⊢ q ε ↔ p ε
