@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `7ab1c47ce634c21b7321b7ee660f0645f75bca9b`
+Mathlib version: `e41065ae98bda505946885a844b968856a096054`
 
 ## Elab.async
 type: `Bool`
@@ -163,7 +163,7 @@ When true, `dsimp` also uses theorems tagged `@[backward_defeq]`, i.e. theorems 
 ## backward.do.legacy
 type: `Bool`
 
-default: `true`
+default: `false`
 
 Use the legacy `do` elaborator instead of the new, extensible implementation.
 
@@ -886,7 +886,7 @@ enable the `auxLemma` linter
 ## linter.checkUnivs
 type: `Bool`
 
-default: `false`
+default: `true`
 
 enable the `checkUnivs` linter, which warns when a declaration has a universe parameter that only ever occurs in a `max u v` together with another parameter, never on its own.
 
@@ -921,7 +921,7 @@ if set to `true`, then the countHeartbeats linter rounds down to the nearest 100
 ## linter.defProp
 type: `Bool`
 
-default: `false`
+default: `true`
 
 enable the `defProp` linter, which warns when a `def` is used to introduce a declaration whose type is a `Prop`; such a declaration should be written using `theorem` instead.
 
@@ -2577,7 +2577,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.31.0"`
+default: `"v4.32.0-rc1"`
 
 Revision of LeanStateSearch to use
 

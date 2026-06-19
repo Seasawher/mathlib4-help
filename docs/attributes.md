@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `7ab1c47ce634c21b7321b7ee660f0645f75bca9b`
+Mathlib version: `e41065ae98bda505946885a844b968856a096054`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -285,7 +285,7 @@ special casing. If the term is an `Expr.mdata` with a single key `k`, `mdata.k` 
  (builtin) control info inference elaborator
 Registers a `ControlInfo` inference handler for the given `doElem` syntax node kind.
 
-A handler should have type `ControlInfoHandler` (i.e. `TSyntax \`doElem → TermElabM ControlInfo`).
+A handler should have type `ControlInfoHandler` (i.e. `DoElem → TermElabM ControlInfo`).
 For pure handlers, use `fun stx => return ControlInfo.pure`.
 
 ## builtin_doElem_elab
@@ -384,10 +384,6 @@ directly.
 
 ## builtin_missing_docs_handler
  (builtin) adds a syntax traversal for the missing docs linter
-
-## builtin_nolint
- Do not report this declaration in any of the tests of `lake builtin-lint`
-Defines the user attribute `builtin_nolint` for skipping environment linters.
 
 ## builtin_parenthesizer
  (builtin) Register a parenthesizer for a parser.
@@ -734,7 +730,7 @@ special casing. If the term is an `Expr.mdata` with a single key `k`, `mdata.k` 
  control info inference elaborator
 Registers a `ControlInfo` inference handler for the given `doElem` syntax node kind.
 
-A handler should have type `ControlInfoHandler` (i.e. `TSyntax \`doElem → TermElabM ControlInfo`).
+A handler should have type `ControlInfoHandler` (i.e. `DoElem → TermElabM ControlInfo`).
 For pure handlers, use `fun stx => return ControlInfo.pure`.
 
 ## doElem_elab
@@ -1723,7 +1719,7 @@ see `callCancellable` in `cancellable.ts`.
 The `simps` attribute.
 
 ## spec
- Marks Hoare triple specifications and simp theorems to use with the `mspec` and `mvcgen` tactics
+ Marks Hoare triple specifications and simp theorems for use with `mvcgen` tactics
 
 ## spec_invariant_type
  marks a type as an invariant type for the `mvcgen` tactic
