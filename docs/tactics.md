@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `7ab1c47ce634c21b7321b7ee660f0645f75bca9b`
+Mathlib version: `e41065ae98bda505946885a844b968856a096054`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3297,7 +3297,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.31.0/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.32.0-rc1/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3459,7 +3459,7 @@ These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
 
-See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.31.0/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.32.0-rc1/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
@@ -6116,8 +6116,8 @@ options. Of particular note is `stepLimit = some 42`, which is useful for bisect
 Often, `mvcgen` will be used like this:
 ```lean
 mvcgen [...]
-case inv1 => by exact I1
-case inv2 => by exact I2
+case inv1 => exact I1
+case inv2 => exact I2
 all_goals (mleave; try grind)
 ```
 There is special syntax for this:
@@ -6204,8 +6204,8 @@ options. Of particular note is `stepLimit = some 42`, which is useful for bisect
 Often, `mvcgen` will be used like this:
 ```lean
 mvcgen [...]
-case inv1 => by exact I1
-case inv2 => by exact I2
+case inv1 => exact I1
+case inv2 => exact I2
 all_goals (mleave; try grind)
 ```
 There is special syntax for this:
