@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `e10f52c0007c0ae339eadb810170c739a99f4c58`
+Mathlib version: `af5bc61fbfcda97e746a8fbd5c3097ff4442034e`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -2392,21 +2392,6 @@ You can access the contents using, for example, `#print LibraryNote.my_note`.
 compatibility with the Lean export format.)
 Use `#help note "some tag"` to display all notes with the tag `"some tag"` in the infoview.
 This command can be imported from Batteries.Tactic.HelpCmd .
-
-## library_note
-Defined in: `Batteries.Util.LibraryNote.commandLibrary_note____1`
-
-Support the old `library_note "foo"` syntax, with a deprecation warning.
-
-## library_note2
-Defined in: `Batteries.Util.LibraryNote.commandLibrary_note2___`
-
-Support the old `library_note2 «foo»` syntax, with a deprecation warning.
-
-## library_note2
-Defined in: `Batteries.Util.LibraryNote.commandLibrary_note2____1`
-
-Support the old `library_note2 "foo"` syntax, with a deprecation warning.
 
 ## lrat_proof
 Defined in: `Mathlib.Tactic.Sat.commandLrat_proof_Example____`
