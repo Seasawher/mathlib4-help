@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `af5bc61fbfcda97e746a8fbd5c3097ff4442034e`
+Mathlib version: `a83a1c306aac0fc15753a4b7590db57c1f56fd40`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1847,6 +1847,26 @@ These syntaxes can be combined. For example, `clear_value x y *` ensures that `x
 while trying to clear all other local definitions,
 and `clear_value (hx : x = _) y * with hx` does the same while first adding the `hx : x = v` hypothesis.
 
+## closedness
+Defined in: `closednessTac`
+
+`closedness` is a simple tactic that tries various lemmas to prove that a set is closed,
+and reasoning about the closure of sets.
+It is implemented using `grind`, and has the same configuration options as `grind`.
+
+It also exists as a grind attribute, and can be combined with other grind attributes using
+`grind only [closedness, ...]`.
+
+## closedness?
+Defined in: `tacticClosedness?_`
+
+`closedness` is a simple tactic that tries various lemmas to prove that a set is closed,
+and reasoning about the closure of sets.
+It is implemented using `grind`, and has the same configuration options as `grind`.
+
+It also exists as a grind attribute, and can be combined with other grind attributes using
+`grind only [closedness, ...]`.
+
 ## coherence
 Defined in: `Mathlib.Tactic.Coherence.coherence`
 
@@ -1862,6 +1882,30 @@ where `a = a'`, `b = b'`, and `c = c'` can be proved using `pure_coherence`.
 (If you have very large equations on which `coherence` is unexpectedly failing,
 you may need to increase the typeclass search depth,
 using e.g. `set_option synthInstance.maxSize 500`.)
+
+## compactness
+Defined in: `compactnessTac`
+
+`compactness` is a simple tactic that tries various lemmas to prove that a set is compact.
+It is implemented using `grind`, and has the same configuration options as `grind`.
+
+Use `grind only [compactness, closedness]` instead if you want to prove that the closure of sets are
+compact.
+
+It also exists as a grind attribute, and can be combined with other grind attributes using
+`grind only [compactness, ...]`.
+
+## compactness?
+Defined in: `tacticCompactness?_`
+
+`compactness` is a simple tactic that tries various lemmas to prove that a set is compact.
+It is implemented using `grind`, and has the same configuration options as `grind`.
+
+Use `grind only [compactness, closedness]` instead if you want to prove that the closure of sets are
+compact.
+
+It also exists as a grind attribute, and can be combined with other grind attributes using
+`grind only [compactness, ...]`.
 
 ## compareOfLessAndEq_rfl
 Defined in: `tacticCompareOfLessAndEq_rfl`

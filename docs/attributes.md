@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `af5bc61fbfcda97e746a8fbd5c3097ff4442034e`
+Mathlib version: `a83a1c306aac0fc15753a4b7590db57c1f56fd40`
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -531,6 +531,38 @@ category will never be parenthesized, but still traversed for parenthesizing nes
 Registers an inductive type or structure as a type class. Using `class` or `class inductive` is
 generally preferred over using `@[class] structure` or `@[class] inductive` directly.
 
+## closedness
+ The `[closedness]` attribute is used to annotate declarations.When applied to an equational theorem, `[closedness =]`, `[closedness =_]`, or `[closedness _=_]`will mark the theorem for use in heuristic instantiations by the `closedness` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[closedness =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[closedness ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[closedness →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[closedness]` by itself will effectively try `[closedness ←]` (if the conclusion is sufficient for instantiation) and then `[closedness →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[closedness =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+The `closedness` attribute is a custom grind-set specialized to prove that sets are closed.
+It is called by the `closedness` tactic.
+
+## closedness!
+ The `[closedness!]` attribute is used to annotate declarations, but selecting minimal indexable subterms.When applied to an equational theorem, `[closedness =]`, `[closedness =_]`, or `[closedness _=_]`will mark the theorem for use in heuristic instantiations by the `closedness` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[closedness =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[closedness ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[closedness →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[closedness]` by itself will effectively try `[closedness ←]` (if the conclusion is sufficient for instantiation) and then `[closedness →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[closedness =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+The `closedness` attribute is a custom grind-set specialized to prove that sets are closed.
+It is called by the `closedness` tactic.
+
+## closedness!?
+ The `[closedness!?]` attribute is identical to the `[closedness!]` attribute, but displays inferred pattern information.When applied to an equational theorem, `[closedness =]`, `[closedness =_]`, or `[closedness _=_]`will mark the theorem for use in heuristic instantiations by the `closedness` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[closedness =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[closedness ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[closedness →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[closedness]` by itself will effectively try `[closedness ←]` (if the conclusion is sufficient for instantiation) and then `[closedness →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[closedness =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+The `closedness` attribute is a custom grind-set specialized to prove that sets are closed.
+It is called by the `closedness` tactic.
+
+## closedness?
+ The `[closedness?]` attribute is identical to the `[closedness]` attribute, but displays inferred pattern information.When applied to an equational theorem, `[closedness =]`, `[closedness =_]`, or `[closedness _=_]`will mark the theorem for use in heuristic instantiations by the `closedness` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[closedness =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[closedness ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[closedness →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[closedness]` by itself will effectively try `[closedness ←]` (if the conclusion is sufficient for instantiation) and then `[closedness →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[closedness =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+The `closedness` attribute is a custom grind-set specialized to prove that sets are closed.
+It is called by the `closedness` tactic.
+
 ## coassoc_simps
  `coassoc_simps` is a simp set useful to prove tautologies on coalgebras.
 
@@ -620,6 +652,38 @@ directly.
 
 ## command_parser
  parser
+
+## compactness
+ The `[compactness]` attribute is used to annotate declarations.When applied to an equational theorem, `[compactness =]`, `[compactness =_]`, or `[compactness _=_]`will mark the theorem for use in heuristic instantiations by the `compactness` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[compactness =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[compactness ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[compactness →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[compactness]` by itself will effectively try `[compactness ←]` (if the conclusion is sufficient for instantiation) and then `[compactness →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[compactness =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+The `compactness` attribute is a custom grind-set specialized to prove that sets are compact.
+It is called by the `compactness` tactic.
+
+## compactness!
+ The `[compactness!]` attribute is used to annotate declarations, but selecting minimal indexable subterms.When applied to an equational theorem, `[compactness =]`, `[compactness =_]`, or `[compactness _=_]`will mark the theorem for use in heuristic instantiations by the `compactness` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[compactness =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[compactness ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[compactness →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[compactness]` by itself will effectively try `[compactness ←]` (if the conclusion is sufficient for instantiation) and then `[compactness →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[compactness =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+The `compactness` attribute is a custom grind-set specialized to prove that sets are compact.
+It is called by the `compactness` tactic.
+
+## compactness!?
+ The `[compactness!?]` attribute is identical to the `[compactness!]` attribute, but displays inferred pattern information.When applied to an equational theorem, `[compactness =]`, `[compactness =_]`, or `[compactness _=_]`will mark the theorem for use in heuristic instantiations by the `compactness` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[compactness =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[compactness ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[compactness →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[compactness]` by itself will effectively try `[compactness ←]` (if the conclusion is sufficient for instantiation) and then `[compactness →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[compactness =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+The `compactness` attribute is a custom grind-set specialized to prove that sets are compact.
+It is called by the `compactness` tactic.
+
+## compactness?
+ The `[compactness?]` attribute is identical to the `[compactness]` attribute, but displays inferred pattern information.When applied to an equational theorem, `[compactness =]`, `[compactness =_]`, or `[compactness _=_]`will mark the theorem for use in heuristic instantiations by the `compactness` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[compactness =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[compactness ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[compactness →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[compactness]` by itself will effectively try `[compactness ←]` (if the conclusion is sufficient for instantiation) and then `[compactness →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[compactness =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+The `compactness` attribute is a custom grind-set specialized to prove that sets are compact.
+It is called by the `compactness` tactic.
 
 ## computed_field
  Marks a function as a computed field of an inductive

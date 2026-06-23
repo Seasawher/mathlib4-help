@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `af5bc61fbfcda97e746a8fbd5c3097ff4442034e`
+Mathlib version: `a83a1c306aac0fc15753a4b7590db57c1f56fd40`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -2766,6 +2766,10 @@ Defined in: `Lean.Parser.Command.registerErrorExplanationStx`
 Registers an error explanation.
 
 Note that the error name is not relativized to the current namespace.
+
+## register_grind_attr
+Defined in: `Lean.Parser.Command.registerGrindAttr`
+
 
 ## register_hint
 Defined in: `Mathlib.Tactic.Hint.registerHintStx`
