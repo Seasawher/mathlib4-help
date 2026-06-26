@@ -1,6 +1,9 @@
 # Attributes
 
-Mathlib version: `d64a465b46a637c851ca8035ce55f0a2ecd45992`
+Mathlib version: `087d8a23b1152e4cac684614729d4690a24345bd`
+
+## PolyInferBaseAttr
+ adds a polynomial extension that infers the base ring of a polynomial-like type
 
 ## Std.Internal.tree_tac
  simp theorems used by internal DTreeMap lemmas
@@ -1596,6 +1599,18 @@ A simp set for the `pnat_to_nat` tactic.
 ## pnat_to_nat_coe_proc
  simproc set for pnat_to_nat_coe_proc
 Simplification procedure
+
+## polynomial_post
+ The `polynomial_post` simp attribute uses postprocessing lemmas to turn `algebraMap`s into more specialized functions.
+`polynomial_post` marks a theorem to be used by the `polynomial_nf` tactic as a postprocessing
+lemma. Used only by polynomial_nf. These serve the purpose of rewriting expressions in `algebra`
+normal form into a more readable form. e.g. `a • X` -> `algebraMap _ _ a * X` -> `C a * X`.
+
+## polynomial_pre
+ The `polynomial_pre` simp attribute uses preprocessing lemmas to turn specialized functions into `algebraMap`s
+`polynomial_pre` marks a theorem to be used by the `polynomial` tactic as a preprocessing lemma.
+These serve the purpose of removing any definitions specific to polynomials that `algebra` can't
+handle. e.g. `Polynomial.C` and `Polynomial.map`
 
 ## positivity
  adds a positivity extension
