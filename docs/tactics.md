@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `d64a465b46a637c851ca8035ce55f0a2ecd45992`
+Mathlib version: `087d8a23b1152e4cac684614729d4690a24345bd`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -6991,6 +6991,134 @@ Defined in: `Mathlib.Tactic.PNatToNat.tacticPnat_to_nat`
 
 `pnat_to_nat` shifts all `PNat`s in the context to `Nat`, rewriting propositions about them.
 A typical use case is `pnat_to_nat; lia`.
+
+## polynomial
+Defined in: `Mathlib.Tactic.Polynomial.polynomial`
+
+`polynomial` solves equalities of `Polynomial`s and similar types.
+
+Given a goal which is an equality in `Polynomial R` with a commutative ring `R`, `polynomial`
+turns both sides of the equation into a normal form by expanding out the brackets. It then closes
+the goal if both sides contain the same terms and fails otherwise. `polynomial_nf` normalizes all
+subexpressions at a given location.
+
+Variants of `polynomial` include:
+* `polynomial`: normalize both sides of an equation and close the goal if they are equal
+* `polynomial!`: run `polynomial` at default transparency
+* `polynomial_nf`: normalize all subexpression of the goal
+* `polynomial_nf at h₁ h₂ ⊢`: normalize all subexpressions at hypotheses `h₁` `h₁` and the goal
+* `polynomial_nf at *`: normalize all subexpressions of all local hypotheses and the goal
+* `polynomial_nf!`: run `polynomial_nf` at default transparency
+
+The `polynomial` tactic can be extended to work with algebras other than `Polynomial` using the
+attributes `polynomial_infer_base`, `polynomial_pre` and `polynomial_post`. This is only possible
+if the base ring can be inferred from the structure of the type.
+
+Examples:
+
+```
+example (a : ℚ) : (X + C a) * (X - C a) = X^2 + C (a^2) := by polynomial
+
+example {P : ℚ[X] → Prop} (h : P (X ^ 2 + X + C 4⁻¹)) : P ((X + C 2⁻¹) ^ 2) := by
+  polynomial_nf at h ⊢
+  exact h
+```
+
+## polynomial!
+Defined in: `Mathlib.Tactic.Polynomial.tacticPolynomial!`
+
+`polynomial` solves equalities of `Polynomial`s and similar types.
+
+Given a goal which is an equality in `Polynomial R` with a commutative ring `R`, `polynomial`
+turns both sides of the equation into a normal form by expanding out the brackets. It then closes
+the goal if both sides contain the same terms and fails otherwise. `polynomial_nf` normalizes all
+subexpressions at a given location.
+
+Variants of `polynomial` include:
+* `polynomial`: normalize both sides of an equation and close the goal if they are equal
+* `polynomial!`: run `polynomial` at default transparency
+* `polynomial_nf`: normalize all subexpression of the goal
+* `polynomial_nf at h₁ h₂ ⊢`: normalize all subexpressions at hypotheses `h₁` `h₁` and the goal
+* `polynomial_nf at *`: normalize all subexpressions of all local hypotheses and the goal
+* `polynomial_nf!`: run `polynomial_nf` at default transparency
+
+The `polynomial` tactic can be extended to work with algebras other than `Polynomial` using the
+attributes `polynomial_infer_base`, `polynomial_pre` and `polynomial_post`. This is only possible
+if the base ring can be inferred from the structure of the type.
+
+Examples:
+
+```
+example (a : ℚ) : (X + C a) * (X - C a) = X^2 + C (a^2) := by polynomial
+
+example {P : ℚ[X] → Prop} (h : P (X ^ 2 + X + C 4⁻¹)) : P ((X + C 2⁻¹) ^ 2) := by
+  polynomial_nf at h ⊢
+  exact h
+```
+
+## polynomial_nf
+Defined in: `Mathlib.Tactic.Polynomial.polynomialNF`
+
+`polynomial` solves equalities of `Polynomial`s and similar types.
+
+Given a goal which is an equality in `Polynomial R` with a commutative ring `R`, `polynomial`
+turns both sides of the equation into a normal form by expanding out the brackets. It then closes
+the goal if both sides contain the same terms and fails otherwise. `polynomial_nf` normalizes all
+subexpressions at a given location.
+
+Variants of `polynomial` include:
+* `polynomial`: normalize both sides of an equation and close the goal if they are equal
+* `polynomial!`: run `polynomial` at default transparency
+* `polynomial_nf`: normalize all subexpression of the goal
+* `polynomial_nf at h₁ h₂ ⊢`: normalize all subexpressions at hypotheses `h₁` `h₁` and the goal
+* `polynomial_nf at *`: normalize all subexpressions of all local hypotheses and the goal
+* `polynomial_nf!`: run `polynomial_nf` at default transparency
+
+The `polynomial` tactic can be extended to work with algebras other than `Polynomial` using the
+attributes `polynomial_infer_base`, `polynomial_pre` and `polynomial_post`. This is only possible
+if the base ring can be inferred from the structure of the type.
+
+Examples:
+
+```
+example (a : ℚ) : (X + C a) * (X - C a) = X^2 + C (a^2) := by polynomial
+
+example {P : ℚ[X] → Prop} (h : P (X ^ 2 + X + C 4⁻¹)) : P ((X + C 2⁻¹) ^ 2) := by
+  polynomial_nf at h ⊢
+  exact h
+```
+
+## polynomial_nf!
+Defined in: `Mathlib.Tactic.Polynomial.tacticPolynomial_nf!_`
+
+`polynomial` solves equalities of `Polynomial`s and similar types.
+
+Given a goal which is an equality in `Polynomial R` with a commutative ring `R`, `polynomial`
+turns both sides of the equation into a normal form by expanding out the brackets. It then closes
+the goal if both sides contain the same terms and fails otherwise. `polynomial_nf` normalizes all
+subexpressions at a given location.
+
+Variants of `polynomial` include:
+* `polynomial`: normalize both sides of an equation and close the goal if they are equal
+* `polynomial!`: run `polynomial` at default transparency
+* `polynomial_nf`: normalize all subexpression of the goal
+* `polynomial_nf at h₁ h₂ ⊢`: normalize all subexpressions at hypotheses `h₁` `h₁` and the goal
+* `polynomial_nf at *`: normalize all subexpressions of all local hypotheses and the goal
+* `polynomial_nf!`: run `polynomial_nf` at default transparency
+
+The `polynomial` tactic can be extended to work with algebras other than `Polynomial` using the
+attributes `polynomial_infer_base`, `polynomial_pre` and `polynomial_post`. This is only possible
+if the base ring can be inferred from the structure of the type.
+
+Examples:
+
+```
+example (a : ℚ) : (X + C a) * (X - C a) = X^2 + C (a^2) := by polynomial
+
+example {P : ℚ[X] → Prop} (h : P (X ^ 2 + X + C 4⁻¹)) : P ((X + C 2⁻¹) ^ 2) := by
+  polynomial_nf at h ⊢
+  exact h
+```
 
 ## polyrith
 Defined in: `Mathlib.Tactic.Polyrith.«tacticPolyrithOnly[_]»`
