@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `717304de0c6c79468a1cee2a76f798f792c252be`
+Mathlib version: `b4b33fa6e8ea63d5069f99824ea1d84d5201961e`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -6516,11 +6516,11 @@ Defined in: `Mathlib.Tactic.normNum`
 `ℕ`, `ℤ`, `ℚ`, `ℝ`, `ℂ`. In addition to evaluating numerical expressions, `norm_num` will use `simp`
 to simplify the goal. If the goal has the form `A = B`, `A ≠ B`, `A < B` or `A ≤ B`, where `A` and
 `B` are numerical expressions, `norm_num` will try to close it. It also has a relatively simple
-primality prover.
+primality prover (available if you import `Mathlib.Tactic.NormNum.Prime`).
 
 This tactic is extensible. Extensions can allow `norm_num` to evaluate more kinds of expressions, or
-to prove more kinds of propositions. See the `@[norm_num]` attribute for further information on
-extending `norm_num`.
+to prove more kinds of propositions (such as, primality of natural numbers). See the `@[norm_num]`
+attribute for further information on extending `norm_num`.
 
 * `norm_num at l` normalizes at location(s) `l`.
 * `norm_num [h1, ...]` adds the arguments `h1, ...` to the `simp` set in addition to the default
