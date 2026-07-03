@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `564ff5af9b5f3b50769a51c10def6bbdcf9c9471`
+Mathlib version: `50b02783d6bc4fb0062521148db7ad923145b150`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -1017,21 +1017,29 @@ Simplification procedure
 Attribute marking "generalized congruence" (`gcongr`) lemmas.  Such lemmas must have a
 conclusion of a form such as `f x₁ y z₁ ∼ f x₂ y z₂`; that is, a relation between the application of
 a function to two argument lists, in which the "varying argument" pairs (here `x₁`/`x₂` and
-`z₁`/`z₂`) are all free variables.
+`z₁`/`z₂`) are all free variables. These lemmas are used by the `gcongr` and `grw` tactics.
 
 The antecedents of such a lemma are classified as generating "main goals" if they are of the form
 `x₁ ≈ x₂` for some "varying argument" pair `x₁`/`x₂` (and a possibly different relation `≈` to `∼`),
 or more generally of the form `∀ i h h' j h'', f₁ i j ≈ f₂ i j` (say) for some "varying argument"
 pair `f₁`/`f₂`, where the arguments of `f₁` and `f₂` are the same list of variables which have to
 be bound by the preceding `∀`. (Other antecedents are considered to generate "side goals".)
-Use `gcongr only` to relax these conditions. A `gcongr only` lemma is not used by `grw`.
 
 If a lemma such as `add_le_add : a ≤ b → c ≤ d → a + c ≤ b + d` has been tagged with `gcongr`,
 then a direct consequence like `a ≤ b → a + c ≤ b + c` does *not* need to be tagged.
 However, if a more specific lemma has fewer side conditions, it should also be tagged with `gcongr`.
 For example, `mul_le_mul_of_nonneg_right` and `mul_le_mul_of_nonneg_left` are both tagged.
 
-Lemmas involving `<` or `≤` can also be marked `@[bound]` for use in the related `bound` tactic.
+* `gcongr only` relaxes some checks that ensure that the lemma is suitable for use in `grw`.
+  So, a lemma tagged `gcongr only` is not used by `grw`, but it may still be used by `gcongr`.
+* `gcongr strict` lets you tag lemmas where the conclusion relates two different constants,
+  instead of a constant with itself.
+  This allows `grw` to replace one constant with another while doing a rewrite.
+  In particular, we use this to have special support for rewriting with strict inequalities (`<`).
+  This is done by applying `gcongr strict` to `lt_of_lt_of_le`, which has the conclusion
+  `b ≤ c → a < c` that relates `LE.le` with `LT.lt` (and similarly for `lt_of_lt_of_le'`).
+  As a result, a rewrite with a strict inequality can turn `<` into `≤`, or `≤` into `<`,
+  depending on whether this appears in positive or negative position.
 
 ## gcongr_forward
  adds a gcongr_forward extension
