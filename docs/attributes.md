@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `db5c6a66675c39afae31ba65850058b68b37909f`
+Mathlib version: `80b457d52734bab76b8b75adfc69c6e7ed4120f0`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -1934,6 +1934,18 @@ have to be assigned in the same file as the declaration.
 
 ## to_fun
  generate a copy of a lemma where point-free functions are expanded to their `fun` form
+
+## to_set_notation
+ generate the set notation version of an order theoretic lemma.
+Generate a variant of a theorem by restricting the order on the specified types to those
+that are tagged `@[use_set_notation_for_order]`.
+
+Explicitly, `to_set_notation` inserts a `[UsesSetNotationForOrder α]` type class
+assumption for each type `α`.
+TODO: it would be nice to be able to restrict which types get the assumption.
+
+This is used to automatically generate theorems like `subset_trans` from `le_trans`.
+The theorem name is automatically translated.
 
 ## trans
  transitive relation
