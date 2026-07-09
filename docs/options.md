@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `ed0d70fdcde71d335acd1613d5fa86e9db419963`
+Mathlib version: `acad6f4eb47959c7f9044081268d43aae88dec63`
 
 ## Elab.async
 type: `Bool`
@@ -1610,6 +1610,14 @@ type: `Bool`
 default: `true`
 
 
+
+## linter.translate.warnInvalid
+type: `Bool`
+
+default: `true`
+
+Linter used by translate attributes that warns when a translation was not added
+    because of being invalid.
 
 ## linter.translateExisting
 type: `Bool`
