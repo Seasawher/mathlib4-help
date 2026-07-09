@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `ed0d70fdcde71d335acd1613d5fa86e9db419963`
+Mathlib version: `acad6f4eb47959c7f9044081268d43aae88dec63`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -872,6 +872,18 @@ The command `#lint` runs the linters on the current file (by default).
 Defined in: `Batteries.Tactic.Lint.«command#list_linters»`
 
 The command `#list_linters` prints a list of all available linters.
+
+## \#lmfdb_tags
+Defined in: `Mathlib.CrossRef.lmfdbTags`
+
+The `#lmfdb_tags` command retrieves all declarations that have the `lmfdb` attribute.
+
+For each found declaration, it prints a line
+```
+'declaration_name' corresponds to tag 'declaration_tag'.
+```
+The variant `#lmfdb_tags!` also adds the theorem statement (for theorems)
+or declaration type (for definitions, structures, instances, etc.) after each summary line.
 
 ## \#long_instances
 Defined in: `«command#long_instances_»`

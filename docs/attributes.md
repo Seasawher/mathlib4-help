@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `ed0d70fdcde71d335acd1613d5fa86e9db419963`
+Mathlib version: `acad6f4eb47959c7f9044081268d43aae88dec63`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -1296,6 +1296,9 @@ Simplification procedure
 ## library_suggestions
  library suggestions selector
 Attribute for registering library suggestions selectors.
+
+## lmfdbTag
+ Apply an LMFDB identifier to a declaration.
 
 ## macro
  macro elaborator
