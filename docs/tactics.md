@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `0098dd94d810711e831b250902687d3edab9969b`
+Mathlib version: `c368140668f5fa16a1bd977448c1f665d48c3df4`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -246,13 +246,26 @@ the goal be closed at the end like `· tacs`. Like `by` itself, the tactics
 can be either separated by newlines or `;`.
 
 syntax ..."<;>"... [Batteries.Tactic.seq_focus]
-`t <;> [t1; t2; ...; tn]` focuses on the first goal and applies `t`, which should result in `n`
-subgoals. It then applies each `ti` to the corresponding goal and collects the resulting
-subgoals.
+`tac <;> tac'` runs `tac` on the main goal and `tac'` on each produced goal,
+concatenating all goals produced by `tac'`.
+
+
+Extensions:
+
+ * `t <;> [t1; t2; ...; tn]` focuses on the first goal and applies `t`, which should result in `n`
+   subgoals. It then applies each `ti` to the corresponding goal and collects the resulting
+   subgoals. It raises an error if the number of subgoals does not match.
 
 syntax ..."<;>"... [Lean.Parser.Tactic.«tactic_<;>_»]
 `tac <;> tac'` runs `tac` on the main goal and `tac'` on each produced goal,
 concatenating all goals produced by `tac'`.
+
+
+Extensions:
+
+ * `t <;> [t1; t2; ...; tn]` focuses on the first goal and applies `t`, which should result in `n`
+   subgoals. It then applies each `ti` to the corresponding goal and collects the resulting
+   subgoals. It raises an error if the number of subgoals does not match.
 
 ## _
 Defined in: `Batteries.Tactic.tactic_`
@@ -1224,6 +1237,7 @@ introducing a hypothesis `h : ¬p` and proving `False`.
 * If `p` is a negation `¬q`, `h : q` will be introduced instead of `¬¬q`.
 * If `p` is decidable, it uses `Decidable.byContradiction` instead of `Classical.byContradiction`.
 * If `h` is omitted, the introduced variable will be called `this`.
+* `h` can be any pattern supported by `rcases`/`rintro`.
 
 ## by_contra!
 Defined in: `Mathlib.Tactic.ByContra.byContra!`
@@ -2759,7 +2773,8 @@ Normalize casts in the goal and the given expression, then close the goal with `
 ## exacts
 Defined in: `Batteries.Tactic.exacts`
 
-Like `exact`, but takes a list of terms and checks that all goals are discharged after the tactic.
+`exacts [e1, ..., en]` is like `exact`, using the terms `e1`, ..., `en` to close all the current
+`n` goals. It raises an error if the number of goals does not match.
 
 ## exfalso
 Defined in: `Lean.Parser.Tactic.tacticExfalso`
@@ -5019,7 +5034,7 @@ Auxiliary tactic for showing that `mapFun` respects the ring operations.
 Defined in: `Batteries.Tactic.«tacticMap_tacs[_;]»`
 
 Assuming there are `n` goals, `map_tacs [t1; t2; ...; tn]` applies each `ti` to the respective
-goal and leaves the resulting subgoals.
+goal and leaves the resulting subgoals. It raises an error if the number of subgoals does not match.
 
 ## massumption
 Defined in: `Lean.Parser.Tactic.massumption`
@@ -8659,7 +8674,7 @@ renamed using the `case` or `next` tactics.
 ## split_ands
 Defined in: `Batteries.Tactic.tacticSplit_ands`
 
-`split_ands` applies `And.intro` until it does not make progress.
+`split_ands` applies `And.intro` on all goals until it does not make progress.
 
 ## split_ifs
 Defined in: `Mathlib.Tactic.splitIfs`
