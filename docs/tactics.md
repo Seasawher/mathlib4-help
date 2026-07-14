@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `22e2625af6b5248de5323d0026f58b5771833042`
+Mathlib version: `677b8c0a9c4e501bdcc92348b7a14d7d35b068a9`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3361,7 +3361,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.32.0-rc1/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.32.0/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3521,7 +3521,7 @@ These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
 
-See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.32.0-rc1/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.32.0/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
