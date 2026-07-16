@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `ed810a9b2a5def62c3bd2920b085e08bfb330577`
+Mathlib version: `cd580e54f1a6b46063824e80cec92f64692cbe78`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -236,7 +236,8 @@ Debugging command: Prints the result of `Environment.dumpAsyncEnvState`.
 ## \#eval
 Defined in: `Lean.Parser.Command.eval`
 
-`#eval e` evaluates the expression `e` by compiling and evaluating it.
+`#eval e` evaluates the expression `e` by compiling it and running the compiled code. It then
+prints the resulting value.
 
 * The command attempts to use `ToExpr`, `Repr`, or `ToString` instances to print the result.
 * If `e` is a monadic value of type `m ty`, then the command tries to adapt the monad `m`
@@ -262,7 +263,8 @@ See also: `#reduce e` for evaluation by term reduction.
 ## \#eval!
 Defined in: `Lean.Parser.Command.evalBang`
 
-`#eval e` evaluates the expression `e` by compiling and evaluating it.
+`#eval e` evaluates the expression `e` by compiling it and running the compiled code. It then
+prints the resulting value.
 
 * The command attempts to use `ToExpr`, `Repr`, or `ToString` instances to print the result.
 * If `e` is a monadic value of type `m ty`, then the command tries to adapt the monad `m`
@@ -1106,7 +1108,7 @@ Defined in: `Lean.Parser.Command.printSig`
 Defined in: `Lean.Parser.Command.printAxioms`
 
 Prints the axioms used by a declaration, directly or indirectly.
-Please consult [the reference manual](https://lean-lang.org/doc/reference/4.32.0/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
+Please consult [the reference manual](https://lean-lang.org/doc/reference/4.33.0-rc1/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
 
 ## \#print
 Defined in: `Lean.Parser.Command.printTacTags`
@@ -1782,7 +1784,7 @@ Defined in: `Lean.Parser.Tactic.declareSimpLikeTactic`
 
 
 ## declare_sint_simprocs
-Defined in: `commandDeclare_sint_simprocs_`
+Defined in: `Lean.commandDeclare_sint_simprocs_`
 
 
 ## declare_syntax_cat
@@ -1813,7 +1815,7 @@ See `ConfigEval.defEvalConfigItemCmd` for further documentation.
 See also `declare_core_config_elab`, `declare_config_elab`, and `declare_command_config_elab`.
 
 ## declare_uint_simprocs
-Defined in: `commandDeclare_uint_simprocs_`
+Defined in: `Lean.commandDeclare_uint_simprocs_`
 
 
 ## declare_uint_theorems

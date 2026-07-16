@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `ed810a9b2a5def62c3bd2920b085e08bfb330577`
+Mathlib version: `cd580e54f1a6b46063824e80cec92f64692cbe78`
 
 ## Elab.async
 type: `Bool`
@@ -153,6 +153,27 @@ default: `true`
 
 Insert monadic lifts (i.e., `liftM` and coercions) when needed.
 
+## autoTry.onEmptyProof
+type: `Bool`
+
+default: `false`
+
+run `try?` on empty proofs and empty subproofs and report any suggestions
+
+## autoTry.onSorry
+type: `Bool`
+
+default: `false`
+
+run `try?` on each `sorry` tactic and report any suggestions
+
+## autoTry.onUnsolvedGoal
+type: `Bool`
+
+default: `false`
+
+run `try?` on each proof or subproof that left a goal unsolved and report any suggestions
+
 ## backward.defeqAttrib.useBackward
 type: `Bool`
 
@@ -249,7 +270,7 @@ type: `Bool`
 
 default: `true`
 
-if true, bump transparency to `.instances` for all implicit arguments, not just instance-implicit ones
+if true, bump transparency to `.implicit` for non-instance implicit arguments, not just instance-implicit ones
 
 ## backward.isDefEq.lazyProjDelta
 type: `Bool`
@@ -275,7 +296,7 @@ if true (the default), do not bump transparency to `.default` when checking whet
 ## backward.isDefEq.respectTransparency.types
 type: `Bool`
 
-default: `false`
+default: `true`
 
 if true, do not bump transparency to `.default` when checking whether the type of a metavariable matches the type of the term being assigned to it.
 
@@ -501,6 +522,13 @@ type: `Bool`
 default: `true`
 
 contrapose a goal `a ↔ b` into the goal `¬ a ↔ ¬ b`
+
+## debug.autoTry.showEdits
+type: `Bool`
+
+default: `false`
+
+if set, autoTry logs an info message per emitted suggestion showing the edit's source range and the literal replacement text (for testing the widget data)
 
 ## debug.byAsSorry
 type: `Bool`
@@ -876,6 +904,13 @@ default: `false`
 
 enable all linters
 
+## linter.ambiguousOpen
+type: `Bool`
+
+default: `true`
+
+if true, warn when the namespace of an `open` declaration could also refer to a namespace that is silently not opened, e.g. `open B` inside `namespace A` only opens `A.B` even if the namespace `B` exists as well
+
 ## linter.auxLemma
 type: `Bool`
 
@@ -974,6 +1009,13 @@ default: `true`
 
 enable the directoryDependency linter
 
+## linter.doc.deferred
+type: `Bool`
+
+default: `true`
+
+if true, run the deferred checks recorded while elaborating Verso docstrings
+
 ## linter.docPrime
 type: `Bool`
 
@@ -1008,6 +1050,13 @@ type: `Bool`
 default: `false`
 
 enable the duplicated namespace linter
+
+## linter.extra.dupNamespace.consecutiveOnly
+type: `Bool`
+
+default: `true`
+
+only warn on consecutive duplicated namespaces
 
 ## linter.extra.unnecessarySeqFocus
 type: `Bool`
@@ -1602,7 +1651,7 @@ type: `Bool`
 
 default: `false`
 
-enable the linter that type-checks every tactic goal at `.instances` transparency
+enable the linter that type-checks every tactic goal at `.implicit` transparency
 
 ## linter.trailingWhitespace
 type: `Bool`
@@ -2585,7 +2634,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.32.0"`
+default: `"v4.33.0-rc1"`
 
 Revision of LeanStateSearch to use
 
@@ -2713,7 +2762,7 @@ type: `Bool`
 
 default: `false`
 
-when an empty `by` block is encountered interactively, run `try?` to suggest a proof (currently disabled by default; may become the default in a future release)
+deprecated alias for `autoTry.onEmptyProof`
 
 ## timeout
 type: `Nat`
@@ -4276,6 +4325,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.Meta.isDefEq.printTransparency
+type: `Bool`
+
+default: `false`
+
+if true, prefix `Meta.isDefEq` `=?=` trace messages with the current transparency level
+
 ## trace.Meta.isDefEq.stuck
 type: `Bool`
 
@@ -4284,6 +4340,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Meta.isDefEq.stuckMVar
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.isDefEq.transparency
 type: `Bool`
 
 default: `false`
@@ -4795,6 +4858,13 @@ default: `false`
 (aesop) Once the search has concluded (successfully or unsuccessfully), print the final search tree.
 
 ## trace.apply_fun
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.autoTry
 type: `Bool`
 
 default: `false`
@@ -6110,7 +6180,7 @@ type: `Bool`
 
 default: `true`
 
-warn when a `def` of class type is not marked `@[reducible]` or `@[implicit_reducible]`
+warn when a `def` of class type is not marked `@[reducible]`, `@[instance_reducible]`, or `@[implicit_reducible]`
 
 ## warn.exposeOnPrivate
 type: `Bool`

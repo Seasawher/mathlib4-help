@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `ed810a9b2a5def62c3bd2920b085e08bfb330577`
+Mathlib version: `cd580e54f1a6b46063824e80cec92f64692cbe78`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -274,6 +274,9 @@ directly.
 ## builtin_command_parser
  Builtin parser
 
+## builtin_deferred_doc_check
+ Registers a builtin `DeferredCheckHandler` for deferred docstring checks whose data has the named type.
+
 ## builtin_delab
  (builtin) Register a delaborator
 Registers a delaborator.
@@ -316,6 +319,9 @@ This allows the documentation of core Lean features to be visible without import
 are defined in. This is only useful during bootstrapping and should not be used outside of
 the Lean source code.
 
+## builtin_doc_block_md
+ builtin Markdown renderer for a docstring block element
+
 ## builtin_doc_code_block
  docstring code block expander
 
@@ -330,6 +336,9 @@ the Lean source code.
 
 ## builtin_doc_directive
  docstring directive expander
+
+## builtin_doc_inline_md
+ builtin Markdown renderer for a docstring inline element
 
 ## builtin_doc_role
  docstring role expander
@@ -763,7 +772,7 @@ axioms (like `sorryAx`).
  mark theorem as a definitional equality, to be used by `dsimp`
 Marks the theorem as a definitional equality that can be used by `dsimp`.
 
-The theorem must be an equality that holds at `.instances` transparency. A theorem
+The theorem must be an equality that holds at `.implicit` transparency. A theorem
 with a definition that is (syntactically) `:= rfl` is implicitly marked `@[defeq]`
 (and also `@[backward_defeq]`, since the latter is a superset); write `:= (rfl)`
 instead to suppress this.
@@ -776,6 +785,9 @@ definitions that need to be unfolded to prove the theorem are exported and expos
 Tagging a theorem with `@[defeq]` automatically also tags it with `@[backward_defeq]`,
 maintaining the invariant that `@[defeq]` theorems form a subset of `@[backward_defeq]`
 theorems.
+
+## deferred_doc_check
+ Registers a `DeferredCheckHandler` for deferred docstring checks whose data has the named type.
 
 ## delab
  Register a delaborator
@@ -817,6 +829,9 @@ directly.
 ## doElem_parser
  parser
 
+## doc_block_md
+ Markdown renderer for a docstring block element of type `BlockMdRendererOf X`
+
 ## doc_code_block
  docstring code block expander
 
@@ -831,6 +846,9 @@ directly.
 
 ## doc_directive
  docstring directive expander
+
+## doc_inline_md
+ Markdown renderer for a docstring inline element of type `InlineMdRendererOf X`
 
 ## doc_role
  docstring role expander
@@ -1000,6 +1018,9 @@ Registers a formatter for a parser.
 `@[formatter k]` registers a declaration of type `Lean.PrettyPrinter.Formatter` to be used for
 formatting syntax of kind `k`.
 
+## frameproc
+ register a frame inference procedure for `vcgen`
+
 ## fun_prop
  `fun_prop` tactic to prove function properties like `Continuous`, `Differentiable`, `IsLinearMap`
 Initialization of `funProp` attribute
@@ -1138,18 +1159,17 @@ which requires a proof that the two functions are equal.
 ## implicit_reducible
  implicit reducible declaration
 Marks a definition as `[implicit_reducible]`, meaning it is unfolded at
-`TransparencyMode.instances` or above but *not* at `TransparencyMode.reducible`.
+`TransparencyMode.implicit` or above but *not* at `TransparencyMode.instances` or
+`TransparencyMode.reducible`.
 
-Use this attribute for:
-- **Type class instances**: The `instance` command automatically adds `[implicit_reducible]`.
-  Instance diamonds (e.g., `Add Nat` from a direct instance vs via `Semiring`) are definitionally
-  equal but structurally different, so `isDefEq` must unfold them. When using `attribute [instance]`
-  on an existing definition, you typically also need `attribute [implicit_reducible]`.
-- **Definitions used in types that appear in implicit arguments**: For example, `Nat.add`, `Array.size`.
-  When proof automation applies a lemma, implicit arguments are checked with increased transparency
-  so that type-level computations (e.g., `n + 0` vs `n`) are resolved.
+Use this attribute for definitions that should unfold when checking implicit-argument
+definitional equality (e.g. abbreviations in downstream libraries such as Mathlib functors),
+without affecting type class search. When proof automation applies a lemma, implicit arguments
+are checked with increased transparency so that type-level computations (e.g. `n + 0` vs `n`)
+are resolved.
 
-`[instance_reducible]` is an alias for this attribute.
+To mark a potential *type class instance* — so it can be unfolded during type class synthesis —
+use `[instance_reducible]` instead (which the `instance` command applies automatically).
 
 ## incremental
  Marks an elaborator (tactic or command, currently) as supporting incremental elaboration. For unmarked elaborators, the corresponding snapshot bundle field in the elaboration context is unset so as to prevent accidental, incorrect reuse.
@@ -1273,11 +1293,24 @@ To assign priorities to instances, `@[instance prio]` can be used (where `prio` 
 This corresponds to the `instance (priority := prio)` notation.
 
 ## instance_reducible
- alias for implicit_reducible
-Alias for `[implicit_reducible]`. See `implicit_reducible` for documentation.
+ instance reducible declaration
+Marks a definition as `[instance_reducible]`, meaning it is unfolded at
+`TransparencyMode.instances` or above but *not* at `TransparencyMode.reducible`.
+
+Applied to type class instances and instance-like support symbols (e.g., subobject projections
+to class parents). The `instance` command automatically adds `[instance_reducible]`.
+
+Applying `[implicit_reducible]` to an `[instance_reducible]` declaration moves it to the higher
+implicit reducibility level; it will no longer unfold at `.instances` transparency.
 
 ## int_toBitVec
  simp theorems used to convert UIntX/IntX statements into BitVec ones
+
+## int_toBitVec_meta
+ meta simp theorems used to convert UIntX/IntX statements into BitVec ones
+
+## int_toBitVec_sym
+ sym simp theorems used to convert UIntX/IntX statements into BitVec ones
 
 ## integral_simps
  Simp set for integral rules. 
@@ -1292,6 +1325,42 @@ Simplification procedure
 
 ## is_poly
  A stub attribute for `is_poly`. 
+
+## lia
+ The `[lia]` attribute is used to annotate declarations.When applied to an equational theorem, `[lia =]`, `[lia =_]`, or `[lia _=_]`will mark the theorem for use in heuristic instantiations by the `lia` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[lia =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[lia ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[lia →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[lia]` by itself will effectively try `[lia ←]` (if the conclusion is sufficient for instantiation) and then `[lia →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[lia =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+Extension backing the `@[lia]` attribute. It uses the same recording mechanism as `@[grind]`
+(see `registerAttr`), but provides a separate, smaller E-matching lemma set that the `lia`
+tactic instantiates (e.g. `Nat.max_def`), without enabling the full `@[grind]` set.
+
+## lia!
+ The `[lia!]` attribute is used to annotate declarations, but selecting minimal indexable subterms.When applied to an equational theorem, `[lia =]`, `[lia =_]`, or `[lia _=_]`will mark the theorem for use in heuristic instantiations by the `lia` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[lia =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[lia ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[lia →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[lia]` by itself will effectively try `[lia ←]` (if the conclusion is sufficient for instantiation) and then `[lia →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[lia =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+Extension backing the `@[lia]` attribute. It uses the same recording mechanism as `@[grind]`
+(see `registerAttr`), but provides a separate, smaller E-matching lemma set that the `lia`
+tactic instantiates (e.g. `Nat.max_def`), without enabling the full `@[grind]` set.
+
+## lia!?
+ The `[lia!?]` attribute is identical to the `[lia!]` attribute, but displays inferred pattern information.When applied to an equational theorem, `[lia =]`, `[lia =_]`, or `[lia _=_]`will mark the theorem for use in heuristic instantiations by the `lia` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[lia =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[lia ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[lia →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[lia]` by itself will effectively try `[lia ←]` (if the conclusion is sufficient for instantiation) and then `[lia →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[lia =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+Extension backing the `@[lia]` attribute. It uses the same recording mechanism as `@[grind]`
+(see `registerAttr`), but provides a separate, smaller E-matching lemma set that the `lia`
+tactic instantiates (e.g. `Nat.max_def`), without enabling the full `@[grind]` set.
+
+## lia?
+ The `[lia?]` attribute is identical to the `[lia]` attribute, but displays inferred pattern information.When applied to an equational theorem, `[lia =]`, `[lia =_]`, or `[lia _=_]`will mark the theorem for use in heuristic instantiations by the `lia` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[lia =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[lia ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[lia →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[lia]` by itself will effectively try `[lia ←]` (if the conclusion is sufficient for instantiation) and then `[lia →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[lia =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+Extension backing the `@[lia]` attribute. It uses the same recording mechanism as `@[grind]`
+(see `registerAttr`), but provides a separate, smaller E-matching lemma set that the `lia`
+tactic instantiates (e.g. `Nat.max_def`), without enabling the full `@[grind]` set.
 
 ## library_suggestions
  library suggestions selector
