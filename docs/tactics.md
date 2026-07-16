@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `ed810a9b2a5def62c3bd2920b085e08bfb330577`
+Mathlib version: `cd580e54f1a6b46063824e80cec92f64692cbe78`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2490,7 +2490,7 @@ Options:
   It has two key properties: (1) since it uses the kernel, it ignores transparency and can unfold everything,
   and (2) it reduces the `Decidable` instance only once instead of twice.
 - `decide +native` uses the native code compiler (`#eval`) to evaluate the `Decidable` instance,
-  admitting the result via an axiom. This can be significantly more efficient than using reduction, but it is at the cost of increasing the size
+  admitting the result via an axiom.
   This can be significantly more efficient than using reduction, but it is at the cost of increasing the size
   of the trusted code base.
   Namely, it depends on the correctness of the Lean compiler and all definitions with an `@[implemented_by]` attribute.
@@ -3361,7 +3361,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.32.0/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.33.0-rc1/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3521,7 +3521,7 @@ These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
 
-See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.32.0/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.33.0-rc1/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
@@ -3676,6 +3676,7 @@ This *model-based* search is **complete for LIA**.
 
 * `grind -lia` disable the solver (useful for debugging)
 * `grind +qlia` accept rational models (shrinks the search space but is incomplete for ℤ)
+* `grind (liaSteps := n)` cap the number of steps performed by the model search (the solver becomes incomplete when the threshold is reached)
 
 #### Examples:
 
@@ -5121,11 +5122,6 @@ example [AddCommGroup M] [Ring R] [Module R M] (a : R) (x : M) :
   -- one goal: `⊢ -2 * (a * 1) = a * (-2 * 1)`
 ```
 
-## match_target
-Defined in: `Mathlib.Tactic.tacticMatch_target_`
-
-Deprecated: use `guard_target =~ t` instead.
-
 ## mcases
 Defined in: `Lean.Parser.Tactic.mcases`
 
@@ -5383,7 +5379,7 @@ example (ψ : Nat → SPred σs) : ψ 42 ⊢ₛ ∃ x, ψ x := by
 ```
 
 ## mfld_set_tac
-Defined in: `Tactic.MfldSetTac.mfldSetTac`
+Defined in: `Mathlib.Tactic.MfldSetTac.mfldSetTac`
 
 A very basic tactic to show that sets showing up in manifolds coincide or are included
 in one another.
@@ -6316,16 +6312,6 @@ theorem mySum_suggest_invariant (l : List Nat) : mySum l = l.sum := by
   mvcgen invariants?
   all_goals admit
 ```
-
-## mvcgen'
-Defined in: `Lean.Parser.Tactic.mvcgen'`
-
-Experimental Sym-based drop-in for `mvcgen`; see `mvcgen` for documentation.
-
-## mvcgen'
-Defined in: `Lean.Parser.Tactic.mvcgen'Macro`
-
-Experimental Sym-based drop-in for `mvcgen`; see `mvcgen` for documentation.
 
 ## mvcgen?
 Defined in: `Lean.Parser.Tactic.mvcgenHint`
@@ -9159,7 +9145,7 @@ An auxiliary tactic closing goals `UniqueDiffWithinAt ℝ s a` where
 `s ∈ {Iic a, Ici a, univ}`.
 
 ## unit_interval
-Defined in: `Tactic.Interactive.tacticUnit_interval`
+Defined in: `Mathlib.Tactic.Interactive.tacticUnit_interval`
 
 `unit_interval` solves the goals `0 ≤ ↑x`, `0 ≤ 1 - ↑x`, `↑x ≤ 1`, and `1 - ↑x ≤ 1` for
 any expression `x : I`.
@@ -9298,6 +9284,16 @@ Defined in: `CategoryTheory.ComposableArrows.tacticValid`
 
 A wrapper for `omega` which prefaces it with some quick and useful attempts
 
+## vcgen
+Defined in: `Lean.Parser.Tactic.vcgen`
+
+Experimental Sym-based drop-in for `mvcgen`; see `mvcgen` for documentation.
+
+## vcgen
+Defined in: `Lean.Parser.Tactic.vcgenMacro`
+
+Experimental Sym-based drop-in for `mvcgen`; see `mvcgen` for documentation.
+
 ## volume_tac
 Defined in: `MeasureTheory.tacticVolume_tac`
 
@@ -9316,6 +9312,13 @@ This also exists as a `conv`-mode tactic.
 
 Weak-head normal form is when the outer-most expression has been fully reduced, the expression
 may contain subexpressions which have not been reduced.
+
+## with_implicit
+Defined in: `Lean.Parser.Tactic.withImplicit`
+
+`withImplicit tacs` executes `tacs` using the `.implicit` transparency setting.
+In this setting only definitions tagged as `[reducible]`, `[instance_reducible]` or
+`[implicit_reducible]` are unfolded.
 
 ## with_panel_widgets
 Defined in: `ProofWidgets.withPanelWidgetsTacticStx`
