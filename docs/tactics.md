@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `f3c143a862db06e8b9ffb382c69285ebc2d3e821`
+Mathlib version: `abb22825db7e020c94f38a007ae3fffe6c3a7532`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -8145,6 +8145,12 @@ Defined in: `Lean.Parser.Tactic.set_option`
 
 `set_option opt val in tacs` (the tactic) acts like `set_option opt val` at the command level,
 but it sets the option only within the tactics `tacs`.
+
+## show
+Defined in: `Mathlib.Linter.Style.show`
+
+`show t` finds the first goal whose target unifies with `t`. It makes that the main goal,
+performs the unification, and replaces the target with the unified version of `t`.
 
 ## show
 Defined in: `Lean.Parser.Tactic.show`
