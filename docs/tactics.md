@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `c6ef9d7c1a509fa04df7f3cf2dbf72e74e214be4`
+Mathlib version: `3bc2a1801c2416549ba5ba0b3f5728a28b87e7d9`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2743,7 +2743,20 @@ For example, given `x : α × β`, then `(x.1, x.2)` becomes `x` after this tran
 ## eval_det
 Defined in: `evalDet`
 
-Normalize `birdDet` calls in the target using the certificate-chain simproc.
+`eval_det` normalizes determinants of matrices written using `!![...]` notation
+over a commutative ring.
+
+Examples:
+
+```lean
+example : Matrix.det (R := ℤ) !![1, 2; 3, 4] = -2 := by
+  eval_det
+
+example {R : Type*} [CommRing R] (a b c d : R) :
+    Matrix.det !![a, b; c, d] = a * d - b * c := by
+  eval_det
+  ring
+```
 
 ## exact
 Defined in: `Lean.Parser.Tactic.exact`
