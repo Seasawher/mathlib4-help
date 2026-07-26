@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `3bc2a1801c2416549ba5ba0b3f5728a28b87e7d9`
+Mathlib version: `9cebae57f419f984d008f357605b2621a1d9f13b`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1848,12 +1848,17 @@ Defined in: `«def_wanted»`
 
 This construction would be a welcome contribution to the library!
 
-The syntax mirrors `theorem_wanted` but admits any `Sort` (not just `Prop`). It records a
-placeholder declaration of type `... → DefWanted type` and accepts the same `❰…❱`
-bracket syntax for cross-referencing earlier `theorem_wanted` or `def_wanted`
-declarations, including parametrised ones — `❰foo❱ x y` applies `foo`'s parameters. A partial
-body may be supplied with `... := body`; as with `theorem_wanted`, a body without any `❰…❱`
+The syntax mirrors `theorem_wanted` but admits any `Sort` (not just `Prop`). It accepts the same
+`❰…❱` bracket syntax for cross-referencing earlier `theorem_wanted` or `def_wanted` declarations,
+including parametrised ones — `❰foo❱ x y` applies `foo`'s parameters. A body without any `❰…❱`
 reference is rejected with an actionable "Try this:" suggesting `def`.
+
+A **bodyless** `def_wanted` records an opaque placeholder of type `... → DefWanted type` (a hole). A
+`def_wanted` **with a body** is instead emitted as a genuine `@[reducible]` definition of type
+`... → DerivedWanted type` (carrying the body), so `❰foo❱` inlines it and is definitionally equal to
+its body — letting you derive honest accessors and data on top of opaque holes. The `DerivedWanted`
+wrapper keeps it from being used directly as a value of `type`; only `❰…❱` accesses it. Either
+way no `axiom`/`sorry` is introduced (see the module docstring).
 
 Modifiers (such as `@[simp]`) are accepted for syntactic compatibility with `def` but are
 currently ignored.
@@ -2350,16 +2355,17 @@ This typeclass instance would be a welcome contribution to the library!
 
 The syntax mirrors `instance` (the name is optional, auto-generated from the class head if
 absent) and the payload must be a typeclass. The placeholder is recorded as
-`DefWanted (TheClass …)` like `def_wanted`, but additionally the declared
-name is registered so every subsequent `theorem_wanted` / `def_wanted` /
-`instance_wanted` automatically picks up a `[d_…]` instance binder for it. Lean's typeclass
-synth then resolves uses of the class without an explicit `❰…❱` reference — matching the
-auto-availability of regular `instance` declarations.
+`DefWanted (TheClass …)` like `def_wanted`, but additionally the declared name is registered so a
+subsequent `theorem_wanted` / `def_wanted` / `instance_wanted` can use it via typeclass synth
+without an explicit `❰…❱` reference — matching the auto-availability of regular `instance`
+declarations.
 
-The registration is **module-scoped and order-sensitive**: every `instance_wanted` declared
-earlier in the current file is auto-included as a binder on every later wanted declaration
-(without any class-name filtering — opting in via `instance_wanted` is taken as a request for
-the instance to be ambient). Registrations persist across `section` / `namespace` boundaries
+Inclusion is **on use** (like `variable [inst]`): a later declaration carries a `[d_…]` binder
+for an earlier `instance_wanted` only when its statement or body actually uses it. A declaration
+that does
+not need the instance does not carry it, so unrelated instances do not accumulate as a file grows.
+The registration is **module-scoped and order-sensitive**: only `instance_wanted`s declared earlier
+in the current file are candidates. Registrations persist across `section` / `namespace` boundaries
 within the file and are dropped at module boundaries (the placeholder defs are `private`, so
 nothing propagates to importers).
 
