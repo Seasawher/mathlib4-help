@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `c7e4bc625eceee28a62a2c852148eb4c14cef1d8`
+Mathlib version: `7630dcddf054c350d73150d536390a15dbd1afc7`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -956,6 +956,26 @@ Defined in: `Lean.Parser.Tactic.as_aux_lemma`
 `as_aux_lemma => tac` does the same as `tac`, except that it wraps the resulting expression
 into an auxiliary lemma. In some cases, this significantly reduces the size of expressions
 because the proof term is not duplicated.
+
+## assume
+Defined in: `assume`
+
+`assume e` introduces a new (unnamed) hypothesis of type `e`.
+It is equivalent to `intro (_ : e)`.
+
+The argument `e` is required to be a proposition, definitionally equal to the hypothesis
+(or domain of a dependent function) in the goal. The introduced hypothesis will have
+the exact form the user wrote.
+
+Example:
+
+```lean
+example {α} (f : α → α) (h : Function.Injective f) : ∀ x y, f x = f y → x = y := by
+  intro x y
+  assume f x = f y
+  apply h
+  assumption
+```
 
 ## assumption
 Defined in: `Lean.Parser.Tactic.assumption`
