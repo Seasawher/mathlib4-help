@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `7630dcddf054c350d73150d536390a15dbd1afc7`
+Mathlib version: `e4c91783ca8e6a7c693ae624ade32fd22d4e43c1`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -4040,6 +4040,11 @@ Defined in: `Lean.Parser.Tactic.tacticHave'`
 Similar to `have`, but using `refine'`
 
 ## haveI
+Defined in: `Mathlib.Linter.HaveILetI.tacticHaveI__`
+
+`haveI` behaves like `have`, but inlines the value instead of producing a `have` term.
+
+## haveI
 Defined in: `Lean.Parser.Tactic.tacticHaveI__`
 
 `haveI` behaves like `have`, but inlines the value instead of producing a `have` term.
@@ -4562,6 +4567,11 @@ The tactic supports all the same syntax variants and options as the `let` term.
 Defined in: `Lean.Parser.Tactic.tacticLet'__`
 
 Similar to `let`, but using `refine'`
+
+## letI
+Defined in: `Mathlib.Linter.HaveILetI.tacticLetI__`
+
+`letI` behaves like `let`, but inlines the value instead of producing a `let` term.
 
 ## letI
 Defined in: `Lean.Parser.Tactic.tacticLetI__`
