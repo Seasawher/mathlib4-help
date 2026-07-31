@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `e4c91783ca8e6a7c693ae624ade32fd22d4e43c1`
+Mathlib version: `d1906c820ac33cb410531db7a6277980309262db`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -149,7 +149,7 @@ This helps make the tests more stable to small changes in heartbeats.
 To use this functionality, use `#count_heartbeats approximately in cmd`.
 
 ## \#count_heartbeats
-Defined in: `Mathlib.Linter.CountHeartbeats.«command#count_heartbeatsApproximately»`
+Defined in: `Mathlib.Linter.CountHeartbeats.countHeartbeats`
 
 The "countHeartbeats" linter counts the heartbeats of every declaration.
 
