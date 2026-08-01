@@ -1,11 +1,11 @@
 # Options
 
-Mathlib version: `d1906c820ac33cb410531db7a6277980309262db`
+Mathlib version: `62244e5ddb2bb0c35e3500acb5730ad8fb4b17aa`
 
 ## Elab.async
 type: `Bool`
 
-default: `false`
+default: `false (currently: true)`
 
 perform elaboration using multiple threads where possible
 
@@ -484,7 +484,7 @@ default: `64`
 ## compiler.postponeCompile
 type: `Bool`
 
-default: `false`
+default: `false (currently: false)`
 
 Internal. Toggle experimental `leanir` separate compilation.
 
@@ -844,7 +844,7 @@ Promote indices to parameters in inductive types whenever possible.
 ## internal.cmdlineSnapshots
 type: `Bool`
 
-default: `false`
+default: `false (currently: true)`
 
 reduce information stored in snapshots to the minimum necessary for the cmdline driver: diagnostics per command and final full snapshot
 
@@ -1344,6 +1344,13 @@ type: `Bool`
 default: `false`
 
 enable the header style linter
+
+## linter.style.header.license
+type: `String`
+
+default: `"Released under Apache 2.0 license as described in the file LICENSE."`
+
+The text required as the second line of the copyright header.
 
 ## linter.style.induction
 type: `Bool`
