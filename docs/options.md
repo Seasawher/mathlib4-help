@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `d586c71e87ddf1c4fef06a739cdd3b733fd8b64d`
+Mathlib version: `9fb10993c11c9e7abfa291e86fb499b6e1f4da82`
 
 ## Elab.async
 type: `Bool`
@@ -2648,7 +2648,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.33.0-rc1"`
+default: `"v4.33.0-rc2"`
 
 Revision of LeanStateSearch to use
 
