@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `e506e4611dd4a29e4e045f676a822bd314056e72`
+Mathlib version: `4dfbeb6dfa69a6b2c28277a4b0dff2df999761bf`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type

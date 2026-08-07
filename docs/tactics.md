@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `e506e4611dd4a29e4e045f676a822bd314056e72`
+Mathlib version: `4dfbeb6dfa69a6b2c28277a4b0dff2df999761bf`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -505,6 +505,28 @@ instance : Std.Associative (α := Nat) (.+.) := ⟨Nat.add_assoc⟩
 instance : Std.Commutative (α := Nat) (.+.) := ⟨Nat.add_comm⟩
 
 example (a b c d : Nat) : a + b + c + d = d + (b + c) + a := by ac_rfl
+```
+
+## add_group
+Defined in: `Mathlib.Tactic.AddGroup.addGroup`
+
+`add_group` normalizes expressions in additive groups without assuming commutativity. Unlike
+`abel`, which does take advantage of commutativity, `add_group` instead only uses the additive
+group axioms without any information about which group is manipulated. If the goal is an equality,
+and after normalization the two sides are equal, `add_group` closes the goal.
+
+`add_group at l1 l2 ...` normalizes at the given locations.
+
+For additive commutative groups, use the `abel` tactic instead.
+For multiplicative groups, use the `group` tactic instead.
+
+Example:
+```lean
+example {G : Type} [AddGroup G] (a b c d : G) (h : c = (a + 2 • b) + (-(b + b) + (-a)) + d) :
+    a + c + (-d) = a := by
+  add_group at h -- normalizes `h` which becomes `h : c = d`
+  rw [h]         -- the goal is now `a + d + (-d) = a`
+  add_group      -- which is then normalized and closed
 ```
 
 ## admit
