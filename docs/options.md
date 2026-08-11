@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `985d97018f12d5ac61a60f551da15d7a4b1e7ac1`
+Mathlib version: `2918a25dd559a110d5a3d48e97071cdeb1f89769`
 
 ## Elab.async
 type: `Bool`
@@ -938,6 +938,20 @@ type: `Bool`
 default: `true`
 
 enable the linter that warns when bound variable names are nullary constructor names
+
+## linter.coreInternal
+type: `Bool`
+
+default: `false`
+
+enables the set of core-internal linters — linters that enforce conventions of the Lean repository itself and are not intended for use by non-core projects.
+
+## linter.coreInternal.internalModule
+type: `Bool`
+
+default: `false`
+
+enable the `internalModule` linter, which warns when a module considered "internal" declares a declaration that is not itself "internal".
 
 ## linter.countHeartbeats
 type: `Bool`
@@ -2648,7 +2662,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.33.0-rc2"`
+default: `"v4.34.0-rc1"`
 
 Revision of LeanStateSearch to use
 

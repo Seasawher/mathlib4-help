@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `985d97018f12d5ac61a60f551da15d7a4b1e7ac1`
+Mathlib version: `2918a25dd559a110d5a3d48e97071cdeb1f89769`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1108,7 +1108,7 @@ Defined in: `Lean.Parser.Command.printSig`
 Defined in: `Lean.Parser.Command.printAxioms`
 
 Prints the axioms used by a declaration, directly or indirectly.
-Please consult [the reference manual](https://lean-lang.org/doc/reference/4.33.0-rc2/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
+Please consult [the reference manual](https://lean-lang.org/doc/reference/4.34.0-rc1/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
 
 ## \#print
 Defined in: `Lean.Parser.Command.printTacTags`
@@ -1435,6 +1435,12 @@ In tactic mode, use `unfold?` instead.
 Defined in: `Lean.Parser.Command.version`
 
 Shows the current Lean version. Prints `Lean.versionString`.
+
+## \#whats_new
+Defined in: `Mathlib.WhatsNew.«command#whats_newIn__»`
+
+`#whats_new in` executes the following command and then prints the
+declarations that were added to the environment.
 
 ## \#where
 Defined in: `Lean.Parser.Command.where`
@@ -3370,9 +3376,9 @@ Syntax for the `variables` command: this command is just a stub,
 and merely warns that it has been renamed to `variable` in Lean 4.
 
 ## whatsnew
-Defined in: `Mathlib.WhatsNew.commandWhatsnewIn__`
+Defined in: `Mathlib.WhatsNew.oldStx`
 
-`whatsnew in $command` executes the command and then prints the
+`#whats_new in` executes the following command and then prints the
 declarations that were added to the environment.
 
 ## with_weak_namespace

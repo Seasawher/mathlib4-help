@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `985d97018f12d5ac61a60f551da15d7a4b1e7ac1`
+Mathlib version: `2918a25dd559a110d5a3d48e97071cdeb1f89769`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1186,43 +1186,10 @@ In order to avoid calling a SAT solver every time, the proof can be cached with 
 If solving your problem relies inherently on using associativity or commutativity, consider enabling
 the `bv.ac_nf` option.
 
-Note: `bv_decide` trusts the correctness of the code generator and adds a axioms asserting its result.
-
-Note: include `import Std.Tactic.BVDecide`
-
-## bv_decide
-Defined in: `Lean.Parser.Tactic.bvDecideMacro`
-
-Close fixed-width `BitVec` and `Bool` goals by obtaining a proof from an external SAT solver and
-verifying it inside Lean. The solvable goals are currently limited to
-- the Lean equivalent of [`QF_BV`](https://smt-lib.org/logics-all.shtml#QF_BV)
-- automatically splitting up `structure`s that contain information about `BitVec` or `Bool`
-```lean
-example : ∀ (a b : BitVec 64), (a &&& b) + (a ^^^ b) = a ||| b := by
-  intros
-  bv_decide
-```
-
-If `bv_decide` encounters an unknown definition it will be treated like an unconstrained `BitVec`
-variable. Sometimes this enables solving goals despite not understanding the definition because
-the precise properties of the definition do not matter in the specific proof.
-
-If `bv_decide` fails to close a goal it provides a counter-example, containing assignments for all
-terms that were considered as variables.
-
-In order to avoid calling a SAT solver every time, the proof can be cached with `bv_decide?`.
-
-If solving your problem relies inherently on using associativity or commutativity, consider enabling
-the `bv.ac_nf` option.
+`bv_decide types [T₁, ..., Tₙ]` restricts the analysis of structures and enum inductives to
+`T₁, ..., Tₙ`, treating all other ones as opaque variables.
 
 Note: `bv_decide` trusts the correctness of the code generator and adds a axioms asserting its result.
-
-Note: include `import Std.Tactic.BVDecide`
-
-## bv_decide?
-Defined in: `Lean.Parser.Tactic.bvTraceMacro`
-
-Suggest a proof script for a `bv_decide` tactic call. Useful for caching LRAT proofs.
 
 Note: include `import Std.Tactic.BVDecide`
 
@@ -1235,14 +1202,6 @@ Note: include `import Std.Tactic.BVDecide`
 
 ## bv_normalize
 Defined in: `Lean.Parser.Tactic.bvNormalize`
-
-Run the normalization procedure of `bv_decide` only. Sometimes this is enough to solve basic
-`BitVec` goals already.
-
-Note: include `import Std.Tactic.BVDecide`
-
-## bv_normalize
-Defined in: `Lean.Parser.Tactic.bvNormalizeMacro`
 
 Run the normalization procedure of `bv_decide` only. Sometimes this is enough to solve basic
 `BitVec` goals already.
@@ -1632,7 +1591,9 @@ after reduction to close the goal.
 - `cbv` — reduce the goal target
 - `cbv at h` — reduce hypothesis `h`
 - `cbv at h |-` — reduce hypothesis `h` and the goal target
-- `cbv at *` — reduce all non-dependent propositional hypotheses and the goal target
+- `cbv at *` — reduce the goal target and all non-dependent propositional hypotheses
+
+If a hypothesis reduces to `False`, the goal is closed immediately.
 
 `cbv` is not a finishing tactic in general: it may leave a new (simpler) goal.
 
@@ -3416,7 +3377,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.33.0-rc2/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.34.0-rc1/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3576,7 +3537,7 @@ These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
 
-See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.33.0-rc2/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.34.0-rc1/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
@@ -6878,6 +6839,7 @@ can be used to:
 * `splitNatSub`: for each appearance of `((a - b : Nat) : Int)`, split on `a ≤ b` if necessary.
 * `splitNatAbs`: for each appearance of `Int.natAbs a`, split on `0 ≤ a` if necessary.
 * `splitMinMax`: for each occurrence of `min a b`, split on `min a b = a ∨ min a b = b`
+
 Currently, all of these are on by default.
 
 ## on_goal
