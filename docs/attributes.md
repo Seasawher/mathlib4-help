@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `985d97018f12d5ac61a60f551da15d7a4b1e7ac1`
+Mathlib version: `2918a25dd559a110d5a3d48e97071cdeb1f89769`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -475,14 +475,8 @@ to declarations of type `IgnoreFunction` for use by the unused variables linter.
  (builtin) Registers a widget module. Its type must implement Lean.Widget.ToModule.
 Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
 
-## bvNormalizeProcBuiltinAttr
- Builtin bv_normalize simproc
-
 ## bv_normalize
  simp theorems used by bv_normalize
-
-## bv_normalize_proc
- simprocs used by bv_normalize
 
 ## cases_eliminator
  custom `casesOn`-like eliminator for the `cases` tactic
@@ -1648,6 +1642,9 @@ Marks a definition to never be specialized during code generation.
  An attribute specifying that this is a notation class. Used by @[simps].
 `@[notation_class]` attribute. Note: this is *not* a `NameMapAttribute` because we key on the
 argument of the attribute, not the declaration name.
+
+## package_code_quality_check
+ Use this declaration as a check in the code quality metrics driver
 
 ## parenthesizer
  Register a parenthesizer for a parser.
