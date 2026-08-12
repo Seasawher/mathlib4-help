@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `2918a25dd559a110d5a3d48e97071cdeb1f89769`
+Mathlib version: `77cbcbc65f9e26f6ede0a01b24c2cb909e11cc0d`
 
 ## Elab.async
 type: `Bool`
@@ -1302,13 +1302,6 @@ type: `Bool`
 default: `false`
 
 enable the `cdot` linter
-
-## linter.style.commandStart
-type: `Bool`
-
-default: `false`
-
-deprecated: use the `linter.style.whitespace` option instead
 
 ## linter.style.docString
 type: `Bool`
