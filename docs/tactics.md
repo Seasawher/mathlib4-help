@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `eb097a9288a78c099bd3e784dd495e7101d9dcb5`
+Mathlib version: `971f540b1b5f10f11d8f73b8d43986759b9f6dcd`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1350,29 +1350,48 @@ example (h : a > 0) : a / 5 > 0 := by
 ## case
 Defined in: `Batteries.Tactic.casePatt`
 
-* `case _ : t => tac` finds the first goal that unifies with `t` and then solves it
-using `tac` or else fails. Like `show`, it changes the type of the goal to `t`.
-The `_` can optionally be a case tag, in which case it only looks at goals
-whose tag would be considered by `case` (goals with an exact tag match,
-followed by goals with the tag as a suffix, followed by goals with the tag as a prefix).
+* `case tag => tac` focuses on the goal with case name `tag` and solves it using `tac`,
+  or else fails.
+* `case tag x₁ ... xₙ => tac` additionally renames the `n` most recent hypotheses
+  with inaccessible names to the given names.
+* `case tag₁ | tag₂ => tac` is equivalent to `(case tag₁ => tac); (case tag₂ => tac)`.
 
-* `case _ n₁ ... nₘ : t => tac` additionally names the `m` most recent hypotheses with
-inaccessible names to the given names. The names are renamed before matching against `t`.
-The `_` can optionally be a case tag.
 
-* `case _ : t := e` is short for `case _ : t => exact e`.
+Extensions:
 
-* `case _ : t₁ | _ : t₂ | ... => tac`
-is equivalent to `(case _ : t₁ => tac); (case _ : t₂ => tac); ...`
-but with all matching done on the original list of goals --
-each goal is consumed as they are matched, so patterns may repeat or overlap.
+ * `case _ : t => tac` finds the first goal that unifies with `t` and then solves it
+   using `tac` or else fails. Like `show`, it changes the type of the goal to `t`.
+   The `_` can optionally be a case tag, in which case it only looks at goals
+   whose tag would be considered by `case` (goals with an exact tag match,
+   followed by goals with the tag as a suffix, followed by goals with the tag as a prefix).
 
-* `case _ : t` will make the matched goal be the first goal.
-`case _ : t₁ | _ : t₂ | ...` makes the matched goals be the first goals in the given order.
 
-* `case _ : t := _` and `case _ : t := ?m` are the same as `case _ : t` but in the `?m` case the
-goal tag is changed to `m`.
-In particular, the goal becomes metavariable `?m`.
+
+ * `case _ n₁ ... nₘ : t => tac` additionally names the `m` most recent hypotheses with
+   inaccessible names to the given names. The names are renamed before matching against `t`.
+   The `_` can optionally be a case tag.
+
+
+
+ * `case _ : t := e` is short for `case _ : t => exact e`.
+
+
+
+ * `case _ : t₁ | _ : t₂ | ... => tac`
+   is equivalent to `(case _ : t₁ => tac); (case _ : t₂ => tac); ...`
+   but with all matching done on the original list of goals --
+   each goal is consumed as they are matched, so patterns may repeat or overlap.
+
+
+
+ * `case _ : t` will make the matched goal be the first goal.
+   `case _ : t₁ | _ : t₂ | ...` makes the matched goals be the first goals in the given order.
+
+
+
+ * `case _ : t := _` and `case _ : t := ?m` are the same as `case _ : t` but in the `?m` case the
+   goal tag is changed to `m`.
+   In particular, the goal becomes metavariable `?m`.
 
 ## case
 Defined in: `Lean.Parser.Tactic.case`
@@ -1383,6 +1402,43 @@ Defined in: `Lean.Parser.Tactic.case`
   with inaccessible names to the given names.
 * `case tag₁ | tag₂ => tac` is equivalent to `(case tag₁ => tac); (case tag₂ => tac)`.
 
+
+Extensions:
+
+ * `case _ : t => tac` finds the first goal that unifies with `t` and then solves it
+   using `tac` or else fails. Like `show`, it changes the type of the goal to `t`.
+   The `_` can optionally be a case tag, in which case it only looks at goals
+   whose tag would be considered by `case` (goals with an exact tag match,
+   followed by goals with the tag as a suffix, followed by goals with the tag as a prefix).
+
+
+
+ * `case _ n₁ ... nₘ : t => tac` additionally names the `m` most recent hypotheses with
+   inaccessible names to the given names. The names are renamed before matching against `t`.
+   The `_` can optionally be a case tag.
+
+
+
+ * `case _ : t := e` is short for `case _ : t => exact e`.
+
+
+
+ * `case _ : t₁ | _ : t₂ | ... => tac`
+   is equivalent to `(case _ : t₁ => tac); (case _ : t₂ => tac); ...`
+   but with all matching done on the original list of goals --
+   each goal is consumed as they are matched, so patterns may repeat or overlap.
+
+
+
+ * `case _ : t` will make the matched goal be the first goal.
+   `case _ : t₁ | _ : t₂ | ...` makes the matched goals be the first goals in the given order.
+
+
+
+ * `case _ : t := _` and `case _ : t := ?m` are the same as `case _ : t` but in the `?m` case the
+   goal tag is changed to `m`.
+   In particular, the goal becomes metavariable `?m`.
+
 ## case'
 Defined in: `Lean.Parser.Tactic.case'`
 
@@ -1391,14 +1447,23 @@ has been solved after applying `tac`, nor admits the goal if `tac` failed.
 Recall that `case` closes the goal using `sorry` when `tac` fails, and
 the tactic execution is not interrupted.
 
+
+Extensions:
+
+ * `case' _ : t => tac` is analogous to the `case _ : t => tac` variant.
+
 ## case'
 Defined in: `Batteries.Tactic.casePatt'`
 
-`case' _ : t => tac` is similar to the `case _ : t => tac` tactic,
-but it does not ensure the goal has been solved after applying `tac`,
-nor does it admit the goal if `tac` failed.
-Recall that `case` closes the goal using `sorry` when `tac` fails,
-and the tactic execution is not interrupted.
+`case'` is similar to the `case tag => tac` tactic, but does not ensure the goal
+has been solved after applying `tac`, nor admits the goal if `tac` failed.
+Recall that `case` closes the goal using `sorry` when `tac` fails, and
+the tactic execution is not interrupted.
+
+
+Extensions:
+
+ * `case' _ : t => tac` is analogous to the `case _ : t => tac` variant.
 
 ## cases
 Defined in: `Lean.Parser.Tactic.cases`
@@ -1985,19 +2050,53 @@ For example, given `⊢ f (g (x + y)) = f (g (y + x))`,
 `congr` produces the goals `⊢ x = y` and `⊢ y = x`,
 while `congr 2` produces the intended `⊢ x + y = y + x`.
 
+
+Extensions:
+
+ * `congr n` controls the depth of the recursive applications.
+   This is useful when `congr` is too aggressive in breaking down the goal.
+   For example, given `⊢ f (g (x + y)) = f (g (y + x))`,
+   `congr` produces the goals `⊢ x = y` and `⊢ y = x`,
+   while `congr 2` produces the intended `⊢ x + y = y + x`.
+
+
+
+ * If, at any point, a subgoal matches a hypothesis then the subgoal will be closed.
+
+
+
+ * You can use `congr with p (: n)?` to call `ext p (: n)?` to all subgoals generated by `congr`.
+   For example, if the goal is `⊢ f '' s = g '' s` then `congr with x` generates the goal
+   `x : α ⊢ f x = g x`.
+
 ## congr
 Defined in: `Batteries.Tactic.congrConfigWith`
 
 Apply congruence (recursively) to goals of the form `⊢ f as = f bs` and `⊢ f as ≍ f bs`.
-* `congr n` controls the depth of the recursive applications.
-  This is useful when `congr` is too aggressive in breaking down the goal.
-  For example, given `⊢ f (g (x + y)) = f (g (y + x))`,
-  `congr` produces the goals `⊢ x = y` and `⊢ y = x`,
-  while `congr 2` produces the intended `⊢ x + y = y + x`.
-* If, at any point, a subgoal matches a hypothesis then the subgoal will be closed.
-* You can use `congr with p (: n)?` to call `ext p (: n)?` to all subgoals generated by `congr`.
-  For example, if the goal is `⊢ f '' s = g '' s` then `congr with x` generates the goal
-  `x : α ⊢ f x = g x`.
+The optional parameter is the depth of the recursive applications.
+This is useful when `congr` is too aggressive in breaking down the goal.
+For example, given `⊢ f (g (x + y)) = f (g (y + x))`,
+`congr` produces the goals `⊢ x = y` and `⊢ y = x`,
+while `congr 2` produces the intended `⊢ x + y = y + x`.
+
+
+Extensions:
+
+ * `congr n` controls the depth of the recursive applications.
+   This is useful when `congr` is too aggressive in breaking down the goal.
+   For example, given `⊢ f (g (x + y)) = f (g (y + x))`,
+   `congr` produces the goals `⊢ x = y` and `⊢ y = x`,
+   while `congr 2` produces the intended `⊢ x + y = y + x`.
+
+
+
+ * If, at any point, a subgoal matches a hypothesis then the subgoal will be closed.
+
+
+
+ * You can use `congr with p (: n)?` to call `ext p (: n)?` to all subgoals generated by `congr`.
+   For example, if the goal is `⊢ f '' s = g '' s` then `congr with x` generates the goal
+   `x : α ⊢ f x = g x`.
 
 ## congr
 Defined in: `Batteries.Tactic.congrConfig`
@@ -2008,6 +2107,25 @@ This is useful when `congr` is too aggressive in breaking down the goal.
 For example, given `⊢ f (g (x + y)) = f (g (y + x))`,
 `congr` produces the goals `⊢ x = y` and `⊢ y = x`,
 while `congr 2` produces the intended `⊢ x + y = y + x`.
+
+
+Extensions:
+
+ * `congr n` controls the depth of the recursive applications.
+   This is useful when `congr` is too aggressive in breaking down the goal.
+   For example, given `⊢ f (g (x + y)) = f (g (y + x))`,
+   `congr` produces the goals `⊢ x = y` and `⊢ y = x`,
+   while `congr 2` produces the intended `⊢ x + y = y + x`.
+
+
+
+ * If, at any point, a subgoal matches a hypothesis then the subgoal will be closed.
+
+
+
+ * You can use `congr with p (: n)?` to call `ext p (: n)?` to all subgoals generated by `congr`.
+   For example, if the goal is `⊢ f '' s = g '' s` then `congr with x` generates the goal
+   `x : α ⊢ f x = g x`.
 
 ## congr!
 Defined in: `Congr!.congr!`
