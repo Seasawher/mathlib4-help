@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `818f61df4172d67372cea1e10be9aba150d1aa7b`
+Mathlib version: `d77ef0741c6da1ff12df68fb4145ea0ae0850c54`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2878,6 +2878,14 @@ example {R : Type*} [CommRing R] (a b c d : R) :
   eval_det
   ring
 ```
+
+## eval_rank
+Defined in: `evalRank`
+
+`eval_rank` evaluates the rank of matrices with non-symbolic entries.
+
+The element type must be a commutative domain with kernel-decidable equality.
+Terms skipped can be viewed by using `set_option trace.Tactic.evalRank true`.
 
 ## exact
 Defined in: `Lean.Parser.Tactic.exact`

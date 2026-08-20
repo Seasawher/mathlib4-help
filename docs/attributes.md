@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `818f61df4172d67372cea1e10be9aba150d1aa7b`
+Mathlib version: `d77ef0741c6da1ff12df68fb4145ea0ae0850c54`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -204,6 +204,9 @@ tagged `@[defeq]` when it also passes the stricter check at instance transparenc
 with `set_option ... in`) makes `dsimp` treat them like `@[defeq]` theorems, which
 provides a local backwards-compatibility escape hatch for proofs broken by the stricter
 inference.
+
+## bareiss_ext
+ adds a computation model to the Bareiss elimination
 
 ## bitvec_to_nat
  simp lemmas converting `BitVec` goals to `Nat` goals
