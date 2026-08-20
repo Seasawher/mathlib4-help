@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `818f61df4172d67372cea1e10be9aba150d1aa7b`
+Mathlib version: `d77ef0741c6da1ff12df68fb4145ea0ae0850c54`
 
 ## Elab.async
 type: `Bool`
@@ -4683,6 +4683,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Tactic.depRewrite.visit
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Tactic.evalRank
 type: `Bool`
 
 default: `false`
