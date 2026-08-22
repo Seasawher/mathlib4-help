@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `1f29011071772620f612bf5a06433775f06067b8`
+Mathlib version: `23a3216f0e5b7f9f5d437409db9f10b34844e6d0`
 
 ## Elab.async
 type: `Bool`
@@ -706,6 +706,13 @@ type: `Bool`
 default: `false`
 
 ('#eval' command) enables pretty printing the type of the result
+
+## experimental.intrinsic
+type: `Bool`
+
+default: `false`
+
+acknowledge that the intrinsic verification syntax (the contract clauses of a `def`, the `assert` element, and the `invariant` clause of a loop) is experimental and subject to change; `true` silences the warning that each of these forms reports
 
 ## experimental.module
 type: `Bool`
@@ -2655,7 +2662,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.34.0-rc1"`
+default: `"v4.34.0-rc2"`
 
 Revision of LeanStateSearch to use
 
