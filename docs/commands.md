@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `e7b8da838099d0bfea089b70a448e3c9b6cdbffd`
+Mathlib version: `d6893048e0d784c43f3cf098b61299b3a4b4aed0`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -147,6 +147,9 @@ As this is intended as a user command, we divide by 1000.
 The optional `approximately` keyword rounds down the heartbeats to the nearest thousand.
 This helps make the tests more stable to small changes in heartbeats.
 To use this functionality, use `#count_heartbeats approximately in cmd`.
+
+`cmd` is elaborated with `Elab.async` disabled: with async elaboration, theorem bodies are
+elaborated in a separate task, whose heartbeats would otherwise not be counted.
 
 ## \#count_heartbeats
 Defined in: `Mathlib.Linter.CountHeartbeats.countHeartbeats`
