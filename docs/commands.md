@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `d6893048e0d784c43f3cf098b61299b3a4b4aed0`
+Mathlib version: `bbcd1968ee6950abe88b85dba6995da346c4b2a8`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -230,6 +230,18 @@ For example,
 `#discr_tree_simp_key` is similar to `#discr_tree_key`, but treats the underlying type
 as one of a simp lemma, i.e. transforms it into an equality and produces the key of the
 left-hand side.
+
+## \#dlmf_tags
+Defined in: `Mathlib.CrossRef.dlmfTags`
+
+The `#dlmf_tags` command retrieves all declarations that have the `dlmf` attribute.
+
+For each found declaration, it prints a line
+```
+'declaration_name' corresponds to tag 'declaration_tag'.
+```
+The variant `#dlmf_tags!` also adds the theorem statement (for theorems)
+or declaration type (for definitions, structures, instances, etc.) after each summary line.
 
 ## \#dump_async_env_state
 Defined in: `Lean.Parser.Command.dumpAsyncEnvState`

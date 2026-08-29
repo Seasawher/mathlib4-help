@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `d6893048e0d784c43f3cf098b61299b3a4b4aed0`
+Mathlib version: `bbcd1968ee6950abe88b85dba6995da346c4b2a8`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -801,6 +801,9 @@ special casing. If the term is an `Expr.mdata` with a single key `k`, `mdata.k` 
 
 ## deprecated_arg
  mark a parameter as deprecated
+
+## dlmfTag
+ Apply a DLMF identifier to a declaration.
 
 ## doElem_control_info
  control info inference elaborator
