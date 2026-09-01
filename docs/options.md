@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `b862025114b04e4711041e2d0e67215b5a8fbbf0`
+Mathlib version: `0a52a37b7f2fec42206095e832902a281edf9f3f`
 
 ## Elab.async
 type: `Bool`
@@ -1436,12 +1436,19 @@ default: `true`
 
 enable the `nameCheck` linter
 
+## linter.style.native
+type: `Bool`
+
+default: `false`
+
+enable the native-evaluation linter
+
 ## linter.style.nativeDecide
 type: `Bool`
 
 default: `false`
 
-enable the nativeDecide linter
+deprecated: use the `linter.style.native` option instead
 
 ## linter.style.openClassical
 type: `Bool`
