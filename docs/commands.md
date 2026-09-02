@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `0a52a37b7f2fec42206095e832902a281edf9f3f`
+Mathlib version: `15fe1e4eb92a37c66db923a0fa96596d7b504a35`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1085,6 +1085,19 @@ For instance, `#parse` can be used as follows
 /-- error: <input>:1:3: Stacks tags must be exactly 4 characters -/
 #guard_msgs in #parse Mathlib.Stacks.stacksTagFn => "A05"
 ```
+
+## \#pibase_tags
+Defined in: `Mathlib.CrossRef.pibaseTags`
+
+The `#pibase_tags topic` command retrieves all declarations that have the `pibase` attribute
+with the given topic.
+
+For each found declaration, it prints a line
+```
+'declaration_name' corresponds to tag 'declaration_tag'.
+```
+The variant `#pibase_tags! topic` also adds the theorem statement (for theorems)
+or declaration type (for definitions, structures, instances, etc.) after each summary line.
 
 ## \#print
 Defined in: `Batteries.Tactic.printPrefix`
