@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `0a52a37b7f2fec42206095e832902a281edf9f3f`
+Mathlib version: `15fe1e4eb92a37c66db923a0fa96596d7b504a35`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -1674,6 +1674,9 @@ Registers a monotonicity theorem for `partial_fixpoint`.
 Monotonicity theorems should have `Lean.Order.monotone ...` as a conclusion. They are used in the
 `monotonicity` tactic (scoped in the `Lean.Order` namespace) to automatically prove monotonicity
 for functions defined using `partial_fixpoint`.
+
+## pibaseTag
+ Apply a π-Base identifier to a declaration.
 
 ## pnat_to_nat_coe
  A simp set for the `pnat_to_nat` tactic. 
