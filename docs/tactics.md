@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `15fe1e4eb92a37c66db923a0fa96596d7b504a35`
+Mathlib version: `205d80eafcd0ec2247c47ca29f9b313a9b93a538`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -8298,6 +8298,54 @@ Defined in: `Lean.Parser.Tactic.set_option`
 
 `set_option opt val in tacs` (the tactic) acts like `set_option opt val` at the command level,
 but it sets the option only within the tactics `tacs`.
+
+## setm
+Defined in: `Mathlib.Tactic.SetM.setM`
+
+`setm patt` matches `patt`, a term containing named holes (like `?a`) to the goal, and creates
+named local declarations for the matched holes with their assigned expressions as values. Moreover,
+it will replace the matches with their new names. This tactic can be used to give a name to a
+complicated subexpression appearing in the goal or a hypothesis.
+
+* `setm patt using h` matches `patt` with the local hypothesis named `h` instead of the main goal.
+* `setm patt at loc` also rewrites by the newly-introduced local declarations at the location(s)
+  `loc`.
+
+Examples:
+```lean
+example : ∃ n, n = 2 ^ 10 - 1 := by
+  setm ∃ _, _ = ?a
+  /-
+  a := 2 ^ 10 - 1
+  ⊢ ∃ n, n = a
+  -/
+  exact .intro a rfl
+```
+
+`using h` matches against `h` instead of the goal:
+```lean
+example (h : 1 + 2 = 3) : ∃ n, n = 2 := by
+  setm _ + ?a = _ using h
+  /-
+  a := 2
+  h : 1 + a = 3
+  ⊢ ∃ n, n = 2
+  -/
+  exact .intro a rfl
+```
+
+`at h₂` rewrites `h₂` so that it uses `a`:
+```lean
+example (h₁ : 1 + 2 = 3) (h₂ : 2 + 2 = 4) : ∃ n, n = 2 := by
+  setm _ + ?a = _ using h₁ at h₂
+  /-
+  a : Nat := 2
+  h₁ : 1 + a = 3
+  h₂ : a + a = 4
+  ⊢ ∃ n, n = 2
+  -/
+  exact .intro a rfl
+```
 
 ## show
 Defined in: `Mathlib.Linter.Style.show`
