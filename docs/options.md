@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `205d80eafcd0ec2247c47ca29f9b313a9b93a538`
+Mathlib version: `f29e78904f032d81572449e632d184f0d58bf323`
 
 ## Elab.async
 type: `Bool`
@@ -1145,6 +1145,13 @@ default: `false`
 
 Validate that variables appearing as an index (e.g. in `xs[i]` or `xs.take i`) are only `i`, `j`, or `k`.
 
+## linter.internalConstructors
+type: `Bool`
+
+default: `true`
+
+forbid internal constructors from being referenced during elaboration.
+
 ## linter.listVariables
 type: `Bool`
 
@@ -1580,6 +1587,13 @@ default: `false`
 type: `Bool`
 
 default: `false`
+
+
+
+## linter.tacticAnalysis.rwaSuggestion
+type: `Bool`
+
+default: `true`
 
 
 

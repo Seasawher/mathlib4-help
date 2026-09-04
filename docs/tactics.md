@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `205d80eafcd0ec2247c47ca29f9b313a9b93a538`
+Mathlib version: `f29e78904f032d81572449e632d184f0d58bf323`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -5259,19 +5259,19 @@ Examples:
 example [AddCommMonoid M] [Semiring R] [Module R M] (a b : R) (x : M) :
     a • x + b • x = (b + a) • x := by
   match_scalars
-  -- one goal: `⊢ a * 1 + b * 1 = (b + a) * 1`
+  -- one goal: `⊢ a + b = b + a`
 
 example [AddCommGroup M] [Ring R] [Module R M] (a b : R) (x : M) :
     a • (a • x - b • y) + (b • a • y + b • b • x) = x := by
   match_scalars
   -- two goals:
-  -- `⊢ a * (a * 1) + b * (b * 1) = 1` (from the `x` atom)
-  -- `⊢ a * -(b * 1) + b * (a * 1) = 0` (from the `y` atom)
+  -- `⊢ a * a + b * b = 1` (from the `x` atom)
+  -- `⊢ a * -b + b * a = 0` (from the `y` atom)
 
 example [AddCommGroup M] [Ring R] [Module R M] (a : R) (x : M) :
     -(2:R) • a • x = a • (-2:ℤ) • x := by
   match_scalars
-  -- one goal: `⊢ -2 * (a * 1) = a * (-2 * 1)`
+  -- one goal: `⊢ -2 * a = a * -2`
 ```
 
 ## mcases
@@ -5732,6 +5732,40 @@ example [AddCommGroup M] [CommRing R] [Module R M] (a : R) (v w : M) :
 example [AddCommGroup M] [CommRing R] [Module R M] (a b μ ν : R) (x y : M) :
     (μ - ν) • a • x = (a • μ • x + b • ν • y) - ν • (a • x + b • y) := by
   module
+```
+
+## module_nf
+Defined in: `Mathlib.Tactic.ModuleNF.moduleNF`
+
+`module_nf` normalizes the goal, by rewriting every linear combination `a • x + ... + b • y`
+into a normal form, collecting the scalars of common terms and normalizing them with `ring_nf`. If
+the goal is an equality and the two sides have the same normal form, `module_nf` closes the goal.
+Otherwise the rewritten goal is left open, and `module_nf` can be used non-terminally.
+
+Like `match_scalars` and `module`, linear combinations are parsed from `+`, `-`, `•` and `0`, other
+subexpressions (including variables) are atoms, and the scalars are interpreted in the largest
+scalar ring encountered, and subtraction requires a ring (see `match_scalars` for the requirements
+on scalar types).
+
+* `module_nf at loc` rewrites at the location(s) `loc`.
+* `module_nf with R` uses `R` as the common ring of scalars.
+
+Examples:
+
+```lean
+example [AddCommMonoid M] [CommSemiring R] [Module R M] (a b : R) (x : M) :
+    a • x + b • x = (a + b) • x := by
+  module_nf
+
+example [AddCommMonoid M] [CommSemiring R] [Module R M] (a b : R) (x : M)
+    (h : a • x + b • x = 0) : (b + a) • x = 0 := by
+  module_nf at h ⊢
+  exact h
+
+example [AddCommGroup M] (x : M) (P : M → Prop) (h : P ((2 : ℤ) • x)) :
+    P (x + x) ∧ P ((2 : ℤ) • x) := by
+  module_nf with ℤ
+  exact ⟨h, h⟩
 ```
 
 ## monicity
