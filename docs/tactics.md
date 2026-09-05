@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `f29e78904f032d81572449e632d184f0d58bf323`
+Mathlib version: `7974e751bece493b6ff508039423ca9fa2452fa8`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2185,6 +2185,8 @@ If the goal is an equality, `congrm e` is equivalent to `refine congr(e')` where
 built from `e` by replacing each placeholder `?m` by `$(?m)`.
 The pattern `e` is allowed to contain `$(...)` expressions to immediately substitute
 equality proofs into the congruence, just like for congruence quotations.
+
+[More documentation on `congr()` and `congrm`.](https://leanprover-community.github.io/extras/congr.html)
 
 ## congrm?
 Defined in: `tacticCongrm?`
@@ -8251,11 +8253,6 @@ To see all suggestions, click on the filter button (▼) in the top right.
 Defined in: `Lean.Parser.Tactic.tacticRw_mod_cast___`
 
 Rewrites with the given rules, normalizing casts prior to each step.
-
-## rw_search
-Defined in: `Mathlib.Tactic.RewriteSearch.tacticRw_search_`
-
-`rw_search` has been removed from Mathlib.
 
 ## rwa
 Defined in: `Lean.Parser.Tactic.tacticRwa__`
