@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `e3ea2ac394b7b87c549a259b7115f79c58e2d711`
+Mathlib version: `e861750b15eff0d5bc98279911ce457bb1a1382f`
 
 ## Elab.async
 type: `Bool`
@@ -4732,6 +4732,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Tactic.generalize_proofs
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Tactic.inclusion
 type: `Bool`
 
 default: `false`

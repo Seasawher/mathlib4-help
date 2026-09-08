@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `e3ea2ac394b7b87c549a259b7115f79c58e2d711`
+Mathlib version: `e861750b15eff0d5bc98279911ce457bb1a1382f`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2784,6 +2784,30 @@ example (x : Nat) : (if True then x + 2 else 3) = x + 2 := by
 
 This command can also be used in `simp_all` and `dsimp`.
 
+## dyadic_interval
+Defined in: `Inclusion.dyadicInterval`
+
+`dyadic_interval` proves real number equalities, inequalities and interval memberships by
+approximating as an interval of dyadic rational numbers.
+
+This tactic is implemented as a family for the `inclusion` tactic: `dyadic_interval` is the same as
+`inclusion [core, interval_dyadic_real]`.
+
+* `dyadic_interval [binSplit := n]` splits each interval `n` times, into `2^n` pieces. Higher values
+  of `n` make the tactic slower but able to prove more. Default: no splitting.
+* `dyadic_interval [prec := n]` uses a precision of `2^-n` when constructing the approximation.
+  Higher values of `n` make the tactic slower but able to prove more. Default value: 0.
+* `dyadic_interval [fam₁, ... famₙ]` uses the inclusion families `fam₁`, ..., `famₙ` for additional
+  reasoning capabilities.
+* `dyadic_interval (config := cfg)` uses `cfg` as a configuration for the `inclusion` tactic.
+  (See there for further details.)
+
+## dyadic_interval?
+Defined in: `Inclusion.dyadicInterval?`
+
+`dyadic_interval?` is a proof writing aid that quickly checks if `dyadic_interval` would close
+the goal, without doing the expensive kernel computation that actually closes the goal.
+
 ## eapply
 Defined in: `Batteries.Tactic.tacticEapply_`
 
@@ -3508,6 +3532,47 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.34.0-rc2/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
+
+## gconvert
+Defined in: `Mathlib.Tactic.GCongr.gconvert`
+
+`gconvert e`, where the term `e` is inferred to have type `t`, replaces the main goal `⊢ t'` with
+new goals for proving the implication `t → t'` using generalized congruence.
+The goals are created like `gcongr` would.
+Like `gcongr`, `gconvert` introduces variables while applying generalized congruence rules.
+Additionally, if a resulting goal is an implication, the hypothesis is introduced
+using `this` as the default name for the new hypothesis.
+These variables can be pattern-matched, like `rintro` would, using the `with` keyword.
+
+`gconvert` can be used to peel matching quantifiers off of a given term and the goal and
+introduce the relevant variables.
+
+`gconvert` is a generalized version of `convert`, in the same way that `gcongr` and `grw` are
+generalized versions of `congr`/`congr!` and `rw`.
+
+* `gconvert e with x y ... z` names the variables that are introduced.
+* `gconvert e using n` where `n` is a natural number literal, limits the depth of `gcongr`.
+  This is useful if `gcongr` is too aggressive in breaking down the goal.
+* `gconvert e using t`, where `t` is a term with `?_` holes, makes `gcongr` perform congruence
+  up to the holes in `t`.
+  This is useful if `gcongr` is too aggressive in breaking down the goal.
+
+Example:
+```lean
+example (h : ∀ ε > (0 : ℝ), ∃ N : ℕ, ∀ n ≥ N, 1 / (n + 1 : ℝ) < ε) :
+             ∀ ε > (0 : ℝ), ∃ N : ℕ, ∀ n ≥ N, 1 / (n + 1 : ℝ) ≤ ε := by
+  gconvert h with ε hε N n hn
+  /-
+  h : ∀ ε > 0, ∃ N, ∀ n ≥ N, 1 / (↑n + 1) < ε
+  ε : ℝ
+  hε : ε > 0
+  N n : ℕ
+  hn : n ≥ N
+  this : 1 / (↑n + 1) < ε
+  ⊢ 1 / (↑n + 1) ≤ ε
+  -/
+  exact this.le
+```
 
 ## generalize
 Defined in: `Lean.Parser.Tactic.generalize`
@@ -4238,6 +4303,40 @@ option turns them into fresh level metavariables instead. Universe metavariables
 rejected.
 
 The original goal is closed as if `sorry` was used.
+
+## inclusion
+Defined in: `Inclusion.inclusion`
+
+`inclusion [fam₁, fam₂, ...]` is a low-level tactic for proving the main goal by reasoning
+about the set inclusion operator `∈` using the *inclusion families* `fam₁`, `fam₂`, ...
+The goal `⊢ P` is first transformed into `⊢ P ∈ {True}` and then each family defines forward-
+and backward reasoning rules to replace the goal with a form suitable for checking by computation
+in the kernel, in other words, something that can be solved `by decide`.
+
+`inclusion` is very flexible and intended as a building block for other tactics with a more
+specific ambition, for example `dyadic_interval`.
+
+An inclusion family is declared using `registerInclusionFamily` and can be extended using the
+`inclusion_op` and `hypothesis_op` attributes.
+The `core` family provides reasoning about logical operators `∧`, `∨`, `¬` and `=`. This family
+is recommented to be included by default.
+
+
+* `inclusion [fam₁, x := e]` sets the parameter named `x` to the value of the term `e`.
+  All the families in an `inclusion` call can access this parameter.
+* `inclusion (config := cfg) [fam₁, ...]` uses `cfg : InclusionConfig` as configuration options.
+  In particular:
+  * `inclusion +native [fam₁, ...]` only uses evaluation, rather than kernel computation, to perform
+    the final proof check. Warning: this adds the Lean compiler to the trusted codebase.
+  * `inclusion +kernel [fam₁, ...]` only uses the kernel to perform the final proof check and skips
+    the (usually faster) evaluation-based check beforehand.
+
+## inclusion?
+Defined in: `Inclusion.inclusion?`
+
+`inclusion? [fam₁, ...]` is a proof writing aid that quickly checks if
+`inclusion [fam₁, ...]` would close the goal, without doing the expensive kernel computation that
+actually closes the goal.
 
 ## induction
 Defined in: `Lean.Parser.Tactic.induction`

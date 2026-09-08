@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `e3ea2ac394b7b87c549a259b7115f79c58e2d711`
+Mathlib version: `e861750b15eff0d5bc98279911ce457bb1a1382f`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -1125,6 +1125,13 @@ generated theorem.
 ## hole_code_action
  Declare a new hole code action, to appear in the code actions on ?_ and _
 
+## hypothesisExtAttr
+ adds a hypothesis extension
+Register the `hypothesis_ext` attribute.
+
+## hypothesisOpAttr
+ adds an inclusion-hypothesis operation
+
 ## implemented_by
  name of the Lean (probably unsafe) function that implements opaque constant
 Instructs the compiler to use a different function as the implementation of a function. With the
@@ -1170,6 +1177,15 @@ are resolved.
 
 To mark a potential *type class instance* — so it can be unfolded during type class synthesis —
 use `[instance_reducible]` instead (which the `instance` command applies automatically).
+
+## inclusionExtAttr
+ adds an inclusion extension
+
+## inclusionOpAttr
+ adds an inclusion operation
+
+## inclusionParamAttr
+ registers an inclusion-tactic parameter
 
 ## incremental
  Marks an elaborator (tactic or command, currently) as supporting incremental elaboration. For unmarked elaborators, the corresponding snapshot bundle field in the elaboration context is unset so as to prevent accidental, incorrect reuse.
