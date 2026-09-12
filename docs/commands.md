@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `63ed4eba5d2be3bb2e99bc7158e07f08cd9189ec`
+Mathlib version: `75ac7a0aa0b7d98acb0c8336e1a98b88be73683f`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -2382,6 +2382,13 @@ Defined in: `Mathlib.Tactic.ToAdditive.commandInsert_to_additive_translation__`
 
 `insert_to_additive_translation mulName addName` inserts the translation `mulName ↦ addName`
 into the `to_additive` dictionary. This is useful for translating namespaces that don't (yet)
+have a corresponding translated declaration.
+
+## insert_to_dual_translation
+Defined in: `Mathlib.Tactic.ToDual.commandInsert_to_dual_translation__`
+
+`insert_to_dual_translation name dualName` inserts the translation `name ↔ dualName`
+into the `to_dual` dictionary. This is useful for translating namespaces that don't (yet)
 have a corresponding translated declaration.
 
 ## instance_wanted
