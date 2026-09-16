@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `db00fb3901b1bb4954f8a2373285959a5930bbfa`
+Mathlib version: `fcabd43b034f7cc13b777feb1dcc84af140c8ce7`
 
 ## Elab.async
 type: `Bool`
@@ -293,12 +293,27 @@ default: `true`
 
 if true (the default), do not bump transparency to `.default` when checking whether implicit arguments are definitionally equal
 
+## backward.isDefEq.respectTransparency.instanceSearchTypes
+type: `Bool`
+
+default: `true`
+
+if true, require assignments to instance metavariables to preserve the metavariable's
+  type up to `.instances` transparency during instance search
+
 ## backward.isDefEq.respectTransparency.types
 type: `Bool`
 
 default: `true`
 
 if true, do not bump transparency to `.default` when checking whether the type of a metavariable matches the type of the term being assigned to it.
+
+## backward.isDefEq.throwOnStuckAfterApp
+type: `Bool`
+
+default: `false`
+
+if true, immediately throw a stuck exception
 
 ## backward.linearNoConfusionType
 type: `Bool`
@@ -712,7 +727,7 @@ type: `Bool`
 
 default: `false`
 
-acknowledge that the intrinsic verification syntax (the contract clauses of a `def`, the `assert` element, and the `invariant` clause of a loop) is experimental and subject to change; `true` silences the warning that each of these forms reports
+acknowledge that the intrinsic verification syntax (the contract clauses of a `def`, the `assert` element, and the `invariant` and `decreasing` clauses of a loop) is experimental and subject to change; `true` silences the warning that each of these forms reports
 
 ## experimental.module
 type: `Bool`
@@ -720,6 +735,13 @@ type: `Bool`
 default: `false`
 
 no-op, deprecated
+
+## experimental.vcgen
+type: `Bool`
+
+default: `false`
+
+acknowledge that the `vcgen` tactic is experimental and subject to change; `true` silences the warning that each `vcgen` call reports
 
 ## exponentiation.threshold
 type: `Nat`
@@ -805,6 +827,20 @@ type: `Bool`
 default: `false`
 
 enable E-matching theorem instantiation diagnostics
+
+## grind.ematch.diagnostics.branchThreshold
+type: `Nat`
+
+default: `10`
+
+report E-matching instances that participated in at least this many other instances directly
+
+## grind.ematch.diagnostics.costThreshold
+type: `Nat`
+
+default: `10`
+
+report E-matching instances that were at least this costly (roughly the size of their transitive closure of follow up instances)
 
 ## grind.param.codeAction
 type: `Bool`
@@ -994,6 +1030,13 @@ type: `Bool`
 default: `true`
 
 if true, generate deprecation warnings and errors for deprecated parameters
+
+## linter.deprecated.deprecatedTarget
+type: `Bool`
+
+default: `true`
+
+if true, warn when a `@[deprecated]` attribute points at a declaration that is itself deprecated
 
 ## linter.deprecated.module
 type: `Bool`
@@ -1767,6 +1810,13 @@ default: `true`
 
 
 
+## linter.unnecessaryRwa
+type: `Bool`
+
+default: `true`
+
+enable the unnecessary `rwa` linter
+
 ## linter.unnecessarySeqFocus
 type: `Bool`
 
@@ -1995,7 +2045,7 @@ type: `Bool`
 
 default: `true`
 
-disable `mvcgen` usage warning
+this option has no effect; `mvcgen` reports a deprecation warning controlled by `linter.deprecated.syntax`
 
 ## pp.all
 type: `Bool`
@@ -2683,7 +2733,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.34.0"`
+default: `"v4.35.0-rc1"`
 
 Revision of LeanStateSearch to use
 
@@ -5565,6 +5615,20 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.ext.candidate
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.hom
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.hom.pred
 type: `Bool`
 
 default: `false`
