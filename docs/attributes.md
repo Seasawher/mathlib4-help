@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `db00fb3901b1bb4954f8a2373285959a5930bbfa`
+Mathlib version: `fcabd43b034f7cc13b777feb1dcc84af140c8ce7`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -1416,6 +1416,9 @@ Changes the inlining behavior. This attribute comes in several variants:
   #eval test 42 (2^1000000000000) -- doesn't compute 2^1000000000000
   ```
   Only non-recursive functions may be marked `@[macro_inline]`.
+
+## mapStx
+ 
 
 ## match_pattern
  mark that a definition can be used in a pattern (remark: the dependent pattern matching compiler will unfold the definition)

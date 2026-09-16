@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `db00fb3901b1bb4954f8a2373285959a5930bbfa`
+Mathlib version: `fcabd43b034f7cc13b777feb1dcc84af140c8ce7`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1136,7 +1136,7 @@ Defined in: `Lean.Parser.Command.printSig`
 Defined in: `Lean.Parser.Command.printAxioms`
 
 Prints the axioms used by a declaration, directly or indirectly.
-Please consult [the reference manual](https://lean-lang.org/doc/reference/4.34.0/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
+Please consult [the reference manual](https://lean-lang.org/doc/reference/4.35.0-rc1/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
 
 ## \#print
 Defined in: `Lean.Parser.Command.printTacTags`
@@ -2743,42 +2743,15 @@ Defined in: `«proof_wanted»`
 deprecated in favour of `theorem_wanted` eventually.)
 
 ## recall
-Defined in: `Mathlib.Tactic.Recall.recall`
+Defined in: `Lean.Parser.Command.recallCmd`
 
-The `recall` command redeclares a previous definition for illustrative purposes.
-This can be useful for files that give an expository account of some theory in Lean.
-
-The syntax of the command mirrors `def`, so all the usual bells and whistles work.
-```lean
-recall List.cons_append (a : α) (as bs : List α) : (a :: as) ++ bs = a :: (as ++ bs) := rfl
-```
-Also, one can leave out the body.
-```lean
-recall Nat.add_comm (n m : Nat) : n + m = m + n
-```
-
-The command verifies that the new definition type-checks and that the type and value
-provided are definitionally equal to the original declaration. However, this does not
-capture some details (like binders), so the following works without error.
-```lean
-recall Nat.add_comm {n m : Nat} : n + m = m + n
-```
-
-Docstrings are permitted but are ignored:
-```lean
-/-- The additive commutativity of natural numbers. -/
-recall Nat.add_comm (n m : Nat) : n + m = m + n
-```
+`recall` restates a previous declaration for illustrative purposes and checks that its type and
+optional value are definitionally equal to the original declaration.
 
 ## recall?
-Defined in: `Mathlib.Tactic.Recall.recall?`
+Defined in: `Lean.Parser.Command.recallQuestionCmd`
 
-The `recall?` command looks up a previous definition and suggests the correct
-`recall` statement for it.
-```lean
-recall? Nat.add_comm
--- Try this: recall Nat.add_comm (n m : Nat) : n + m = m + n
-```
+`recall?` suggests a `recall` statement for a previous declaration.
 
 ## recommended_spelling
 Defined in: `Lean.Parser.Command.recommended_spelling`
