@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `f61f3ed7633ff99ecaae4a086395b501652a76ee`
+Mathlib version: `797def14ae4c973c2fc3634045d952cc8e2a2952`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -207,6 +207,24 @@ inference.
 
 ## bareiss_ext
  adds a computation model to the Bareiss elimination
+
+## basifyElim
+ an eliminator that `basify` uses to case split a value of a registered type
+
+## basifyOp
+ an operation of a registered type that `basify` looks inside of
+
+## basify_simp
+ The simp set `basify` runs, after each case split and once at the end: the lemmas that clear
+away the degenerate branches, where some atom is `⊤` or `⊥`, and those that translate a proposition
+down, such as `↑a ≤ ↑b ↔ a ≤ b`. Lemmas tagged `@[basify_op]` are added here as well. 
+The simp set `basify` runs, after each case split and once at the end: the lemmas that clear
+away the degenerate branches, where some atom is `⊤` or `⊥`, and those that translate a proposition
+down, such as `↑a ≤ ↑b ↔ a ≤ b`. Lemmas tagged `@[basify_op]` are added here as well.
+
+## basify_simp_proc
+ simproc set for basify_simp_proc
+Simplification procedure
 
 ## bitvec_to_nat
  simp lemmas converting `BitVec` goals to `Nat` goals

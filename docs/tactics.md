@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `f61f3ed7633ff99ecaae4a086395b501652a76ee`
+Mathlib version: `797def14ae4c973c2fc3634045d952cc8e2a2952`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1030,6 +1030,36 @@ Helper internal tactic for implementing the tactic `try?`.
 Defined in: `Lean.Parser.Tactic.attemptAllPar`
 
 Helper internal tactic for implementing the tactic `try?` with parallel execution.
+
+## basify
+Defined in: `Mathlib.Tactic.Basify.tacticBasify`
+
+`basify` removes the layers that separate a type from the type its arithmetic really lives in,
+turning the goal into an equivalent goal about that type: `ℕ∞` and `ℕ+` become `ℕ`, `ℝ≥0` becomes
+`ℝ`, and `ℝ≥0∞` becomes `ℝ` by way of `ℝ≥0`.
+
+Every value of a registered type is destructed with the eliminator registered for it -- `⊤` or
+`↑x` for an extension such as `ℕ∞`, `n.toPNat'` together with `0 < n` for a subtype such as `ℕ+`
+-- the degenerate branches are discharged, and the surviving propositions are pushed down along
+the coercions. The result is then can be finished off by a decision procedure for the underlying
+type:
+
+```
+example (a b : ℕ∞) (h : a ≤ b) : a - b < b + 1 := by basify; lia
+example (a b : ℕ+) (h : a < b) : 1 < b := by basify; lia
+example (a b : ℝ≥0) (h : a + b = 0) : a = 0 := by basify; linarith
+example (a b c : ℝ≥0∞) (hab : a ≥ b) (hbc : b ≥ c) : a ≥ c := by basify <;> linarith
+```
+
+The cast lemmas for division and inverse are conditional, and are discharged from the context, so a
+goal using them needs the relevant `≠ 0` to be available; without it the descent stops part-way.
+
+```
+example (a : ℝ≥0∞) (h : a ≠ 0) (h' : a ≠ ⊤) : a * a⁻¹ = 1 := by basify; field_simp
+```
+
+New types are supported by tagging an eliminator with `@[basify_elim]`, its operations with
+`@[basify_op]`, and the relevant rewrite lemmas with `@[basify_simp]`.
 
 ## bddDefault
 Defined in: `tacticBddDefault`
