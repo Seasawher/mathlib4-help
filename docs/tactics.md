@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `045acef0f761280401116e3801cb78ed1b2e716b`
+Mathlib version: `5e0c4e5239cb0a2d86d68a884bf52cfd963fce22`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1129,12 +1129,6 @@ example {B : Type} [Bicategory B] {a : B} :
 Defined in: `Mathlib.Tactic.Bicategory.tacticBicategory_nf`
 
 Normalize the both sides of an equality.
-
-## bitwise_assoc_tac
-Defined in: `Nat.tacticBitwise_assoc_tac`
-
-Proving associativity of bitwise operations in general essentially boils down to a huge case
-distinction, so it is shorter to use this tactic instead of proving it in the general case.
 
 ## borelize
 Defined in: `Mathlib.Tactic.Borelize.tacticBorelize___`
@@ -3387,11 +3381,6 @@ Defined in: `Aesop.Frontend.tacticForward____`
 Defined in: `Aesop.Frontend.tacticForward?____`
 
 
-## frac_tac
-Defined in: `RatFunc.tacticFrac_tac`
-
-Solve equations for `K⟮X⟯` by working in `FractionRing K[X]`.
-
 ## fun_cases
 Defined in: `Lean.Parser.Tactic.funCases`
 
@@ -3570,7 +3559,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.35.0-rc2/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.35.0-rc3/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3771,7 +3760,7 @@ These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
 
-See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.35.0-rc2/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.35.0-rc3/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
@@ -5326,11 +5315,6 @@ example (a b : ℚ) (h : ∀ p q : ℚ, p = q) : 3*a + qc = 3*b + 2*qc := by
   linear_combination' 3 * h a b + hqc
 ```
 
-## map_fun_tac
-Defined in: `WittVector.mapFun.tacticMap_fun_tac`
-
-Auxiliary tactic for showing that `mapFun` respects the ring operations.
-
 ## map_tacs
 Defined in: `Batteries.Tactic.«tacticMap_tacs[_;]»`
 
@@ -5585,13 +5569,6 @@ The tactic `measurability?` solves goals of the form `Measurable f`, `AEMeasurab
 `StronglyMeasurable f`, `AEStronglyMeasurable f μ`, or `MeasurableSet s` by applying lemmas tagged
 with the `measurability` user attribute, and suggests a faster proof script that can be substituted
 for the tactic call in case of success.
-
-## mem_tac
-Defined in: `AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.tacticMem_tac`
-
-`mem_tac` tries to prove goals of the form `x ∈ 𝒜 i` when `x` has the form of:
-* `y ^ n` where `i = n • j` and `y ∈ 𝒜 j`.
-* a natural number `n`.
 
 ## mexact
 Defined in: `Lean.Parser.Tactic.mexactMacro`
@@ -8988,11 +8965,6 @@ Defined in: `Mathlib.Tactic.Slice.sliceRHS`
 `slice_rhs a b => tac` zooms to the right-hand side, uses associativity for categorical
 composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invokes `tac`.
 
-## smul_tac
-Defined in: `RatFunc.tacticSmul_tac`
-
-Solve equations for `K⟮X⟯` by applying `RatFunc.induction_on`.
-
 ## solve
 Defined in: `Lean.solveTactic`
 
@@ -9962,11 +9934,6 @@ Defined in: `Lean.Parser.Tactic.withUnfoldingNone`
 
 `with_unfolding_none tacs` executes `tacs` using the `.none` transparency setting.
 In this setting no definitions are unfolded.
-
-## witt_truncateFun_tac
-Defined in: `witt_truncateFun_tac`
-
-A macro tactic used to prove that `truncateFun` respects ring operations.
 
 ## wlog
 Defined in: `Mathlib.Tactic.wlog`
