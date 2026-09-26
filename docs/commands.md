@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `5e0c4e5239cb0a2d86d68a884bf52cfd963fce22`
+Mathlib version: `99f56c0c71dc987159c015bd29e766e547e0c761`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1085,6 +1085,18 @@ so the results will likely need to be adjusted by hand.
 ## \#minimize_imports
 Defined in: `«command#minimize_imports»`
 
+
+## \#norm_imports
+Defined in: `ImportGraph.NormImports.«command#norm_imports»`
+
+Normalizes the imports of the current file. This removes rendundant imports and formats the
+resulting import block in a standard fashion, ensuring that the same modules are available at the
+same visibilities and phases. It does **not** take into account the declarations or usages of those
+modules in the current file.
+
+`#norm_imports` will keep any direct imports of `ImportGraph.Tools.NormImports`,
+`ImportGraph.Tools`, or `ImportGraph` in place, while ignoring them for the calculation
+of the redundant imports.
 
 ## \#norm_num
 Defined in: `Mathlib.Tactic.normNumCmd`

@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `5e0c4e5239cb0a2d86d68a884bf52cfd963fce22`
+Mathlib version: `99f56c0c71dc987159c015bd29e766e547e0c761`
 
 ## Elab.async
 type: `Bool`
@@ -1296,13 +1296,6 @@ type: `Bool`
 default: `false`
 
 Enable the `privateModule` linter, which lints against nonempty modules that have only private declarations.
-
-## linter.pythonStyle
-type: `Bool`
-
-default: `false`
-
-
 
 ## linter.redundantVisibility
 type: `Bool`
