@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `344385a8816d926e65be4f6b76c7b3b476d2dde5`
+Mathlib version: `728a93eeff833da3173895bb0575752fdc24edb0`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -471,7 +471,43 @@ Examples:
 ```
 
 ## \#find_home
-Defined in: `«command#find_home!_»`
+Defined in: `ImportGraph.Shake.findHomeStx`
+
+⚠️ `#find_home` is currently experimental. Please report any wish-list features, possible ergonomic
+improvements, or errors on GitHub or Zulip.
+
+---
+
+`#find_home for <cmd>` finds the highest modules in the import hierarchy in which `<cmd>` (and the
+declarations produced during it) can live. This accounts for the syntax, constants, and executable
+code produced during `<cmd>`, and respects the module system.
+
+This includes any declarations which are dependencies of `<cmd>` from the current file, which
+should be moved along with it. (Currently, `#find_home` does not account for the syntax of those
+dependencies, nor does it suggest moving such dependencies individually.)
+
+Note that `#find_home` may take a long time on its first run. It caches data about the module
+hierarchy both in the `.lake` folder and interactively to make subsequent runs faster.
+
+### Known limitations
+
+- `#find_home` does not yet handle `meta` definitions.
+- `#find_home` does not yet account for the syntax of dependent definitions.
+- `#find_home` may not function correctly outside of the module system.
+- For smaller miscellaneous limitations, see the module docstring.
+
+## \#find_home
+Defined in: `oldFindHomeStx`
+
+`#find_home <ident>` is in the process of being deprecated. Instead, use
+```
+#find_home for
+<command>
+```
+where `<command>` declares `<ident>`. This ensures that the imports necessary for the syntax and
+tactics used in the declaration are present too.
+
+The following describes the functionality outside of the module system, which may not work:
 
 Find locations as high as possible in the import hierarchy
 where the named declaration could live.
@@ -2249,6 +2285,10 @@ The optional `approximately` keyword rounds down the heartbeats to the nearest t
 This helps make the tests more stable to small changes in heartbeats.
 To use this functionality, use `guard_min_heartbeats approximately (n)? in cmd`.
 
+## hydrate_opaque_type
+Defined in: `Lake.hydrateOpaqueTypeCmd`
+
+
 ## import
 Defined in: `Lean.Parser.Command.import`
 
@@ -2614,6 +2654,10 @@ As with `section`, namespaces can be nested and the scope of a namespace is term
 corresponding `end <id>` or the end of the file.
 
 `namespace` also acts like `section` in delimiting the scope of `variable`, `open`, and other scoped commands.
+
+## nonempty_type
+Defined in: `Lake.nonemptyTypeCmd`
+
 
 ## norm_cast_add_elim
 Defined in: `Lean.Parser.Tactic.normCastAddElim`
