@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `344385a8816d926e65be4f6b76c7b3b476d2dde5`
+Mathlib version: `728a93eeff833da3173895bb0575752fdc24edb0`
 
 ## Elab.async
 type: `Bool`
@@ -3886,6 +3886,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Elab.tactic.backtrack
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.ImportGraph.Shake
 type: `Bool`
 
 default: `false`
