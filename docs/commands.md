@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `300d0e535721bc098547106fc297d8ba2a63f6bb`
+Mathlib version: `aaf410c71d42d5dc083c7735e47f56443afca3c0`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -3197,6 +3197,15 @@ Defined in: `Mathlib.Tactic.ToAdditive.commandTo_additive_name_hint__`
 
 `to_additive_name_hint src tgt` lets `to_additive` translate the name segment `src` to `tgt`
 for the rest of the file current. `src` and `tgt` should both be capitalized.
+
+## to_dual_for
+Defined in: `Mathlib.Tactic.ToDual.«commandTo_dual_for_:=_»`
+
+`to_dual_for src := e` tells `to_dual` to translate the constant `src` to `e`,
+where `e` can be an arbitrary expression.
+
+TODO: this currently doesn't accept the `(dont_translate := ...)`/`(relevant_arg := ...)` syntax.
+  This can be added if necessary.
 
 ## to_dual_insert_cast
 Defined in: `Mathlib.Tactic.ToDual.«commandTo_dual_insert_cast_:=_»`
