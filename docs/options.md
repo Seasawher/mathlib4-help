@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `be31cde2c2cb07d7562e5e891b302f9286cd0a68`
+Mathlib version: `331d5244f0d3aad530d9ab00ded135b4c7691502`
 
 ## Elab.async
 type: `Bool`
@@ -1156,13 +1156,6 @@ type: `Bool`
 default: `false`
 
 enable the flexible linter
-
-## linter.globalAttributeIn
-type: `Bool`
-
-default: `true`
-
-enable the globalAttributeIn linter
 
 ## linter.hashCommand
 type: `Bool`

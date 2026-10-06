@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `be31cde2c2cb07d7562e5e891b302f9286cd0a68`
+Mathlib version: `331d5244f0d3aad530d9ab00ded135b4c7691502`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -6970,13 +6970,15 @@ can be used to:
 Currently, all of these are on by default.
 
 ## on_goal
-Defined in: `Batteries.Tactic.«tacticOn_goal-_=>_»`
+Defined in: `Batteries.Tactic.«tacticOn_goal_=>_»`
 
 `on_goal n => tacSeq` creates a block scope for the `n`-th goal and tries the sequence
 of tactics `tacSeq` on it.
 
 `on_goal -n => tacSeq` does the same, but the `n`-th goal is chosen by counting from the
 bottom.
+
+`on_goal n₁ ... nᵢ => tacSeq` runs `tacSeq` on each of the goals `n₁ ... nᵢ` separately.
 
 The goal is not required to be solved and any resulting subgoals are inserted back into the
 list of goals, replacing the chosen goal.
@@ -7073,13 +7075,13 @@ sequence of rational numbers `√2 < r 1 < r 2 < ... < r n < 2` satisfying the p
 `√(2 + r i) ≥ r(i+1)`, where `r 0 = 0` and `√(2 - r n) ≤ (a - 1/4^n) / 2^(n+1)`.
 
 ## pick_goal
-Defined in: `Batteries.Tactic.«tacticPick_goal-_»`
+Defined in: `Batteries.Tactic.tacticPick_goal_`
 
 `pick_goal n` will move the `n`-th goal to the front.
 
 `pick_goal -n` will move the `n`-th goal (counting from the bottom) to the front.
 
-See also `Tactic.rotate_goals`, which moves goals from the front to the back and vice-versa.
+See also `rotate_left`/`rotate_right`, which move goals from the front to the back and vice-versa.
 
 ## plausible
 Defined in: `plausibleSyntax`

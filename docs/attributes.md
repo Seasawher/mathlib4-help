@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `be31cde2c2cb07d7562e5e891b302f9286cd0a68`
+Mathlib version: `331d5244f0d3aad530d9ab00ded135b4c7691502`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -1479,26 +1479,24 @@ overloaded `Cls.op` operation, and similarly `instClsT.op_spec_<n>` based on the
  simp lemma used to post-process the theorem created by `@[method_specs]`.
 
 ## mfld_simps
- The simpset `mfld_simps` records several simp lemmas that are
-especially useful in manifolds. It is a subset of the whole set of simp lemmas, but it makes it
-possible to have quicker proofs (when used with `squeeze_simp` or `simp only`) while retaining
-readability.
+ The simpset `mfld_simps` records several simp lemmas that are especially useful in manifolds.
+It is a subset of the whole set of simp lemmas, but it makes it possible to have quicker proofs
+(when used with `simp?` or `simp only`) while retaining readability.
 
 The typical use case is the following, in a file on manifolds:
-If `simp [foo, bar]` is slow, replace it with `squeeze_simp [foo, bar, mfld_simps]` and paste
-its output. The list of lemmas should be reasonable (contrary to the output of
-`squeeze_simp [foo, bar]` which might contain tens of lemmas), and the outcome should be quick
+If `simp [foo, bar]` is slow, replace it with `simp? [foo, bar, mfld_simps]` and click the
+"Try this" suggestion in the infoview. The list of lemmas should be reasonable (contrary to the
+output of `simp? [foo, bar]` which might contain tens of lemmas), and the outcome should be quick
 enough.
 
-The simpset `mfld_simps` records several simp lemmas that are
-especially useful in manifolds. It is a subset of the whole set of simp lemmas, but it makes it
-possible to have quicker proofs (when used with `squeeze_simp` or `simp only`) while retaining
-readability.
+The simpset `mfld_simps` records several simp lemmas that are especially useful in manifolds.
+It is a subset of the whole set of simp lemmas, but it makes it possible to have quicker proofs
+(when used with `simp?` or `simp only`) while retaining readability.
 
 The typical use case is the following, in a file on manifolds:
-If `simp [foo, bar]` is slow, replace it with `squeeze_simp [foo, bar, mfld_simps]` and paste
-its output. The list of lemmas should be reasonable (contrary to the output of
-`squeeze_simp [foo, bar]` which might contain tens of lemmas), and the outcome should be quick
+If `simp [foo, bar]` is slow, replace it with `simp? [foo, bar, mfld_simps]` and click the
+"Try this" suggestion in the infoview. The list of lemmas should be reasonable (contrary to the
+output of `simp? [foo, bar]` which might contain tens of lemmas), and the outcome should be quick
 enough.
 
 ## mfld_simps_proc
