@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `9e6b3aac99b624d10c84653ab9c5357283b9b3b8`
+Mathlib version: `29c53517cf8e316f02ecadf525b142c15f8eb386`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -2023,11 +2023,6 @@ directly.
 ## to_additive_dont_translate
  Auxiliary attribute for `to_additive` stating that the operations on this type should not be translated.
 
-## to_additive_ignore_args
- Auxiliary attribute for `to_additive` stating that certain arguments are not additivized.
-Similar to `registerParametricAttribute` except that attributes do not
-have to be assigned in the same file as the declaration.
-
 ## to_app
  
 
@@ -2039,11 +2034,6 @@ have to be assigned in the same file as the declaration.
 
 ## to_dual_dont_translate
  Auxiliary attribute for `to_dual` stating that the operations on this type should not be translated.
-
-## to_dual_ignore_args
- Auxiliary attribute for `to_dual` stating that certain arguments are not dualized.
-Similar to `registerParametricAttribute` except that attributes do not
-have to be assigned in the same file as the declaration.
 
 ## to_fun
  generate a copy of a lemma where point-free functions are expanded to their `fun` form
