@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `29c53517cf8e316f02ecadf525b142c15f8eb386`
+Mathlib version: `aa4180fd65f90dd50307a354941dfbee635cf9d2`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2945,7 +2945,7 @@ Defined in: `evalRank`
 
 `eval_rank` evaluates the rank of matrices with non-symbolic entries.
 
-The element type must be a commutative domain with kernel-decidable equality.
+The element type must be a commutative domain.
 Terms skipped can be viewed by using `set_option trace.Tactic.evalRank true`.
 
 ## exact
