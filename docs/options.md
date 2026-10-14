@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `715a03a90adf491de40fbec8b456c179a623435f`
+Mathlib version: `a63713524b66f0b5681eaa2bfa83e7218c5cdbe5`
 
 ## Elab.async
 type: `Bool`
@@ -1731,13 +1731,6 @@ default: `false`
 
 enable the linter that type-checks every tactic goal at `.implicit` transparency
 
-## linter.trailingWhitespace
-type: `Bool`
-
-default: `true`
-
-
-
 ## linter.translate.warnInvalid
 type: `Bool`
 
@@ -2719,7 +2712,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.35.0-rc4"`
+default: `"v4.35.0"`
 
 Revision of LeanStateSearch to use
 
