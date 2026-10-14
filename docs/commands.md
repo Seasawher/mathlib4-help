@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `715a03a90adf491de40fbec8b456c179a623435f`
+Mathlib version: `a63713524b66f0b5681eaa2bfa83e7218c5cdbe5`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1219,7 +1219,7 @@ Defined in: `Lean.Parser.Command.printSig`
 Defined in: `Lean.Parser.Command.printAxioms`
 
 Prints the axioms used by a declaration, directly or indirectly.
-Please consult [the reference manual](https://lean-lang.org/doc/reference/4.35.0-rc4/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
+Please consult [the reference manual](https://lean-lang.org/doc/reference/4.35.0/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
 
 ## \#print
 Defined in: `Lean.Parser.Command.printTacTags`
@@ -2285,10 +2285,6 @@ The optional `approximately` keyword rounds down the heartbeats to the nearest t
 This helps make the tests more stable to small changes in heartbeats.
 To use this functionality, use `guard_min_heartbeats approximately (n)? in cmd`.
 
-## hydrate_opaque_type
-Defined in: `Lake.hydrateOpaqueTypeCmd`
-
-
 ## import
 Defined in: `Lean.Parser.Command.import`
 
@@ -2654,10 +2650,6 @@ As with `section`, namespaces can be nested and the scope of a namespace is term
 corresponding `end <id>` or the end of the file.
 
 `namespace` also acts like `section` in delimiting the scope of `variable`, `open`, and other scoped commands.
-
-## nonempty_type
-Defined in: `Lake.nonemptyTypeCmd`
-
 
 ## norm_cast_add_elim
 Defined in: `Lean.Parser.Tactic.normCastAddElim`
