@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `a63713524b66f0b5681eaa2bfa83e7218c5cdbe5`
+Mathlib version: `f0b4c8150aa0dbc758aff1291410c5ae335aff3a`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -1683,6 +1683,9 @@ Marks a definition to never be specialized during code generation.
  An attribute specifying that this is a notation class. Used by @[simps].
 `@[notation_class]` attribute. Note: this is *not* a `NameMapAttribute` because we key on the
 argument of the attribute, not the declaration name.
+
+## oeisTag
+ Apply an OEIS identifier to a declaration.
 
 ## package_code_quality_check
  Use this declaration as a check in the code quality metrics driver

@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `a63713524b66f0b5681eaa2bfa83e7218c5cdbe5`
+Mathlib version: `f0b4c8150aa0dbc758aff1291410c5ae335aff3a`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1150,6 +1150,18 @@ Unlike `norm_num`, this command does not fail when no simplifications are made.
   simplification.
 * `#norm_num (config := cfg) : e` uses `cfg` as configuration for `simp` calls (see the `simp`
   tactic for further details).
+
+## \#oeis_tags
+Defined in: `Mathlib.CrossRef.oeisTags`
+
+The `#oeis_tags` command retrieves all declarations that have the `oeis` attribute.
+
+For each found declaration, it prints a line
+```
+'declaration_name' corresponds to tag 'declaration_tag'.
+```
+The variant `#oeis_tags!` also adds the theorem statement (for theorems)
+or declaration type (for definitions, structures, instances, etc.) after each summary line.
 
 ## \#parse
 Defined in: `Mathlib.GuardExceptions.parseCmd`
