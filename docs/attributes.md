@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `cfc55fc58714a59dc06e6e79edc6d1d95140d3c2`
+Mathlib version: `fbc1661a327737928fe9d69b74f7deaa09eecfbc`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -217,7 +217,7 @@ inference.
 ## basify_simp
  The simp set `basify` runs, after each case split and once at the end: the lemmas that clear
 away the degenerate branches, where some atom is `⊤` or `⊥`, and those that translate a proposition
-down, such as `↑a ≤ ↑b ↔ a ≤ b`. Lemmas tagged `@[basify_op]` are added here as well. 
+down, such as `↑a ≤ ↑b ↔ a ≤ b`. Lemmas tagged `@[basify_op]` are added here as well.
 The simp set `basify` runs, after each case split and once at the end: the lemmas that clear
 away the degenerate branches, where some atom is `⊤` or `⊥`, and those that translate a proposition
 down, such as `↑a ≤ ↑b ↔ a ≤ b`. Lemmas tagged `@[basify_op]` are added here as well.
@@ -614,7 +614,6 @@ The simp set makes the following choice of normal form
 
 - Some lemmas (e.g. `lid_comp_map : λ ∘ₗ (f ⊗ₘ g) = g ∘ₗ λ ∘ₗ (f ⊗ₘ id)`) loops when tagged as simp,
   so we wrap it inside a rudimentary simproc that only fires when `g ≠ id`.
-
 `coassoc_simps` is a simp set useful to prove tautologies on coalgebras.
 
 The general algorithm it follows is to push the associators `TensorProduct.assoc` and
@@ -947,7 +946,7 @@ type. This may prevent the elaborator from incorrectly inferring implicit argume
  
 
 ## enat_to_nat_coe
- A simp set for pushing coercions from `ℕ` to `ℕ∞` in `enat_to_nat`. 
+ A simp set for pushing coercions from `ℕ` to `ℕ∞` in `enat_to_nat`.
 A simp set for pushing coercions from `ℕ` to `ℕ∞` in `enat_to_nat`.
 
 ## enat_to_nat_coe_proc
@@ -955,7 +954,7 @@ A simp set for pushing coercions from `ℕ` to `ℕ∞` in `enat_to_nat`.
 Simplification procedure
 
 ## enat_to_nat_top
- A simp set for simplifying expressions involving `⊤` in `enat_to_nat`. 
+ A simp set for simplifying expressions involving `⊤` in `enat_to_nat`.
 A simp set for simplifying expressions involving `⊤` in `enat_to_nat`.
 
 ## enat_to_nat_top_proc
@@ -1022,7 +1021,7 @@ Register an Expr presenter. It must have the type `ProofWidgets.ExprPresenter`.
 Initialize the attribute `field` grouping the simprocs associated to the `field_simp` tactic.
 
 ## fin_omega
- A simp set for the `fin_omega` wrapper around `omega`. 
+ A simp set for the `fin_omega` wrapper around `omega`.
 A simp set for the `fin_omega` wrapper around `omega`.
 
 ## fin_omega_proc
@@ -1044,7 +1043,7 @@ formatting syntax of kind `k`.
 Initialization of `funProp` attribute
 
 ## functor_norm
- Simp set for `functor_norm` 
+ Simp set for `functor_norm`
 Simp set for `functor_norm`
 
 ## functor_norm_proc
@@ -1091,7 +1090,7 @@ This attribute is only meant to be used in `Init.Prelude` to build these constru
 types where we did not generate them immediately (due to `set_option genCtorIdx false`).
 
 ## ghost_simps
- Simplification rules for ghost equations. 
+ Simplification rules for ghost equations.
 Simplification rules for ghost equations.
 
 ## ghost_simps_proc
@@ -1347,7 +1346,7 @@ implicit reducibility level; it will no longer unfold at `.instances` transparen
  sym simp theorems used to convert UIntX/IntX statements into BitVec ones
 
 ## integral_simps
- Simp set for integral rules. 
+ Simp set for integral rules.
 Simp set for integral rules.
 
 ## integral_simps_proc
@@ -1358,7 +1357,7 @@ Simplification procedure
  irreducible declaration
 
 ## is_poly
- A stub attribute for `is_poly`. 
+ A stub attribute for `is_poly`.
 
 ## lia
  The `[lia]` attribute is used to annotate declarations.When applied to an equational theorem, `[lia =]`, `[lia =_]`, or `[lia _=_]`will mark the theorem for use in heuristic instantiations by the `lia` tactic,
@@ -1488,7 +1487,6 @@ If `simp [foo, bar]` is slow, replace it with `simp? [foo, bar, mfld_simps]` and
 "Try this" suggestion in the infoview. The list of lemmas should be reasonable (contrary to the
 output of `simp? [foo, bar]` which might contain tens of lemmas), and the outcome should be quick
 enough.
-
 The simpset `mfld_simps` records several simp lemmas that are especially useful in manifolds.
 It is a subset of the whole set of simp lemmas, but it makes it possible to have quicker proofs
 (when used with `simp?` or `simp only`) while retaining readability.
@@ -1544,7 +1542,6 @@ some of the simp lemmas in the standard simp set:
   `(α_ M M M).hom ≫ (𝟙 M ⊗ₘ μ) ≫ μ = (μ ⊗ₘ 𝟙 M) ≫ μ`,
   `(α_ M M M).inv ≫ (μ ⊗ₘ 𝟙 M) ≫ μ = (𝟙 M ⊗ₘ μ) ≫ μ`
 * It unfolds non-primitive coherence isomorphisms, like the tensor strengths `tensorμ`, `tensorδ`.
-
 `mon_tauto` is a simp set to prove tautologies about morphisms from some (tensor) power of `M`
 to `M`, where `M` is a (commutative) monoid object in a (braided) monoidal category.
 
@@ -1585,7 +1582,7 @@ some of the simp lemmas in the standard simp set:
 Simplification procedure
 
 ## monad_norm
- Simp set for `functor_norm` 
+ Simp set for `functor_norm`
 Simp set for `functor_norm`
 
 ## monad_norm_proc
@@ -1660,7 +1657,7 @@ Defines the user attribute `nolint` for skipping `#lint`
 ## nontriviality
  The `@[nontriviality]` simp set is used by the `nontriviality` tactic to automatically
 discharge theorems about the trivial case (where we know `Subsingleton α` and many theorems
-in e.g. groups are trivially true). 
+in e.g. groups are trivially true).
 The `@[nontriviality]` simp set is used by the `nontriviality` tactic to automatically
 discharge theorems about the trivial case (where we know `Subsingleton α` and many theorems
 in e.g. groups are trivially true).
@@ -1698,7 +1695,7 @@ Registers a parenthesizer for a parser.
 for parenthesizing syntax of kind `k`.
 
 ## parity_simps
- Simp attribute for lemmas about `Even` 
+ Simp attribute for lemmas about `Even`
 Simp attribute for lemmas about `Even`
 
 ## parity_simps_proc
@@ -1717,7 +1714,7 @@ for functions defined using `partial_fixpoint`.
  Apply a π-Base identifier to a declaration.
 
 ## pnat_to_nat_coe
- A simp set for the `pnat_to_nat` tactic. 
+ A simp set for the `pnat_to_nat` tactic.
 A simp set for the `pnat_to_nat` tactic.
 
 ## pnat_to_nat_coe_proc
@@ -1762,7 +1759,6 @@ formulation of homomorphisms, so for example `1 : Equiv α α` becomes `Equiv.re
 `a * b` becomes `b.trans a`.
 
 The dual simpset is `push_end`.
-
 The simpset `pull_end` translates algebraic formulations of endomorphisms into the standard
 formulation of homomorphisms, so for example `1 : Equiv α α` becomes `Equiv.refl α` and
 `a * b` becomes `b.trans a`.
@@ -1805,7 +1801,6 @@ algebraic formulation, so for example `Equiv.refl α` becomes `1 : Equiv α α` 
 `b.trans a` becomes `a * b`.
 
 The dual simpset is `pull_end`.
-
 The simpset `push_end` translates the standard formulations of endomorphisms to the
 algebraic formulation, so for example `Equiv.refl α` becomes `1 : Equiv α α` and
 `b.trans a` becomes `a * b`.
@@ -1818,7 +1813,7 @@ Simplification procedure
 
 ## qify_simps
  The simpset `qify_simps` is used by the tactic `qify` to move expressions from `ℕ` or `ℤ` to `ℚ`
-which gives a well-behaved division. 
+which gives a well-behaved division.
 The simpset `qify_simps` is used by the tactic `qify` to move expressions from `ℕ` or `ℤ` to `ℚ`
 which gives a well-behaved division.
 
@@ -1837,7 +1832,7 @@ with an extended local context (`withNewLocal`). Macros without registered prech
 unfolded, and identifier-less syntax is ultimately assumed to be well-formed.
 
 ## rclike_simps
- "Simp attribute for lemmas about `RCLike`" 
+ "Simp attribute for lemmas about `RCLike`"
 "Simp attribute for lemmas about `RCLike`"
 
 ## rclike_simps_proc
@@ -1869,7 +1864,7 @@ special case in the `rfl` tactic.
 
 ## rify_simps
  The simpset `rify_simps` is used by the tactic `rify` to move expressions from `ℕ`, `ℤ`, or
-`ℚ` to `ℝ`. 
+`ℚ` to `ℝ`.
 The simpset `rify_simps` is used by the tactic `rify` to move expressions from `ℕ`, `ℤ`, or
 `ℚ` to `ℝ`.
 
@@ -1922,7 +1917,7 @@ see `callCancellable` in `cancellable.ts`.
 The `simps` attribute.
 
 ## spec
- Marks Hoare triple specifications and simp theorems for use with `mvcgen` tactics
+ Marks Hoare triple specifications and simp theorems for use with `vcgen`
 
 ## spec_invariant_type
  marks a type as an invariant type for the `mvcgen` tactic
@@ -2064,7 +2059,7 @@ Register the @[try_suggestion prio] attribute
  try_tactic elaborator
 
 ## typevec
- simp set for the manipulation of typevec and arrow expressions 
+ simp set for the manipulation of typevec and arrow expressions
 simp set for the manipulation of typevec and arrow expressions
 
 ## typevec_proc
@@ -2131,7 +2126,7 @@ Registers a widget module. Its type must implement `Lean.Widget.ToModule`.
 
 ## zify_simps
  The simpset `zify_simps` is used by the tactic `zify` to move expressions from `ℕ` to `ℤ`
-which gives a well-behaved subtraction. 
+which gives a well-behaved subtraction.
 The simpset `zify_simps` is used by the tactic `zify` to move expressions from `ℕ` to `ℤ`
 which gives a well-behaved subtraction.
 

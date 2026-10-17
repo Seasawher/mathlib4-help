@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `cfc55fc58714a59dc06e6e79edc6d1d95140d3c2`
+Mathlib version: `fbc1661a327737928fe9d69b74f7deaa09eecfbc`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1231,7 +1231,7 @@ Defined in: `Lean.Parser.Command.printSig`
 Defined in: `Lean.Parser.Command.printAxioms`
 
 Prints the axioms used by a declaration, directly or indirectly.
-Please consult [the reference manual](https://lean-lang.org/doc/reference/4.35.0/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
+Please consult [the reference manual](https://lean-lang.org/doc/reference/4.36.0-rc1/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
 
 ## \#print
 Defined in: `Lean.Parser.Command.printTacTags`
@@ -1903,6 +1903,38 @@ These instances will be `private local`.
 See `ConfigEval.defEvalConfigItemCmd` for further documentation.
 
 See also `declare_term_config_elab`, `declare_config_elab`, and `declare_command_config_elab`.
+
+## declare_decidable_int_quantifiers
+Defined in: `commandDeclare_decidable_int_quantifiers__`
+
+
+## declare_decidable_uint_quantifiers
+Defined in: `commandDeclare_decidable_uint_quantifiers__`
+
+
+## declare_eval_bin
+Defined in: `Lean.Meta.Sym.Simp.commandDeclare_eval_bin__`
+
+
+## declare_eval_bin
+Defined in: `Lean.Meta.Sym.DSimp.commandDeclare_eval_bin__`
+
+
+## declare_eval_bin_bitwise
+Defined in: `Lean.Meta.Sym.DSimp.commandDeclare_eval_bin_bitwise__`
+
+
+## declare_eval_bin_bitwise
+Defined in: `Lean.Meta.Sym.Simp.commandDeclare_eval_bin_bitwise__`
+
+
+## declare_eval_bin_bool_pred
+Defined in: `Lean.Meta.Sym.Simp.commandDeclare_eval_bin_bool_pred__`
+
+
+## declare_eval_bin_bool_pred
+Defined in: `Lean.Meta.Sym.DSimp.commandDeclare_eval_bin_bool_pred__`
+
 
 ## declare_int_theorems
 Defined in: `commandDeclare_int_theorems__`
@@ -2949,6 +2981,7 @@ Register a named `Sym.simp` variant.
 register_sym_simp myVariant where
   pre  := telescope
   post := ground >> rewrite [thm1, thm2] with self
+  discharger := grind
   maxSteps := 50000
 ```
 
