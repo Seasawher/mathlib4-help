@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `cfc55fc58714a59dc06e6e79edc6d1d95140d3c2`
+Mathlib version: `fbc1661a327737928fe9d69b74f7deaa09eecfbc`
 
 ## Elab.async
 type: `Bool`
@@ -236,6 +236,13 @@ type: `Bool`
 default: `false`
 
 use old E-matching pattern inference
+
+## backward.grind.normalizer
+type: `Bool`
+
+default: `true`
+
+use the legacy `simp`-based `grind` normalizer instead of the `Sym.simp`-based one
 
 ## backward.inferInstanceAs.wrap
 type: `Bool`
@@ -594,6 +601,13 @@ type: `Bool`
 default: `false`
 
 skip kernel type checker. WARNING: setting this option to true may compromise soundness because your proofs will not be checked by the Lean kernel
+
+## debug.synthInstance.checkCacheHits
+type: `Bool`
+
+default: `false`
+
+differentially validate type class resolution cache hits: rerun every served query and panic if the result differs from the cached one, which means a dependency of the entry was not recorded (roughly doubles resolution cost)
 
 ## debug.tactic.simp.checkDefEqAttr
 type: `Bool`
@@ -1731,6 +1745,49 @@ default: `false`
 
 enable the linter that type-checks every tactic goal at `.implicit` transparency
 
+## linter.translate.existing
+type: `Bool`
+
+default: `true`
+
+Linter used by translate attributes that checks whether the user correctly specified
+    that the translated declaration already exists
+
+## linter.translate.generateName
+type: `Bool`
+
+default: `true`
+
+Linter used by translate attributes that checks if the given declaration name is equal to the automatically generated name
+
+## linter.translate.overwrite
+type: `Bool`
+
+default: `true`
+
+Linter used by translate attributes that checks if the attribute was already applied
+
+## linter.translate.redundant
+type: `Bool`
+
+default: `true`
+
+Linter used by translate attributes that checks if the attribute is redundant
+
+## linter.translate.relevantArg
+type: `Bool`
+
+default: `true`
+
+Linter used by translate attributes that checks if the relevant_arg is automatically generated
+
+## linter.translate.reorder
+type: `Bool`
+
+default: `true`
+
+Linter used by translate attributes that checks if the given reorder is equal to the automatically generated one
+
 ## linter.translate.warnInvalid
 type: `Bool`
 
@@ -2712,7 +2769,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.35.0"`
+default: `"v4.36.0-rc1"`
 
 Revision of LeanStateSearch to use
 
@@ -2736,6 +2793,20 @@ type: `Bool`
 default: `false`
 
 if true, enable warnings when a structure has diamond inheritance
+
+## sym.arith.maxDegree
+type: `Nat`
+
+default: `64`
+
+maximum degree of a polynomial produced by `Sym.Arith` normalization
+
+## sym.arith.maxTerms
+type: `Nat`
+
+default: `64`
+
+maximum number of monomials of a polynomial produced by `Sym.Arith` normalization
 
 ## sym.debug
 type: `Bool`
@@ -2770,7 +2841,7 @@ type: `Bool`
 
 default: `true`
 
-enable using custom eliminators in the 'induction' and 'cases' tactics defined using the '@[induction_eliminator]' and '@[cases_eliminator]' attributes
+enable using custom eliminators in the `induction` and `cases` tactics defined using the `@[induction_eliminator]` and `@[cases_eliminator]` attributes
 
 ## tactic.erw?.verbose
 type: `Bool`
@@ -2784,7 +2855,7 @@ type: `Bool`
 
 default: `true`
 
-if set to 'true', then 'fun_induction' and 'fun_cases' will use the “unfolding functional induction (resp. cases) principle” ('….induct_unfolding'/'….fun_cases_unfolding'), which will attempt to replace the function goal of interest in the goal with the appropriate right-hand-side in each case. If 'false', the regular “functional induction principle” ('….induct'/'….fun_cases') is used.
+if set to `true`, then `fun_induction` and `fun_cases` will use the "unfolding functional induction (resp. cases) principle" (`….induct_unfolding`/`….fun_cases_unfolding`), which will attempt to replace the function goal of interest in the goal with the appropriate right-hand-side in each case. If `false`, the regular "functional induction principle" (`….induct`/`….fun_cases`) is used.
 
 ## tactic.hygienic
 type: `Bool`
@@ -4033,6 +4104,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.Meta.Tactic.bv
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.Meta.Tactic.bv.uf
 type: `Bool`
 
 default: `false`
@@ -5705,6 +5783,13 @@ default: `false`
 
 enable/disable tracing for the given module and submodules
 
+## trace.grind.lia.reorder
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
 ## trace.grind.linarith
 type: `Bool`
 
@@ -5790,6 +5875,13 @@ default: `false`
 enable/disable tracing for the given module and submodules
 
 ## trace.grind.mbtc
+type: `Bool`
+
+default: `false`
+
+enable/disable tracing for the given module and submodules
+
+## trace.grind.norm.sym
 type: `Bool`
 
 default: `false`
