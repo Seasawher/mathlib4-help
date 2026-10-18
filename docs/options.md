@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `fbc1661a327737928fe9d69b74f7deaa09eecfbc`
+Mathlib version: `f039e1b8a616d45782a5c7fc5e7909249c36b8ea`
 
 ## Elab.async
 type: `Bool`
@@ -1394,6 +1394,13 @@ type: `Bool`
 default: `false`
 
 enable the emptyLine linter
+
+## linter.style.extendedBinder
+type: `Bool`
+
+default: `false`
+
+enable the `extendedBinder` linter
 
 ## linter.style.haveILetI
 type: `Bool`
