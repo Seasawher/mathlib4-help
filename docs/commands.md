@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `8af27d91704d4e7c4a0cdf149d8ce56034e96c93`
+Mathlib version: `10156080d0e7997b71f3ef86bd6f0211b42ab90d`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -21,24 +21,9 @@ Defined in: `Aesop.Frontend.Parser.showStats`
 
 
 ## \#allow_unused_tactic
-Defined in: `Mathlib.Linter.UnusedTactic.«command#allow_unused_tactic!___»`
+Defined in: `Mathlib.Linter.UnusedTactic.hashStx`
 
-`#allow_unused_tactic` takes as input a space-separated list of identifiers.
-These identifiers are then allowed by the unused tactic linter:
-even if these tactics do not modify goals, there will be no warning emitted.
-
-Note: for this to work, these identifiers should be the `SyntaxNodeKind` of each tactic.
-
-For instance, you can allow the `done` and `skip` tactics using
-```lean
-#allow_unused_tactic Lean.Parser.Tactic.done Lean.Parser.Tactic.skip
-```
-
-This change is file-local.  If you want a *persistent* change, then use the `!`-flag:
-the command `#allow_unused_tactic! ids` makes the change the linter continues to ignore these
-tactics also in files importing a file where this command is issued.
-
-The command `#show_kind tac` may help to find the `SyntaxNodeKind`.
+`#allow_unused_tactic` is deprecated in favour of `allow_unused_tactic`
 
 ## \#check
 Defined in: `Lean.Parser.Command.check`
@@ -1693,6 +1678,25 @@ The command `alias ⟨fwd, rev⟩ := target` creates synonyms for the forward an
 of an iff theorem. Use `_` if only one direction is required.
 
 These commands accept all modifiers and attributes that `def` and `theorem` do.
+
+## allow_unused_tactic
+Defined in: `Mathlib.Linter.UnusedTactic.allowUnusedTactic`
+
+`allow_unused_tactic` takes as input a space-separated list of identifiers.
+These identifiers are then allowed by the unused tactic linter:
+even if these tactics do not modify goals, there will be no warning emitted.
+
+Note: for this to work, these identifiers should be the `SyntaxNodeKind` of each tactic.
+
+For instance, you can allow the `done` and `skip` tactics using
+```lean
+allow_unused_tactic Lean.Parser.Tactic.done Lean.Parser.Tactic.skip
+```
+
+This change is global and persistent across imports. For a file-local or scoped change, use
+`local allow_unused_tactic` or `scoped allow_unused_tactic`, respectively.
+
+The command `#show_kind tac` may help to find the `SyntaxNodeKind`.
 
 ## assert_no_sorry
 Defined in: `commandAssert_no_sorry_`

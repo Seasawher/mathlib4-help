@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `8af27d91704d4e7c4a0cdf149d8ce56034e96c93`
+Mathlib version: `10156080d0e7997b71f3ef86bd6f0211b42ab90d`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1700,7 +1700,7 @@ Defined in: `Lean.Parser.Tactic.change`
 * `change a with b at h` similarly changes `a` to `b` in the type of hypothesis `h`.
 
 ## change?
-Defined in: `change?`
+Defined in: `Mathlib.Tactic.change?`
 
 `change? term` unifies `term` with the current goal, then suggests explicit `change` syntax
 that uses the resulting unified term.
