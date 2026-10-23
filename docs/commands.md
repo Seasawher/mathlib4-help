@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `10156080d0e7997b71f3ef86bd6f0211b42ab90d`
+Mathlib version: `d88814353fcbcc0461c55b2a4585d3f44d903df1`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -836,7 +836,7 @@ Display a value of type `Html` in the infoview.
 
 The input can be a pure value
 or a computation in any Lean metaprogramming monad
-(e.g. `CommandElabM Html`).
+(e.g. `CommandElabM ProofWidgets.Html`).
 
 ## \#import_bumps
 Defined in: `Mathlib.Linter.MinImports.«command#import_bumps»`
