@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `d88814353fcbcc0461c55b2a4585d3f44d903df1`
+Mathlib version: `3d14fd9a313ac35ed4b5c653ed5d99157c9e29f6`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -8856,11 +8856,6 @@ then `specialize h 2 h'` replaces `h` with `h : q 2`.
 The tactic also supports instantiating particular universal quantifiers
 using named argument syntax. Example: given `h : ∀ (m n : Nat), p m n`,
 then `specialize h (n := 2)` replaces `h` with `h : ∀ (m : Nat), p m 2`.
-
-## specialize_all
-Defined in: `Mathlib.Tactic.TautoSet.specialize_all`
-
-`specialize_all x` runs `specialize h x` for all hypotheses `h` where this tactic succeeds.
 
 ## split
 Defined in: `Lean.Parser.Tactic.split`
