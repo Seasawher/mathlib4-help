@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `7b5414df54cc1c50f2bf143e9c3370e1daec1320`
+Mathlib version: `10dc7882b0311638b63e9aad5506f2cfcf4e61b8`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -286,8 +286,14 @@ Defined in: `Mathlib.Tactic.Abel.abel`
   * `abel_nf (config := cfg)` allows for additional configuration:
     * `red`: the reducibility setting (overridden by `!`).
     * `zetaDelta`: if true, local `let` variables can be unfolded (overridden by `!`).
-    * `recursive`: if true, `abel_nf` also recurses into atoms.
+    * `contextual`: if true, implication hypotheses are added to the local context of the
+      discharger.
 * `abel!`, `abel1!`, `abel_nf!` use a more aggressive reducibility setting to identify atoms.
+
+The `!` variants and the `red` configuration option will be deprecated soon. If you have a genuine
+use case for either feature, please write in the
+[Zulip discussion](https://leanprover.zulipchat.com/#narrow/with/629213120). The warning can be
+disabled with `set_option warn.abelTransparency false`.
 
 Examples:
 ```lean
@@ -309,8 +315,14 @@ Defined in: `Mathlib.Tactic.Abel.tacticAbel!`
   * `abel_nf (config := cfg)` allows for additional configuration:
     * `red`: the reducibility setting (overridden by `!`).
     * `zetaDelta`: if true, local `let` variables can be unfolded (overridden by `!`).
-    * `recursive`: if true, `abel_nf` also recurses into atoms.
+    * `contextual`: if true, implication hypotheses are added to the local context of the
+      discharger.
 * `abel!`, `abel1!`, `abel_nf!` use a more aggressive reducibility setting to identify atoms.
+
+The `!` variants and the `red` configuration option will be deprecated soon. If you have a genuine
+use case for either feature, please write in the
+[Zulip discussion](https://leanprover.zulipchat.com/#narrow/with/629213120). The warning can be
+disabled with `set_option warn.abelTransparency false`.
 
 Examples:
 ```lean
@@ -332,8 +344,14 @@ Defined in: `Mathlib.Tactic.Abel.abel1`
   * `abel_nf (config := cfg)` allows for additional configuration:
     * `red`: the reducibility setting (overridden by `!`).
     * `zetaDelta`: if true, local `let` variables can be unfolded (overridden by `!`).
-    * `recursive`: if true, `abel_nf` also recurses into atoms.
+    * `contextual`: if true, implication hypotheses are added to the local context of the
+      discharger.
 * `abel!`, `abel1!`, `abel_nf!` use a more aggressive reducibility setting to identify atoms.
+
+The `!` variants and the `red` configuration option will be deprecated soon. If you have a genuine
+use case for either feature, please write in the
+[Zulip discussion](https://leanprover.zulipchat.com/#narrow/with/629213120). The warning can be
+disabled with `set_option warn.abelTransparency false`.
 
 Examples:
 ```lean
@@ -355,8 +373,14 @@ Defined in: `Mathlib.Tactic.Abel.abel1!`
   * `abel_nf (config := cfg)` allows for additional configuration:
     * `red`: the reducibility setting (overridden by `!`).
     * `zetaDelta`: if true, local `let` variables can be unfolded (overridden by `!`).
-    * `recursive`: if true, `abel_nf` also recurses into atoms.
+    * `contextual`: if true, implication hypotheses are added to the local context of the
+      discharger.
 * `abel!`, `abel1!`, `abel_nf!` use a more aggressive reducibility setting to identify atoms.
+
+The `!` variants and the `red` configuration option will be deprecated soon. If you have a genuine
+use case for either feature, please write in the
+[Zulip discussion](https://leanprover.zulipchat.com/#narrow/with/629213120). The warning can be
+disabled with `set_option warn.abelTransparency false`.
 
 Examples:
 ```lean
@@ -378,8 +402,14 @@ Defined in: `Mathlib.Tactic.Abel.abelNF`
   * `abel_nf (config := cfg)` allows for additional configuration:
     * `red`: the reducibility setting (overridden by `!`).
     * `zetaDelta`: if true, local `let` variables can be unfolded (overridden by `!`).
-    * `recursive`: if true, `abel_nf` also recurses into atoms.
+    * `contextual`: if true, implication hypotheses are added to the local context of the
+      discharger.
 * `abel!`, `abel1!`, `abel_nf!` use a more aggressive reducibility setting to identify atoms.
+
+The `!` variants and the `red` configuration option will be deprecated soon. If you have a genuine
+use case for either feature, please write in the
+[Zulip discussion](https://leanprover.zulipchat.com/#narrow/with/629213120). The warning can be
+disabled with `set_option warn.abelTransparency false`.
 
 Examples:
 ```lean
@@ -401,8 +431,14 @@ Defined in: `Mathlib.Tactic.Abel.tacticAbel_nf!__`
   * `abel_nf (config := cfg)` allows for additional configuration:
     * `red`: the reducibility setting (overridden by `!`).
     * `zetaDelta`: if true, local `let` variables can be unfolded (overridden by `!`).
-    * `recursive`: if true, `abel_nf` also recurses into atoms.
+    * `contextual`: if true, implication hypotheses are added to the local context of the
+      discharger.
 * `abel!`, `abel1!`, `abel_nf!` use a more aggressive reducibility setting to identify atoms.
+
+The `!` variants and the `red` configuration option will be deprecated soon. If you have a genuine
+use case for either feature, please write in the
+[Zulip discussion](https://leanprover.zulipchat.com/#narrow/with/629213120). The warning can be
+disabled with `set_option warn.abelTransparency false`.
 
 Examples:
 ```lean
@@ -1943,6 +1979,8 @@ It is implemented using `grind`, and has the same configuration options as `grin
 It also exists as a grind attribute, and can be combined with other grind attributes using
 `grind only [closedness, ...]`.
 
+* `closedness?` shows the suggestions from `grind?`.
+
 ## closedness?
 Defined in: `tacticClosedness?_`
 
@@ -1952,6 +1990,8 @@ It is implemented using `grind`, and has the same configuration options as `grin
 
 It also exists as a grind attribute, and can be combined with other grind attributes using
 `grind only [closedness, ...]`.
+
+* `closedness?` shows the suggestions from `grind?`.
 
 ## coherence
 Defined in: `Mathlib.Tactic.Coherence.coherence`
@@ -1981,6 +2021,8 @@ compact.
 It also exists as a grind attribute, and can be combined with other grind attributes using
 `grind only [compactness, ...]`.
 
+* `compactness?` shows the suggestions from `grind?`.
+
 ## compactness?
 Defined in: `tacticCompactness?_`
 
@@ -1992,6 +2034,8 @@ compact.
 
 It also exists as a grind attribute, and can be combined with other grind attributes using
 `grind only [compactness, ...]`.
+
+* `compactness?` shows the suggestions from `grind?`.
 
 ## compareOfLessAndEq_rfl
 Defined in: `tacticCompareOfLessAndEq_rfl`
@@ -5389,6 +5433,30 @@ The tactic `measurability?` solves goals of the form `Measurable f`, `AEMeasurab
 `StronglyMeasurable f`, `AEStronglyMeasurable f μ`, or `MeasurableSet s` by applying lemmas tagged
 with the `measurability` user attribute, and suggests a faster proof script that can be substituted
 for the tactic call in case of success.
+
+## membership
+Defined in: `membershipTac`
+
+`membership` is a simple tactic that performs backward reasoning to prove
+membership goals in algebraic substructures.
+It is implemented using `grind`, and has the same configuration options as `grind`.
+
+It also exists as a grind attribute, and can be combined with other grind attributes using
+`grind only [membership, ...]`.
+
+* `membership?` shows the suggestions from `grind?`.
+
+## membership?
+Defined in: `tacticMembership?_`
+
+`membership` is a simple tactic that performs backward reasoning to prove
+membership goals in algebraic substructures.
+It is implemented using `grind`, and has the same configuration options as `grind`.
+
+It also exists as a grind attribute, and can be combined with other grind attributes using
+`grind only [membership, ...]`.
+
+* `membership?` shows the suggestions from `grind?`.
 
 ## mexact
 Defined in: `Lean.Parser.Tactic.mexactMacro`

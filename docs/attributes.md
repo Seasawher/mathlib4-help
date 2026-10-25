@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `7b5414df54cc1c50f2bf143e9c3370e1daec1320`
+Mathlib version: `10dc7882b0311638b63e9aad5506f2cfcf4e61b8`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -1458,6 +1458,42 @@ def isYellow (color : String) : Bool :=
 
 ## measurability
  The `measurability` attribute used to tag measurability statements for the `measurability` tactic.
+
+## membership
+ The `[membership]` attribute is used to annotate declarations.When applied to an equational theorem, `[membership =]`, `[membership =_]`, or `[membership _=_]`will mark the theorem for use in heuristic instantiations by the `membership` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[membership =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[membership ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[membership →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[membership]` by itself will effectively try `[membership ←]` (if the conclusion is sufficient for instantiation) and then `[membership →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[membership =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+The `membership` attribute is a custom grind-set specialized to prove
+membership goals in algebraic substructures by backward reasoning.
+It is called by the `membership` tactic.
+
+## membership!
+ The `[membership!]` attribute is used to annotate declarations, but selecting minimal indexable subterms.When applied to an equational theorem, `[membership =]`, `[membership =_]`, or `[membership _=_]`will mark the theorem for use in heuristic instantiations by the `membership` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[membership =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[membership ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[membership →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[membership]` by itself will effectively try `[membership ←]` (if the conclusion is sufficient for instantiation) and then `[membership →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[membership =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+The `membership` attribute is a custom grind-set specialized to prove
+membership goals in algebraic substructures by backward reasoning.
+It is called by the `membership` tactic.
+
+## membership!?
+ The `[membership!?]` attribute is identical to the `[membership!]` attribute, but displays inferred pattern information.When applied to an equational theorem, `[membership =]`, `[membership =_]`, or `[membership _=_]`will mark the theorem for use in heuristic instantiations by the `membership` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[membership =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[membership ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[membership →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[membership]` by itself will effectively try `[membership ←]` (if the conclusion is sufficient for instantiation) and then `[membership →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[membership =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+The `membership` attribute is a custom grind-set specialized to prove
+membership goals in algebraic substructures by backward reasoning.
+It is called by the `membership` tactic.
+
+## membership?
+ The `[membership?]` attribute is identical to the `[membership]` attribute, but displays inferred pattern information.When applied to an equational theorem, `[membership =]`, `[membership =_]`, or `[membership _=_]`will mark the theorem for use in heuristic instantiations by the `membership` tactic,
+      using respectively the left-hand side, the right-hand side, or both sides of the theorem.When applied to a function, `[membership =]` automatically annotates the equational theorems associated with that function.When applied to a theorem `[membership ←]` will instantiate the theorem whenever it encounters the conclusion of the theorem
+      (that is, it will use the theorem for backwards reasoning).When applied to a theorem `[membership →]` will instantiate the theorem whenever it encounters sufficiently many of the propositional hypotheses
+      (that is, it will use the theorem for forwards reasoning).The attribute `[membership]` by itself will effectively try `[membership ←]` (if the conclusion is sufficient for instantiation) and then `[membership →]`.The `grind` tactic utilizes annotated theorems to add instances of matching patterns into the local context during proof search.For example, if a theorem `@[membership =] theorem foo_idempotent : foo (foo x) = foo x` is annotated,`grind` will add an instance of this theorem to the local context whenever it encounters the pattern `foo (foo x)`.
+The `membership` attribute is a custom grind-set specialized to prove
+membership goals in algebraic substructures by backward reasoning.
+It is called by the `membership` tactic.
 
 ## method_specs
  generate method specification theorems

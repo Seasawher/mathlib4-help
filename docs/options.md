@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `7b5414df54cc1c50f2bf143e9c3370e1daec1320`
+Mathlib version: `10dc7882b0311638b63e9aad5506f2cfcf4e61b8`
 
 ## Elab.async
 type: `Bool`
@@ -791,6 +791,15 @@ type: `Nat`
 default: `120`
 
 indentation
+
+## fun_prop.projDefaultTransparency
+type: `Bool`
+
+default: `false`
+
+Previously, `fun_prop` incorrectly switched to default transparency when reducing an expression if a projection was applied to it. Setting this option to true restores this behavior.
+
+Note that this option is only for backward compatibility and will be removed in the future.
 
 ## genCtorIdx
 type: `Bool`
@@ -6407,6 +6416,13 @@ type: `Bool`
 default: `true`
 
 
+
+## warn.abelTransparency
+type: `Bool`
+
+default: `true`
+
+warn when transparency controls for 'abel' are used
 
 ## warn.classDefReducibility
 type: `Bool`
