@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `10dc7882b0311638b63e9aad5506f2cfcf4e61b8`
+Mathlib version: `cc5a8f804aa0eabe95091bf318bef6c1c353f78e`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -3571,7 +3571,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.36.0-rc1/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.36.0-rc2/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3772,7 +3772,7 @@ These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
 
-See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.36.0-rc1/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.36.0-rc2/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
@@ -4379,7 +4379,7 @@ specific ambition, for example `dyadic_interval`.
 An inclusion family is declared using `registerInclusionFamily` and can be extended using the
 `inclusion_op` and `hypothesis_op` attributes.
 The `core` family provides reasoning about logical operators `∧`, `∨`, `¬` and `=`. This family
-is recommented to be included by default.
+is recommended to be included by default.
 
 
 * `inclusion [fam₁, x := e]` sets the parameter named `x` to the value of the term `e`.

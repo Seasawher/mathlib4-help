@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `10dc7882b0311638b63e9aad5506f2cfcf4e61b8`
+Mathlib version: `cc5a8f804aa0eabe95091bf318bef6c1c353f78e`
 
 ## Elab.async
 type: `Bool`
@@ -997,6 +997,13 @@ type: `Bool`
 default: `false`
 
 enable the commandRanges linter
+
+## linter.concreteInstances
+type: `Bool`
+
+default: `true`
+
+enable the concrete instances linter
 
 ## linter.constructorNameAsVariable
 type: `Bool`
@@ -2792,7 +2799,7 @@ Number of results requested from statesearch (default 6)
 ## statesearch.revision
 type: `String`
 
-default: `"v4.36.0-rc1"`
+default: `"v4.36.0-rc2"`
 
 Revision of LeanStateSearch to use
 
