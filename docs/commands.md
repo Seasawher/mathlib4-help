@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `10dc7882b0311638b63e9aad5506f2cfcf4e61b8`
+Mathlib version: `cc5a8f804aa0eabe95091bf318bef6c1c353f78e`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -87,10 +87,12 @@ This function is intended for automated use by the `remove_deprecations` automat
 Defined in: `Mathlib.Tactic.ClickSuggestions.«command#click_suggestions»`
 
 `#click_suggestions` enables a widget in the infoview that gives tactic suggestions for
-the expression in the tactic state that was (most recently) selected with shift-click.
-Each suggestion has an insert button for pasting it into the editor, at the position of the cursor.
+the (most recently) selected expression in the tactic state.
+To select an expression, use `shift`+click in VS Code, and `ctrl`+click or `gK` in Neovim.
+Each suggestion starts with a button for pasting the tactic into the editor
+at the position of the cursor.
 
-Theorems are searched for use in `apply`, `apply at`, `rw` and `grw`.
+Theorems are searched for the `apply`, `apply at`, `rw` and `grw` tactics.
 These suggestions are grouped and sorted by the pattern that the lemmas match with.
 Rewrites that don't change the goal and rewrites that create the same goal as another rewrite
 are filtered out, as well as suggestions that create new goal(s) with metavariables in them.
@@ -1082,6 +1084,24 @@ would find all lemmas which mention the constants Real.sin and tsum, have \"two\
 You can modify the Loogle server URL by setting the `LEANSEARCHCLIENT_LOOGLE_API_URL` environment variable.
 
 ## \#min_imports
+Defined in: `ImportGraph.Shake.minImportsStx`
+
+Minimize the imports of the entire current module in the module system.
+
+This command may be written anywhere in the file, and will still take into account the whole file.
+As such, the command will remain silent until the file finishes elaborating.
+
+Currently, it accounts for constants, syntax, shake records, and runtime IR (except for
+attributes like `@[inline]`), but not yet meta IR from new `meta def`s.
+
+To eliminate redundancies among the current file's imports without taking into account whether they
+are actually used or not, see `#norm_imports`.
+
+This command currently only suggests module-system import blocks. It may still help with modulizing
+non-module files if all necessary imports are already modules, or by indicating which necessary
+imports are non-modules.
+
+## \#min_imports
 Defined in: `Mathlib.Command.MinImports.minImpsStx`
 
 `#min_imports in cmd` scans the syntax `cmd` and the declaration obtained by elaborating `cmd`
@@ -1093,27 +1113,15 @@ Defined in: `Mathlib.Command.MinImports.«command#min_importsIn_»`
 `#min_imports in cmd` scans the syntax `cmd` and the declaration obtained by elaborating `cmd`
 to find a collection of minimal imports that should be sufficient for `cmd` to work.
 
-## \#min_imports
-Defined in: `«command#min_imports»`
-
-Try to compute a minimal set of imports for this file,
-by analyzing the declarations.
-
-This must be run at the end of the file,
-and is not aware of syntax and tactics,
-so the results will likely need to be adjusted by hand.
-
-## \#minimize_imports
-Defined in: `«command#minimize_imports»`
-
-
 ## \#norm_imports
 Defined in: `ImportGraph.NormImports.«command#norm_imports»`
 
 Normalizes the imports of the current file. This removes rendundant imports and formats the
 resulting import block in a standard fashion, ensuring that the same modules are available at the
-same visibilities and phases. It does **not** take into account the declarations or usages of those
-modules in the current file.
+same visibilities and phases.
+
+`#norm_imports` does **not** take into account whether these imports are used in the current
+module. For that functionality, use `#min_imports`.
 
 `#norm_imports` will keep any direct imports of `ImportGraph.Tools.NormImports`,
 `ImportGraph.Tools`, or `ImportGraph` in place, while ignoring them for the calculation
@@ -1216,7 +1224,7 @@ Defined in: `Lean.Parser.Command.printSig`
 Defined in: `Lean.Parser.Command.printAxioms`
 
 Prints the axioms used by a declaration, directly or indirectly.
-Please consult [the reference manual](https://lean-lang.org/doc/reference/4.36.0-rc1/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
+Please consult [the reference manual](https://lean-lang.org/doc/reference/4.36.0-rc2/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
 
 ## \#print
 Defined in: `Lean.Parser.Command.printTacTags`
@@ -1440,6 +1448,20 @@ Defined in: `Lean.Parser.Command.showDeprecatedModules`
 
 `#show_deprecated_modules` displays all modules in the current environment that have been
 marked with `deprecated_module`.
+
+## \#show_imports
+Defined in: `ImportGraph.Shake.«command#show_imports_For__»`
+
+`#show_imports for <cmd>` shows a minimal set of imports needed by `<cmd>`. This includes
+
+- The import needs of any declarations elaborated in the command
+- The import needs of any previously-defined constants from the same file used in those
+  declarations
+- The syntax needs of the current command (but not the syntax needs of same-file dependencies of
+  constants produced in the command, which we do not have access to)
+- Any extra shake records produced by the command. (These may be due to syntax, tactics, etc.)
+
+The imports may be copied by clicking the "copy" icon.
 
 ## \#show_kind
 Defined in: `Mathlib.Linter.UnusedTactic.«command#show_kind_»`
