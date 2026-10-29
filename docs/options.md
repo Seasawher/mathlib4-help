@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `cc5a8f804aa0eabe95091bf318bef6c1c353f78e`
+Mathlib version: `d0207795ac79006da92d98544e1ce915ae386160`
 
 ## Elab.async
 type: `Bool`
@@ -700,6 +700,13 @@ type: `Bool`
 default: `false`
 
 whether to use Verso syntax in docstrings
+
+## doc.verso.libraryNote.warnOnMissing
+type: `Bool`
+
+default: `true`
+
+whether to warn if a `{library_note}` reference cannot be resolved
 
 ## doc.verso.module
 type: `Bool`
