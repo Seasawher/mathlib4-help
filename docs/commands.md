@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `d0207795ac79006da92d98544e1ce915ae386160`
+Mathlib version: `9c3101a274bcc37e8aa14424129a1f541e09cbc6`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -33,7 +33,7 @@ Defined in: `Lean.Parser.Command.check`
 Defined in: `Mathlib.Tactic.«command#check'_»`
 
 The `#check'` command is like `#check`, but only prints explicit arguments in the signature
-(i.e., omitting implicit and typeclass arguments).
+\(i.e., omitting implicit and typeclass arguments\).
 
 ## \#check_assertions
 Defined in: `Lean.Parser.Command.checkAssertions`
@@ -1820,7 +1820,7 @@ Defined in: `Mathlib.Util.«commandCompile_def%_»`
 `compile_def% Foo.foo` adds compiled code for the definition `Foo.foo`.
 This can be used for type class projections or definitions like `List._sizeOf_1`,
 for which Lean does not generate compiled code by default
-(since it is not used 99% of the time).
+\(since it is not used 99% of the time\).
 
 ## compile_inductive%
 Defined in: `Mathlib.Util.«commandCompile_inductive%_»`

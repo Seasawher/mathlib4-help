@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `d0207795ac79006da92d98544e1ce915ae386160`
+Mathlib version: `9c3101a274bcc37e8aa14424129a1f541e09cbc6`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1923,10 +1923,12 @@ definition to the user via `decreasing_by`. It is not necessary to use this tact
 Defined in: `Lean.Elab.Tactic.clearExceptTactic`
 
 Clears all hypotheses it can, except those provided after a minus sign, class instances, and
-hidden auxiliary declarations (for example recursive hypotheses). Example:
-```lean
+hidden auxiliary declarations \(for example recursive hypotheses\). Example:
+
+```
   clear * - h₁ h₂
 ```
+
 The intent is that `clear * -` only clears user-visible local declarations; hidden auxiliary
 declarations should be handled by more specific mechanisms when needed.
 
@@ -2897,7 +2899,7 @@ which only unfolds `@[reducible]` definitions).
 ## erw?
 Defined in: `Mathlib.Tactic.Erw?.erw?`
 
-`erw? [r, ...]` calls `erw [r, ...]` (at hypothesis `h` if written `erw [r, ...] at h`),
+`erw? [r, ...]` calls `erw [r, ...]` \(at hypothesis `h` if written `erw [r, ...] at h`\),
 and then attempts to identify any subexpression which would block the use of `rw` instead.
 It does so by identifying subexpressions which are defeq, but not at reducible transparency.
 
@@ -2933,6 +2935,19 @@ The transformation is known as eta reduction for structures, and it yields defin
 equal expressions.
 
 For example, given `x : α × β`, then `(x.1, x.2)` becomes `x` after this transformation.
+
+## eval_charpoly
+Defined in: `evalCharpoly`
+
+`eval_charpoly` evaluates the characteristic polynomial of matrix literals over a commutative ring
+`α` with `[Algebra α ℚ] [FaithfulSMul α ℚ]`, such as `ℚ` and `ℤ`.
+
+```lean
+example : Matrix.charpoly (R := ℤ) !![1, 2; 3, 4] = X ^ 2 - 5 * X - 2 := by
+  eval_charpoly
+```
+
+Terms skipped can be viewed by using `set_option trace.Tactic.evalCharpoly true`.
 
 ## eval_det
 Defined in: `evalDet`
@@ -7640,10 +7655,10 @@ x : α ⊢ f x + 3 = g x + 3
 ## recover
 Defined in: `Mathlib.Tactic.tacticRecover_`
 
-`recover tacs` applies the tactic (sequence) `tacs` and then re-adds goals that were
+`recover tacs` applies the tactic \(sequence\) `tacs` and then re-adds goals that were
 incorrectly marked as closed. This helps to debug issues where a tactic closes goals without
-solving them (i.e. goals were removed from the MetaM state without the metavariable
-being assigned), resulting in the error "(kernel) declaration has metavariables".
+solving them \(i.e. goals were removed from the MetaM state without the metavariable
+being assigned\), resulting in the error "\(kernel\) declaration has metavariables".
 
 ## reduce
 Defined in: `Mathlib.Tactic.tacticReduce__`
@@ -7660,7 +7675,8 @@ The tactic `reduce_mod_char` looks for numeric expressions in characteristic `p`
 and reduces these to lie between `0` and `p`.
 
 For example:
-```lean
+
+```
 example : (5 : ZMod 4) = 1 := by reduce_mod_char
 example : (X ^ 2 - 3 * X + 4 : (ZMod 4)[X]) = X ^ 2 + X := by reduce_mod_char
 ```
@@ -7671,8 +7687,8 @@ and similarly subtraction.
 This tactic uses the type of the subexpression to figure out if it is indeed of positive
 characteristic, for improved performance compared to trying to synthesise a `CharP` instance.
 The variant `reduce_mod_char!` also tries to use `CharP R n` hypotheses in the context.
-(Limitations of the typeclass system mean the tactic can't search for a `CharP R n` instance if
-`n` is not yet known; use `have : CharP R n := inferInstance; reduce_mod_char!` as a workaround.)
+\(Limitations of the typeclass system mean the tactic can't search for a `CharP R n` instance if
+`n` is not yet known; use `have : CharP R n := inferInstance; reduce_mod_char!` as a workaround.\)
 
 ## reduce_mod_char!
 Defined in: `Tactic.ReduceModChar.reduce_mod_char!`
@@ -7681,7 +7697,8 @@ The tactic `reduce_mod_char` looks for numeric expressions in characteristic `p`
 and reduces these to lie between `0` and `p`.
 
 For example:
-```lean
+
+```
 example : (5 : ZMod 4) = 1 := by reduce_mod_char
 example : (X ^ 2 - 3 * X + 4 : (ZMod 4)[X]) = X ^ 2 + X := by reduce_mod_char
 ```
@@ -7692,8 +7709,8 @@ and similarly subtraction.
 This tactic uses the type of the subexpression to figure out if it is indeed of positive
 characteristic, for improved performance compared to trying to synthesise a `CharP` instance.
 The variant `reduce_mod_char!` also tries to use `CharP R n` hypotheses in the context.
-(Limitations of the typeclass system mean the tactic can't search for a `CharP R n` instance if
-`n` is not yet known; use `have : CharP R n := inferInstance; reduce_mod_char!` as a workaround.)
+\(Limitations of the typeclass system mean the tactic can't search for a `CharP R n` instance if
+`n` is not yet known; use `have : CharP R n := inferInstance; reduce_mod_char!` as a workaround.\)
 
 ## refine
 Defined in: `Lean.Parser.Tactic.refine`
