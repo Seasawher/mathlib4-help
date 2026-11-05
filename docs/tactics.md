@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `c995178e4e646a896fa65d521b9c96e018db04b7`
+Mathlib version: `539ea3019ba5bd98cbc383d07e1dce07edf7f56d`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -8612,15 +8612,19 @@ Defined in: `Mathlib.Tactic.tacticSimp_rw___`
 `simp_rw` functions as a mix of `simp` and `rw`. Like `rw`, it applies each
 rewrite rule in the given order, but like `simp` it repeatedly applies these
 rules and also under binders like `∀ x, ...`, `∃ x, ...` and `fun x ↦...`.
-Usage:
+
+See the module docstring for more explanation of the differences between this tactic, `simp`
+and `rw`.
 
 - `simp_rw [lemma_1, ..., lemma_n]` will rewrite the goal by applying the
   lemmas in that order. A lemma preceded by `←` is applied in the reverse direction.
+  Lemmas passed to `simp_rw` must be expressions that are valid arguments to `simp`.
 - `simp_rw [lemma_1, ..., lemma_n] at h₁ ... hₙ` will rewrite the given hypotheses.
 - `simp_rw [...] at *` rewrites in the whole context: all hypotheses and the goal.
+- `simp_rw (config := cfg)` uses `cfg` as additional configuration options for `simp`.
+  See the reference manual chapter [Configuring Simplification][config-simp].
 
-Lemmas passed to `simp_rw` must be expressions that are valid arguments to `simp`.
-For example, neither `simp` nor `rw` can solve the following, but `simp_rw` can:
+Examples:
 
 ```lean
 example {a : ℕ}
@@ -8628,7 +8632,14 @@ example {a : ℕ}
     (h2 : ∀ a b : ℕ, a ≤ b ↔ ∀ c, c < a → c < b) :
     (∀ b, a - 1 ≤ b) = ∀ b c : ℕ, c < a → c < b + 1 := by
   simp_rw [h1, h2]
+
+example (a b c d : ℕ) (h : a = c + d) : b + a = b + c + d := by
+  -- The option `+arith` allows `simp` to simplify `b + (c + d)` to `b + c + d` after replacing `a`
+  -- with `c + d`.
+  simp_rw +arith [h]
 ```
+
+[config-simp]: https://lean-lang.org/doc/reference/latest/The-Simplifier/Configuring-Simplification
 
 ## simp_wf
 Defined in: `tacticSimp_wf`
