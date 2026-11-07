@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `539ea3019ba5bd98cbc383d07e1dce07edf7f56d`
+Mathlib version: `dc928fb15386eaade05b1fa9c79b7dcc91036447`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2840,10 +2840,11 @@ Defined in: `Inclusion.dyadicInterval`
 approximating as an interval of dyadic rational numbers.
 
 This tactic is implemented as a family for the `inclusion` tactic: `dyadic_interval` is the same as
-`inclusion [core, interval_dyadic_real]`.
+`inclusion [core, interval_int, interval_dyadic_real]`.
 
-* `dyadic_interval [binSplit := n]` splits each interval `n` times, into `2^n` pieces. Higher values
-  of `n` make the tactic slower but able to prove more. Default: no splitting.
+* `dyadic_interval [binSplit := n]` splits each bounded interval up to `n` times, into at most
+  `2^n` pieces. Higher values of `n` make the tactic slower but able to prove more.
+  Default: no splitting.
 * `dyadic_interval [prec := n]` uses a precision of `2^-n` when constructing the approximation.
   Higher values of `n` make the tactic slower but able to prove more. Default value: 0.
 * `dyadic_interval [fam₁, ... famₙ]` uses the inclusion families `fam₁`, ..., `famₙ` for additional
@@ -7398,6 +7399,28 @@ example {a b c d : ℝ} (hab : 0 < a * b) (hb : 0 ≤ b) (hcd : c < d) :
     0 < a ^ c + 1 / (d - c) := by
   positivity [sub_pos_of_lt hcd, pos_of_mul_pos_left hab hb]
 ```
+
+## primality
+Defined in: `Mathlib.Tactic.Primality.primality`
+
+`primality` proves a goal `Nat.Prime n`, where `norm_num` evaluates `n` to a numeral, from a
+Lucas certificate given as a list of witnesses.
+
+A Lucas certificate proves `p` prime by a primitive root `a` of `p`, a number with
+`a ^ (p - 1) % p = 1` and `a ^ ((p - 1) / q) % p ≠ 1` for each prime factor `q` of `p - 1`. Each
+such `q` needs a certificate too, except for primes below `2 ^ 10` which are left to `norm_num`.
+
+```lean
+example : Nat.Prime 1000003 := by
+  primality (cert := .witnesses [
+    -- Proves `1000003` prime, since `1000003 - 1 = 2 * 3 * 166667` and `2` is a primitive root.
+    .lucas { root := 2, primeFactors := [2, 3, 166667] },
+    -- Proves `166667` prime, since `166667 - 1 = 2 * 167 * 499` and `2` is a primitive root.
+    .lucas { root := 2, primeFactors := [2, 167, 499] }])
+```
+
+`primality (cert := …) [h₁, …]` takes proofs `hᵢ : Nat.Prime m` instead of a certificate.
+See `MathlibTest/Tactic/Primality.lean` for more examples.
 
 ## pull
 Defined in: `Mathlib.Tactic.Push.pull`
