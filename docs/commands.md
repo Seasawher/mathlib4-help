@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `539ea3019ba5bd98cbc383d07e1dce07edf7f56d`
+Mathlib version: `dc928fb15386eaade05b1fa9c79b7dcc91036447`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -99,11 +99,11 @@ are filtered out, as well as suggestions that create new goal(s) with metavariab
 To see all suggestions, click on the filter button (▼) in the top right.
 
 ## \#conv
-Defined in: `Mathlib.Tactic.Conv.«command#conv_=>_»`
+Defined in: `Mathlib.Tactic.Conv.convCmd`
 
 The command `#conv tac => e` will run a conv tactic `tac` on `e`, and display the resulting
 expression (discarding the proof).
-For example, `#conv rw [true_and_iff] => True ∧ False` displays `False`.
+For example, `#conv rw [true_and] => True ∧ False` displays `False`.
 There are also shorthand commands for several common conv tactics:
 
 * `#whnf e` is short for `#conv whnf => e`
@@ -1490,7 +1490,7 @@ def bar := foo
 ```
 
 ## \#simp
-Defined in: `Mathlib.Tactic.Conv.«command#simpOnly_=>__»`
+Defined in: `Mathlib.Tactic.Conv.simpCmd`
 
 * `#simp => e` runs `simp` on the expression `e` and displays the resulting expression after
   simplification.
@@ -1580,7 +1580,7 @@ This includes the current namespace, `open` namespaces, `universe` and `variable
 and options set with `set_option`.
 
 ## \#whnf
-Defined in: `Mathlib.Tactic.Conv.«command#whnf_»`
+Defined in: `Mathlib.Tactic.Conv.whnfCmd`
 
 The command `#whnf e` evaluates `e` to Weak Head Normal Form, which means that the "head"
 of the expression is reduced to a primitive - a lambda or forall, or an axiom or inductive type.
@@ -1600,7 +1600,7 @@ but the subterms `Nat.succ 1` and `List.map Nat.succ (List.cons 2 (List.cons 3 L
 still unevaluated. `#reduce` is equivalent to using `#whnf` on every subexpression.
 
 ## \#whnfR
-Defined in: `Mathlib.Tactic.Conv.«command#whnfR_»`
+Defined in: `Mathlib.Tactic.Conv.whnfRCmd`
 
 The command `#whnfR e` evaluates `e` to Weak Head Normal Form with Reducible transparency,
 that is, it uses `whnf` but only unfolding reducible definitions.
