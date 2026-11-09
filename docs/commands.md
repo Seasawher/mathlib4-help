@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `a8d0dfed4f2f657d517c034437ce238c46fef1a8`
+Mathlib version: `9bac2d0692944a775113f7c130fd5e5b4608a854`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1691,6 +1691,10 @@ of an iff theorem. Use `_` if only one direction is required.
 
 These commands accept all modifiers and attributes that `def` and `theorem` do.
 
+An alias of a definition has the same reducibility status as its target, so an alias of an
+`abbrev` is reducible. A reducibility attribute on the alias, such as `@[irreducible]`, sets its
+status instead.
+
 ## alias
 Defined in: `Batteries.Tactic.Alias.aliasLR`
 
@@ -1700,6 +1704,10 @@ The command `alias ⟨fwd, rev⟩ := target` creates synonyms for the forward an
 of an iff theorem. Use `_` if only one direction is required.
 
 These commands accept all modifiers and attributes that `def` and `theorem` do.
+
+An alias of a definition has the same reducibility status as its target, so an alias of an
+`abbrev` is reducible. A reducibility attribute on the alias, such as `@[irreducible]`, sets its
+status instead.
 
 ## allow_unused_tactic
 Defined in: `Mathlib.Linter.UnusedTactic.allowUnusedTactic`
