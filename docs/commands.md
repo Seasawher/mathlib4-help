@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `f78acaf72ad85f1dc68259a994f3e2f1494fa334`
+Mathlib version: `28c657f1a489152a52a5d37eb7f7925c7d6c0e9e`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -1224,7 +1224,7 @@ Defined in: `Lean.Parser.Command.printSig`
 Defined in: `Lean.Parser.Command.printAxioms`
 
 Prints the axioms used by a declaration, directly or indirectly.
-Please consult [the reference manual](https://lean-lang.org/doc/reference/4.36.0-rc2/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
+Please consult [the reference manual](https://lean-lang.org/doc/reference/4.36.0/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
 
 ## \#print
 Defined in: `Lean.Parser.Command.printTacTags`
