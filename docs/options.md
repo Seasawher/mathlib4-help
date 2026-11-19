@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `28c657f1a489152a52a5d37eb7f7925c7d6c0e9e`
+Mathlib version: `6c9a0a07bbbce9b0205b16c83a17b8458f4bcdf9`
 
 ## Elab.async
 type: `Bool`
@@ -1536,6 +1536,13 @@ type: `Bool`
 default: `false`
 
 deprecated: use the `linter.style.native` option instead
+
+## linter.style.numericProjections
+type: `Bool`
+
+default: `false`
+
+Lints against numeric structure projections such as `foo.2`.
 
 ## linter.style.openClassical
 type: `Bool`
