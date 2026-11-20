@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `6c9a0a07bbbce9b0205b16c83a17b8458f4bcdf9`
+Mathlib version: `66f20c74af93380e30c6f16bad25e5ea77dd19c5`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -2148,6 +2148,12 @@ constructor. You should not have any fields in `variable_alias` structures.
 
 Notice that `VectorSpace` is not a class; the `variable?` command allows non-classes with the
 `variable_alias` attribute to use instance binders.
+
+## vcgen_rintro
+ register a rule by which `vcgen` destructures a binder while introducing binders
+
+## vcgen_simp
+ simp theorems used by vcgen
 
 ## weak_specialize
  mark type for weak specialization: instances are only specialized when another argument already triggers specialization

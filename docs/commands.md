@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `6c9a0a07bbbce9b0205b16c83a17b8458f4bcdf9`
+Mathlib version: `66f20c74af93380e30c6f16bad25e5ea77dd19c5`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -592,7 +592,7 @@ If the option `trace.grind.*` is enabled, additional details are printed.
 
 By default, `#grind_lint` uses the following `grind` configuration:
 ```lean
-  splits       := 0
+  branches     := 0
   lookahead    := false
   mbtc         := false
   ematch       := 20
@@ -832,13 +832,14 @@ it will appear as a `(currently: true)` note next to the option.
 The form `#help option id` will show only options that begin with `id`.
 
 ## \#html
-Defined in: `ProofWidgets.HtmlCommand.htmlCmd`
+Defined in: `Lean.Elab.Html.htmlCmd`
 
-Display a value of type `Html` in the infoview.
+`#html e` evaluates the HTML value `e` and renders it in the infoview.
+`e` must have a type supported by some `#html` elaborator:
+core Lean supports `Lean.Html`, whereas other packages may support custom HTML types.
 
-The input can be a pure value
-or a computation in any Lean metaprogramming monad
-(e.g. `CommandElabM ProofWidgets.Html`).
+This command behaves similarly to `#eval`;
+`e` may also be a computation in any monad supported by `#eval`, e.g. `IO Html`.
 
 ## \#import_bumps
 Defined in: `Mathlib.Linter.MinImports.«command#import_bumps»`
@@ -1224,7 +1225,7 @@ Defined in: `Lean.Parser.Command.printSig`
 Defined in: `Lean.Parser.Command.printAxioms`
 
 Prints the axioms used by a declaration, directly or indirectly.
-Please consult [the reference manual](https://lean-lang.org/doc/reference/4.36.0/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
+Please consult [the reference manual](https://lean-lang.org/doc/reference/4.37.0-rc1/find/?domain=Verso.Genre.Manual.section&name=validating-proofs) to understand the significance of the output.
 
 ## \#print
 Defined in: `Lean.Parser.Command.printTacTags`
@@ -2122,6 +2123,38 @@ Mark a syntax kind as deprecated. When this syntax is elaborated, a warning will
 ```
 deprecated_syntax Lean.Parser.Term.let_fun "use `have` instead" (since := "2026-03-18")
 ```
+
+Syntax can also be deprecated where it is declared, using `@[deprecated "..." (since := "...")]`
+on the `syntax`, `macro`, `elab` or `notation` command that declares it.
+
+The deprecation can be followed by `macro_rules`-style alternatives that rewrite the deprecated
+syntax into its replacement. When the user writes syntax matched by one of the alternatives, the
+warning offers the result as a "Try this" suggestion. Only the first alternative whose pattern
+matches is run; if it throws an exception (such as `Macro.throwUnsupported`), there is no
+suggestion.
+
+```
+deprecated_syntax Lean.Parser.Tactic.rwaAtLegacyLocation
+  "use `rw [...] at ... <;> assumption` instead" (since := "2026-08-27")
+  | `(tactic| rwa $rws:rwRuleSeq $loc:location) =>
+    `(tactic| rw $rws:rwRuleSeq $loc:location <;> assumption)
+```
+
+As with `macro_rules`, the patterns are syntax quotations of the deprecated syntax kind and the
+right-hand sides run in `MacroM`. Alternatively, a single alternative with an identifier pattern,
+such as `| stx => f stx` for some `f : Macro`, receives every use of the deprecated syntax. In a
+module, the function `f` should be marked as `meta`. A single alternative with the pattern `_`, such
+as ``| _ => `(tactic| trivial)``, also receives every use, which is convenient for syntax without
+arguments.
+
+The result is printed as source text, so it should be syntax that can be kept in the source. There
+are some simple heuristics to ensure that the replacement parses correctly, but in more complex
+cases the result will need to be adjusted manually.
+
+Suggestions are only offered for deprecated syntax written by the user, not for deprecated syntax
+produced by a macro, and only if the syntax kind belongs to a single syntax category. A later
+`deprecated_syntax` command for the same syntax kind replaces the earlier one, including its
+alternatives.
 
 ## deriving
 Defined in: `Lean.Parser.Command.deriving`
