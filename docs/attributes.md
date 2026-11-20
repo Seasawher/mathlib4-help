@@ -1,6 +1,6 @@
 # Attributes
 
-Mathlib version: `28c657f1a489152a52a5d37eb7f7925c7d6c0e9e`
+Mathlib version: `6c9a0a07bbbce9b0205b16c83a17b8458f4bcdf9`
 
 ## PolyInferBaseAttr
  adds a polynomial extension that infers the base ring of a polynomial-like type
@@ -151,6 +151,12 @@ behaves like
 ```
 alias Foo.Bar.d := A.B.C.d
 ```
+
+## allow_numeric_proj
+ Allow numeric projections of the tagged structure type to appear in syntax.
+Structures `Foo` tagged with `@[allow_numeric_proj]` are exempt from the `numericProjections`
+linter, and thus their projections are allowed to appear as numeric projections in syntax. E.g., if
+`foo : Foo`, the linter will not warn on `foo.2`.
 
 ## always_inline
  mark definition to be always inlined
