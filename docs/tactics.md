@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `6c9a0a07bbbce9b0205b16c83a17b8458f4bcdf9`
+Mathlib version: `66f20c74af93380e30c6f16bad25e5ea77dd19c5`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -2885,6 +2885,14 @@ Defined in: `Mathlib.Tactic.ENatToNat.tacticEnat_to_nat`
 `enat_to_nat` shifts all `ENat`s in the context to `Nat`, rewriting propositions about them.
 A typical use case is `enat_to_nat; lia`.
 
+## epr
+Defined in: `Lean.Parser.Tactic.epr`
+
+Extract the EPR (effectively propositional first order logic) components out of the goal and try
+to solve with a decision procedure for EPR.
+
+Note: include `import Std.Tactic.BVDecide`
+
 ## eq_refl
 Defined in: `Lean.Parser.Tactic.eqRefl`
 
@@ -3587,7 +3595,7 @@ Defined in: `Mathlib.Tactic.GCongr.tacticGcongr_discharger`
 
 `gcongr_discharger` is used by `gcongr` to discharge side goals.
 
-This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.36.0/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
+This is an extensible tactic using [`macro_rules`](https://lean-lang.org/doc/reference/4.37.0-rc1/find/?domain=Verso.Genre.Manual.section&name=tactic-macro-extension).
 By default it calls `positivity` (after importing the `positivity` tactic).
 Example: ``macro_rules | `(tactic| gcongr_discharger) => `(tactic| positivity)``.
 
@@ -3788,7 +3796,7 @@ These engines work together to handle equality reasoning, apply known theorems,
 propagate new facts, perform case analysis, and run specialized solvers
 for domains like linear arithmetic and commutative rings.
 
-See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.36.0/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
+See [the reference manual's chapter on `grind`](https://lean-lang.org/doc/reference/4.37.0-rc1/find/?domain=Verso.Genre.Manual.section&name=grind-tactic) for more information.
 
 `grind` is *not* designed for goals whose search space explodes combinatorially,
 think large pigeonhole instances, graph‑coloring reductions, high‑order N‑queens boards,
@@ -3944,6 +3952,8 @@ This *model-based* search is **complete for LIA**.
 * `grind -lia` disable the solver (useful for debugging)
 * `grind +qlia` accept rational models (shrinks the search space but is incomplete for ℤ)
 * `grind (liaSteps := n)` cap the number of steps performed by the model search (the solver becomes incomplete when the threshold is reached)
+* `grind (liaReorders := n)` cap the number of times the model search reorders its variables to avoid a large Cooper case split (`0` disables)
+* `grind (liaReorderCases := n)` request such a reordering only for Cooper splits with more than `n` cases
 
 #### Examples:
 
@@ -4028,8 +4038,8 @@ example [Field α] [NoNatZeroDivisors α] (a : α) :
 
 ### Other options
 
-- `grind (splits := <num>)` caps the *depth* of the search tree.  Once a branch performs `num` splits
-  `grind` stops splitting further in that branch.
+- `grind (branches := <num>)` caps the *size* of the search tree. A case-split with `n` cases creates
+  `n - 1` new branches. Once `num` branches have been created, `grind` stops splitting.
 - `grind -splitIte` disables case splitting on if-then-else expressions.
 - `grind -splitMatch` disables case splitting on `match` expressions.
 - `grind +splitImp` instructs `grind` to split on any hypothesis `A → B` whose antecedent `A` is **propositional**.
@@ -7404,11 +7414,15 @@ example {a b c d : ℝ} (hab : 0 < a * b) (hb : 0 ≤ b) (hcd : c < d) :
 Defined in: `Mathlib.Tactic.Primality.primality`
 
 `primality` proves a goal `Nat.Prime n`, where `norm_num` evaluates `n` to a numeral, from a
-Lucas certificate given as a list of witnesses.
+Lucas certificate whose witnesses it searches for or takes from the user.
 
 A Lucas certificate proves `p` prime by a primitive root `a` of `p`, a number with
 `a ^ (p - 1) % p = 1` and `a ^ ((p - 1) / q) % p ≠ 1` for each prime factor `q` of `p - 1`. Each
 such `q` needs a certificate too, except for primes below `2 ^ 10` which are left to `norm_num`.
+
+By default the witnesses are searched for, factorizing each `p - 1` by trial division and Pollard's
+rho method, and `(cert := .search { factors := […] })` adds candidate prime factors to the search.
+`(cert := .witnesses […])` takes the witnesses from the user instead:
 
 ```lean
 example : Nat.Prime 1000003 := by
@@ -9678,7 +9692,7 @@ vcgen [...] invariants
 | _ => I2
 ```
 
-`vcgen` has two further clauses.
+`vcgen` has three further clauses.
 
 ```
 vcgen until f a _ c
@@ -9704,6 +9718,18 @@ vcgen frames
 ```
 carries `s.2 = 7` past the call, and `vcgen` proves that `mkFreshNat` preserves it. The named binders
 are in scope in the frame, bound to the matched arguments.
+
+```
+vcgen simp [Nat.add_assoc, h]
+```
+adds theorems to the simp set of `vcgen`. `vcgen` rewrites the hypotheses it introduces, the state
+arguments of the program and the verification conditions with the theorems tagged
+`@[vcgen_simp]`, the theorems of the clause, and the evaluation of ground terms such as `41 + 1`
+and `"x" = "y"`. An argument is a theorem or definition name, a local hypothesis, a proof term, or
+`*` for every local hypothesis. A theorem with hypotheses, such as
+`wrap_of_lt (h : n < 2 ^ w) : wrap w n = n`, rewrites only if the same simplification proves each
+hypothesis.
+`vcgen -simp` turns this simplification off.
 
 ### Invariant suggestions
 
@@ -9771,7 +9797,7 @@ vcgen [...] invariants
 | _ => I2
 ```
 
-`vcgen` has two further clauses.
+`vcgen` has three further clauses.
 
 ```
 vcgen until f a _ c
@@ -9797,6 +9823,18 @@ vcgen frames
 ```
 carries `s.2 = 7` past the call, and `vcgen` proves that `mkFreshNat` preserves it. The named binders
 are in scope in the frame, bound to the matched arguments.
+
+```
+vcgen simp [Nat.add_assoc, h]
+```
+adds theorems to the simp set of `vcgen`. `vcgen` rewrites the hypotheses it introduces, the state
+arguments of the program and the verification conditions with the theorems tagged
+`@[vcgen_simp]`, the theorems of the clause, and the evaluation of ground terms such as `41 + 1`
+and `"x" = "y"`. An argument is a theorem or definition name, a local hypothesis, a proof term, or
+`*` for every local hypothesis. A theorem with hypotheses, such as
+`wrap_of_lt (h : n < 2 ^ w) : wrap w n = n`, rewrites only if the same simplification proves each
+hypothesis.
+`vcgen -simp` turns this simplification off.
 
 ### Invariant suggestions
 
