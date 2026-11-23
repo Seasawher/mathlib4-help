@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `6ebcce37335bcb6bca64596e5d57bb3035648030`
+Mathlib version: `53dad9ed98be8416b6ca1111e55a03de4303231f`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -3307,6 +3307,7 @@ Defined in: `Mathlib.Tactic.ToDual.«commandTo_dual_for_:=_»`
 
 `to_dual_for src := e` tells `to_dual` to translate the constant `src` to `e`,
 where `e` can be an arbitrary expression.
+To see the expected type of `e` and/or provide a tactic proof, use `to_dual_for src := by ...`
 
 TODO: this currently doesn't accept the `(dont_translate := ...)`/`(relevant_arg := ...)` syntax.
   This can be added if necessary.

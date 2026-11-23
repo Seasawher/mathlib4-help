@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `6ebcce37335bcb6bca64596e5d57bb3035648030`
+Mathlib version: `53dad9ed98be8416b6ca1111e55a03de4303231f`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -1139,7 +1139,7 @@ Defined in: `Mathlib.Tactic.Bicategory.tacticBicategory`
 
 Use the coherence theorem for bicategories to solve equations in a bicategory,
 where the two sides only differ by replacing strings of bicategory structural morphisms
-(that is, associators, unitors, and identities)
+\(that is, associators, unitors, and identities\)
 with different strings of structural morphisms with the same source and target.
 
 That is, `bicategory` can handle goals of the form
@@ -5842,7 +5842,7 @@ Defined in: `Mathlib.Tactic.Monoidal.tacticMonoidal`
 
 Use the coherence theorem for monoidal categories to solve equations in a monoidal category,
 where the two sides only differ by replacing strings of monoidal structural morphisms
-(that is, associators, unitors, and identities)
+\(that is, associators, unitors, and identities\)
 with different strings of structural morphisms with the same source and target.
 
 That is, `monoidal` can handle goals of the form
