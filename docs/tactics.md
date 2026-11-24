@@ -1,6 +1,6 @@
 # Tactics
 
-Mathlib version: `53dad9ed98be8416b6ca1111e55a03de4303231f`
+Mathlib version: `46c4980fbcb48fc3ac7b1b5214fb11805867ccf4`
 
 ## \#adaptation_note
 Defined in: `«tactic#adaptation_note_»`
@@ -114,7 +114,8 @@ There is also the `find` tactic which looks for lemmas which are `apply`able aga
 goal.
 
 Examples:
-```lean
+
+```
 #find _ + _ = _ + _
 #find ?n + _ = _ + ?n
 #find (_ : Nat) + _ = _ + _
@@ -3310,7 +3311,8 @@ In other words, `find` lists definitions and theorems that are `apply`able again
 For a command or tactic that takes the type to search for as an argument, see `#find`.
 
 Example:
-```lean
+
+```
 example : True := by
   find
   -- True.intro: True
