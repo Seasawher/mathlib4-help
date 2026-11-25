@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `53dad9ed98be8416b6ca1111e55a03de4303231f`
+Mathlib version: `46c4980fbcb48fc3ac7b1b5214fb11805867ccf4`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -450,7 +450,8 @@ match any conjunction.
 which are `apply`able against the current goal.
 
 Examples:
-```lean
+
+```
 #find _ + _ = _ + _
 #find ?n + _ = _ + ?n
 #find (_ : Nat) + _ = _ + _
