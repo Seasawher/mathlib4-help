@@ -1,6 +1,6 @@
 # Commands
 
-Mathlib version: `82fba18f247570450245f88df4f0ba72628d6cc5`
+Mathlib version: `351fc61b8034110e0d661cedb8418a46728456ce`
 
 ## \#adaptation_note
 Defined in: `adaptationNoteCmd`
@@ -82,6 +82,11 @@ Running `#clear_deprecations "YYYY₁-MM₁-DD₁" "YYYY₂-MM₂-DD₂"`, witho
 the removal, but still emits the same verbose output.
 
 This function is intended for automated use by the `remove_deprecations` automation.
+
+## \#clear_do
+Defined in: `Batteries.Tactic.DoCommand.«command#clear_do»`
+
+Clears all variables from the current `#do` context.
 
 ## \#click_suggestions
 Defined in: `Mathlib.Tactic.ClickSuggestions.«command#click_suggestions»`
@@ -264,6 +269,47 @@ For each found declaration, it prints a line
 ```
 The variant `#dlmf_tags!` also adds the theorem statement (for theorems)
 or declaration type (for definitions, structures, instances, etc.) after each summary line.
+
+## \#do
+Defined in: `Batteries.Tactic.DoCommand.doCommand`
+
+`#do code` runs `code` with access to all variables from previous `#do` (and `#do_meta`)
+invocations. Example:
+```lean
+#do let x ← IO.rand 0 100
+-- these will both print the same number
+#do IO.println x
+#do IO.println x
+```
+This command can be used to run expensive computations once and refer to them later.
+
+For `#do`, the body is run in the `CommandElabM` monad. For an alternative where computations run
+in `MetaM`, use `#do_meta`.
+
+## \#do!
+Defined in: `Batteries.Tactic.DoCommand.doBangCommand`
+
+An alternative to `#do` that doesn't check for `sorry`s
+
+## \#do_meta
+Defined in: `Batteries.Tactic.DoCommand.doMetaCommand`
+
+`#do_meta code` runs `code` with access to all variables from previous `#do` and `#do_meta`
+invocations in the `MetaM` monad. Example:
+```lean
+#do_meta let x ← IO.rand 0 100
+-- these will both print the same number
+#do_meta IO.println x
+#do_meta IO.println x
+```
+This command can be used to run expensive computations once and refer to them later.
+
+For an alternative where computations run in `CommandElabM`, use `#do`.
+
+## \#do_meta!
+Defined in: `Batteries.Tactic.DoCommand.doMetaBangCommand`
+
+An alternative to `#do_meta` that doesn't check for `sorry`s
 
 ## \#dump_async_env_state
 Defined in: `Lean.Parser.Command.dumpAsyncEnvState`
@@ -939,14 +985,14 @@ example : 3 ≤ 5 := by
 You can modify the LeanSearch URL by setting the `LEANSEARCHCLIENT_LEANSEARCH_API_URL` environment variable.
 
 ## \#lint
-Defined in: `Batteries.Tactic.Lint.«command#lint+-*Only___»`
+Defined in: `Batteries.Linter.«command#lint+-*Only___»`
 
 The command `#lint` runs the linters on the current file (by default).
 
 `#lint only someLinter` can be used to run only a single linter.
 
 ## \#list_linters
-Defined in: `Batteries.Tactic.Lint.«command#list_linters»`
+Defined in: `Batteries.Linter.«command#list_linters»`
 
 The command `#list_linters` prints a list of all available linters.
 

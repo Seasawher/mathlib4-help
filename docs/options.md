@@ -1,6 +1,6 @@
 # Options
 
-Mathlib version: `82fba18f247570450245f88df4f0ba72628d6cc5`
+Mathlib version: `351fc61b8034110e0d661cedb8418a46728456ce`
 
 ## Elab.async
 type: `Bool`
@@ -1266,6 +1266,20 @@ type: `Bool`
 default: `false`
 
 Validate that all `List`/`Array`/`Vector` variables use allowed names.
+
+## linter.longDeclaration
+type: `Bool`
+
+default: `false`
+
+enable the `longDeclaration` linter
+
+## linter.longDeclaration.maxLines
+type: `Nat`
+
+default: `200`
+
+maximum number of lines of code in a command
 
 ## linter.loopingSimpArgs
 type: `Bool`
